@@ -44,3 +44,4 @@ next-env.d.ts
 /ff-site
 /ff-server
 /vortox-bot
+/.next-build
