@@ -128,6 +128,14 @@
     font-size: 1.02rem;
     color: var(--char);
     text-shadow: 1px 1px 0 var(--shadow);
+    text-decoration: none;
+
+    &:hover {
+        background: none;
+        color: var(--char);
+        text-decoration: underline dotted;
+        text-underline-offset: 3px;
+    }
 }
 
 .playedBy {

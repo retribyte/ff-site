@@ -51,7 +51,7 @@ export function seasonColors(title: string): { primary: string; secondary: strin
 }
 
 /** "3-shady-business" for /archives/ff2/3-shady-business; resolved by number prefix. */
-export function episodeSlug(episode: Episode): string {
+export function episodeSlug(episode: Pick<Episode, 'title' | 'episode_no'>): string {
     const titlePart = episode.title
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
@@ -63,4 +63,12 @@ export function episodeSlug(episode: Episode): string {
 export function episodeNoFromSlug(slug: string): number | null {
     const match = slug.match(/^(\d+)(-|$)/);
     return match ? parseInt(match[1]) : null;
+}
+
+/** Deep link to one line of an episode; the chronicle reads at /cyoa. */
+export function lineUrl(episode: Pick<Episode, 'title' | 'episode_no' | 'seasonTitle'>, messageNo: number): string {
+    if (episode.seasonTitle === 'Vortox Machina') {
+        return `/cyoa?line=${messageNo}`;
+    }
+    return `/archives/${seasonSlug(episode.seasonTitle)}/${episodeSlug(episode)}?line=${messageNo}`;
 }

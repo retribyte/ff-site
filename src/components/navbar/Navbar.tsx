@@ -10,6 +10,7 @@ import styles from './navbar.module.scss';
 const links = [
     { href: '/archives', label: 'Archives' },
     { href: '/cyoa', label: 'CYOA' },
+    { href: '/characters', label: 'Characters' },
 ];
 
 function SessionArea() {

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { memo, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
@@ -60,7 +61,13 @@ const Line = memo(function Line({
             const color = characterColor(name, character?.color ?? null, colorMode);
             content = (
                 <p className={styles.dialogue} style={{ '--char': color } as React.CSSProperties}>
-                    <span className={styles.dialogueName}>{name}:</span>{' '}
+                    {message.characterId !== null ? (
+                        <Link href={`/characters/${message.characterId}`} className={styles.dialogueName}>
+                            {name}:
+                        </Link>
+                    ) : (
+                        <span className={styles.dialogueName}>{name}:</span>
+                    )}{' '}
                     <Highlighted text={message.text} query={query} />
                 </p>
             );

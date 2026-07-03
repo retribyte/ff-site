@@ -12,7 +12,14 @@ function hexToRgb(hex: string): [number, number, number] {
  * sprite resolution; CSS scales it up with crisp pixels.
  * Falls back to a letter tile when there's no sprite.
  */
-export default function PixelAvatar({ src, name, color }: { src: string | null; name: string; color: string }) {
+interface Props {
+    src: string | null;
+    name: string;
+    color: string;
+    size?: number;
+}
+
+export default function PixelAvatar({ src, name, color, size = 48 }: Props) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     // Track which src failed so a src change resets automatically
     const [failedSrc, setFailedSrc] = useState<string | null>(null);
@@ -70,13 +77,13 @@ export default function PixelAvatar({ src, name, color }: { src: string | null; 
             <div
                 aria-hidden
                 style={{
-                    width: 48,
-                    height: 48,
+                    width: size,
+                    height: size,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontFamily: 'var(--font-display)',
-                    fontSize: '1.4rem',
+                    fontSize: size / 34 + 'rem',
                     color,
                     background: `color-mix(in srgb, ${color} 18%, transparent)`,
                     border: `2px solid ${color}`,
@@ -90,14 +97,14 @@ export default function PixelAvatar({ src, name, color }: { src: string | null; 
     }
 
     return (
-        <span style={{ width: 48, height: 48, display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
+        <span style={{ width: size, height: size, display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
             <canvas
                 ref={canvasRef}
                 width={0}
                 height={0}
                 role='img'
                 aria-label={`${name} avatar`}
-                style={{ height: 48, width: 'auto', maxWidth: 48, imageRendering: 'pixelated' }}
+                style={{ height: size, width: 'auto', maxWidth: size, imageRendering: 'pixelated' }}
             />
         </span>
     );

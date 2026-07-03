@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { memo, useState } from 'react';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
@@ -126,7 +127,13 @@ function StoryBlock({ block, characters, players, targetNo, query, currentMatchN
 
             <div className={styles.blockBody}>
                 <div className={styles.blockHeader}>
-                    <span className={styles.speaker}>{speaker}</span>
+                    {block.characterId !== null ? (
+                        <Link href={`/characters/${block.characterId}`} className={styles.speaker}>
+                            {speaker}
+                        </Link>
+                    ) : (
+                        <span className={styles.speaker}>{speaker}</span>
+                    )}
                     {character && player && character.name !== player.name && (
                         <span className={styles.playedBy}>{player.name}</span>
                     )}

@@ -87,6 +87,7 @@ export interface Message {
     text: string;
     player?: PublicUser;
     character?: Character;
+    episode?: Episode;
     commentaries?: Commentary[];
 }
 

@@ -71,6 +71,14 @@
     font-style: normal;
     color: var(--char);
     text-shadow: 1px 1px 0 var(--shadow);
+    text-decoration: none;
+
+    &:hover {
+        background: none;
+        color: var(--char);
+        text-decoration: underline dotted;
+        text-underline-offset: 3px;
+    }
 }
 
 // Recovered broadcast fragment — the chronicle's cold open

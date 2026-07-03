@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Production build output (see distDir in next.config.ts):
+    ".next-build/**",
   ]),
 ]);
 

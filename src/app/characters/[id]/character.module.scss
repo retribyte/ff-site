@@ -1,0 +1,241 @@
+.main {
+    // Theme-aware character color: server sets both variants, CSS picks
+    --char: var(--char-dark);
+
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+}
+
+:global([data-theme='light']) .main {
+    --char: var(--char-light);
+}
+
+.breadcrumb {
+    margin-bottom: 1.25rem;
+
+    a {
+        font-family: var(--font-pixel);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        text-decoration: none;
+        color: var(--text-muted);
+
+        &:hover {
+            color: var(--link-hover);
+        }
+    }
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 1fr 19rem;
+    gap: 2rem;
+    align-items: start;
+}
+
+.article {
+    min-width: 0;
+}
+
+.name {
+    margin: 0 0 0.35rem;
+    color: var(--char);
+    text-shadow:
+        calc(var(--px) * 1.2) calc(var(--px) * 1.2) 0 var(--shadow),
+        0 0 18px color-mix(in srgb, var(--char) 40%, transparent);
+}
+
+.aliases {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-pixel);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: baseline;
+}
+
+.alias {
+    border: 1px dashed color-mix(in srgb, var(--char) 50%, var(--border-loud));
+    color: var(--text);
+    padding: 0.15rem 0.45rem;
+}
+
+.blurb {
+    font-family: var(--font-prose);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 40rem;
+    margin: 0 0 1.5rem;
+}
+
+.section {
+    margin-top: 2rem;
+}
+
+.sectionTitle {
+    font-size: 1.3rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    &::after {
+        content: '';
+        flex: 1;
+        border-top: 1px dashed color-mix(in srgb, var(--char) 45%, var(--border-loud));
+    }
+}
+
+.relations {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    li::before {
+        content: '⌁ ';
+        color: var(--char);
+    }
+}
+
+.quotes {
+    list-style: none;
+    margin: 0 0 0.75rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.quote {
+    display: flex;
+    gap: 0.6rem;
+    background: color-mix(in srgb, var(--char) 7%, var(--surface));
+    border-left: var(--px) solid var(--char);
+    padding: 0.75rem 1rem;
+
+    blockquote {
+        margin: 0;
+        min-width: 0;
+
+        p {
+            margin: 0;
+            font-family: var(--font-prose);
+            font-style: italic;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        footer {
+            margin-top: 0.35rem;
+            font-family: var(--font-pixel);
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+
+            a {
+                color: var(--text-muted);
+                text-decoration: none;
+
+                &:hover {
+                    color: var(--link-hover);
+                }
+            }
+        }
+    }
+}
+
+.quoteMark {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--char);
+    user-select: none;
+}
+
+.quotesLink {
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    color: var(--link);
+
+    &:hover {
+        color: var(--link-hover);
+    }
+}
+
+// ── Infobox (wiki portable-infobox, reborn) ──────────────────────────────
+.infobox {
+    padding: 0;
+    overflow: hidden;
+    border-color: color-mix(in srgb, var(--char) 55%, var(--border-loud));
+    box-shadow:
+        var(--px) var(--px) 0 0 var(--shadow),
+        0 0 14px color-mix(in srgb, var(--char) 25%, transparent);
+}
+
+.infoboxHeader {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    background:
+        var(--star-texture),
+        linear-gradient(150deg, color-mix(in srgb, var(--char) 32%, var(--surface)) 0%, var(--surface) 85%);
+    background-size: 120px, auto;
+    border-bottom: 1px solid color-mix(in srgb, var(--char) 40%, var(--border));
+}
+
+.facts {
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+.fact {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 0.6rem;
+    padding: 0.4rem 0.9rem;
+
+    &:nth-child(even) {
+        background: color-mix(in srgb, var(--char) 6%, transparent);
+    }
+
+    dt {
+        font-family: var(--font-pixel);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        align-self: center;
+    }
+
+    dd {
+        margin: 0;
+        font-size: 0.92rem;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 860px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    // Dossier card reads first on mobile, like the wiki
+    .infobox {
+        order: -1;
+        max-width: 22rem;
+        margin: 0 auto;
+        width: 100%;
+    }
+}
