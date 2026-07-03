@@ -43,6 +43,7 @@ export interface Character {
     image: string | null;
     themeColor: string | null;
     blurb: string | null;
+    wikiArticle: string | null;
     aliases?: Alias[];
     relationships?: Relationship[];
     species?: Species;
@@ -60,6 +61,7 @@ export interface Species {
     habitat: string | null;
     placeOfOrigin: string | null;
     creatorId: number;
+    wikiArticle: string | null;
     Character?: Character[];
 }
 
@@ -108,6 +110,7 @@ export interface Item {
     image: string | null;
     creatorId: number;
     characterId: number | null;
+    wikiArticle: string | null;
     character?: Character;
     creator?: PublicUser;
 }

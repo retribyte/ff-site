@@ -39,6 +39,23 @@
     min-width: 0;
 }
 
+.nameRow {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.35rem;
+}
+
+.factLink {
+    color: var(--link);
+    text-decoration: none;
+
+    &:hover {
+        color: var(--link-hover);
+    }
+}
+
 .name {
     margin: 0 0 0.35rem;
     color: var(--char);

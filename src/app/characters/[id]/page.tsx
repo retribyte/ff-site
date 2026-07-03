@@ -7,6 +7,7 @@ import { characterColor } from '@/lib/characterColors';
 import { lineUrl } from '@/lib/seasons';
 import SignalLost from '@/components/SignalLost';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
+import WikiLink from '@/components/WikiLink';
 import styles from './character.module.scss';
 
 interface Props {
@@ -78,7 +79,14 @@ export default async function CharacterPage({ params }: Props) {
     const sampleQuotes = [...quotes].sort(() => Math.random() - 0.5).slice(0, 3);
 
     const facts: [string, React.ReactNode][] = [];
-    if (species) facts.push(['species', species.name]);
+    if (species) {
+        facts.push([
+            'species',
+            <Link key='species' href={`/species/${species.id}`} className={styles.factLink}>
+                {species.name}
+            </Link>,
+        ]);
+    }
     const sexLabel = SEX_LABELS[character.sex];
     if (sexLabel) facts.push(['sex', sexLabel]);
     if (character.dob !== null) facts.push(['born', `GUY ${Math.floor(character.dob / GUY_SECONDS)}`]);
@@ -97,7 +105,10 @@ export default async function CharacterPage({ params }: Props) {
 
             <div className={styles.layout}>
                 <article className={styles.article}>
-                    <h1 className={styles.name}>{character.name}</h1>
+                    <div className={styles.nameRow}>
+                        <h1 className={styles.name}>{character.name}</h1>
+                        <WikiLink article={character.wikiArticle} />
+                    </div>
                     {aliases.length > 0 && (
                         <p className={styles.aliases}>
                             a.k.a.{' '}

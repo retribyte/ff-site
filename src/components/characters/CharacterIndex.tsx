@@ -1,10 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { useTheme } from '@/components/theme/ThemeProvider';
-import { characterColor } from '@/lib/characterColors';
-import PixelAvatar from '@/components/transcript/PixelAvatar';
+import CharacterCard from './CharacterCard';
 import styles from './characterIndex.module.scss';
 
 export interface IndexCharacter {
@@ -23,7 +20,6 @@ export default function CharacterIndex({
     characters: IndexCharacter[];
     species: { id: number; name: string }[];
 }) {
-    const { colorMode } = useTheme();
     const [query, setQuery] = useState('');
     const [speciesId, setSpeciesId] = useState<number | ''>('');
 
@@ -73,24 +69,19 @@ export default function CharacterIndex({
             )}
 
             <ul className={styles.grid}>
-                {visible.map((character) => {
-                    const color = characterColor(character.name, character.themeColor, colorMode);
-                    return (
-                        <li key={character.id}>
-                            <Link
-                                href={`/characters/${character.id}`}
-                                className={styles.card}
-                                style={{ '--char': color } as React.CSSProperties}
-                            >
-                                <PixelAvatar src={character.image} name={character.name} color={color} size={56} />
-                                <span className={styles.cardName}>{character.name}</span>
-                                {character.aliases.length > 0 && (
-                                    <span className={styles.cardAlias}>a.k.a. {character.aliases[0]}</span>
-                                )}
-                            </Link>
-                        </li>
-                    );
-                })}
+                {visible.map((character) => (
+                    <li key={character.id}>
+                        <CharacterCard
+                            character={{
+                                id: character.id,
+                                name: character.name,
+                                themeColor: character.themeColor,
+                                image: character.image,
+                                alias: character.aliases[0] ?? null,
+                            }}
+                        />
+                    </li>
+                ))}
             </ul>
         </div>
     );

@@ -1,0 +1,112 @@
+.filters {
+    position: sticky;
+    top: var(--navbar-height);
+    z-index: 5;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border-loud);
+    border-left: var(--px) solid var(--accent);
+    box-shadow: 2px 2px 0 0 var(--shadow);
+}
+
+.filter {
+    // --type set per button to the item-type color
+    font-family: var(--font-pixel);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background: none;
+    border: 1px dashed transparent;
+    border-radius: var(--radius);
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--text);
+        border-color: var(--border-loud);
+    }
+
+    &[data-active] {
+        color: var(--type, var(--text));
+        background: color-mix(in srgb, var(--type, var(--accent)) 12%, transparent);
+        border: 1px dashed color-mix(in srgb, var(--type, var(--accent)) 55%, var(--border-loud));
+    }
+}
+
+.grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: 0.9rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 1.1rem 0.75rem 0.9rem;
+    height: 100%;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text);
+
+    background: color-mix(in srgb, var(--type) 7%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--type) 30%, var(--border));
+    border-top: var(--px) solid var(--type);
+    box-shadow: 2px 2px 0 0 var(--shadow);
+    transition: transform 0.12s ease-out;
+
+    &:hover,
+    &:focus-visible {
+        background: color-mix(in srgb, var(--type) 13%, var(--surface));
+        transform: translateY(calc(var(--px) * -0.5));
+        box-shadow:
+            2px 2px 0 0 var(--shadow),
+            0 0 12px color-mix(in srgb, var(--type) 40%, transparent);
+    }
+}
+
+.cardArt {
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--type);
+    text-shadow: 2px 2px 0 var(--shadow);
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+
+    img {
+        image-rendering: pixelated;
+    }
+}
+
+.cardName {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--type);
+    text-shadow: 1px 1px 0 var(--shadow);
+    overflow-wrap: anywhere;
+}
+
+.cardType {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card {
+        transition: none;
+    }
+}
