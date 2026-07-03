@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Lora, Silkscreen } from 'next/font/google';
 import localFont from 'next/font/local';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { SessionProvider } from '@/components/auth/SessionProvider';
 import Navbar from '@/components/navbar/Navbar';
 import './globals.scss';
 
@@ -64,8 +65,10 @@ export default function RootLayout({
             <body>
                 <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
                 <ThemeProvider>
-                    <Navbar />
-                    {children}
+                    <SessionProvider>
+                        <Navbar />
+                        {children}
+                    </SessionProvider>
                 </ThemeProvider>
             </body>
         </html>

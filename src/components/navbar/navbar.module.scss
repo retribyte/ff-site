@@ -62,6 +62,46 @@
     }
 }
 
+.sessionSlot {
+    width: 4rem;
+}
+
+.session {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.sessionIcon {
+    image-rendering: pixelated;
+    border: 1px solid var(--border-loud);
+    background: var(--surface-2);
+}
+
+.sessionName {
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text);
+}
+
+.logout {
+    font-size: 0.85rem;
+    line-height: 1;
+    padding: 0.3rem 0.4rem;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    &:hover {
+        color: var(--ff1);
+        border-color: var(--border-loud);
+    }
+}
+
 .themeToggle {
     font-size: 1.1rem;
     line-height: 1;
