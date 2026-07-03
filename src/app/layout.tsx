@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Silkscreen } from 'next/font/google';
+import { Geist, Geist_Mono, Lora, Silkscreen } from 'next/font/google';
 import localFont from 'next/font/local';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import Navbar from '@/components/navbar/Navbar';
@@ -19,6 +19,13 @@ const silkscreen = Silkscreen({
     variable: '--font-silkscreen',
     weight: ['400', '700'],
     subsets: ['latin'],
+});
+
+// Reading face for the CYOA chronicle's long-form narration
+const lora = Lora({
+    variable: '--font-lora',
+    subsets: ['latin'],
+    style: ['normal', 'italic'],
 });
 
 const righteous = localFont({
@@ -50,7 +57,7 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const fontVars = `${geistSans.variable} ${geistMono.variable} ${silkscreen.variable} ${righteous.variable}`;
+    const fontVars = `${geistSans.variable} ${geistMono.variable} ${silkscreen.variable} ${righteous.variable} ${lora.variable}`;
 
     return (
         <html lang='en' data-theme='dark' className={fontVars} suppressHydrationWarning>

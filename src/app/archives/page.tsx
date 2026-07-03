@@ -58,13 +58,11 @@ export default async function ArchivesPage() {
                         );
                     }
 
+                    // The chronicle gets its dedicated prose reader
+                    const href = seasonSlug(title) === 'vm' ? '/cyoa' : `/archives/${seasonSlug(title)}`;
+
                     return (
-                        <Link
-                            key={title}
-                            href={`/archives/${seasonSlug(title)}`}
-                            className={styles.strip}
-                            style={style}
-                        >
+                        <Link key={title} href={href} className={styles.strip} style={style}>
                             <span className={styles.stripCode}>{title}</span>
                             {subtitle && <span className={styles.stripTitle}>{subtitle}</span>}
                             <span className={styles.stripMeta}>

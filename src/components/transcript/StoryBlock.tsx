@@ -3,8 +3,10 @@
 import { memo, useState } from 'react';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
+import type { SlimMessage, TranscriptData } from '@/lib/transcript';
 import PixelAvatar from './PixelAvatar';
-import type { Block, SlimMessage, TranscriptData } from './TranscriptReader';
+import { Highlighted } from './ScanBar';
+import type { Block } from './TranscriptReader';
 import styles from './transcript.module.scss';
 
 function formatTimestamp(iso: string | null): string | null {
@@ -17,26 +19,6 @@ function formatTimestamp(iso: string | null): string | null {
         minute: '2-digit',
         timeZone: 'UTC',
     });
-}
-
-/** Wraps search hits in <mark>; safe because we only ever render text nodes. */
-function Highlighted({ text, query }: { text: string; query: string | null }) {
-    if (!query) return <>{text}</>;
-    const lower = text.toLowerCase();
-    const q = query.toLowerCase();
-    if (!lower.includes(q)) return <>{text}</>;
-
-    const parts: React.ReactNode[] = [];
-    let cursor = 0;
-    let hit = lower.indexOf(q);
-    while (hit !== -1) {
-        if (hit > cursor) parts.push(text.slice(cursor, hit));
-        parts.push(<mark key={hit}>{text.slice(hit, hit + q.length)}</mark>);
-        cursor = hit + q.length;
-        hit = lower.indexOf(q, cursor);
-    }
-    parts.push(text.slice(cursor));
-    return <>{parts}</>;
 }
 
 interface Embed {

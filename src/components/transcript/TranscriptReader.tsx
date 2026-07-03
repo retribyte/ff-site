@@ -1,31 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
-import type { MessageType } from '@/lib/types';
+import type { SlimMessage, TranscriptData } from '@/lib/transcript';
+import { ScanBar, scrollToMessage, useScan } from './ScanBar';
 import StoryBlock from './StoryBlock';
 import styles from './transcript.module.scss';
-
-export interface SlimMessage {
-    no: number;
-    type: MessageType;
-    text: string;
-    characterId: number | null;
-    playerId: number;
-    timestamp: string | null;
-}
-
-export interface SpeakerInfo {
-    name: string;
-    color: string | null;
-    image: string | null;
-}
-
-export interface TranscriptData {
-    messages: SlimMessage[];
-    characters: Record<number, SpeakerInfo>;
-    players: Record<number, { name: string; icon: string | null }>;
-}
 
 export interface Block {
     key: number; // first messageNo in the block
@@ -66,13 +46,6 @@ function groupIntoBlocks(messages: SlimMessage[]): Block[] {
     return blocks;
 }
 
-function scrollToMessage(no: number, smooth: boolean) {
-    const el = document.getElementById(`m-${no}`);
-    if (!el) return;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    el.scrollIntoView({ behavior: smooth && !reduced ? 'smooth' : 'auto', block: 'center' });
-}
-
 export default function TranscriptReader({ data }: { data: TranscriptData }) {
     const searchParams = useSearchParams();
     const blocks = useMemo(() => groupIntoBlocks(data.messages), [data.messages]);
@@ -87,84 +60,11 @@ export default function TranscriptReader({ data }: { data: TranscriptData }) {
         }
     }, [targetNo]);
 
-    // ── Search ("scan") ───────────────────────────────────────────────────
-    const [query, setQuery] = useState('');
-    const [matchIndex, setMatchIndex] = useState(0);
-
-    const matches = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        if (q.length < 2) return [];
-        return data.messages.filter((m) => m.text.toLowerCase().includes(q)).map((m) => m.no);
-    }, [query, data.messages]);
-
-    // First jump lands on the current match; subsequent jumps step through.
-    // Query changes reset the cursor via the derived-state-reset pattern.
-    const [hasJumped, setHasJumped] = useState(false);
-    const [prevQuery, setPrevQuery] = useState(query);
-    if (prevQuery !== query) {
-        setPrevQuery(query);
-        setMatchIndex(0);
-        setHasJumped(false);
-    }
-
-    const jumpToMatch = useCallback(
-        (direction: 1 | -1) => {
-            if (matches.length === 0) return;
-            const step = hasJumped ? direction : 0;
-            setHasJumped(true);
-            const wrapped = (((matchIndex + step) % matches.length) + matches.length) % matches.length;
-            setMatchIndex(wrapped);
-            scrollToMessage(matches[wrapped], true);
-        },
-        [matches, matchIndex, hasJumped]
-    );
-
-    const activeQuery = query.trim().length >= 2 ? query.trim() : null;
-    const currentMatchNo = matches.length > 0 ? matches[matchIndex] : null;
+    const scan = useScan(data.messages);
 
     return (
         <div>
-            <div className={styles.scanBar}>
-                <span className={styles.scanPrompt} aria-hidden>
-                    ❯
-                </span>
-                <input
-                    type='search'
-                    className={styles.scanInput}
-                    placeholder='scan transcript…'
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') jumpToMatch(e.shiftKey ? -1 : 1);
-                        if (e.key === 'Escape') setQuery('');
-                    }}
-                    aria-label='Search within this transcript'
-                />
-                {activeQuery && (
-                    <span className={styles.scanStatus}>
-                        {matches.length === 0 ? 'no hits' : `${matchIndex + 1}/${matches.length}`}
-                    </span>
-                )}
-                <button
-                    type='button'
-                    className={styles.scanButton}
-                    onClick={() => jumpToMatch(-1)}
-                    disabled={matches.length === 0}
-                    aria-label='Previous match'
-                >
-                    ▲
-                </button>
-                <button
-                    type='button'
-                    className={styles.scanButton}
-                    onClick={() => jumpToMatch(1)}
-                    disabled={matches.length === 0}
-                    aria-label='Next match'
-                >
-                    ▼
-                </button>
-            </div>
-
+            <ScanBar scan={scan} />
             <ol className={styles.blocks}>
                 {blocks.map((block) => (
                     <StoryBlock
@@ -173,8 +73,8 @@ export default function TranscriptReader({ data }: { data: TranscriptData }) {
                         characters={data.characters}
                         players={data.players}
                         targetNo={targetNo}
-                        query={activeQuery}
-                        currentMatchNo={currentMatchNo}
+                        query={scan.activeQuery}
+                        currentMatchNo={scan.currentMatchNo}
                     />
                 ))}
             </ol>

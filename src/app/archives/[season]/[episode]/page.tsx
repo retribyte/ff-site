@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { api, apiPaged } from '@/lib/api';
+import { api } from '@/lib/api';
 import type { Message, Season } from '@/lib/types';
 import { episodeNoFromSlug, episodeSlug, findSeasonBySlug, seasonColors } from '@/lib/seasons';
+import { fetchAllMessages, slimTranscript } from '@/lib/transcript';
 import SignalLost from '@/components/SignalLost';
-import TranscriptReader, { type TranscriptData } from '@/components/transcript/TranscriptReader';
+import TranscriptReader from '@/components/transcript/TranscriptReader';
 import EpisodeSelect from '@/components/transcript/EpisodeSelect';
 import styles from './episode.module.scss';
 
@@ -24,55 +25,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     } catch {
         return { title: 'Archives' };
     }
-}
-
-async function fetchAllMessages(episodeTitle: string): Promise<Message[]> {
-    const encoded = encodeURIComponent(episodeTitle);
-    const limit = 1000;
-    const first = await apiPaged<Message>(`/episodes/${encoded}/messages?page=1&limit=${limit}`);
-    const messages = [...first.data];
-    const totalPages = Math.ceil(first.total / limit);
-    for (let page = 2; page <= totalPages; page += 1) {
-        const next = await apiPaged<Message>(`/episodes/${encoded}/messages?page=${page}&limit=${limit}`);
-        messages.push(...next.data);
-    }
-    return messages;
-}
-
-// The API includes full character/player objects on every message; sending
-// that to the client 1,500× would be silly. Slim to id-keyed lookup tables.
-function slimTranscript(messages: Message[]): TranscriptData {
-    const characters: TranscriptData['characters'] = {};
-    const players: TranscriptData['players'] = {};
-
-    for (const message of messages) {
-        if (message.character && !(message.character.id in characters)) {
-            characters[message.character.id] = {
-                name: message.character.name,
-                color: message.character.themeColor,
-                image: message.character.image,
-            };
-        }
-        if (message.player && !(message.player.id in players)) {
-            players[message.player.id] = {
-                name: message.player.username,
-                icon: message.player.icon,
-            };
-        }
-    }
-
-    return {
-        characters,
-        players,
-        messages: messages.map((m) => ({
-            no: m.messageNo,
-            type: m.type,
-            text: m.text,
-            characterId: m.characterId,
-            playerId: m.playerId,
-            timestamp: m.timestamp,
-        })),
-    };
 }
 
 export default async function EpisodePage({ params }: Props) {

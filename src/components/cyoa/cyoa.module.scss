@@ -1,0 +1,139 @@
+.prose {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    max-width: 42rem;
+    margin: 0 auto;
+}
+
+// One addressable line of the chronicle; anchor button lives in the margin
+.line {
+    position: relative;
+
+    content-visibility: auto;
+    contain-intrinsic-size: auto 4rem;
+
+    p {
+        margin: 0;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+    }
+
+    mark {
+        background: var(--accent-2);
+        color: #1a1c22;
+        padding: 0 2px;
+    }
+
+    &[data-target] {
+        background: color-mix(in srgb, var(--vm) 14%, transparent);
+        outline: 1px solid color-mix(in srgb, var(--vm) 45%, transparent);
+        outline-offset: 4px;
+    }
+
+    &:hover .anchor,
+    &:focus-within .anchor {
+        opacity: 1;
+    }
+}
+
+.narration {
+    font-family: var(--font-prose);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+// The command the readers chose — rendered as the input it was
+.action {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    color: var(--vm);
+    background: color-mix(in srgb, var(--vm) 9%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--vm) 45%, transparent);
+    border-radius: var(--radius);
+    padding: 0.4rem 0.7rem;
+    margin: 0.5rem 0 !important;
+}
+
+.dialogue {
+    // --char is set inline per line to the speaker's color
+    font-family: var(--font-prose);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--char) 78%, var(--text));
+    padding-left: 1.25rem;
+    border-left: 2px solid color-mix(in srgb, var(--char) 55%, transparent);
+}
+
+.dialogueName {
+    font-family: var(--font-display);
+    font-size: 0.95em;
+    font-style: normal;
+    color: var(--char);
+    text-shadow: 1px 1px 0 var(--shadow);
+}
+
+// Recovered broadcast fragment — the chronicle's cold open
+.vcomm {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--vm);
+    background:
+        var(--star-texture),
+        linear-gradient(165deg, color-mix(in srgb, var(--vm) 14%, var(--surface)) 0%, var(--surface) 70%);
+    background-size: 120px, auto;
+    border: var(--px) solid color-mix(in srgb, var(--vm) 55%, var(--border-loud));
+    box-shadow:
+        var(--px) var(--px) 0 0 var(--shadow),
+        0 0 18px color-mix(in srgb, var(--vm) 25%, transparent);
+    padding: 1.1rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.anchor {
+    position: absolute;
+    top: 0;
+    left: -2.1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    opacity: 0;
+    font-family: var(--font-pixel);
+    font-size: 0.75rem;
+    line-height: 1;
+    color: var(--vm);
+    background: var(--surface-2);
+    border: 1px solid color-mix(in srgb, var(--vm) 45%, var(--border-loud));
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: opacity 0.12s ease-out;
+
+    &:hover {
+        background: color-mix(in srgb, var(--vm) 15%, var(--surface-2));
+    }
+
+    &:focus-visible {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 860px) {
+    // No margin room on small screens — tuck the anchor inside, top-right
+    .anchor {
+        left: auto;
+        right: 0;
+        opacity: 0.45;
+    }
+
+    .line[data-target] {
+        outline-offset: 2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .anchor {
+        transition: none;
+    }
+}
