@@ -1,9 +1,10 @@
+import { ddMmYyyyToIso, formatDdMmYyyy } from '@/lib/dates';
 import { ITEM_TYPE_META, SENTIENCE_LABELS } from '@/lib/lore';
 
 // Schema-driven editing: every record type declares its fields once and the
 // RecordEditor renders/validates/submits any of them.
 
-export type FieldKind = 'text' | 'textarea' | 'number' | 'date' | 'select' | 'color' | 'list' | 'entity-ref';
+export type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'color' | 'list' | 'entity-ref';
 
 export interface FieldDef {
     name: string;
@@ -20,6 +21,10 @@ export interface FieldDef {
     itemKey?: string;
     /** custom record → form-value read (default: direct field access) */
     read?: (record: Record<string, unknown>) => unknown;
+    /** custom form-value → payload write (default: by-kind conversion) */
+    write?: (value: string) => unknown;
+    /** input pattern + message shown when it doesn't match */
+    pattern?: { regex: string; message: string };
 }
 
 export interface EntitySchema {
@@ -66,10 +71,12 @@ export const characterSchema: EntitySchema = {
         {
             name: 'dob',
             label: 'date of birth',
-            kind: 'date',
-            help: 'stored in GUY notation',
-            read: (record) =>
-                typeof record.dob === 'number' ? new Date(record.dob * 1000).toISOString().slice(0, 10) : '',
+            kind: 'text',
+            placeholder: 'dd-mm-yyyy',
+            help: 'GUY notation, dd-mm-yyyy',
+            pattern: { regex: '\\d{1,2}-\\d{1,2}-\\d{4}', message: 'use dd-mm-yyyy' },
+            read: (record) => (typeof record.dob === 'string' ? formatDdMmYyyy(new Date(record.dob)) : ''),
+            write: (value) => (value === '' ? null : ddMmYyyyToIso(value)),
         },
         { name: 'pob', label: 'birthplace', kind: 'text' },
         { name: 'homePlanet', label: 'home planet', kind: 'text' },
@@ -170,6 +177,10 @@ export function valuesToPayload(schema: EntitySchema, values: FormValues): Recor
     const payload: Record<string, unknown> = {};
     for (const field of schema.fields) {
         const value = values[field.name];
+        if (field.write) {
+            payload[field.name] = field.write(value as string);
+            continue;
+        }
         switch (field.kind) {
             case 'list':
                 payload[field.name] = (value as string[])

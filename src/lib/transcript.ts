@@ -5,6 +5,13 @@ import type { Message, MessageType } from './types';
 // full character/player objects on every message; we send id-keyed lookup
 // tables to the client instead.
 
+export interface SlimCommentary {
+    id: number;
+    content: string;
+    creatorId: number;
+    creatorName: string;
+}
+
 export interface SlimMessage {
     no: number;
     type: MessageType;
@@ -12,6 +19,8 @@ export interface SlimMessage {
     characterId: number | null;
     playerId: number;
     timestamp: string | null;
+    /** present only when the message has annotations */
+    commentaries?: SlimCommentary[];
 }
 
 export interface SpeakerInfo {
@@ -21,6 +30,7 @@ export interface SpeakerInfo {
 }
 
 export interface TranscriptData {
+    episodeTitle: string;
     messages: SlimMessage[];
     characters: Record<number, SpeakerInfo>;
     players: Record<number, { name: string; icon: string | null }>;
@@ -60,6 +70,7 @@ export function slimTranscript(messages: Message[]): TranscriptData {
     }
 
     return {
+        episodeTitle: messages[0]?.episodeTitle ?? '',
         characters,
         players,
         messages: messages.map((m) => ({
@@ -69,6 +80,16 @@ export function slimTranscript(messages: Message[]): TranscriptData {
             characterId: m.characterId,
             playerId: m.playerId,
             timestamp: m.timestamp,
+            ...(m.commentaries && m.commentaries.length > 0
+                ? {
+                      commentaries: m.commentaries.map((c) => ({
+                          id: c.id,
+                          content: c.content,
+                          creatorId: c.creatorId,
+                          creatorName: c.creator?.username ?? 'unknown',
+                      })),
+                  }
+                : {}),
         })),
     };
 }

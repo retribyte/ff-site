@@ -101,6 +101,12 @@
         opacity: 1;
     }
 
+    // Reveal quiet "add note" chips (CommentaryThread) on hover
+    &:hover button[data-empty],
+    &:focus-within button[data-empty] {
+        opacity: 0.7;
+    }
+
     mark {
         background: var(--accent-2);
         color: #1a1c22;

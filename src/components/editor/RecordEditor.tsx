@@ -272,12 +272,14 @@ function Field({
             control = (
                 <input
                     id={id}
-                    type={field.kind === 'number' ? 'number' : field.kind === 'date' ? 'date' : 'text'}
+                    type={field.kind === 'number' ? 'number' : 'text'}
                     step={field.kind === 'number' ? 'any' : undefined}
                     value={value as string}
                     onChange={(e) => onChange(e.target.value)}
                     required={field.required}
                     placeholder={field.placeholder}
+                    pattern={field.pattern?.regex}
+                    title={field.pattern?.message}
                 />
             );
     }

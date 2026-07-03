@@ -1,0 +1,152 @@
+.thread {
+    margin-top: 0.25rem;
+}
+
+.chip {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background: none;
+    border: 1px dashed color-mix(in srgb, var(--char, var(--accent)) 40%, var(--border-loud));
+    border-radius: var(--radius);
+    padding: 0.2rem 0.45rem;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--text);
+        background: var(--highlight);
+    }
+
+    // "add note" affordance stays quiet until its line is hovered —
+    // the reader modules reveal it via .block:hover button[data-empty]
+    &[data-empty] {
+        opacity: 0;
+        transition: opacity 0.12s ease-out;
+    }
+
+    &[data-empty]:focus-visible,
+    &[aria-expanded='true'] {
+        opacity: 1 !important;
+    }
+}
+
+.panel {
+    margin-top: 0.5rem;
+    padding: 0.7rem 0.9rem;
+    background: var(--surface-2);
+    border: 1px dashed color-mix(in srgb, var(--char, var(--accent)) 40%, var(--border-loud));
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.note {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.noteAuthor {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-soft);
+
+    &::after {
+        content: ' says:';
+        color: var(--text-muted);
+        text-transform: none;
+    }
+}
+
+.noteContent {
+    margin: 0;
+    font-size: 0.92rem;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.noteActions {
+    display: flex;
+    gap: 0.4rem;
+
+    button {
+        font-family: var(--font-pixel);
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        background: none;
+        border: none;
+        padding: 0.1rem 0.2rem;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--text);
+            text-decoration: underline dotted;
+        }
+    }
+}
+
+.editRow,
+.addRow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-start;
+
+    textarea {
+        width: 100%;
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border-loud);
+        border-radius: var(--radius);
+        padding: 0.45rem 0.6rem;
+        resize: vertical;
+
+        &:focus {
+            outline: none;
+            border-color: var(--accent-soft);
+        }
+    }
+
+    button {
+        font-family: var(--font-pixel);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text);
+        background: var(--surface);
+        border: 1px dashed var(--border-loud);
+        border-radius: var(--radius);
+        padding: 0.35rem 0.6rem;
+        cursor: pointer;
+
+        &:hover:not(:disabled) {
+            border-color: var(--accent-soft);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+    }
+}
+
+.error {
+    margin: 0;
+    font-family: var(--font-pixel);
+    font-size: 0.65rem;
+    color: var(--ff1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chip[data-empty] {
+        transition: none;
+    }
+}

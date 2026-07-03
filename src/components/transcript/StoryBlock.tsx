@@ -5,6 +5,7 @@ import { memo, useState } from 'react';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
 import type { SlimMessage, TranscriptData } from '@/lib/transcript';
+import CommentaryThread from './CommentaryThread';
 import PixelAvatar from './PixelAvatar';
 import { Highlighted } from './ScanBar';
 import type { Block } from './TranscriptReader';
@@ -86,6 +87,7 @@ function MessageLine({ message, query }: { message: SlimMessage; query: string |
 
 interface Props {
     block: Block;
+    episodeTitle: string;
     characters: TranscriptData['characters'];
     players: TranscriptData['players'];
     targetNo: number | null;
@@ -93,7 +95,7 @@ interface Props {
     currentMatchNo: number | null;
 }
 
-function StoryBlock({ block, characters, players, targetNo, query, currentMatchNo }: Props) {
+function StoryBlock({ block, episodeTitle, characters, players, targetNo, query, currentMatchNo }: Props) {
     const { colorMode } = useTheme();
     const [copied, setCopied] = useState(false);
 
@@ -146,6 +148,11 @@ function StoryBlock({ block, characters, players, targetNo, query, currentMatchN
                 {block.messages.map((message) => (
                     <div key={message.no} id={`m-${message.no}`}>
                         <MessageLine message={message} query={query} />
+                        <CommentaryThread
+                            episodeTitle={episodeTitle}
+                            messageNo={message.no}
+                            initial={message.commentaries}
+                        />
                     </div>
                 ))}
             </div>

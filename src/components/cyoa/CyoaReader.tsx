@@ -7,6 +7,7 @@ import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
 import type { SlimMessage, TranscriptData } from '@/lib/transcript';
 import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
+import CommentaryThread from '@/components/transcript/CommentaryThread';
 import styles from './cyoa.module.scss';
 
 // The chronicle reads as prose: BOT_RESPONSE is narration, ACTION is the
@@ -24,12 +25,14 @@ function parseVcomm(text: string): string[] {
 
 const Line = memo(function Line({
     message,
+    episodeTitle,
     characters,
     colorMode,
     query,
     highlighted,
 }: {
     message: SlimMessage;
+    episodeTitle: string;
     characters: TranscriptData['characters'];
     colorMode: ColorMode;
     query: string | null;
@@ -97,6 +100,7 @@ const Line = memo(function Line({
     return (
         <div id={`m-${message.no}`} className={styles.line} data-target={highlighted || undefined}>
             {content}
+            <CommentaryThread episodeTitle={episodeTitle} messageNo={message.no} initial={message.commentaries} />
             <button
                 type='button'
                 className={styles.anchor}
@@ -132,6 +136,7 @@ export default function CyoaReader({ data }: { data: TranscriptData }) {
                     <Line
                         key={message.no}
                         message={message}
+                        episodeTitle={data.episodeTitle}
                         characters={data.characters}
                         colorMode={colorMode}
                         query={scan.activeQuery}

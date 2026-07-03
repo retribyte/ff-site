@@ -30,7 +30,7 @@ export interface Relationship {
 export interface Character {
     id: number;
     name: string;
-    dob: number | null; // unix timestamp, displayed in GUY notation
+    dob: string | null; // ISO date, displayed dd-mm-yyyy in GUY notation
     pob: string | null;
     homePlanet: string | null;
     speciesId: number;

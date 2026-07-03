@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { Character, Message, Species } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
+import { formatDdMmYyyy } from '@/lib/dates';
 import { lineUrl } from '@/lib/seasons';
 import SignalLost from '@/components/SignalLost';
 import { getSessionUser } from '@/lib/auth';
@@ -15,9 +16,6 @@ import styles from './character.module.scss';
 interface Props {
     params: Promise<{ id: string }>;
 }
-
-// One GUY ≈ one Julian year, epoch 1970 — the vortox-bot dob convention
-const GUY_SECONDS = 31_557_600;
 
 const SEX_LABELS: Record<Character['sex'], string | null> = {
     MALE: 'male',
@@ -94,7 +92,7 @@ export default async function CharacterPage({ params }: Props) {
     }
     const sexLabel = SEX_LABELS[character.sex];
     if (sexLabel) facts.push(['sex', sexLabel]);
-    if (character.dob !== null) facts.push(['born', `GUY ${Math.floor(character.dob / GUY_SECONDS)}`]);
+    if (character.dob !== null) facts.push(['born', `${formatDdMmYyyy(new Date(character.dob))} GUY`]);
     if (character.pob) facts.push(['birthplace', character.pob]);
     if (character.homePlanet) facts.push(['home planet', character.homePlanet]);
     if (character.height !== null) facts.push(['height', `${character.height} m`]);

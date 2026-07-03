@@ -70,6 +70,7 @@ export default function TranscriptReader({ data }: { data: TranscriptData }) {
                     <StoryBlock
                         key={block.key}
                         block={block}
+                        episodeTitle={data.episodeTitle}
                         characters={data.characters}
                         players={data.players}
                         targetNo={targetNo}
