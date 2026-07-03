@@ -1,4 +1,4 @@
-import { ddMmYyyyToIso, formatDdMmYyyy } from '@/lib/dates';
+import { formatGuyDate, parseGuyDate } from '@/lib/guy-time';
 import { ITEM_TYPE_META, SENTIENCE_LABELS } from '@/lib/lore';
 
 // Schema-driven editing: every record type declares its fields once and the
@@ -72,11 +72,12 @@ export const characterSchema: EntitySchema = {
             name: 'dob',
             label: 'date of birth',
             kind: 'text',
-            placeholder: 'dd-mm-yyyy',
-            help: 'GUY notation, dd-mm-yyyy',
-            pattern: { regex: '\\d{1,2}-\\d{1,2}-\\d{4}', message: 'use dd-mm-yyyy' },
-            read: (record) => (typeof record.dob === 'string' ? formatDdMmYyyy(new Date(record.dob)) : ''),
-            write: (value) => (value === '' ? null : ddMmYyyyToIso(value)),
+            placeholder: '4-2-3022',
+            help: 'GUY notation: equinox-semester-year (45 eqx/semester, 32 semesters/GUY)',
+            pattern: { regex: '\\d{1,2}-\\d{1,2}--?\\d+', message: 'use equinox-semester-year, e.g. 4-2-3022' },
+            read: (record) => (typeof record.dob === 'number' ? formatGuyDate(record.dob) : ''),
+            // undefined marks invalid input — valuesToPayload turns it into a form error
+            write: (value) => (value === '' ? null : (parseGuyDate(value) ?? undefined)),
         },
         { name: 'pob', label: 'birthplace', kind: 'text' },
         { name: 'homePlanet', label: 'home planet', kind: 'text' },
@@ -173,12 +174,19 @@ export function recordToValues(schema: EntitySchema, record: Record<string, unkn
     return values;
 }
 
+/** Thrown when a field's custom write rejects the input; shown as the form error. */
+export class FieldValidationError extends Error {}
+
 export function valuesToPayload(schema: EntitySchema, values: FormValues): Record<string, unknown> {
     const payload: Record<string, unknown> = {};
     for (const field of schema.fields) {
         const value = values[field.name];
         if (field.write) {
-            payload[field.name] = field.write(value as string);
+            const written = field.write(value as string);
+            if (written === undefined) {
+                throw new FieldValidationError(`${field.label}: ${field.pattern?.message ?? 'invalid value'}`);
+            }
+            payload[field.name] = written;
             continue;
         }
         switch (field.kind) {

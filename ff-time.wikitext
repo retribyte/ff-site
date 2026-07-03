@@ -1,0 +1,89 @@
+A Galactic Union Year, or GUY, is a standard unit of time measurement in the [[Galactic Union]], and in ''[[Final Frontier]]'' as a whole. It is equivalent to about 3.945 or <math>\frac{288}{73}</math> [[Earth]] years. The GUY is used by most spacefaring species as a convenient method of communicating time, as time is usually divided into unique units depending on the planet. Each GUY is divided into 32 semesters with 45 equinoxes each. In total, 1 GUY is equal to 1440 equinoxes.
+
+The calendar system begins at 1-1, 0 GUY, which is when the Galactic Union was founded. Dates before the GU’s inception are marked with a negative (-) GUY value; e.g. -142 GUY would be 142 GUYs before the GU's inception.
+
+==Units==
+
+===Standard units===
+{| class="vortox-table"
+!Unit
+!Abbr.
+!Relative to
+previous
+!in GUYs
+!Officially
+recognized?
+!Notes
+|-
+|trion
+|tr
+|
+|1.00 × 10<sup>-10</sup>
+|Yes
+|Further divisions are calculating by <math>\frac{n}{60}</math>, where <math>n</math>is the unit.
+|-
+|duon<br>second
+|du<br>sec
+|60 trions
+|6.03 × 10<sup>-9</sup>
+|Yes
+|
+|-
+|union<br>minute*
+|un<br>min
+|60 duons<br>60 seconds
+|3.62 × 10<sup>-7</sup>
+|Yes
+|
+|-
+|period<br>hour*
+|pr<br>hr
+|60 unions<br>60 minutes
+|2.89 × 10<sup>-5</sup>
+|Yes
+|
+|-
+|equinox<br>day*
+|eqx
+|24 periods<br>24 hours
+|6.94 × 10<sup>-4</sup>
+|Yes
+|
+|-
+|week
+|wk
+|9 equinoxes<br>9 days
+|6.25 × 10<sup>-3</sup>
+|No
+|
+|-
+|semester
+|sem<br>S
+|5 weeks
+|3.125 × 10<sup>-2</sup>
+|Yes
+|Also equal to 45 equinoxes (eqx).
+|-
+|Galactic Union Year
+|GUY
+|32 semesters
+|1
+|Yes
+|Also equal to 1440 equinoxes (eqx).
+|}
+<small>* These terms are purely from common use and not officially recognized by the Galactic Union.</small>
+
+===Notable conversions===
+Aside from the standard GU system, individual planets and factions might have their own local systems based on solar or lunar revolution.
+
+1 GUY is equivalent to:
+
+*3.945 or <math>\frac{288}{73}</math> [[Earth]] years
+*1.365 or <math>\frac{789}{578}</math> [[Lama'entria]] years
+*4.069 or <math>590\over145</math>Ottori years
+
+==Calendar==
+[[File:Calendar blue.png|thumb|The GUY calendar, with 5 rows and 9 columns.|alt=|400x400px]]
+The GUY standard calendar is formatted with 5 rows and 9 columns. Each group of 9 equinoxes is 1 week, and there are exactly 5 weeks per semester. Weeks are not official GU time units but are often used by the common people for convenience. Unlike the Earthen calendar, there are no leap days or leap years; every subdivision is static and does not change. This is necessary to keep the calendar system simple and consistent throughout the large expanse of the Galactic Union, and the Milky Way as a whole.
+
+Each week consists of 9 equinoxes: Turkal, Rezet, Ever, Rimbo, Overt, Elena, Mono, Eflo, and Rinns. The names of the days of the week are arbitrary, and are abbreviated in the calendar with the letters T-R-E-I-O-L-M-F-N. Officially, the 32 semesters do not have names, and are usually referred to by number; for example, the twelfth semester in a GUY might be written "S12" or "Sem12".

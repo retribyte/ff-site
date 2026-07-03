@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { Character, Message, Species } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
-import { formatDdMmYyyy } from '@/lib/dates';
+import { formatEarthDate, formatGuyDate, guyToEarthDate, guyWeekday } from '@/lib/guy-time';
 import { lineUrl } from '@/lib/seasons';
 import SignalLost from '@/components/SignalLost';
 import { getSessionUser } from '@/lib/auth';
@@ -92,7 +92,17 @@ export default async function CharacterPage({ params }: Props) {
     }
     const sexLabel = SEX_LABELS[character.sex];
     if (sexLabel) facts.push(['sex', sexLabel]);
-    if (character.dob !== null) facts.push(['born', `${formatDdMmYyyy(new Date(character.dob))} GUY`]);
+    if (character.dob !== null) {
+        facts.push([
+            'born',
+            <span key='dob'>
+                {guyWeekday(character.dob)}, {formatGuyDate(character.dob)} GUY
+                <small style={{ display: 'block', color: 'var(--text-muted)' }}>
+                    ≈ {formatEarthDate(guyToEarthDate(character.dob))}
+                </small>
+            </span>,
+        ]);
+    }
     if (character.pob) facts.push(['birthplace', character.pob]);
     if (character.homePlanet) facts.push(['home planet', character.homePlanet]);
     if (character.height !== null) facts.push(['height', `${character.height} m`]);

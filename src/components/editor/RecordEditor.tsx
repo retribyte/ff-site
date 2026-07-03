@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     EDITOR_SCHEMAS,
+    FieldValidationError,
     recordToValues,
     valuesToPayload,
     type EditorKind,
@@ -73,11 +74,21 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
         event.preventDefault();
         setBusy(true);
         setError(null);
+
+        let payload: Record<string, unknown>;
+        try {
+            payload = valuesToPayload(schema, values);
+        } catch (validation) {
+            setError(validation instanceof FieldValidationError ? validation.message : 'Invalid input');
+            setBusy(false);
+            return;
+        }
+
         try {
             const res = await fetch(`/api/ff${schema.basePath}${isEdit ? `/${recordId}` : ''}`, {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(valuesToPayload(schema, values)),
+                body: JSON.stringify(payload),
             });
             const envelope = (await res.json()) as Envelope;
             if (!res.ok || envelope.status === 'error') {
