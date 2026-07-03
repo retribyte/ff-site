@@ -1,0 +1,91 @@
+// Thin typed client for the ff-server API.
+// Standard envelope: { status: 'success', data: T } | { status: 'error', message: string }
+// Paginated endpoints spread extra fields onto the envelope:
+//   { status: 'success', data: T[], total, page, limit }
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000/api';
+
+export class ApiError extends Error {
+    constructor(
+        message: string,
+        public readonly httpStatus: number
+    ) {
+        super(message);
+        this.name = 'ApiError';
+    }
+}
+
+export interface Paged<T> {
+    data: T[];
+    total: number;
+    page: number;
+    limit: number;
+}
+
+interface RequestOptions {
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+    body?: unknown;
+    token?: string;
+    /** Next.js fetch cache options, e.g. { revalidate: 60 } */
+    next?: NextFetchRequestConfig;
+    cache?: RequestCache;
+}
+
+interface Envelope {
+    status: 'success' | 'error';
+    message?: string;
+    data?: unknown;
+    total?: number;
+    page?: number;
+    limit?: number;
+}
+
+async function request(path: string, options: RequestOptions): Promise<Envelope | undefined> {
+    const { method = 'GET', body, token, next, cache } = options;
+
+    const res = await fetch(`${API_URL}${path}`, {
+        method,
+        headers: {
+            Accept: 'application/json',
+            ...(body !== undefined && { 'Content-Type': 'application/json' }),
+            ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        ...(body !== undefined && { body: JSON.stringify(body) }),
+        ...(next && { next }),
+        ...(cache && { cache }),
+    });
+
+    if (res.status === 204) return undefined;
+
+    let envelope: Envelope;
+    try {
+        envelope = (await res.json()) as Envelope;
+    } catch {
+        throw new ApiError(`Unexpected non-JSON response (HTTP ${res.status})`, res.status);
+    }
+
+    if (envelope.status === 'error') {
+        throw new ApiError(envelope.message ?? 'Unknown API error', res.status);
+    }
+    if (!res.ok) {
+        throw new ApiError(`Request failed (HTTP ${res.status})`, res.status);
+    }
+
+    return envelope;
+}
+
+export async function api<T>(path: string, options: RequestOptions = {}): Promise<T> {
+    const envelope = await request(path, options);
+    return envelope?.data as T;
+}
+
+export async function apiPaged<T>(path: string, options: RequestOptions = {}): Promise<Paged<T>> {
+    const envelope = await request(path, options);
+    const data = (envelope?.data ?? []) as T[];
+    return {
+        data,
+        total: envelope?.total ?? data.length,
+        page: envelope?.page ?? 1,
+        limit: envelope?.limit ?? data.length,
+    };
+}

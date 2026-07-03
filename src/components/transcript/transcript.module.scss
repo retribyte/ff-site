@@ -1,0 +1,249 @@
+// ── Scan bar (in-episode search console) ─────────────────────────────────
+.scanBar {
+    position: sticky;
+    top: var(--navbar-height);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border-loud);
+    border-left: var(--px) solid var(--accent);
+    box-shadow: 2px 2px 0 0 var(--shadow);
+}
+
+.scanPrompt {
+    font-family: var(--font-mono);
+    color: var(--accent-soft);
+    user-select: none;
+}
+
+.scanInput {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    outline: none;
+
+    &::placeholder {
+        color: var(--text-muted);
+    }
+}
+
+.scanStatus {
+    font-family: var(--font-pixel);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.scanButton {
+    font-size: 0.7rem;
+    line-height: 1;
+    padding: 0.35rem 0.5rem;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border-loud);
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        background: var(--highlight);
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
+}
+
+// ── Transmission blocks ──────────────────────────────────────────────────
+.blocks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.block {
+    // --char is set inline per block to the speaker's color
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 0.75rem 0.9rem;
+    position: relative;
+
+    background: color-mix(in srgb, var(--char) 6%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--char) 22%, var(--border));
+    border-left: var(--px) solid var(--char);
+    box-shadow: 2px 2px 0 0 var(--shadow);
+
+    // Long transcripts stay responsive: offscreen blocks skip layout/paint
+    content-visibility: auto;
+    contain-intrinsic-size: auto 8rem;
+
+    &[data-target] {
+        border-color: color-mix(in srgb, var(--char) 65%, var(--border));
+        box-shadow:
+            2px 2px 0 0 var(--shadow),
+            0 0 12px color-mix(in srgb, var(--char) 50%, transparent);
+    }
+
+    &:hover .anchor,
+    &:focus-within .anchor {
+        opacity: 1;
+    }
+
+    mark {
+        background: var(--accent-2);
+        color: #1a1c22;
+        padding: 0 2px;
+    }
+}
+
+.blockBody {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.blockHeader {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.speaker {
+    font-family: var(--font-display);
+    font-size: 1.02rem;
+    color: var(--char);
+    text-shadow: 1px 1px 0 var(--shadow);
+}
+
+.playedBy {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+
+    &::before {
+        content: '⌁ ';
+    }
+}
+
+.timestamp {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-style: italic;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+// ── Message type treatments ──────────────────────────────────────────────
+.plain,
+.action,
+.command {
+    margin: 0;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.action {
+    font-style: italic;
+    color: color-mix(in srgb, var(--text) 82%, var(--char));
+}
+
+.command {
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    color: var(--char);
+    background: color-mix(in srgb, var(--char) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--char) 45%, transparent);
+    border-radius: var(--radius);
+    padding: 0.3rem 0.55rem;
+}
+
+.embed {
+    background: color-mix(in srgb, var(--char) 10%, var(--surface-2));
+    border-left: var(--px) solid color-mix(in srgb, var(--char) 60%, var(--border-loud));
+    padding: 0.55rem 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    p {
+        margin: 0;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+    }
+}
+
+.embedTitle {
+    font-family: var(--font-display);
+}
+
+.embedFooter {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+// ── Anchor copy button ───────────────────────────────────────────────────
+.anchor {
+    position: absolute;
+    bottom: 0.4rem;
+    right: 0.4rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    opacity: 0;
+    font-family: var(--font-pixel);
+    font-size: 0.75rem;
+    line-height: 1;
+    color: var(--char);
+    background: var(--surface-2);
+    border: 1px solid color-mix(in srgb, var(--char) 45%, var(--border-loud));
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: opacity 0.12s ease-out;
+
+    &:hover {
+        background: color-mix(in srgb, var(--char) 15%, var(--surface-2));
+    }
+
+    &:focus-visible {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 640px) {
+    .block {
+        gap: 0.6rem;
+        padding: 0.6rem;
+    }
+
+    .timestamp {
+        display: none;
+    }
+
+    // No hover on touch — keep the anchor reachable
+    .anchor {
+        opacity: 0.5;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .anchor {
+        transition: none;
+    }
+}

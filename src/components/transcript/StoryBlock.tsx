@@ -1,0 +1,177 @@
+'use client';
+
+import { memo, useState } from 'react';
+import { useTheme } from '@/components/theme/ThemeProvider';
+import { characterColor } from '@/lib/characterColors';
+import PixelAvatar from './PixelAvatar';
+import type { Block, SlimMessage, TranscriptData } from './TranscriptReader';
+import styles from './transcript.module.scss';
+
+function formatTimestamp(iso: string | null): string | null {
+    if (!iso) return null;
+    return new Date(iso).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZone: 'UTC',
+    });
+}
+
+/** Wraps search hits in <mark>; safe because we only ever render text nodes. */
+function Highlighted({ text, query }: { text: string; query: string | null }) {
+    if (!query) return <>{text}</>;
+    const lower = text.toLowerCase();
+    const q = query.toLowerCase();
+    if (!lower.includes(q)) return <>{text}</>;
+
+    const parts: React.ReactNode[] = [];
+    let cursor = 0;
+    let hit = lower.indexOf(q);
+    while (hit !== -1) {
+        if (hit > cursor) parts.push(text.slice(cursor, hit));
+        parts.push(<mark key={hit}>{text.slice(hit, hit + q.length)}</mark>);
+        cursor = hit + q.length;
+        hit = lower.indexOf(q, cursor);
+    }
+    parts.push(text.slice(cursor));
+    return <>{parts}</>;
+}
+
+interface Embed {
+    title?: string;
+    description?: string[];
+    footer?: string;
+}
+
+function parseEmbed(text: string): Embed | null {
+    try {
+        const parsed = JSON.parse(text);
+        return typeof parsed === 'object' && parsed !== null ? (parsed as Embed) : null;
+    } catch {
+        return null;
+    }
+}
+
+function MessageLine({ message, query }: { message: SlimMessage; query: string | null }) {
+    switch (message.type) {
+        case 'COMMAND':
+            return (
+                <p className={styles.command}>
+                    <Highlighted text={message.text} query={query} />
+                </p>
+            );
+        case 'ACTION':
+            return (
+                <p className={styles.action}>
+                    <Highlighted text={message.text} query={query} />
+                </p>
+            );
+        case 'EMBED': {
+            const embed = parseEmbed(message.text);
+            if (!embed) {
+                return (
+                    <div className={styles.embed}>
+                        <p>
+                            <Highlighted text={message.text} query={query} />
+                        </p>
+                    </div>
+                );
+            }
+            return (
+                <div className={styles.embed}>
+                    {embed.title && <p className={styles.embedTitle}>{embed.title}</p>}
+                    {(embed.description ?? []).map((line, i) => (
+                        <p key={i}>
+                            <Highlighted text={line} query={query} />
+                        </p>
+                    ))}
+                    {embed.footer && <p className={styles.embedFooter}>{embed.footer}</p>}
+                </div>
+            );
+        }
+        default:
+            // QUOTE, BOT_RESPONSE, OTHER — plain transmission text
+            return (
+                <p className={styles.plain}>
+                    <Highlighted text={message.text} query={query} />
+                </p>
+            );
+    }
+}
+
+interface Props {
+    block: Block;
+    characters: TranscriptData['characters'];
+    players: TranscriptData['players'];
+    targetNo: number | null;
+    query: string | null;
+    currentMatchNo: number | null;
+}
+
+function StoryBlock({ block, characters, players, targetNo, query, currentMatchNo }: Props) {
+    const { colorMode } = useTheme();
+    const [copied, setCopied] = useState(false);
+
+    const character = block.characterId !== null ? characters[block.characterId] : null;
+    const player = players[block.playerId];
+    const speaker = character?.name ?? player?.name ?? 'Unknown';
+    // Characterless speakers (the bot, table talk) still get legacy-table colors by name
+    const color = characterColor(speaker, character?.color ?? null, colorMode);
+    const avatarSrc = character?.image ?? player?.icon ?? null;
+
+    const isTarget =
+        targetNo !== null && block.messages.some((m) => m.no === targetNo);
+    const hasCurrentMatch =
+        currentMatchNo !== null && block.messages.some((m) => m.no === currentMatchNo);
+
+    const copyAnchor = () => {
+        const url = `${window.location.origin}${window.location.pathname}?line=${block.key}`;
+        navigator.clipboard.writeText(url).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1200);
+        });
+    };
+
+    return (
+        <li
+            className={styles.block}
+            style={{ '--char': color } as React.CSSProperties}
+            data-target={isTarget || hasCurrentMatch || undefined}
+        >
+            <PixelAvatar src={avatarSrc} name={speaker} color={color} />
+
+            <div className={styles.blockBody}>
+                <div className={styles.blockHeader}>
+                    <span className={styles.speaker}>{speaker}</span>
+                    {character && player && character.name !== player.name && (
+                        <span className={styles.playedBy}>{player.name}</span>
+                    )}
+                    {block.timestamp && (
+                        <time className={styles.timestamp} dateTime={block.timestamp}>
+                            {formatTimestamp(block.timestamp)}
+                        </time>
+                    )}
+                </div>
+                {block.messages.map((message) => (
+                    <div key={message.no} id={`m-${message.no}`}>
+                        <MessageLine message={message} query={query} />
+                    </div>
+                ))}
+            </div>
+
+            <button
+                type='button'
+                className={styles.anchor}
+                onClick={copyAnchor}
+                aria-label={`Copy link to line ${block.key}`}
+                title='Copy link to this line'
+            >
+                {copied ? '✓' : '#'}
+            </button>
+        </li>
+    );
+}
+
+export default memo(StoryBlock);

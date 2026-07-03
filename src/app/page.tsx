@@ -1,66 +1,52 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from 'next/link';
+import styles from './page.module.scss';
+
+const seasons = [
+    { id: 'ff1', title: 'Final Frontier 1', colorVar: '--ff1' },
+    { id: 'ff2', title: 'Final Frontier 2', colorVar: '--ff2' },
+    { id: 'ff3', title: 'Final Frontier 3', colorVar: '--ff3' },
+    { id: 'ff4', title: 'Final Frontier 4', colorVar: '--ff4' },
+];
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    return (
+        <main className={styles.main}>
+            <section className={styles.hero}>
+                <p className='pixel-label'>★ you have reached the ★</p>
+                <h1 className={styles.title}>Final Frontier</h1>
+                <p className={styles.tagline}>
+                    The canonical archive of the Vortox universe — campaign transcripts, characters, species, and
+                    assorted lore<span className='blink'>▌</span>
+                </p>
+            </section>
+
+            <div className='star-divider'>✦ ✧ ✦</div>
+
+            <section className={styles.doors}>
+                <Link href='/archives' className={`pixel-panel ${styles.door}`}>
+                    <h2>Archives</h2>
+                    <p>Read the finished campaigns, episode by episode.</p>
+                    <ul className={styles.seasonChips}>
+                        {seasons.map((s) => (
+                            <li key={s.id} style={{ color: `var(${s.colorVar})` }}>
+                                {s.id.toUpperCase()}
+                            </li>
+                        ))}
+                    </ul>
+                </Link>
+
+                <Link href='/cyoa' className={`pixel-panel ${styles.door}`}>
+                    <h2>Vortox Machina</h2>
+                    <p>The choose-your-own-adventure chronicle.</p>
+                    <span className='pixel-label' style={{ color: 'var(--vm)' }}>
+                        CYOA
+                    </span>
+                </Link>
+            </section>
+
+            <footer className={styles.footer}>
+                <span className='pixel-label'>est. GUY unknown · best viewed in any browser</span>
+            </footer>
+        </main>
+    );
 }
