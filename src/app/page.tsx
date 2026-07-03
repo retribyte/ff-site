@@ -16,7 +16,8 @@ export default function Home() {
                 <h1 className={styles.title}>Final Frontier</h1>
                 <p className={styles.tagline}>
                     The canonical archive of the Vortox universe — campaign transcripts, characters, species, and
-                    assorted lore<span className='blink'>▌</span>
+                    assorted lore
+                    {/* <span className='blink'>▌</span> */}
                 </p>
             </section>
 

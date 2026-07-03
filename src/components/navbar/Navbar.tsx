@@ -13,6 +13,7 @@ const links = [
     { href: '/characters', label: 'Characters' },
     { href: '/species', label: 'Species' },
     { href: '/items', label: 'Items' },
+    { href: '/convert', label: 'Convert' },
 ];
 
 function SessionArea() {

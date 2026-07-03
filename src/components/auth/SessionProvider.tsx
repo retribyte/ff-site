@@ -35,9 +35,24 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
+    // Initial session load; all setState happens after the fetch resolves
     useEffect(() => {
-        void refresh();
-    }, [refresh]);
+        let cancelled = false;
+        fetch('/api/auth/me')
+            .then((res) => res.json())
+            .then((data: { user: SessionUser | null }) => {
+                if (!cancelled) setUser(data.user);
+            })
+            .catch(() => {
+                if (!cancelled) setUser(null);
+            })
+            .finally(() => {
+                if (!cancelled) setLoading(false);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     const logout = useCallback(async () => {
         await fetch('/api/auth/logout', { method: 'POST' });

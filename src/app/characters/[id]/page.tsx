@@ -79,6 +79,9 @@ export default async function CharacterPage({ params }: Props) {
 
     const aliases = character.aliases ?? [];
     const relationships = character.relationships ?? [];
+    // Fresh random intercepts on every visit — intentional impurity on a
+    // dynamic server-rendered route (nothing rehydrates against it).
+    // eslint-disable-next-line react-hooks/purity
     const sampleQuotes = [...quotes].sort(() => Math.random() - 0.5).slice(0, 3);
 
     const facts: [string, React.ReactNode][] = [];
