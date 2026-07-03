@@ -4,7 +4,9 @@ import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { Species } from '@/lib/types';
 import { SENTIENCE_LABELS } from '@/lib/lore';
+import { getSessionUser } from '@/lib/auth';
 import SignalLost from '@/components/SignalLost';
+import ActionChip from '@/components/editor/ActionChip';
 import CharacterCard from '@/components/characters/CharacterCard';
 import WikiLink from '@/components/WikiLink';
 import styles from './speciesDetail.module.scss';
@@ -49,6 +51,9 @@ export default async function SpeciesPage({ params }: Props) {
     }
     if (!species) notFound();
 
+    const user = await getSessionUser();
+    const canEdit = user !== null && (user.role === 'ADMIN' || user.id === species.creatorId);
+
     const members = [...(species.Character ?? [])].sort((a, b) => {
         const rank = (c: { image: string | null; themeColor: string | null }) =>
             c.image ? 0 : c.themeColor ? 1 : 2;
@@ -73,6 +78,7 @@ export default async function SpeciesPage({ params }: Props) {
                     <div className={styles.nameRow}>
                         <h1 className={styles.name}>{species.name}</h1>
                         <WikiLink article={species.wikiArticle} />
+                        {canEdit && <ActionChip href={`/species/${species.id}/edit`} label='edit ✎' />}
                     </div>
                     {species.binomialName && <p className={styles.binomial}>{species.binomialName}</p>}
 

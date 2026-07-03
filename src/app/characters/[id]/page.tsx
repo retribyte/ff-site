@@ -6,7 +6,9 @@ import type { Character, Message, Species } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
 import { lineUrl } from '@/lib/seasons';
 import SignalLost from '@/components/SignalLost';
+import { getSessionUser } from '@/lib/auth';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
+import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
 import styles from './character.module.scss';
 
@@ -68,6 +70,9 @@ export default async function CharacterPage({ params }: Props) {
     }
     if (!character) notFound();
 
+    const user = await getSessionUser();
+    const canEdit = user !== null && (user.role === 'ADMIN' || user.id === character.creatorId);
+
     // Both theme variants go on the page root; CSS picks per data-theme
     const style = {
         '--char-dark': characterColor(character.name, character.themeColor, 'dark'),
@@ -108,6 +113,7 @@ export default async function CharacterPage({ params }: Props) {
                     <div className={styles.nameRow}>
                         <h1 className={styles.name}>{character.name}</h1>
                         <WikiLink article={character.wikiArticle} />
+                        {canEdit && <ActionChip href={`/characters/${character.id}/edit`} label='edit ✎' />}
                     </div>
                     {aliases.length > 0 && (
                         <p className={styles.aliases}>

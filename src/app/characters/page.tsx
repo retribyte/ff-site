@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { api } from '@/lib/api';
 import type { Character, Species } from '@/lib/types';
+import { getSessionUser } from '@/lib/auth';
 import SignalLost from '@/components/SignalLost';
+import ActionChip from '@/components/editor/ActionChip';
 import CharacterIndex from '@/components/characters/CharacterIndex';
 import styles from './characters.module.scss';
 
@@ -12,6 +14,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function CharactersPage() {
+    const user = await getSessionUser();
     let characters: Character[];
     let species: Species[];
     try {
@@ -35,6 +38,7 @@ export default async function CharactersPage() {
             <header className={styles.header}>
                 <h1>Dramatis Personae</h1>
                 <p className='pixel-label'>{characters.length} beings on record</p>
+                {user && <ActionChip href='/characters/new' label='+ record a new being' />}
             </header>
             <CharacterIndex
                 characters={sorted.map((c) => ({

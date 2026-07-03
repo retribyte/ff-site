@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import type { Species } from '@/lib/types';
 import { SENTIENCE_LABELS } from '@/lib/lore';
+import { getSessionUser } from '@/lib/auth';
 import SignalLost from '@/components/SignalLost';
+import ActionChip from '@/components/editor/ActionChip';
 import styles from './species.module.scss';
 
 export const metadata: Metadata = {
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function SpeciesIndexPage() {
+    const user = await getSessionUser();
     let species: Species[];
     try {
         species = await api<Species[]>('/species');
@@ -31,6 +34,7 @@ export default async function SpeciesIndexPage() {
             <header className={styles.header}>
                 <h1>Xenobiology Index</h1>
                 <p className='pixel-label'>{species.length} taxa on record</p>
+                {user && <ActionChip href='/species/new' label='+ catalogue a taxon' />}
             </header>
 
             {sorted.length === 0 && (

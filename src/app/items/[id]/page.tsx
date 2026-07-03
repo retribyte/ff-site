@@ -5,7 +5,9 @@ import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { Item } from '@/lib/types';
 import { ITEM_TYPE_META } from '@/lib/lore';
+import { getSessionUser } from '@/lib/auth';
 import SignalLost from '@/components/SignalLost';
+import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
 import styles from './itemDetail.module.scss';
 
@@ -49,6 +51,9 @@ export default async function ItemPage({ params }: Props) {
     }
     if (!item) notFound();
 
+    const user = await getSessionUser();
+    const canEdit = user !== null && (user.role === 'ADMIN' || user.id === item.creatorId);
+
     const meta = ITEM_TYPE_META[item.itemType];
 
     return (
@@ -62,6 +67,7 @@ export default async function ItemPage({ params }: Props) {
                     <div className={styles.nameRow}>
                         <h1 className={styles.name}>{item.name}</h1>
                         <WikiLink article={item.wikiArticle} />
+                        {canEdit && <ActionChip href={`/items/${item.id}/edit`} label='edit ✎' />}
                     </div>
                     <p className={styles.typeLine}>
                         <span className={styles.typeChip}>
