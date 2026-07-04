@@ -1,0 +1,124 @@
+{
+    "seasonTitle": "FF3",
+    "usernames": {
+        "Zander": "Zander",
+        "Trey Moment": "Trey",
+        "Sean.": "Sean",
+        "Lili": "Lili",
+        "Brody": "Brody",
+        "Rashidi": "Rashidi",
+        "Jonas": "Jonas",
+        "Hyper-Realistic Blood.": "Cooldude",
+        "Sib": "Silas",
+        "Multi": "Bill",
+        "Michael": "Michael",
+        "ScootyDooty": "Preston",
+        "Hunter": "Hunter",
+        "Tatsu": "FFBot",
+        "Æsir": "Charles",
+        "FF 8Ball": "FFBot"
+    },
+    "bots": [
+        "FFBot"
+    ],
+    "cast": {
+        "Zander": {
+            "1": "Emmett"
+        },
+        "Trey": {
+            "1": "Garrick"
+        },
+        "Sean": {
+            "1": "Seth"
+        },
+        "Lili": {
+            "1": "Iris"
+        },
+        "Brody": {
+            "1": "Sanya"
+        },
+        "Rashidi": {
+            "1": "Dakari"
+        },
+        "Jonas": {
+            "1": "Chomsky"
+        },
+        "Cooldude": {
+            "1": "Wemmfort"
+        },
+        "Silas": {
+            "1": "Wes"
+        },
+        "Bill": {
+            "1": "Burner"
+        },
+        "Michael": {
+            "1": "Theylin"
+        },
+        "Preston": {
+            "1": "Volentina"
+        },
+        "Hunter": {
+            "1": "Rachell"
+        },
+        "Charles": {
+            "1": "Vargas"
+        }
+    },
+    "episodes": [
+        {
+            "title": "",
+            "file_name": "0-prep",
+            "episode_number": 0,
+            "short_desc": ""
+        },
+        {
+            "title": "",
+            "file_name": "1",
+            "episode_number": 1,
+            "short_desc": ""
+        },
+        {
+            "title": "",
+            "file_name": "2",
+            "episode_number": 2,
+            "short_desc": ""
+        },
+        {
+            "title": "",
+            "file_name": "3",
+            "episode_number": 3,
+            "short_desc": ""
+        },
+        {
+            "title": "",
+            "file_name": "4",
+            "episode_number": 4,
+            "short_desc": ""
+        },
+        {
+            "title": "",
+            "file_name": "5",
+            "episode_number": 5,
+            "short_desc": ""
+        },
+        {
+            "title": "",
+            "file_name": "6",
+            "episode_number": 6,
+            "short_desc": ""
+        },
+        {
+            "title": "",
+            "file_name": "7",
+            "episode_number": 7,
+            "short_desc": ""
+        },
+        {
+            "title": "",
+            "file_name": "8",
+            "episode_number": 8,
+            "short_desc": ""
+        }
+    ]
+}

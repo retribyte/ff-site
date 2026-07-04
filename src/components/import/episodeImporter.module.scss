@@ -1,0 +1,218 @@
+.importer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 1.75rem 1rem;
+    border-style: dashed;
+    cursor: pointer;
+    text-align: center;
+
+    input {
+        display: none;
+    }
+
+    &:hover {
+        border-color: var(--accent-soft);
+        box-shadow: var(--glow);
+    }
+}
+
+.dropHint {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.preview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.5rem;
+
+    h2,
+    h3 {
+        margin: 0;
+    }
+
+    h3 {
+        padding-top: 0.6rem;
+        border-top: 1px dashed var(--border-loud);
+    }
+}
+
+.facts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0;
+
+    div {
+        display: grid;
+        grid-template-columns: 6.5rem 1fr;
+        gap: 0.75rem;
+    }
+
+    dt {
+        font-family: var(--font-pixel);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        padding-top: 0.2rem;
+    }
+
+    dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+.badge,
+.badgeWarn {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-left: 0.4rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--radius);
+}
+
+.badge {
+    color: var(--ff3);
+    border: 1px dashed var(--ff3);
+}
+
+.badgeWarn {
+    color: var(--vm);
+    border: 1px dashed var(--vm);
+}
+
+.mappings {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.4rem 1rem;
+    margin: 0;
+    padding: 0;
+
+    li {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    select {
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border-loud);
+        border-radius: var(--radius);
+        padding: 0.3rem 0.4rem;
+        cursor: pointer;
+        min-width: 0;
+
+        &:focus {
+            outline: none;
+            border-color: var(--accent-soft);
+        }
+    }
+}
+
+.mapName {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--border-loud);
+}
+
+.upload {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, #000) 100%);
+    border: var(--px) solid color-mix(in srgb, var(--accent) 60%, var(--border-loud));
+    border-radius: var(--radius);
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+
+    &:hover:not(:disabled) {
+        filter: brightness(1.15);
+        box-shadow: var(--glow);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
+}
+
+.progress {
+    flex: 1;
+    accent-color: var(--accent);
+}
+
+.error {
+    margin: 0;
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--ff1);
+}
+
+.success {
+    margin: 0;
+    font-family: var(--font-pixel);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--ff3);
+
+    a {
+        color: var(--link);
+    }
+}
+
+.hint {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.failure {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.eject {
+    font-family: var(--font-pixel);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--ff1);
+    border: 1px solid var(--ff1-2);
+    border-radius: var(--radius);
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(1.15);
+    }
+}

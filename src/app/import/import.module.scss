@@ -1,0 +1,44 @@
+.main {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+}
+
+.header {
+    margin-bottom: 1.5rem;
+
+    h1 {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        margin: 0 0 0.35rem;
+    }
+}
+
+.tagline {
+    margin: 0;
+    color: var(--text-muted);
+
+    code {
+        font-family: var(--font-mono);
+        font-size: 0.85em;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0.1rem 0.35rem;
+    }
+}
+
+.restricted {
+    max-width: 28rem;
+    margin: 3rem auto;
+    padding: 1.5rem;
+    text-align: center;
+
+    p {
+        margin: 0.5rem 0 0;
+    }
+
+    a {
+        color: var(--link);
+    }
+}

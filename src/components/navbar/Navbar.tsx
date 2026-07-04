@@ -47,6 +47,8 @@ function SessionArea() {
 export default function Navbar() {
     const pathname = usePathname();
     const { colorMode, toggleColorMode } = useTheme();
+    const { user } = useSession();
+    const navLinks = user?.role === 'ADMIN' ? [...links, { href: '/import', label: 'Import' }] : links;
 
     return (
         <header className={styles.navbar}>
@@ -56,7 +58,7 @@ export default function Navbar() {
             </Link>
 
             <nav className={styles.links} aria-label='Primary'>
-                {links.map(({ href, label }) => (
+                {navLinks.map(({ href, label }) => (
                     <Link
                         key={href}
                         href={href}
