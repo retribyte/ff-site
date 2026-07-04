@@ -52,7 +52,7 @@ export function guyDateToEquinoxes({ year, semester, equinox }: GuyDate): number
 /** "4-2-3022" (equinox-semester-year). Append " GUY" yourself where wanted. */
 export function formatGuyDate(equinoxes: number): string {
     const { year, semester, equinox } = equinoxesToGuyDate(equinoxes);
-    return `${equinox}-${semester}-${year}`;
+    return `${equinox} of ${semester}, ${year}`;
 }
 
 /**

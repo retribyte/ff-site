@@ -79,8 +79,10 @@ export default async function ItemPage({ params }: Props) {
 
                     {item.character && (
                         <p className={styles.bearer}>
-                            <span className='pixel-label'>held by </span>
-                            <Link href={`/characters/${item.character.id}`}>{item.character.name}</Link>
+                            <span className='pixel-label'>
+                                held by&nbsp;
+                                <Link href={`/characters/${item.character.id}`}>{item.character.name}</Link>
+                            </span>
                         </p>
                     )}
                 </article>

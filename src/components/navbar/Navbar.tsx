@@ -53,7 +53,7 @@ export default function Navbar() {
     return (
         <header className={styles.navbar}>
             <Link href='/' className={styles.brand}>
-                <span className={styles.brandMark}>✦</span>
+                <img src='/images/logo.svg' width={32} height={32} alt='Final Frontier' className={styles.brandMark} />
                 Final Frontier
             </Link>
 

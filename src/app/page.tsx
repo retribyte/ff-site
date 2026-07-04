@@ -12,10 +12,13 @@ export default function Home() {
     return (
         <main className={styles.main}>
             <section className={styles.hero}>
-                <p className='pixel-label'>★ you have reached the ★</p>
+                <p className='pixel-label'>★ Welcome to the home of ★</p>
                 <h1 className={styles.title}>Final Frontier</h1>
                 <p className={styles.tagline}>
-                    The canonical archive of the Vortox universe — campaign transcripts, characters, species, and
+                    The canonical archive of the Final Frontier universe
+                </p>
+                <p className={styles.tagline}>
+                    campaign transcripts, characters, species, and
                     assorted lore
                     {/* <span className='blink'>▌</span> */}
                 </p>
