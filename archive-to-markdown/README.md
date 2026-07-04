@@ -18,10 +18,14 @@ DiscordChatExporter HTML  ──ff2.py / ff3.py──▶  markdown  ──md-to-
    The markdown is the *editing* format: fix typos, reattribute lines, trim
    table talk there.
 
-2. **markdown → episode JSON** — `python3 md-to-api.py <season> [file.md ...]`
-   (stdlib only). Reads `meta/<season>.json`, writes API-ready payloads to
-   `api/<season>/` (gitignored). Episodes without a `title` in the meta file
-   are skipped, so fill that in first.
+2. **markdown → episode JSON** — `python3 md-to-api.py` (stdlib only).
+   Run it **without arguments for the interactive wizard**: it walks through
+   season (existing or scaffolds a new meta file), markdown file, episode
+   number, title, and short description, saves the answers back into
+   `meta/<season>.json`, and converts. Or batch:
+   `python3 md-to-api.py <season> [file.md ...]` converts every episode
+   already titled in the meta file. Output lands in `api/<season>/`
+   (gitignored).
 
 3. **upload** — log in as an admin on the site and feed the JSON to
    `/import`. It resolves player/character names against the database (with
