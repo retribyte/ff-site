@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { api } from '@/lib/api';
 import type { Species } from '@/lib/types';
-import { SENTIENCE_LABELS } from '@/lib/lore';
 import { getSessionUser } from '@/lib/auth';
 import SignalLost from '@/components/SignalLost';
 import ActionChip from '@/components/editor/ActionChip';
+import SpeciesIndex from '@/components/species/SpeciesIndex';
 import styles from './species.module.scss';
 
 export const metadata: Metadata = {
@@ -36,32 +35,15 @@ export default async function SpeciesIndexPage() {
                 <p className='pixel-label'>{species.length} taxa on record</p>
                 {user && <ActionChip href='/species/new' label='+ catalogue a taxon' />}
             </header>
-
-            {sorted.length === 0 && (
-                <p className='pixel-label' style={{ textAlign: 'center', padding: '3rem 0' }}>
-                    no taxa catalogued yet
-                </p>
-            )}
-
-            <ul className={styles.grid}>
-                {sorted.map((s) => {
-                    const members = s.Character?.length ?? 0;
-                    return (
-                        <li key={s.id}>
-                            <Link href={`/species/${s.id}`} className={styles.card}>
-                                <span className={styles.cardName}>{s.name}</span>
-                                {s.binomialName && <span className={styles.cardBinomial}>{s.binomialName}</span>}
-                                <span className={styles.cardMeta}>
-                                    <span className={styles.classChip}>{SENTIENCE_LABELS[s.class]}</span>
-                                    <span className='pixel-label'>
-                                        {members} member{members === 1 ? '' : 's'}
-                                    </span>
-                                </span>
-                            </Link>
-                        </li>
-                    );
-                })}
-            </ul>
+            <SpeciesIndex
+                species={sorted.map((s) => ({
+                    id: s.id,
+                    name: s.name,
+                    binomialName: s.binomialName,
+                    class: s.class,
+                    members: s.Character?.length ?? 0,
+                }))}
+            />
         </main>
     );
 }

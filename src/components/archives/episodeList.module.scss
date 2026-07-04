@@ -1,0 +1,94 @@
+.episodes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+// One episode row: a panel with the number as a big Righteous numeral
+.episode {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0.9rem 1.25rem;
+    text-decoration: none;
+    color: var(--text);
+
+    background:
+        var(--star-texture),
+        linear-gradient(120deg, color-mix(in srgb, var(--season) 16%, var(--surface)) 0%, var(--surface) 55%);
+    background-size: 120px, auto;
+    border: 1px solid color-mix(in srgb, var(--season) 35%, var(--border));
+    border-left: var(--px) solid var(--season);
+    box-shadow: 2px 2px 0 0 var(--shadow);
+
+    transition:
+        transform 0.12s ease-out,
+        box-shadow 0.12s ease-out;
+
+    &:hover,
+    &:focus-visible {
+        background:
+            var(--star-texture),
+            linear-gradient(120deg, color-mix(in srgb, var(--season) 26%, var(--surface)) 0%, var(--surface-2) 60%);
+        background-size: 120px, auto;
+        transform: translateX(var(--px));
+        box-shadow:
+            2px 2px 0 0 var(--shadow),
+            0 0 14px color-mix(in srgb, var(--season) 35%, transparent);
+    }
+}
+
+.episodeNo {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--season);
+    text-shadow: 2px 2px 0 var(--shadow);
+    min-width: 2.6rem;
+    text-align: right;
+}
+
+.episodeBody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.episodeTitle {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+}
+
+.episodeSummary {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+}
+
+.episodeDate {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .episode {
+        gap: 0.8rem;
+        padding: 0.75rem 0.9rem;
+    }
+
+    .episodeDate {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .episode {
+        transition: none;
+    }
+}
