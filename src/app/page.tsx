@@ -46,7 +46,7 @@ export default function Home() {
             </section>
 
             <footer className={styles.footer}>
-                <span className='pixel-label'>est. GUY unknown · best viewed in any browser</span>
+                <span className='pixel-label'>est. 981 GUY · best viewed in any browser</span>
             </footer>
         </main>
     );
