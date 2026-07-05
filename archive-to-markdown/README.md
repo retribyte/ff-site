@@ -86,11 +86,20 @@ color and parses without dependencies, so that's the input:
 `python3 story-docx-to-md.py <manuscript>.docx`.
 
 The first run is a wizard: it prompts for story metadata (title/slug/blurb
-default from the doc's Title and Subtitle styles) and shows each distinct
-text color with sample lines so you can name the speaker — an empty answer
-means "narration ink, not a voice". Answers are saved to
-`meta/stories/<slug>.json` and reused; `--batch --slug <slug>` re-converts
-non-interactively and fails with a report if any color is unmapped.
+default from the doc's Title and Subtitle styles), a `format` (`script` or
+`prose` — see below), and shows each distinct text color with sample lines so
+you can name the speaker — an empty answer means "narration ink, not a voice".
+Answers are saved to `meta/stories/<slug>.json` and reused; `--batch --slug
+<slug>` re-converts non-interactively and fails with a report if the title,
+format, or any color is missing.
+
+**`script` vs `prose`.** In `script` stories (e.g. Vortox Machina) narration
+and dialogue are written as separate whole paragraphs. In `prose` (novel-style)
+stories dialogue is embedded inside narration paragraphs — `The man stood up,
+"I have something to say," he said.` with only the quote colored. Set
+`format: prose` and a mixed paragraph converts to a single narration line with
+inline `[spoken]{Speaker}` spans instead of being split into comma-fragment
+lines. The reader colors each span and shows a voice legend.
 
 How a Doc is read:
 
@@ -99,15 +108,15 @@ How a Doc is read:
 | Title / Subtitle styles | frontmatter `title` / `blurb` defaults |
 | Heading 1 or 2 | chapter break (`Chapter N: ...` numbering honored) |
 | paragraph wholly in a mapped color | `> Name:` dialogue line (a typed `Name:` prefix is stripped) |
-| colored span inside a paragraph | paragraph splits into narration + dialogue lines |
+| colored span inside a paragraph | **script:** paragraph splits into narration + dialogue lines · **prose:** kept in one paragraph as an inline `[span]{Speaker}` |
 | wholly italic paragraph | `_action_` line |
 | consecutive monospace paragraphs | one ```` ```transcript ```` block |
 | horizontal rule, `***`, `- - -` | `***` scene break |
 
 Other inline formatting is flattened to plain text. Always review the
-generated markdown before uploading — prose-style paragraphs leave their
-dialogue tags ("...Vex said.") as small narration fragments you may want to
-merge or trim.
+generated markdown before uploading — in `script` mode, prose-style paragraphs
+leave their dialogue tags ("...Vex said.") as small narration fragments you may
+want to merge or trim (or switch the story to `prose`).
 
 `python3 story-md-to-api.py md/stories/<slug>.md` converts;
 add `--upload [--api http://localhost:3000/api]` to log in and POST the
@@ -115,8 +124,8 @@ story, its chapters, and bulk lines directly. Uploading aborts if the slug
 already exists (delete the story via the API to re-upload a revision).
 
 Story metadata lives in the manuscript's frontmatter (`slug` and `title`
-required; `blurb`, `author`, `published`, `themeColor`, `themeColor2`
-optional). Body format:
+required; `blurb`, `author`, `published`, `themeColor`, `themeColor2`, `format`
+optional — `format` defaults to `script`). Body format:
 
 ````
 # Chapter 1: The Signal             "# Chapter N[: Title]" starts a chapter;
@@ -124,16 +133,25 @@ optional). Body format:
 A plain paragraph.                  NARRATION (one line per paragraph)
 > Emmett: line                      DIALOGUE by Emmett
 > ?: line                           DIALOGUE, unknown speaker
+The lock clicked. ["Move,"]{Emmett} she hissed.
+                                    NARRATION with an inline dialogue span —
+                                    [spoken]{Speaker}. Stays ONE line; the
+                                    span is colored by speaker in the reader.
 _action line_                       ACTION (a choice, CYOA-style)
 ```transcript … ```                 one TRANSCRIPT line (VCOMM fragment);
                                     interior blank lines = paragraph breaks
 ***                                 BREAK (scene break)
 ````
 
-At upload, dialogue speakers are resolved against `/characters` (exact name,
-then aliases); unmatched names are kept as display-name fallbacks and listed
-in a warning. The `author` frontmatter is matched against the uploader (or
-the user list, when uploading as an admin).
+Inline `[spoken]{Speaker}` spans work regardless of `format` — the segment
+texts concatenate verbatim (markers stripped) back to the paragraph's prose, so
+the server stores the clean paragraph in `text` with the spans as annotations.
+
+At upload, dialogue speakers — whole `> Name:` lines and inline `[…]{Speaker}`
+spans alike — are resolved against `/characters` (exact name, then aliases);
+unmatched names are kept as display-name fallbacks and listed in a warning. The
+`author` frontmatter is matched against the uploader (or the user list, when
+uploading as an admin).
 
 ## Sanity check
 

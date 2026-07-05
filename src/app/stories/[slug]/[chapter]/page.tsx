@@ -62,7 +62,8 @@ export default async function StoryChapterPage({ params }: Props) {
     const prev = index > 0 ? chapters[index - 1] : null;
     const next = index < chapters.length - 1 ? chapters[index + 1] : null;
 
-    const data = slimStoryChapter(slug, chapter.chapter_no, await fetchAllLines(slug, chapter.chapter_no));
+    const { lines, characters } = await fetchAllLines(slug, chapter.chapter_no);
+    const data = slimStoryChapter(slug, chapter.chapter_no, story.format, lines, characters);
     const choices = data.lines.filter((l) => l.type === 'ACTION').map((l) => ({ no: l.no, text: l.text }));
 
     const colors = storyColors(story);

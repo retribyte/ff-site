@@ -7,6 +7,7 @@ export type SentienceClass = 'BLACK' | 'HIGHER_SENTIENT' | 'LOWER_SENTIENT' | 'N
 export type MessageType = 'BOT_RESPONSE' | 'COMMAND' | 'QUOTE' | 'ACTION' | 'EMBED' | 'OTHER';
 export type ItemType = 'WEAPON' | 'EQUIPMENT' | 'ARTIFACT' | 'OTHER';
 export type StoryLineType = 'NARRATION' | 'DIALOGUE' | 'ACTION' | 'TRANSCRIPT' | 'BREAK';
+export type StoryFormat = 'SCRIPT' | 'PROSE';
 
 export interface PublicUser {
     id: number;
@@ -103,6 +104,12 @@ export interface Commentary {
     creator?: PublicUser;
 }
 
+export interface StorySegment {
+    text: string;
+    characterId?: number | null;
+    speaker?: string | null;
+}
+
 export interface Story {
     id: number;
     slug: string;
@@ -112,6 +119,7 @@ export interface Story {
     publishedDate: string | null;
     themeColor: string | null;
     themeColor2: string | null;
+    format: StoryFormat;
     author?: PublicUser;
     chapters?: StoryChapter[];
 }
@@ -133,6 +141,7 @@ export interface StoryLine {
     text: string;
     characterId: number | null;
     speaker: string | null; // display-name fallback when no Character row exists
+    segments?: StorySegment[] | null; // sub-paragraph dialogue spans (NARRATION only); concat === text
     character?: Character;
 }
 

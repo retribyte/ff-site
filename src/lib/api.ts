@@ -79,6 +79,16 @@ export async function api<T>(path: string, options: RequestOptions = {}): Promis
     return envelope?.data as T;
 }
 
+/**
+ * The raw response envelope, for endpoints that carry extra top-level fields
+ * beyond {status, data, total, page, limit} (e.g. story lines also return a
+ * `characters` array). Caller supplies the envelope shape it expects.
+ */
+export async function apiRaw<T extends object>(path: string, options: RequestOptions = {}): Promise<T> {
+    const envelope = await request(path, options);
+    return (envelope ?? {}) as unknown as T;
+}
+
 export async function apiPaged<T>(path: string, options: RequestOptions = {}): Promise<Paged<T>> {
     const envelope = await request(path, options);
     const data = (envelope?.data ?? []) as T[];

@@ -51,7 +51,8 @@ export default async function StoryPage({ params }: Props) {
 
     // Single-chapter stories read on one page, straight through
     if (chapters.length === 1) {
-        const data = slimStoryChapter(slug, chapters[0].chapter_no, await fetchAllLines(slug, chapters[0].chapter_no));
+        const { lines, characters } = await fetchAllLines(slug, chapters[0].chapter_no);
+        const data = slimStoryChapter(slug, chapters[0].chapter_no, story.format, lines, characters);
         const choices = data.lines.filter((l) => l.type === 'ACTION').map((l) => ({ no: l.no, text: l.text }));
         const voices = countVoices(data);
 

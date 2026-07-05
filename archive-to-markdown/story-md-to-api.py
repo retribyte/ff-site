@@ -15,6 +15,7 @@ Markdown format (see README, "Stories"):
     author: Trey                       optional username, resolved at upload
     published: 2026-07-04              optional ISO date
     themeColor: '#e8b23b'              optional (+ themeColor2)
+    format: prose                      optional, 'script' (default) or 'prose'
     ---
 
     # Chapter 1: The Signal            "# Chapter N[: Title]" starts a chapter;
@@ -24,6 +25,15 @@ Markdown format (see README, "Stories"):
 
     > Emmett: I told you this would happen.     DIALOGUE by Emmett
     > ?: Who's there?                           DIALOGUE, unknown speaker
+
+    The lock clicked. ["Move,"]{Emmett} she hissed.   NARRATION with an inline
+                                       dialogue span — [spoken]{Speaker}. The
+                                       paragraph stays ONE line; the span is
+                                       colored by speaker in the reader. The
+                                       segment texts concatenate verbatim (minus
+                                       the markers) back to the paragraph, so
+                                       'format: prose' novel-style stories keep
+                                       dialogue inside their narration.
 
     _take the left corridor_                    ACTION
 
@@ -52,6 +62,9 @@ SLUG_RE = re.compile(r"^[a-z0-9-]+$")
 CHAPTER_RE = re.compile(r"^#\s+Chapter\s+(\d+)(?:\s*:\s*(.+?))?\s*$", re.IGNORECASE)
 DIALOGUE_RE = re.compile(r"^>\s*(.+?):\s+(.*)$")
 BREAK_RE = re.compile(r"^(\*\s*\*\s*\*+|-{3,}|_{3,})\s*$")
+# Novel-style inline dialogue: [spoken text]{Speaker} embedded in a narration paragraph
+INLINE_DIALOGUE_RE = re.compile(r"\[([^\[\]]+)\]\{([^{}]+)\}")
+VALID_FORMATS = {"script", "prose"}
 
 
 # ---------- parsing ----------
@@ -112,7 +125,32 @@ def flush_paragraph(buffer, lines_out):
         return
 
     # NARRATION — markdown soft-wraps join with a space
-    lines_out.append({"type": "NARRATION", "text": " ".join(text.split())})
+    joined = " ".join(text.split())
+    segments = parse_inline_dialogue(joined)
+    if segments:
+        # text is the clean concatenation of segment texts (markers stripped)
+        clean = "".join(seg["text"] for seg in segments)
+        lines_out.append({"type": "NARRATION", "text": clean, "segments": segments})
+    else:
+        lines_out.append({"type": "NARRATION", "text": joined})
+
+
+def parse_inline_dialogue(text):
+    """Split narration into [{text}, {text, speaker}, ...] at [dialogue]{Speaker}
+    spans, preserving surrounding whitespace so segments concatenate back to the
+    prose. Returns None when the paragraph has no spans (plain narration)."""
+    segments = []
+    pos = 0
+    for match in INLINE_DIALOGUE_RE.finditer(text):
+        if match.start() > pos:
+            segments.append({"text": text[pos:match.start()]})
+        segments.append({"text": match.group(1), "speaker": match.group(2).strip()})
+        pos = match.end()
+    if not segments:
+        return None
+    if pos < len(text):
+        segments.append({"text": text[pos:]})
+    return segments
 
 
 def parse_body(lines):
@@ -199,6 +237,11 @@ def convert(md_path):
     for key in ("themeColor", "themeColor2"):
         if meta.get(key):
             story[key] = meta[key]
+    fmt = (meta.get("format") or "script").strip().lower()
+    if fmt not in VALID_FORMATS:
+        sys.exit(f"error: format must be one of {sorted(VALID_FORMATS)}, got {meta.get('format')!r}")
+    if fmt == "prose":
+        story["format"] = "PROSE"
 
     return {"story": story, "author": meta.get("author"), "chapters": parse_body(body)}
 
@@ -276,16 +319,28 @@ def upload(payload, api_base):
             "chapter_no": chapter["chapter_no"],
             **({"title": chapter["title"]} if chapter["title"] else {}),
         })
+        def resolve_speaker(entry, speaker):
+            """Attach characterId (or a display-name speaker) for a speaker string."""
+            if speaker in by_name:
+                entry["characterId"] = by_name[speaker]
+            else:
+                entry["speaker"] = speaker
+                unresolved.add(speaker)
+
         lines = []
         for line in chapter["lines"]:
             out = {"type": line["type"], "text": line["text"]}
             speaker = line.get("speaker")
             if speaker:
-                if speaker in by_name:
-                    out["characterId"] = by_name[speaker]
-                else:
-                    out["speaker"] = speaker
-                    unresolved.add(speaker)
+                resolve_speaker(out, speaker)
+            segments = line.get("segments")
+            if segments:
+                out["segments"] = []
+                for seg in segments:
+                    resolved = {"text": seg["text"]}
+                    if seg.get("speaker"):
+                        resolve_speaker(resolved, seg["speaker"])
+                    out["segments"].append(resolved)
             lines.append(out)
         CHUNK = 500
         for i in range(0, len(lines), CHUNK):

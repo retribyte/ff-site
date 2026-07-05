@@ -5,7 +5,7 @@ import { memo, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
-import type { SlimLine, StoryData } from '@/lib/stories';
+import { collectVoices, type SlimLine, type StoryData } from '@/lib/stories';
 import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
 import styles from './story.module.scss';
 
@@ -14,18 +14,55 @@ import styles from './story.module.scss';
 // speaking, TRANSCRIPT is an in-universe recording fragment, BREAK is a
 // scene break.
 
+// A colored dialogue fragment — a segment span inside narration, or a whole
+// prose-format dialogue line. Links to the character page when one is linked.
+function DialogueRun({
+    text,
+    characterId,
+    speaker,
+    characters,
+    colorMode,
+    query,
+    className,
+}: {
+    text: string;
+    characterId: number | null;
+    speaker: string | null;
+    characters: StoryData['characters'];
+    colorMode: ColorMode;
+    query: string | null;
+    className: string;
+}) {
+    const character = characterId !== null ? characters[characterId] : null;
+    const name = character?.name ?? speaker ?? '?';
+    const color = characterColor(name, character?.color ?? null, colorMode);
+    const style = { '--char': color } as React.CSSProperties;
+    const inner = <Highlighted text={text} query={query} />;
+    return characterId !== null ? (
+        <Link href={`/characters/${characterId}`} className={className} style={style} title={name}>
+            {inner}
+        </Link>
+    ) : (
+        <span className={className} style={style} title={name}>
+            {inner}
+        </span>
+    );
+}
+
 const Line = memo(function Line({
     line,
     characters,
     colorMode,
     query,
     highlighted,
+    format,
 }: {
     line: SlimLine;
     characters: StoryData['characters'];
     colorMode: ColorMode;
     query: string | null;
     highlighted: boolean;
+    format: StoryData['format'];
 }) {
     const [copied, setCopied] = useState(false);
 
@@ -51,6 +88,24 @@ const Line = memo(function Line({
             const character = line.characterId !== null ? characters[line.characterId] : null;
             const name = character?.name ?? line.speaker ?? '?';
             const color = characterColor(name, character?.color ?? null, colorMode);
+            // Novel-style: colored prose, no "Name:" prefix — speaker read from
+            // color + tooltip + the voice legend.
+            if (format === 'PROSE') {
+                content = (
+                    <p className={styles.dialogueProse}>
+                        <DialogueRun
+                            text={line.text}
+                            characterId={line.characterId}
+                            speaker={line.speaker}
+                            characters={characters}
+                            colorMode={colorMode}
+                            query={query}
+                            className={styles.dialogueSpan}
+                        />
+                    </p>
+                );
+                break;
+            }
             content = (
                 <p className={styles.dialogue} style={{ '--char': color } as React.CSSProperties}>
                     {line.characterId !== null ? (
@@ -85,7 +140,32 @@ const Line = memo(function Line({
             );
             break;
         default:
-            // NARRATION — long-form prose
+            // NARRATION — long-form prose. When the paragraph carries segment
+            // annotations, render it as one block with colored dialogue spans
+            // inline; the spans concatenate verbatim to line.text.
+            if (line.segments && line.segments.length > 0) {
+                content = (
+                    <p className={styles.narration}>
+                        {line.segments.map((seg, i) =>
+                            seg.characterId != null || seg.speaker ? (
+                                <DialogueRun
+                                    key={i}
+                                    text={seg.text}
+                                    characterId={seg.characterId ?? null}
+                                    speaker={seg.speaker ?? null}
+                                    characters={characters}
+                                    colorMode={colorMode}
+                                    query={query}
+                                    className={styles.dialogueSpan}
+                                />
+                            ) : (
+                                <Highlighted key={i} text={seg.text} query={query} />
+                            ),
+                        )}
+                    </p>
+                );
+                break;
+            }
             content = (
                 <p className={styles.narration}>
                     <Highlighted text={line.text} query={query} />
@@ -123,9 +203,39 @@ export default function StoryReader({ data }: { data: StoryData }) {
 
     const scan = useScan(data.lines);
 
+    // Novel-style stories don't print speaker names inline, so a legend keys
+    // the dialogue colors to their characters.
+    const voices = data.format === 'PROSE' ? collectVoices(data) : [];
+
     return (
         <div>
             <ScanBar scan={scan} />
+            {voices.length > 0 && (
+                <ul className={styles.legend} aria-label='Voices in this chapter'>
+                    {voices.map((voice) => {
+                        const character = voice.characterId !== null ? data.characters[voice.characterId] : null;
+                        const color = characterColor(voice.name, character?.color ?? null, colorMode);
+                        const style = { '--char': color } as React.CSSProperties;
+                        return (
+                            <li key={voice.name}>
+                                {voice.characterId !== null ? (
+                                    <Link
+                                        href={`/characters/${voice.characterId}`}
+                                        className={styles.legendChip}
+                                        style={style}
+                                    >
+                                        {voice.name}
+                                    </Link>
+                                ) : (
+                                    <span className={styles.legendChip} style={style}>
+                                        {voice.name}
+                                    </span>
+                                )}
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
             <div className={styles.prose}>
                 {data.lines.map((line) => (
                     <Line
@@ -135,6 +245,7 @@ export default function StoryReader({ data }: { data: StoryData }) {
                         colorMode={colorMode}
                         query={scan.activeQuery}
                         highlighted={line.no === targetNo || line.no === scan.currentMatchNo}
+                        format={data.format}
                     />
                 ))}
             </div>

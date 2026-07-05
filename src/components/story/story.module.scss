@@ -84,6 +84,60 @@
     }
 }
 
+// Novel-style dialogue: a whole standalone spoken paragraph, read like prose
+// (no name prefix, no border) with the speaker conveyed by color + legend.
+.dialogueProse {
+    font-family: var(--font-prose);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+// A colored dialogue fragment inline within narration, or the body of a
+// prose-format dialogue line. --char is set inline to the speaker's color.
+.dialogueSpan {
+    color: color-mix(in srgb, var(--char) 78%, var(--text));
+    text-decoration: none;
+
+    // Links (characterId set) hint at navigation only on hover
+    &:hover {
+        background: none;
+        color: color-mix(in srgb, var(--char) 78%, var(--text));
+        text-decoration: underline dotted;
+        text-underline-offset: 3px;
+    }
+}
+
+// Keys dialogue colors to characters for novel-style stories
+.legend {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+    justify-content: center;
+    max-width: 42rem;
+    margin: 0 auto 1.4rem;
+    padding: 0;
+}
+
+.legendChip {
+    // --char set inline per voice
+    display: inline-block;
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    line-height: 1;
+    text-decoration: none;
+    color: var(--char);
+    padding: 0.3rem 0.5rem;
+    background: color-mix(in srgb, var(--char) 12%, var(--surface-2));
+    border: 1px solid color-mix(in srgb, var(--char) 45%, var(--border-loud));
+    border-radius: var(--radius);
+
+    &:hover {
+        background: color-mix(in srgb, var(--char) 22%, var(--surface-2));
+        color: var(--char);
+    }
+}
+
 // Recovered broadcast fragment — an in-universe recording
 .vcomm {
     font-family: var(--font-mono);

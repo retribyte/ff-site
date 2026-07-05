@@ -23,13 +23,23 @@ Reads  <manuscript>.docx
        ./meta/stories/<slug>.json    metadata + color→character map
 Writes ./md/stories/<slug>.md        the editing format — review it before upload
 
+The `format` meta field (asked by the wizard, required in --batch) picks how
+colored spans inside a paragraph are handled:
+    script (default)  a whole paragraph is either narration or one voice; a
+                      colored span mid-paragraph still splits into separate
+                      lines (fine when authors write dialogue on its own line).
+    prose             novel-style: a mixed paragraph becomes ONE narration line
+                      with inline [spoken]{Speaker} spans, so dialogue stays
+                      embedded in the prose (no comma-fragment splitting).
+
 How the document is read:
     Title / Subtitle styles          story title / blurb (frontmatter defaults)
     Heading 1 or 2                   chapter break ("Chapter N: ..." numbering is
                                      honored when increasing, else sequential)
-    paragraph in a mapped color      DIALOGUE by that character (script style)
-    colored span inside a paragraph  the paragraph splits into narration and
-                                     dialogue lines (prose style)
+    paragraph in a mapped color      DIALOGUE by that character
+    colored span inside a paragraph  script: splits into narration + dialogue
+                                     lines; prose: inline [span]{Speaker} kept in
+                                     one paragraph, seam whitespace preserved
     wholly italic paragraph          ACTION line
     monospace paragraphs (Courier,   one TRANSCRIPT block per run of consecutive
       Consolas, Roboto Mono...)      monospace paragraphs
@@ -179,6 +189,14 @@ def run_wizard(meta, colors, doc_title, doc_blurb, source_name):
     meta["blurb"] = prompt("blurb", meta.get("blurb") or doc_blurb or None)
     meta["author"] = prompt("author (site username)", meta.get("author") or None)
     meta["published"] = prompt("published (YYYY-MM-DD)", meta.get("published") or None)
+    while True:
+        # prose = dialogue is embedded inside narration paragraphs (novel-style);
+        # script = narration and dialogue alternate as whole paragraphs (VM-style)
+        fmt = (prompt("format (script/prose)", meta.get("format") or "script") or "script").lower()
+        if fmt in ("script", "prose"):
+            meta["format"] = fmt
+            break
+        print("  format must be 'script' or 'prose'")
 
     unmapped = [c for c in colors if c not in meta["colors"]]
     if unmapped:
@@ -214,6 +232,44 @@ def segment_paragraph(paragraph, color_map):
     return [(speaker, " ".join(text.split())) for speaker, text in segments if text.strip()]
 
 
+def segment_paragraph_prose(paragraph, color_map):
+    """Like segment_paragraph but records seam whitespace so an inline-dialogue
+    paragraph can be rebuilt without eating the spaces around each span.
+
+    Returns [(speaker|None, core, had_leading_ws, had_trailing_ws)] where `core`
+    has its internal whitespace collapsed but the boundary flags remember
+    whether the source run touched whitespace on either side."""
+    merged = []
+    for text, color, _italic, _mono in paragraph["runs"]:
+        speaker = speaker_for(color, color_map)
+        if merged and merged[-1][0] == speaker:
+            merged[-1] = (speaker, merged[-1][1] + text)
+        else:
+            merged.append((speaker, text))
+    segments = []
+    for speaker, raw in merged:
+        core = " ".join(raw.split())
+        if not core:
+            # whitespace-only run — mark a seam on the previous segment
+            if segments:
+                s = segments[-1]
+                segments[-1] = (s[0], s[1], s[2], True)
+            continue
+        segments.append((speaker, core, raw != raw.lstrip(), raw != raw.rstrip()))
+    return segments
+
+
+def render_prose_paragraph(segments):
+    """One markdown NARRATION paragraph with inline [spoken]{Speaker} spans,
+    preserving a single space at each seam the source had whitespace on."""
+    parts = []
+    for i, (speaker, core, lead, _trail) in enumerate(segments):
+        if i > 0 and (segments[i - 1][3] or lead):
+            parts.append(" ")
+        parts.append(f"[{core}]{{{speaker}}}" if speaker is not None else core)
+    return "".join(parts)
+
+
 def strip_speaker_prefix(text, speaker):
     """Drop a redundant 'Name:' the author typed inside the colored line."""
     match = re.match(r"^([^:]{1,40}):\s*(.+)$", text)
@@ -225,6 +281,7 @@ def strip_speaker_prefix(text, speaker):
 def convert(paragraphs, meta):
     """Paragraph dicts -> markdown body lines (without frontmatter)."""
     color_map = meta["colors"]
+    is_prose = (meta.get("format") or "script").strip().lower() == "prose"
     out = []
     chapter_count = 0
     last_number = 0
@@ -282,9 +339,40 @@ def convert(paragraphs, meta):
             continue
         flush_transcript()
 
+        wholly_italic = all(italic for _t, _c, italic, _m in paragraph["runs"])
+
+        if is_prose:
+            segments = segment_paragraph_prose(paragraph, color_map)
+            narration_only = all(speaker is None for speaker, *_ in segments)
+            has_dialogue = any(speaker is not None for speaker, *_ in segments)
+
+            if narration_only and wholly_italic:
+                out.append(f"_{' '.join(text.split())}_")
+                out.append("")
+                continue
+
+            if any(ch in text for ch in "[]{}"):
+                warnings.append(f"prose paragraph contains literal []{{}} that may collide with span syntax: {text[:40]!r}")
+
+            if has_dialogue and not narration_only:
+                # mixed narration + dialogue — one paragraph with inline spans
+                paragraph_md = render_prose_paragraph(segments)
+                if paragraph_md[:1] in "#>_`*":
+                    warnings.append(f"narration starts with a markdown marker: {paragraph_md[:40]!r}")
+                out.append(paragraph_md)
+                out.append("")
+            elif has_dialogue:
+                # wholly-spoken paragraph — a block DIALOGUE line per voice
+                for speaker, core, *_ in segments:
+                    out.append(f"> {speaker}: {strip_speaker_prefix(core, speaker)}")
+                    out.append("")
+            else:
+                out.append(render_prose_paragraph(segments))
+                out.append("")
+            continue
+
         segments = segment_paragraph(paragraph, color_map)
         narration_only = all(speaker is None for speaker, _ in segments)
-        wholly_italic = all(italic for _t, _c, italic, _m in paragraph["runs"])
 
         if narration_only and wholly_italic:
             out.append(f"_{' '.join(text.split())}_")
@@ -309,7 +397,7 @@ def convert(paragraphs, meta):
 
 def frontmatter(meta):
     lines = ["---"]
-    for key in ("slug", "title", "blurb", "author", "published", "themeColor", "themeColor2"):
+    for key in ("slug", "title", "blurb", "author", "published", "themeColor", "themeColor2", "format"):
         value = meta.get(key)
         if value:
             lines.append(f"{key}: {value}")
@@ -338,16 +426,18 @@ def main():
     slug = args.slug or (slugify(doc_title) if doc_title else slugify(args.manuscript.stem))
     meta_path = META_DIR / f"{slug}.json"
     meta = {"slug": slug, "title": None, "blurb": None, "author": None,
-            "published": None, "themeColor": None, "themeColor2": None, "colors": {}}
+            "published": None, "themeColor": None, "themeColor2": None, "format": None, "colors": {}}
     if meta_path.exists():
         meta.update(json.loads(meta_path.read_text(encoding="utf-8")))
 
     if args.batch:
         missing = [c for c in colors if c not in meta["colors"]]
-        if not meta.get("title") or missing:
+        if not meta.get("title") or not meta.get("format") or missing:
             print(f"{meta_path.relative_to(ROOT)} is incomplete:", file=sys.stderr)
             if not meta.get("title"):
                 print("  title: <missing>", file=sys.stderr)
+            if not meta.get("format"):
+                print("  format: <missing> (set to 'script' or 'prose')", file=sys.stderr)
             for color in missing:
                 samples = "; ".join(colors[color]["samples"])
                 print(f'  colors["{color}"]: <unmapped> — {colors[color]["count"]} run(s): {samples}', file=sys.stderr)

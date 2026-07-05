@@ -27,6 +27,7 @@ Next.js rebuild of the legacy `ff-site` React app. Lore archive + authoring UI f
 - **Record editing is schema-driven**: field definitions live in `src/lib/editor/schemas.ts` (`EDITOR_SCHEMAS`); `RecordEditor` renders/validates/submits any registered kind. Add fields there, not in per-page forms.
 - **Category search** (FR-SR-1) uses the shared `IndexScan` component; season/episode slugs and deep links come from `src/lib/seasons.ts`.
 - EMBED message `text` is a JSON string `{title?, description[], footer?}`; the transcript reader regroups consecutive messages by player+character into Discord-style blocks.
+- **Story dialogue presentation**: `Story.format` (`SCRIPT` | `PROSE`) switches script-style vs novel-style rendering. A NARRATION `StoryLine` may carry a `segments` JSON annotation (`[{text, characterId?, speaker?}]`) for dialogue embedded inside the paragraph — the segment texts concatenate verbatim to `text` (server-derived, so they never desync; search/scan stay on `text`).
 
 ## Conventions
 - **No MUI, no Tailwind, no component frameworks.** Hand-rolled SCSS Modules + design tokens (`src/styles/_tokens.scss`). Art direction: retro sci-fi × indie-web Neocities.
