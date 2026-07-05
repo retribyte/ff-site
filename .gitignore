@@ -48,3 +48,4 @@ next-env.d.ts
 /.next-build
 *.wikitext
 vortox-wiki.css
+archive-to-markdown/__pycache__/

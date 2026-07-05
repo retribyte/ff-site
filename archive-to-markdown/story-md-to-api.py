@@ -21,6 +21,9 @@ Markdown format (see README, "Stories"):
     # Chapter 1: The Signal            "# Chapter N[: Title]" starts a chapter;
                                        no headings = single untitled chapter
 
+    ## The Descent                     "## Title" is an in-chapter HEADING line
+                                       (prose sub-sections)
+
     A plain paragraph is one NARRATION line.
 
     > Emmett: I told you this would happen.     DIALOGUE by Emmett
@@ -34,6 +37,11 @@ Markdown format (see README, "Stories"):
                                        the markers) back to the paragraph, so
                                        'format: prose' novel-style stories keep
                                        dialogue inside their narration.
+
+    A *whispered* word, a **shout**.   Inline emphasis: *italic*, **bold**,
+                                       ***both***. Works inside dialogue spans
+                                       too, e.g. ["I *really* mean it"]{Emmett}.
+                                       Markers strip out of the stored text.
 
     _take the left corridor_                    ACTION
 
@@ -64,6 +72,13 @@ DIALOGUE_RE = re.compile(r"^>\s*(.+?):\s+(.*)$")
 BREAK_RE = re.compile(r"^(\*\s*\*\s*\*+|-{3,}|_{3,})\s*$")
 # Novel-style inline dialogue: [spoken text]{Speaker} embedded in a narration paragraph
 INLINE_DIALOGUE_RE = re.compile(r"\[([^\[\]]+)\]\{([^{}]+)\}")
+# Inline emphasis: ***bold+italic***, **bold**, *italic*. Markers must hug
+# non-space (CommonMark-ish) so stray asterisks stay literal. Longest first.
+EMPHASIS_RE = re.compile(
+    r"\*\*\*(?=\S)(.+?)(?<=\S)\*\*\*|\*\*(?=\S)(.+?)(?<=\S)\*\*|\*(?=\S)(.+?)(?<=\S)\*"
+)
+# In-chapter section heading: "## Title" (distinct from "# Chapter N")
+HEADING_RE = re.compile(r"^##\s+(.+?)\s*$")
 VALID_FORMATS = {"script", "prose"}
 
 
@@ -126,7 +141,7 @@ def flush_paragraph(buffer, lines_out):
 
     # NARRATION — markdown soft-wraps join with a space
     joined = " ".join(text.split())
-    segments = parse_inline_dialogue(joined)
+    segments = parse_inline_segments(joined)
     if segments:
         # text is the clean concatenation of segment texts (markers stripped)
         clean = "".join(seg["text"] for seg in segments)
@@ -135,22 +150,53 @@ def flush_paragraph(buffer, lines_out):
         lines_out.append({"type": "NARRATION", "text": joined})
 
 
-def parse_inline_dialogue(text):
-    """Split narration into [{text}, {text, speaker}, ...] at [dialogue]{Speaker}
-    spans, preserving surrounding whitespace so segments concatenate back to the
-    prose. Returns None when the paragraph has no spans (plain narration)."""
+def parse_emphasis(text, base):
+    """Split `text` on *italic* / **bold** / ***both*** markers into segments,
+    each merging `base` (e.g. a {'speaker': ...}) with italic/bold flags. Markers
+    are stripped so segment texts concatenate back to the unmarked prose."""
     segments = []
     pos = 0
+    for match in EMPHASIS_RE.finditer(text):
+        if match.start() > pos:
+            segments.append({**base, "text": text[pos:match.start()]})
+        if match.group(1) is not None:
+            segments.append({**base, "text": match.group(1), "italic": True, "bold": True})
+        elif match.group(2) is not None:
+            segments.append({**base, "text": match.group(2), "bold": True})
+        else:
+            segments.append({**base, "text": match.group(3), "italic": True})
+        pos = match.end()
+    if pos < len(text):
+        segments.append({**base, "text": text[pos:]})
+    return segments
+
+
+def parse_inline_segments(text):
+    """Split a narration paragraph into segments at [dialogue]{Speaker} spans and
+    *italic*/**bold** emphasis (emphasis nests inside dialogue spans). Whitespace
+    is preserved so segments concatenate back to the prose. Returns None when the
+    paragraph carries no dialogue and no emphasis (plain narration)."""
+    segments = []
+    has_annotation = False
+    pos = 0
+
+    def add(pieces, styled_counts):
+        nonlocal has_annotation
+        segments.extend(pieces)
+        if styled_counts and any(p.get("italic") or p.get("bold") for p in pieces):
+            has_annotation = True
+
     for match in INLINE_DIALOGUE_RE.finditer(text):
         if match.start() > pos:
-            segments.append({"text": text[pos:match.start()]})
-        segments.append({"text": match.group(1), "speaker": match.group(2).strip()})
+            add(parse_emphasis(text[pos:match.start()], {}), True)
+        speaker = match.group(2).strip()
+        segments.extend(parse_emphasis(match.group(1), {"speaker": speaker}))
+        has_annotation = True  # a dialogue span is itself an annotation
         pos = match.end()
-    if not segments:
-        return None
     if pos < len(text):
-        segments.append({"text": text[pos:]})
-    return segments
+        add(parse_emphasis(text[pos:], {}), True)
+
+    return segments if has_annotation else None
 
 
 def parse_body(lines):
@@ -195,6 +241,13 @@ def parse_body(lines):
                 buffer = []
             current = {"chapter_no": int(heading.group(1)), "title": heading.group(2) or None, "lines": []}
             chapters.append(current)
+            continue
+
+        section = HEADING_RE.match(line)
+        if section:
+            flush_paragraph(buffer, chapter()["lines"])
+            buffer = []
+            chapter()["lines"].append({"type": "HEADING", "text": section.group(1).strip()})
             continue
 
         if not line.strip():
@@ -340,6 +393,9 @@ def upload(payload, api_base):
                     resolved = {"text": seg["text"]}
                     if seg.get("speaker"):
                         resolve_speaker(resolved, seg["speaker"])
+                    for style in ("italic", "bold"):
+                        if seg.get(style):
+                            resolved[style] = True
                     out["segments"].append(resolved)
             lines.append(out)
         CHUNK = 500

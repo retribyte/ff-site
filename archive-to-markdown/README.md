@@ -106,17 +106,19 @@ How a Doc is read:
 | in the Doc | becomes |
 |---|---|
 | Title / Subtitle styles | frontmatter `title` / `blurb` defaults |
-| Heading 1 or 2 | chapter break (`Chapter N: ...` numbering honored) |
+| Heading 1 | chapter break (`Chapter N: ...` numbering honored) |
+| Heading 2 | **prose:** `## Title` in-chapter heading · **script:** another chapter break |
 | paragraph wholly in a mapped color | `> Name:` dialogue line (a typed `Name:` prefix is stripped) |
 | colored span inside a paragraph | **script:** paragraph splits into narration + dialogue lines · **prose:** kept in one paragraph as an inline `[span]{Speaker}` |
-| wholly italic paragraph | `_action_` line |
+| italic / bold run | **prose:** `*italic*` / `**bold**` emphasis, kept inline (nests inside dialogue spans) · **script:** flattened |
+| wholly italic paragraph | **prose:** italic narration · **script:** `_action_` line |
 | consecutive monospace paragraphs | one ```` ```transcript ```` block |
 | horizontal rule, `***`, `- - -` | `***` scene break |
 
-Other inline formatting is flattened to plain text. Always review the
-generated markdown before uploading — in `script` mode, prose-style paragraphs
-leave their dialogue tags ("...Vex said.") as small narration fragments you may
-want to merge or trim (or switch the story to `prose`).
+Underline and other inline formatting is flattened to plain text. Always review
+the generated markdown before uploading — in `script` mode, prose-style
+paragraphs leave their dialogue tags ("...Vex said.") as small narration
+fragments you may want to merge or trim (or switch the story to `prose`).
 
 `python3 story-md-to-api.py md/stories/<slug>.md` converts;
 add `--upload [--api http://localhost:3000/api]` to log in and POST the
@@ -130,6 +132,7 @@ optional — `format` defaults to `script`). Body format:
 ````
 # Chapter 1: The Signal             "# Chapter N[: Title]" starts a chapter;
                                     no headings = one untitled chapter
+## The Descent                      in-chapter HEADING line (prose sub-sections)
 A plain paragraph.                  NARRATION (one line per paragraph)
 > Emmett: line                      DIALOGUE by Emmett
 > ?: line                           DIALOGUE, unknown speaker
@@ -137,15 +140,18 @@ The lock clicked. ["Move,"]{Emmett} she hissed.
                                     NARRATION with an inline dialogue span —
                                     [spoken]{Speaker}. Stays ONE line; the
                                     span is colored by speaker in the reader.
+A *whispered* word, a **shout**.    inline emphasis: *italic*, **bold**,
+                                    ***both***; works inside dialogue spans too
 _action line_                       ACTION (a choice, CYOA-style)
 ```transcript … ```                 one TRANSCRIPT line (VCOMM fragment);
                                     interior blank lines = paragraph breaks
 ***                                 BREAK (scene break)
 ````
 
-Inline `[spoken]{Speaker}` spans work regardless of `format` — the segment
-texts concatenate verbatim (markers stripped) back to the paragraph's prose, so
-the server stores the clean paragraph in `text` with the spans as annotations.
+Inline `[spoken]{Speaker}` spans and `*emphasis*` work regardless of `format` —
+the segment texts concatenate verbatim (markers stripped) back to the
+paragraph's prose, so the server stores the clean paragraph in `text` with the
+spans/styling as annotations.
 
 At upload, dialogue speakers — whole `> Name:` lines and inline `[…]{Speaker}`
 spans alike — are resolved against `/characters` (exact name, then aliases);

@@ -6,7 +6,7 @@ export type Sex = 'MALE' | 'FEMALE' | 'OTHER' | 'UNSPECIFIED';
 export type SentienceClass = 'BLACK' | 'HIGHER_SENTIENT' | 'LOWER_SENTIENT' | 'NON_SENTIENT';
 export type MessageType = 'BOT_RESPONSE' | 'COMMAND' | 'QUOTE' | 'ACTION' | 'EMBED' | 'OTHER';
 export type ItemType = 'WEAPON' | 'EQUIPMENT' | 'ARTIFACT' | 'OTHER';
-export type StoryLineType = 'NARRATION' | 'DIALOGUE' | 'ACTION' | 'TRANSCRIPT' | 'BREAK';
+export type StoryLineType = 'NARRATION' | 'DIALOGUE' | 'ACTION' | 'TRANSCRIPT' | 'BREAK' | 'HEADING';
 export type StoryFormat = 'SCRIPT' | 'PROSE';
 
 export interface PublicUser {
@@ -108,6 +108,8 @@ export interface StorySegment {
     text: string;
     characterId?: number | null;
     speaker?: string | null;
+    italic?: boolean;
+    bold?: boolean;
 }
 
 export interface Story {

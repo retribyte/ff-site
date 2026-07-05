@@ -44,6 +44,25 @@
     font-family: var(--font-prose);
     font-size: 1.05rem;
     line-height: 1.7;
+
+    // Inline emphasis carried by styled segments
+    em {
+        font-style: italic;
+    }
+
+    strong {
+        font-weight: 700;
+    }
+}
+
+// In-chapter section heading (prose sub-sections), beneath the page <h1>
+.heading {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    line-height: 1.25;
+    color: var(--story);
+    text-shadow: 1px 1px 0 var(--shadow);
+    margin: 1.4rem 0 0.2rem;
 }
 
 // The command the protagonist (or the readers) chose — rendered as the input it was

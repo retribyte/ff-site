@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
 import { collectVoices, type SlimLine, type StoryData } from '@/lib/stories';
+import type { StorySegment } from '@/lib/types';
 import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
 import styles from './story.module.scss';
 
@@ -47,6 +48,39 @@ function DialogueRun({
             {inner}
         </span>
     );
+}
+
+// One inline segment of a narration paragraph: a colored dialogue run when it
+// carries a voice, plain text otherwise, wrapped in <em>/<strong> for styling.
+// Segment texts concatenate verbatim to line.text; the markup is presentational.
+function Segment({
+    seg,
+    characters,
+    colorMode,
+    query,
+}: {
+    seg: StorySegment;
+    characters: StoryData['characters'];
+    colorMode: ColorMode;
+    query: string | null;
+}) {
+    const hasVoice = seg.characterId != null || !!seg.speaker;
+    let node: React.ReactNode = hasVoice ? (
+        <DialogueRun
+            text={seg.text}
+            characterId={seg.characterId ?? null}
+            speaker={seg.speaker ?? null}
+            characters={characters}
+            colorMode={colorMode}
+            query={query}
+            className={styles.dialogueSpan}
+        />
+    ) : (
+        <Highlighted text={seg.text} query={query} />
+    );
+    if (seg.bold) node = <strong>{node}</strong>;
+    if (seg.italic) node = <em>{node}</em>;
+    return <>{node}</>;
 }
 
 const Line = memo(function Line({
@@ -139,29 +173,31 @@ const Line = memo(function Line({
                 </p>
             );
             break;
+        case 'HEADING':
+            // In-chapter section heading (prose sub-sections). Sits under the
+            // page's <h1> chapter title.
+            content = (
+                <h2 className={styles.heading}>
+                    <Highlighted text={line.text} query={query} />
+                </h2>
+            );
+            break;
         default:
             // NARRATION — long-form prose. When the paragraph carries segment
             // annotations, render it as one block with colored dialogue spans
-            // inline; the spans concatenate verbatim to line.text.
+            // and inline styling; the spans concatenate verbatim to line.text.
             if (line.segments && line.segments.length > 0) {
                 content = (
                     <p className={styles.narration}>
-                        {line.segments.map((seg, i) =>
-                            seg.characterId != null || seg.speaker ? (
-                                <DialogueRun
-                                    key={i}
-                                    text={seg.text}
-                                    characterId={seg.characterId ?? null}
-                                    speaker={seg.speaker ?? null}
-                                    characters={characters}
-                                    colorMode={colorMode}
-                                    query={query}
-                                    className={styles.dialogueSpan}
-                                />
-                            ) : (
-                                <Highlighted key={i} text={seg.text} query={query} />
-                            ),
-                        )}
+                        {line.segments.map((seg, i) => (
+                            <Segment
+                                key={i}
+                                seg={seg}
+                                characters={characters}
+                                colorMode={colorMode}
+                                query={query}
+                            />
+                        ))}
                     </p>
                 );
                 break;

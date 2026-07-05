@@ -34,19 +34,24 @@ colored spans inside a paragraph are handled:
 
 How the document is read:
     Title / Subtitle styles          story title / blurb (frontmatter defaults)
-    Heading 1 or 2                   chapter break ("Chapter N: ..." numbering is
+    Heading 1                        chapter break ("Chapter N: ..." numbering is
                                      honored when increasing, else sequential)
+    Heading 2                        prose: "## Title" in-chapter heading;
+                                     script: another chapter break
     paragraph in a mapped color      DIALOGUE by that character
     colored span inside a paragraph  script: splits into narration + dialogue
                                      lines; prose: inline [span]{Speaker} kept in
                                      one paragraph, seam whitespace preserved
-    wholly italic paragraph          ACTION line
+    italic / bold run                prose: *italic* / **bold** emphasis, kept
+                                     inline (nests inside dialogue spans);
+                                     script: flattened to plain text
+    wholly italic paragraph          prose: italic narration; script: ACTION line
     monospace paragraphs (Courier,   one TRANSCRIPT block per run of consecutive
       Consolas, Roboto Mono...)      monospace paragraphs
     horizontal rule or *** / - - -   BREAK (scene break)
 
 Colors mapped to an empty name count as narration (ink color, not a voice).
-Inline bold/italic/underline is otherwise flattened to plain text.
+Underline and other inline formatting is flattened to plain text.
 """
 
 import argparse
@@ -97,7 +102,7 @@ def normalize_color(value):
 
 
 def run_properties(run):
-    """(text, color, italic, mono) for one <w:r>."""
+    """(text, color, italic, mono, bold) for one <w:r>."""
     parts = []
     for node in run.iter():
         if node.tag == f"{W}t":
@@ -109,22 +114,24 @@ def run_properties(run):
     text = "".join(parts)
 
     rpr = run.find(f"{W}rPr")
-    color, italic, mono = None, False, False
+    color, italic, mono, bold = None, False, False, False
     if rpr is not None:
         color_el = rpr.find(f"{W}color")
         if color_el is not None:
             color = normalize_color(color_el.get(f"{W}val"))
         italic_el = rpr.find(f"{W}i")
         italic = italic_el is not None and italic_el.get(f"{W}val") not in ("0", "false")
+        bold_el = rpr.find(f"{W}b")
+        bold = bold_el is not None and bold_el.get(f"{W}val") not in ("0", "false")
         fonts = rpr.find(f"{W}rFonts")
         if fonts is not None:
             face = (fonts.get(f"{W}ascii") or fonts.get(f"{W}hAnsi") or "").lower()
             mono = face in MONO_FONTS
-    return text, color, italic, mono
+    return text, color, italic, mono, bold
 
 
 def read_paragraphs(body):
-    """Flatten the document into dicts: {style, hr, runs: [(text, color, italic, mono)]}."""
+    """Flatten the document into dicts: {style, hr, runs: [(text, color, italic, mono, bold)]}."""
     paragraphs = []
     for p in body.iter(f"{W}p"):
         ppr = p.find(f"{W}pPr")
@@ -159,7 +166,7 @@ def collect_colors(paragraphs):
     for paragraph in paragraphs:
         if paragraph["style"] in ("Title", "Subtitle"):
             continue
-        for text, color, _italic, _mono in paragraph["runs"]:
+        for text, color, _italic, _mono, _bold in paragraph["runs"]:
             if color is None or not text.strip():
                 continue
             entry = seen.setdefault(color, {"count": 0, "samples": []})
@@ -223,7 +230,7 @@ def speaker_for(color, color_map):
 def segment_paragraph(paragraph, color_map):
     """Split a paragraph's runs into (speaker|None, text) segments in order."""
     segments = []
-    for text, color, _italic, _mono in paragraph["runs"]:
+    for text, color, _italic, _mono, _bold in paragraph["runs"]:
         speaker = speaker_for(color, color_map)
         if segments and segments[-1][0] == speaker:
             segments[-1] = (speaker, segments[-1][1] + text)
@@ -233,40 +240,68 @@ def segment_paragraph(paragraph, color_map):
 
 
 def segment_paragraph_prose(paragraph, color_map):
-    """Like segment_paragraph but records seam whitespace so an inline-dialogue
-    paragraph can be rebuilt without eating the spaces around each span.
+    """Merge runs into styled atoms so an inline-dialogue paragraph can be rebuilt
+    without eating seam whitespace or losing emphasis.
 
-    Returns [(speaker|None, core, had_leading_ws, had_trailing_ws)] where `core`
-    has its internal whitespace collapsed but the boundary flags remember
-    whether the source run touched whitespace on either side."""
-    merged = []
-    for text, color, _italic, _mono in paragraph["runs"]:
+    Returns atoms (speaker|None, italic, bold, core, had_leading_ws,
+    had_trailing_ws): `core` has internal whitespace collapsed; the boundary
+    flags remember whether the source run touched whitespace on either side.
+    Runs merge while (speaker, italic, bold) are identical."""
+    merged = []  # (speaker, italic, bold, raw)
+    for text, color, italic, _mono, bold in paragraph["runs"]:
         speaker = speaker_for(color, color_map)
-        if merged and merged[-1][0] == speaker:
-            merged[-1] = (speaker, merged[-1][1] + text)
+        key = (speaker, italic, bold)
+        if merged and merged[-1][:3] == key:
+            merged[-1] = (*key, merged[-1][3] + text)
         else:
-            merged.append((speaker, text))
-    segments = []
-    for speaker, raw in merged:
+            merged.append((*key, text))
+    atoms = []
+    for speaker, italic, bold, raw in merged:
         core = " ".join(raw.split())
         if not core:
-            # whitespace-only run — mark a seam on the previous segment
-            if segments:
-                s = segments[-1]
-                segments[-1] = (s[0], s[1], s[2], True)
+            # whitespace-only run — mark a seam on the previous atom
+            if atoms:
+                a = atoms[-1]
+                atoms[-1] = (*a[:5], True)
             continue
-        segments.append((speaker, core, raw != raw.lstrip(), raw != raw.rstrip()))
-    return segments
+        atoms.append((speaker, italic, bold, core, raw != raw.lstrip(), raw != raw.rstrip()))
+    return atoms
 
 
-def render_prose_paragraph(segments):
-    """One markdown NARRATION paragraph with inline [spoken]{Speaker} spans,
-    preserving a single space at each seam the source had whitespace on."""
+def emphasize(core, italic, bold):
+    """Wrap text in the markdown emphasis markers for its style."""
+    if italic and bold:
+        return f"***{core}***"
+    if bold:
+        return f"**{core}**"
+    if italic:
+        return f"*{core}*"
+    return core
+
+
+def render_prose_paragraph(atoms):
+    """One markdown NARRATION paragraph: consecutive same-speaker atoms group into
+    a single [spoken]{Speaker} span, emphasis markers wrap styled atoms inside,
+    and a single space is kept at each seam the source had whitespace on."""
+    def seam(prev, nxt):
+        return " " if prev[5] or nxt[4] else ""
+
     parts = []
-    for i, (speaker, core, lead, _trail) in enumerate(segments):
-        if i > 0 and (segments[i - 1][3] or lead):
-            parts.append(" ")
-        parts.append(f"[{core}]{{{speaker}}}" if speaker is not None else core)
+    i, n = 0, len(atoms)
+    while i < n:
+        speaker = atoms[i][0]
+        group, j = [], i
+        while j < n and atoms[j][0] == speaker:
+            group.append(atoms[j])
+            j += 1
+        if i > 0:
+            parts.append(seam(atoms[i - 1], atoms[i]))
+        inner = "".join(
+            (seam(group[k - 1], atom) if k > 0 else "") + emphasize(atom[3], atom[1], atom[2])
+            for k, atom in enumerate(group)
+        )
+        parts.append(f"[{inner}]{{{speaker}}}" if speaker is not None else inner)
+        i = j
     return "".join(parts)
 
 
@@ -305,6 +340,13 @@ def convert(paragraphs, meta):
             continue  # consumed as frontmatter defaults
 
         if style.startswith("Heading") and style[7:] in ("1", "2") and text:
+            # Prose: Heading 1 = chapter, Heading 2 = in-chapter section heading.
+            # Script: both levels are chapters (legacy behavior).
+            if is_prose and style[7:] == "2":
+                flush_transcript()
+                out.append(f"## {text}")
+                out.append("")
+                continue
             flush_transcript()
             chapter_count += 1
             match = CHAPTER_HEADING.match(text)
@@ -334,41 +376,26 @@ def convert(paragraphs, meta):
             out.append("")
             continue
 
-        if paragraph["runs"] and all(mono for _t, _c, _i, mono in paragraph["runs"]):
+        if paragraph["runs"] and all(mono for _t, _c, _i, mono, _b in paragraph["runs"]):
             transcript.append(text)
             continue
         flush_transcript()
 
-        wholly_italic = all(italic for _t, _c, italic, _m in paragraph["runs"])
+        wholly_italic = all(italic for _t, _c, italic, _m, _b in paragraph["runs"])
 
         if is_prose:
-            segments = segment_paragraph_prose(paragraph, color_map)
-            narration_only = all(speaker is None for speaker, *_ in segments)
-            has_dialogue = any(speaker is not None for speaker, *_ in segments)
-
-            if narration_only and wholly_italic:
-                out.append(f"_{' '.join(text.split())}_")
-                out.append("")
-                continue
-
-            if any(ch in text for ch in "[]{}"):
-                warnings.append(f"prose paragraph contains literal []{{}} that may collide with span syntax: {text[:40]!r}")
-
-            if has_dialogue and not narration_only:
-                # mixed narration + dialogue — one paragraph with inline spans
-                paragraph_md = render_prose_paragraph(segments)
-                if paragraph_md[:1] in "#>_`*":
-                    warnings.append(f"narration starts with a markdown marker: {paragraph_md[:40]!r}")
-                out.append(paragraph_md)
-                out.append("")
-            elif has_dialogue:
-                # wholly-spoken paragraph — a block DIALOGUE line per voice
-                for speaker, core, *_ in segments:
-                    out.append(f"> {speaker}: {strip_speaker_prefix(core, speaker)}")
-                    out.append("")
-            else:
-                out.append(render_prose_paragraph(segments))
-                out.append("")
+            # Every prose paragraph is one NARRATION line: inline [spoken]{Speaker}
+            # dialogue spans and *emphasis* are carried as segments (a wholly-
+            # italic paragraph becomes italic narration, not ACTION). Dialogue,
+            # emphasis, and their nesting are all handled by render_prose_paragraph.
+            if any(ch in text for ch in "[]{}*"):
+                warnings.append(f"prose paragraph contains literal []{{}}* that may collide with span/emphasis syntax: {text[:40]!r}")
+            atoms = segment_paragraph_prose(paragraph, color_map)
+            paragraph_md = render_prose_paragraph(atoms)
+            if paragraph_md[:1] in "#>`":
+                warnings.append(f"paragraph starts with a markdown marker: {paragraph_md[:40]!r}")
+            out.append(paragraph_md)
+            out.append("")
             continue
 
         segments = segment_paragraph(paragraph, color_map)
