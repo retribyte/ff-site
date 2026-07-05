@@ -68,13 +68,46 @@ are dropped. Quotes that end up with no character import as OTHER (FR-MSG-4).
 
 ## Stories
 
-Short stories (and anything else that reads at `/stories`) have their own,
-thinner pipeline — no meta files, no `/import` page:
+Short stories (and anything else that reads at `/stories`) have their own
+pipeline — no `/import` page:
 
 ```
+Google Doc  ──File ▸ Download ▸ .docx──▶  story-docx-to-md.py  ──▶  markdown manuscript
+                                           meta/stories/<slug>.json   md/stories/<slug>.md
 markdown manuscript  ──story-md-to-api.py──▶  story JSON  ──--upload──▶  database
  md/stories/<slug>.md                          api/stories/
 ```
+
+### Google Docs → markdown
+
+FF stories color-code dialogue, and the ink color is often the only clue to
+who is speaking. Of Google's export formats only `.docx` both preserves text
+color and parses without dependencies, so that's the input:
+`python3 story-docx-to-md.py <manuscript>.docx`.
+
+The first run is a wizard: it prompts for story metadata (title/slug/blurb
+default from the doc's Title and Subtitle styles) and shows each distinct
+text color with sample lines so you can name the speaker — an empty answer
+means "narration ink, not a voice". Answers are saved to
+`meta/stories/<slug>.json` and reused; `--batch --slug <slug>` re-converts
+non-interactively and fails with a report if any color is unmapped.
+
+How a Doc is read:
+
+| in the Doc | becomes |
+|---|---|
+| Title / Subtitle styles | frontmatter `title` / `blurb` defaults |
+| Heading 1 or 2 | chapter break (`Chapter N: ...` numbering honored) |
+| paragraph wholly in a mapped color | `> Name:` dialogue line (a typed `Name:` prefix is stripped) |
+| colored span inside a paragraph | paragraph splits into narration + dialogue lines |
+| wholly italic paragraph | `_action_` line |
+| consecutive monospace paragraphs | one ```` ```transcript ```` block |
+| horizontal rule, `***`, `- - -` | `***` scene break |
+
+Other inline formatting is flattened to plain text. Always review the
+generated markdown before uploading — prose-style paragraphs leave their
+dialogue tags ("...Vex said.") as small narration fragments you may want to
+merge or trim.
 
 `python3 story-md-to-api.py md/stories/<slug>.md` converts;
 add `--upload [--api http://localhost:3000/api]` to log in and POST the
