@@ -45,3 +45,5 @@ next-env.d.ts
 /ff-server
 /vortox-bot
 /.next-build
+*.wikitext
+vortox-wiki.css
