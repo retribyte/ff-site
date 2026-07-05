@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import styles from './transcript.module.scss';
 
-// In-episode search ("scan"), shared by the transcript and CYOA readers.
+// In-episode search ("scan"), shared by the transcript and story readers.
 
 export function scrollToMessage(no: number, smooth: boolean) {
     const el = document.getElementById(`m-${no}`);

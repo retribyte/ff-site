@@ -6,7 +6,9 @@ const nextConfig: NextConfig = {
     // reload-loops on stale chunk references.
     distDir: process.env.NODE_ENV === 'production' ? '.next-build' : '.next',
     async redirects() {
-        // Legacy ff-site URLs: /ff2/<episode> → /archives/ff2/<episode>, /vm → /cyoa
+        // Legacy URLs: /ff2/<episode> → /archives/ff2/<episode>; the old
+        // /vm and /cyoa routes both land on the chronicle's story page
+        // (query strings like ?line=N are preserved automatically).
         return [
             ...['ff1', 'ff2', 'ff3', 'ff4'].map((season) => ({
                 source: `/${season}/:path*`,
@@ -15,7 +17,12 @@ const nextConfig: NextConfig = {
             })),
             {
                 source: '/vm/:path*',
-                destination: '/cyoa/:path*',
+                destination: '/stories/vm/:path*',
+                permanent: true,
+            },
+            {
+                source: '/cyoa/:path*',
+                destination: '/stories/vm/:path*',
                 permanent: true,
             },
         ];

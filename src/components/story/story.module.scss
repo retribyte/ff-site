@@ -1,3 +1,6 @@
+// Story reader prose. --story/--story-2 are set inline per page from
+// storyColors() so every story carries its own identity colors.
+
 .prose {
     display: flex;
     flex-direction: column;
@@ -6,7 +9,7 @@
     margin: 0 auto;
 }
 
-// One addressable line of the chronicle; anchor button lives in the margin
+// One addressable line of the story; anchor button lives in the margin
 .line {
     position: relative;
 
@@ -26,20 +29,14 @@
     }
 
     &[data-target] {
-        background: color-mix(in srgb, var(--vm) 14%, transparent);
-        outline: 1px solid color-mix(in srgb, var(--vm) 45%, transparent);
+        background: color-mix(in srgb, var(--story) 14%, transparent);
+        outline: 1px solid color-mix(in srgb, var(--story) 45%, transparent);
         outline-offset: 4px;
     }
 
     &:hover .anchor,
     &:focus-within .anchor {
         opacity: 1;
-    }
-
-    // Reveal quiet "add note" chips (CommentaryThread) on hover
-    &:hover button[data-empty],
-    &:focus-within button[data-empty] {
-        opacity: 0.7;
     }
 }
 
@@ -49,13 +46,13 @@
     line-height: 1.7;
 }
 
-// The command the readers chose — rendered as the input it was
+// The command the protagonist (or the readers) chose — rendered as the input it was
 .action {
     font-family: var(--font-mono);
     font-size: 0.88rem;
-    color: var(--vm);
-    background: color-mix(in srgb, var(--vm) 9%, transparent);
-    border: 1px dashed color-mix(in srgb, var(--vm) 45%, transparent);
+    color: var(--story);
+    background: color-mix(in srgb, var(--story) 9%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--story) 45%, transparent);
     border-radius: var(--radius);
     padding: 0.4rem 0.7rem;
     margin: 0.5rem 0 !important;
@@ -87,24 +84,31 @@
     }
 }
 
-// Recovered broadcast fragment — the chronicle's cold open
+// Recovered broadcast fragment — an in-universe recording
 .vcomm {
     font-family: var(--font-mono);
     font-size: 0.9rem;
     line-height: 1.65;
-    color: var(--vm);
+    color: var(--story);
     background:
         var(--star-texture),
-        linear-gradient(165deg, color-mix(in srgb, var(--vm) 14%, var(--surface)) 0%, var(--surface) 70%);
+        linear-gradient(165deg, color-mix(in srgb, var(--story) 14%, var(--surface)) 0%, var(--surface) 70%);
     background-size: 120px, auto;
-    border: var(--px) solid color-mix(in srgb, var(--vm) 55%, var(--border-loud));
+    border: var(--px) solid color-mix(in srgb, var(--story) 55%, var(--border-loud));
     box-shadow:
         var(--px) var(--px) 0 0 var(--shadow),
-        0 0 18px color-mix(in srgb, var(--vm) 25%, transparent);
+        0 0 18px color-mix(in srgb, var(--story) 25%, transparent);
     padding: 1.1rem 1.3rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+}
+
+.sceneBreak {
+    text-align: center;
+    color: color-mix(in srgb, var(--story) 65%, var(--text-muted));
+    letter-spacing: 0.8em;
+    padding: 0.6rem 0;
 }
 
 .anchor {
@@ -117,15 +121,15 @@
     font-family: var(--font-pixel);
     font-size: 0.75rem;
     line-height: 1;
-    color: var(--vm);
+    color: var(--story);
     background: var(--surface-2);
-    border: 1px solid color-mix(in srgb, var(--vm) 45%, var(--border-loud));
+    border: 1px solid color-mix(in srgb, var(--story) 45%, var(--border-loud));
     border-radius: var(--radius);
     cursor: pointer;
     transition: opacity 0.12s ease-out;
 
     &:hover {
-        background: color-mix(in srgb, var(--vm) 15%, var(--surface-2));
+        background: color-mix(in srgb, var(--story) 15%, var(--surface-2));
     }
 
     &:focus-visible {

@@ -5,35 +5,24 @@ import { memo, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
-import type { SlimMessage, TranscriptData } from '@/lib/transcript';
+import type { SlimLine, StoryData } from '@/lib/stories';
 import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
-import CommentaryThread from '@/components/transcript/CommentaryThread';
-import styles from './cyoa.module.scss';
+import styles from './story.module.scss';
 
-// The chronicle reads as prose: BOT_RESPONSE is narration, ACTION is the
-// command the readers chose, QUOTE is character dialogue, EMBED is a
-// VCOMM broadcast fragment.
-
-function parseVcomm(text: string): string[] {
-    try {
-        const parsed = JSON.parse(text) as { description?: string[] };
-        return parsed.description ?? [text];
-    } catch {
-        return [text];
-    }
-}
+// Stories read as prose: NARRATION is narrator voice, ACTION is a command the
+// protagonist (or the readers, in a CYOA) chose, DIALOGUE is a character
+// speaking, TRANSCRIPT is an in-universe recording fragment, BREAK is a
+// scene break.
 
 const Line = memo(function Line({
-    message,
-    episodeTitle,
+    line,
     characters,
     colorMode,
     query,
     highlighted,
 }: {
-    message: SlimMessage;
-    episodeTitle: string;
-    characters: TranscriptData['characters'];
+    line: SlimLine;
+    characters: StoryData['characters'];
     colorMode: ColorMode;
     query: string | null;
     highlighted: boolean;
@@ -41,7 +30,7 @@ const Line = memo(function Line({
     const [copied, setCopied] = useState(false);
 
     const copyAnchor = () => {
-        const url = `${window.location.origin}${window.location.pathname}?line=${message.no}`;
+        const url = `${window.location.origin}${window.location.pathname}?line=${line.no}`;
         navigator.clipboard.writeText(url).then(() => {
             setCopied(true);
             setTimeout(() => setCopied(false), 1200);
@@ -49,63 +38,69 @@ const Line = memo(function Line({
     };
 
     let content: React.ReactNode;
-    switch (message.type) {
+    switch (line.type) {
         case 'ACTION':
             content = (
                 <p className={styles.action}>
                     <span aria-hidden>❯ </span>
-                    <Highlighted text={message.text} query={query} />
+                    <Highlighted text={line.text} query={query} />
                 </p>
             );
             break;
-        case 'QUOTE': {
-            const character = message.characterId !== null ? characters[message.characterId] : null;
-            const name = character?.name ?? '?';
+        case 'DIALOGUE': {
+            const character = line.characterId !== null ? characters[line.characterId] : null;
+            const name = character?.name ?? line.speaker ?? '?';
             const color = characterColor(name, character?.color ?? null, colorMode);
             content = (
                 <p className={styles.dialogue} style={{ '--char': color } as React.CSSProperties}>
-                    {message.characterId !== null ? (
-                        <Link href={`/characters/${message.characterId}`} className={styles.dialogueName}>
+                    {line.characterId !== null ? (
+                        <Link href={`/characters/${line.characterId}`} className={styles.dialogueName}>
                             {name}:
                         </Link>
                     ) : (
                         <span className={styles.dialogueName}>{name}:</span>
                     )}{' '}
-                    <Highlighted text={message.text} query={query} />
+                    <Highlighted text={line.text} query={query} />
                 </p>
             );
             break;
         }
-        case 'EMBED':
+        case 'TRANSCRIPT':
             content = (
                 <div className={styles.vcomm}>
                     <p className='pixel-label'>⌁ vcomm broadcast fragment ⌁</p>
-                    {parseVcomm(message.text).map((line, i) => (
+                    {line.text.split(/\n{2,}/).map((paragraph, i) => (
                         <p key={i}>
-                            <Highlighted text={line} query={query} />
+                            <Highlighted text={paragraph} query={query} />
                         </p>
                     ))}
                 </div>
             );
             break;
+        case 'BREAK':
+            content = (
+                <p className={styles.sceneBreak} aria-hidden>
+                    ✦ ✦ ✦
+                </p>
+            );
+            break;
         default:
-            // BOT_RESPONSE and OTHER — narration prose
+            // NARRATION — long-form prose
             content = (
                 <p className={styles.narration}>
-                    <Highlighted text={message.text} query={query} />
+                    <Highlighted text={line.text} query={query} />
                 </p>
             );
     }
 
     return (
-        <div id={`m-${message.no}`} className={styles.line} data-target={highlighted || undefined}>
+        <div id={`m-${line.no}`} className={styles.line} data-target={highlighted || undefined}>
             {content}
-            <CommentaryThread episodeTitle={episodeTitle} messageNo={message.no} initial={message.commentaries} />
             <button
                 type='button'
                 className={styles.anchor}
                 onClick={copyAnchor}
-                aria-label={`Copy link to line ${message.no}`}
+                aria-label={`Copy link to line ${line.no}`}
                 title='Copy link to this line'
             >
                 {copied ? '✓' : '#'}
@@ -114,7 +109,7 @@ const Line = memo(function Line({
     );
 });
 
-export default function CyoaReader({ data }: { data: TranscriptData }) {
+export default function StoryReader({ data }: { data: StoryData }) {
     const { colorMode } = useTheme();
     const searchParams = useSearchParams();
 
@@ -126,21 +121,20 @@ export default function CyoaReader({ data }: { data: TranscriptData }) {
         }
     }, [targetNo]);
 
-    const scan = useScan(data.messages);
+    const scan = useScan(data.lines);
 
     return (
         <div>
             <ScanBar scan={scan} />
             <div className={styles.prose}>
-                {data.messages.map((message) => (
+                {data.lines.map((line) => (
                     <Line
-                        key={message.no}
-                        message={message}
-                        episodeTitle={data.episodeTitle}
+                        key={line.no}
+                        line={line}
                         characters={data.characters}
                         colorMode={colorMode}
                         query={scan.activeQuery}
-                        highlighted={message.no === targetNo || message.no === scan.currentMatchNo}
+                        highlighted={line.no === targetNo || line.no === scan.currentMatchNo}
                     />
                 ))}
             </div>

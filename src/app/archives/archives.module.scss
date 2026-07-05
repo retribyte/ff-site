@@ -116,6 +116,21 @@
     }
 }
 
+// Pointer to the chronicle's new home under /stories
+.pointer {
+    margin: 1rem 0 0;
+    text-align: center;
+
+    a {
+        color: var(--vm);
+        text-decoration: none;
+
+        &:hover {
+            color: var(--link-hover);
+        }
+    }
+}
+
 @media (max-width: 768px) {
     .main {
         height: auto;

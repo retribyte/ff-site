@@ -1,0 +1,130 @@
+// Story reader page chrome. --story/--story-2 are set inline from storyColors().
+
+.main {
+    max-width: var(--reader-width);
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    a {
+        font-family: var(--font-pixel);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        text-decoration: none;
+        color: var(--text-muted);
+
+        &:hover {
+            color: var(--link-hover);
+        }
+    }
+}
+
+.header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.title {
+    margin: 0.2rem 0 0.4rem;
+    color: var(--story);
+    text-shadow:
+        calc(var(--px) * 1.2) calc(var(--px) * 1.2) 0 var(--shadow),
+        0 0 18px color-mix(in srgb, var(--story) 40%, transparent);
+}
+
+.chapterTitle {
+    margin: 0.2rem 0 0.4rem;
+    color: var(--story);
+    text-shadow: var(--px) var(--px) 0 var(--shadow);
+}
+
+.summary {
+    margin: 0 auto;
+    color: var(--text-muted);
+    max-width: 34rem;
+    font-family: var(--font-prose);
+    font-style: italic;
+}
+
+.footer {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+// Chapter table of contents (multi-chapter stories)
+.toc {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 34rem;
+    margin: 0 auto;
+}
+
+.tocLink {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.85rem 1.1rem;
+    text-decoration: none;
+
+    background: linear-gradient(160deg, color-mix(in srgb, var(--story) 14%, var(--surface)) 0%, var(--surface) 75%);
+    border: var(--px) solid color-mix(in srgb, var(--story) 45%, var(--border-loud));
+    box-shadow: var(--px) var(--px) 0 0 var(--shadow);
+    transition: box-shadow 0.15s ease-out;
+
+    &:hover,
+    &:focus-visible {
+        box-shadow:
+            var(--px) var(--px) 0 0 var(--shadow),
+            0 0 14px color-mix(in srgb, var(--story) 35%, transparent);
+    }
+}
+
+.tocNo {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--story);
+    text-shadow: 1px 1px 0 var(--shadow);
+}
+
+.tocTitle {
+    flex: 1;
+    color: var(--text);
+}
+
+.tocMeta {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+// prev/next chapter navigation
+.chapterNav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2.5rem;
+
+    a {
+        font-family: var(--font-pixel);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        text-decoration: none;
+        color: var(--story);
+
+        &:hover {
+            color: var(--link-hover);
+        }
+    }
+}

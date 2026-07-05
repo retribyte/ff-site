@@ -66,6 +66,42 @@ _action line_                       ACTION (same `Name`: override)
 A speaker override sticks for the rest of the block. Bare `(edited)` lines
 are dropped. Quotes that end up with no character import as OTHER (FR-MSG-4).
 
+## Stories
+
+Short stories (and anything else that reads at `/stories`) have their own,
+thinner pipeline — no meta files, no `/import` page:
+
+```
+markdown manuscript  ──story-md-to-api.py──▶  story JSON  ──--upload──▶  database
+ md/stories/<slug>.md                          api/stories/
+```
+
+`python3 story-md-to-api.py md/stories/<slug>.md` converts;
+add `--upload [--api http://localhost:3000/api]` to log in and POST the
+story, its chapters, and bulk lines directly. Uploading aborts if the slug
+already exists (delete the story via the API to re-upload a revision).
+
+Story metadata lives in the manuscript's frontmatter (`slug` and `title`
+required; `blurb`, `author`, `published`, `themeColor`, `themeColor2`
+optional). Body format:
+
+````
+# Chapter 1: The Signal             "# Chapter N[: Title]" starts a chapter;
+                                    no headings = one untitled chapter
+A plain paragraph.                  NARRATION (one line per paragraph)
+> Emmett: line                      DIALOGUE by Emmett
+> ?: line                           DIALOGUE, unknown speaker
+_action line_                       ACTION (a choice, CYOA-style)
+```transcript … ```                 one TRANSCRIPT line (VCOMM fragment);
+                                    interior blank lines = paragraph breaks
+***                                 BREAK (scene break)
+````
+
+At upload, dialogue speakers are resolved against `/characters` (exact name,
+then aliases); unmatched names are kept as display-name fallbacks and listed
+in a warning. The `author` frontmatter is matched against the uploader (or
+the user list, when uploading as an admin).
+
 ## Sanity check
 
 Converting `md/ff2/*.md` reproduces the seeded database exactly: 21,741

@@ -1,4 +1,4 @@
-export default function CyoaLoading() {
+export default function StoryLoading() {
     return (
         <main
             style={{

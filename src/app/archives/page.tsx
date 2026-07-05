@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
 
 // The full campaign roster. Seasons without data in the DB still get a strip,
 // dimmed, like the old site listed FF1–FF4 before their archives existed.
-const ROSTER = ['FF1', 'FF2', 'FF3', 'FF4', 'Vortox Machina'];
+const ROSTER = ['FF1', 'FF2', 'FF3', 'FF4'];
 
 export default async function ArchivesPage() {
     let seasons: Season[];
@@ -58,8 +58,7 @@ export default async function ArchivesPage() {
                         );
                     }
 
-                    // The chronicle gets its dedicated prose reader
-                    const href = seasonSlug(title) === 'vm' ? '/cyoa' : `/archives/${seasonSlug(title)}`;
+                    const href = `/archives/${seasonSlug(title)}`;
 
                     return (
                         <Link key={title} href={href} className={styles.strip} style={style}>
@@ -72,6 +71,12 @@ export default async function ArchivesPage() {
                     );
                 })}
             </div>
+
+            <p className={styles.pointer}>
+                <Link href='/stories/vm' className='pixel-label'>
+                    the Vortox Machina chronicle now lives in Stories →
+                </Link>
+            </p>
         </main>
     );
 }

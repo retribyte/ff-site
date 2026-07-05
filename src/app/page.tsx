@@ -39,11 +39,11 @@ export default function Home() {
                     </ul>
                 </Link>
 
-                <Link href='/cyoa' className={`pixel-panel ${styles.door}`}>
-                    <h2>Vortox Machina</h2>
-                    <p>The choose-your-own-adventure chronicle.</p>
+                <Link href='/stories' className={`pixel-panel ${styles.door}`}>
+                    <h2>Stories</h2>
+                    <p>Short stories and the Vortox Machina chronicle.</p>
                     <span className='pixel-label' style={{ color: 'var(--vm)' }}>
-                        CYOA
+                        CYOA · FICTION
                     </span>
                 </Link>
             </section>

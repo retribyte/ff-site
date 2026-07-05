@@ -9,7 +9,7 @@ import styles from './navbar.module.scss';
 
 const links = [
     { href: '/archives', label: 'Archives' },
-    { href: '/cyoa', label: 'CYOA' },
+    { href: '/stories', label: 'Stories' },
     { href: '/characters', label: 'Characters' },
     { href: '/species', label: 'Species' },
     { href: '/items', label: 'Items' },

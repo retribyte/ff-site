@@ -1,15 +1,14 @@
 import type { Episode, Season } from './types';
 
-// Season titles in the DB are short codes ("FF2", "Vortox Machina").
-// These maps give them URLs and display flavor. Unknown seasons fall back
-// to a generic slugify so newly authored seasons still get a page.
+// Season titles in the DB are short codes ("FF2"). These maps give them URLs
+// and display flavor. Unknown seasons fall back to a generic slugify so newly
+// authored seasons still get a page.
 
 const KNOWN_SLUGS: Record<string, string> = {
     FF1: 'ff1',
     FF2: 'ff2',
     FF3: 'ff3',
     FF4: 'ff4',
-    'Vortox Machina': 'vm',
 };
 
 const DISPLAY_NAMES: Record<string, string> = {
@@ -17,11 +16,10 @@ const DISPLAY_NAMES: Record<string, string> = {
     ff2: 'Final Frontier 2',
     ff3: 'Final Frontier 3',
     ff4: 'Final Frontier 4',
-    vm: 'Vortox Machina',
 };
 
-// Season slugs with dedicated color tokens in _tokens.scss ("vm" → --vm/--vm-2)
-const THEMED_SLUGS = new Set(['ff1', 'ff2', 'ff3', 'ff4', 'vm']);
+// Season slugs with dedicated color tokens in _tokens.scss ("ff2" → --ff2/--ff2-2)
+const THEMED_SLUGS = new Set(['ff1', 'ff2', 'ff3', 'ff4']);
 
 export function seasonSlug(title: string): string {
     return (
@@ -65,10 +63,7 @@ export function episodeNoFromSlug(slug: string): number | null {
     return match ? parseInt(match[1]) : null;
 }
 
-/** Deep link to one line of an episode; the chronicle reads at /cyoa. */
+/** Deep link to one line of an episode. */
 export function lineUrl(episode: Pick<Episode, 'title' | 'episode_no' | 'seasonTitle'>, messageNo: number): string {
-    if (episode.seasonTitle === 'Vortox Machina') {
-        return `/cyoa?line=${messageNo}`;
-    }
     return `/archives/${seasonSlug(episode.seasonTitle)}/${episodeSlug(episode)}?line=${messageNo}`;
 }

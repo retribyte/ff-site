@@ -5,13 +5,13 @@
     letter-spacing: 0.05em;
     color: var(--text);
     background: var(--surface-2);
-    border: 1px solid color-mix(in srgb, var(--vm) 40%, var(--border-loud));
+    border: 1px solid color-mix(in srgb, var(--story) 40%, var(--border-loud));
     border-radius: var(--radius);
     padding: 0.45rem 0.5rem;
     max-width: 17rem;
     cursor: pointer;
 
     &:hover {
-        border-color: var(--vm);
+        border-color: var(--story);
     }
 }

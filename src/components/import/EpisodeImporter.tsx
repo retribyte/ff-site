@@ -225,13 +225,10 @@ export default function EpisodeImporter() {
                 setPhase({ step: 'uploading', done: Math.min(offset + CHUNK_SIZE, total), total });
             }
 
-            const href =
-                payload.seasonTitle === 'Vortox Machina'
-                    ? '/cyoa'
-                    : `/archives/${seasonSlug(payload.seasonTitle)}/${episodeSlug({
-                          title: payload.episode.title,
-                          episode_no: payload.episode.episode_no,
-                      })}`;
+            const href = `/archives/${seasonSlug(payload.seasonTitle)}/${episodeSlug({
+                title: payload.episode.title,
+                episode_no: payload.episode.episode_no,
+            })}`;
             setPhase({ step: 'success', count: total, href });
             setEpisodeExists(true);
         } catch (error) {

@@ -6,6 +6,7 @@ export type Sex = 'MALE' | 'FEMALE' | 'OTHER' | 'UNSPECIFIED';
 export type SentienceClass = 'BLACK' | 'HIGHER_SENTIENT' | 'LOWER_SENTIENT' | 'NON_SENTIENT';
 export type MessageType = 'BOT_RESPONSE' | 'COMMAND' | 'QUOTE' | 'ACTION' | 'EMBED' | 'OTHER';
 export type ItemType = 'WEAPON' | 'EQUIPMENT' | 'ARTIFACT' | 'OTHER';
+export type StoryLineType = 'NARRATION' | 'DIALOGUE' | 'ACTION' | 'TRANSCRIPT' | 'BREAK';
 
 export interface PublicUser {
     id: number;
@@ -100,6 +101,39 @@ export interface Commentary {
     messageNo: number;
     content: string;
     creator?: PublicUser;
+}
+
+export interface Story {
+    id: number;
+    slug: string;
+    title: string;
+    blurb: string | null;
+    authorId: number | null;
+    publishedDate: string | null;
+    themeColor: string | null;
+    themeColor2: string | null;
+    author?: PublicUser;
+    chapters?: StoryChapter[];
+}
+
+export interface StoryChapter {
+    id: number;
+    storyId: number;
+    chapter_no: number;
+    title: string | null;
+    lines?: StoryLine[];
+    _count?: { lines: number };
+}
+
+export interface StoryLine {
+    id: number;
+    chapterId: number;
+    line_no: number;
+    type: StoryLineType;
+    text: string;
+    characterId: number | null;
+    speaker: string | null; // display-name fallback when no Character row exists
+    character?: Character;
 }
 
 export interface Item {

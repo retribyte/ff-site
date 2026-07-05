@@ -1,7 +1,7 @@
 import { apiPaged } from './api';
 import type { Message, MessageType } from './types';
 
-// Slim shapes shared by the transcript and CYOA readers — the API includes
+// Slim shapes shared by the transcript and story readers — the API includes
 // full character/player objects on every message; we send id-keyed lookup
 // tables to the client instead.
 
