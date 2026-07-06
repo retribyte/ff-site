@@ -59,8 +59,7 @@
     &:not(.unarchived):hover,
     &:focus-visible {
         flex: 2.4;
-        background: 
-        var(--star-texture),color-mix(in srgb, var(--season) 38%);
+        background: var(--star-texture),color-mix(in srgb, var(--season) 38%);
         box-shadow:
             var(--px) var(--px) 0 0 var(--shadow),
             0 0 18px color-mix(in srgb, var(--season) 45%, transparent);

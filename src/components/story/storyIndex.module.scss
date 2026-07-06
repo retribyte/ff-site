@@ -1,6 +1,14 @@
 // The story shelf — each card is tinted by the story's identity colors
 // (--story / --story-2, set inline).
 
+// Registered so the browser knows --percentage is a <percentage> and can
+// interpolate it — unregistered custom props snap instead of transitioning.
+@property --percentage {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 0%;
+}
+
 .shelf {
     list-style: none;
     margin: 1.5rem 0 0;
@@ -10,6 +18,12 @@
     gap: 1rem;
 }
 
+.row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
 .card {
     display: flex;
     flex-direction: column;
@@ -17,19 +31,27 @@
     padding: 1.1rem 1.3rem;
     text-decoration: none;
 
+    --percentage: 0%;
+
     background:
         var(--star-texture),
-        linear-gradient(160deg, color-mix(in srgb, var(--story) 24%, var(--surface)) 0%, var(--surface) 72%);
+        linear-gradient(160deg, color-mix(in srgb, var(--story) 24%, var(--surface)) var(--percentage), var(--surface) calc(var(--percentage) + 72%));
     background-size: 120px, auto;
     border: var(--px) solid color-mix(in srgb, var(--story) 55%, var(--border-loud));
     box-shadow: var(--px) var(--px) 0 0 var(--shadow);
-    transition: box-shadow 0.15s ease-out;
+    transition:
+        box-shadow 0.15s ease-out,
+        --percentage 0.3s ease-out;
 
     &:hover,
     &:focus-visible {
         box-shadow:
             var(--px) var(--px) 0 0 var(--shadow),
             0 0 18px color-mix(in srgb, var(--story) 40%, transparent);
+        --percentage: 100%;
+        background:
+            var(--star-texture),
+            linear-gradient(160deg, color-mix(in srgb, var(--story) 24%, var(--surface)) var(--percentage), var(--surface) calc(var(--percentage) + 72%));
     }
 }
 

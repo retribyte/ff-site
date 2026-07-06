@@ -8,6 +8,7 @@ import SignalLost from '@/components/SignalLost';
 import StoryReader from '@/components/story/StoryReader';
 import ChoiceJump from '@/components/story/ChoiceJump';
 import styles from './story-page.module.scss';
+import DeleteStoryButton from '@/components/story/DeleteStoryButton';
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -71,9 +72,10 @@ export default async function StoryPage({ params }: Props) {
                     </p>
                     <h1 className={styles.title}>{story.title}</h1>
                     {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
+                <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
                 </header>
 
-                <StoryReader data={data} />
+                <StoryReader data={data} canDelete />
 
                 <footer className={styles.footer}>
                     <span className='pixel-label'>end of story ⌁ signal terminates here</span>
@@ -98,6 +100,7 @@ export default async function StoryPage({ params }: Props) {
                 </p>
                 <h1 className={styles.title}>{story.title}</h1>
                 {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
+                <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
             </header>
 
             <ol className={styles.toc}>

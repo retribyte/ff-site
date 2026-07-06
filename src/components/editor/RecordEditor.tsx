@@ -11,6 +11,7 @@ import {
     type FieldDef,
     type FormValues,
 } from '@/lib/editor/schemas';
+import DeleteControl from '@/components/DeleteControl';
 import styles from './recordEditor.module.scss';
 
 interface Props {
@@ -65,7 +66,6 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
     const [values, setValues] = useState<FormValues>(() => recordToValues(schema, record));
     const [error, setError] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
-    const [confirmingDelete, setConfirmingDelete] = useState(false);
     const refOptions = useRefOptions(schema.fields);
 
     const set = (name: string, value: string | string[]) => setValues((prev) => ({ ...prev, [name]: value }));
@@ -113,7 +113,6 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
             if (!res.ok && res.status !== 204) {
                 const envelope = (await res.json().catch(() => null)) as Envelope | null;
                 setError(envelope?.message ?? `Delete failed (HTTP ${res.status})`);
-                setConfirmingDelete(false);
                 return;
             }
             router.push(schema.indexPath);
@@ -147,26 +146,7 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
                 <button type='submit' className={styles.save} disabled={busy}>
                     {busy ? 'transmitting…' : isEdit ? 'Save changes' : `Create ${schema.kind}`}
                 </button>
-                {isEdit &&
-                    (confirmingDelete ? (
-                        <span className={styles.confirmGroup}>
-                            <span className='pixel-label'>eject this record?</span>
-                            <button type='button' className={styles.deleteConfirm} onClick={destroy} disabled={busy}>
-                                Eject
-                            </button>
-                            <button
-                                type='button'
-                                className={styles.cancel}
-                                onClick={() => setConfirmingDelete(false)}
-                            >
-                                Keep
-                            </button>
-                        </span>
-                    ) : (
-                        <button type='button' className={styles.delete} onClick={() => setConfirmingDelete(true)}>
-                            Delete
-                        </button>
-                    ))}
+                {isEdit && <DeleteControl onConfirm={destroy} busy={busy} />}
             </div>
         </form>
     );

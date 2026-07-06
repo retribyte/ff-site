@@ -15,10 +15,10 @@ export default function Home() {
                 <p className='pixel-label'>★ Welcome to the home of ★</p>
                 <h1 className={styles.title}>Final Frontier</h1>
                 <p className={styles.tagline}>
-                    The canonical archive of the Final Frontier universe
+                    The canonical archive of the Final Frontier universe ✦
                 </p>
                 <p className={styles.tagline}>
-                    campaign transcripts, characters, species, and
+                    ✧ Campaign transcripts, short stories, and
                     assorted lore
                     {/* <span className='blink'>▌</span> */}
                 </p>

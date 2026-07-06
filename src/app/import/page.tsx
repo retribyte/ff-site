@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getSessionUser } from '@/lib/auth';
-import EpisodeImporter from '@/components/import/EpisodeImporter';
+import ImportConsole from '@/components/import/ImportConsole';
 import styles from './import.module.scss';
 
 export const metadata: Metadata = { title: 'Import transcripts' };
@@ -26,12 +26,12 @@ export default async function ImportPage() {
     return (
         <main className={styles.main}>
             <header className={styles.header}>
-                <h1>Transcript import</h1>
+                <h1>Archive import</h1>
                 <p className={styles.tagline}>
-                    Feed an episode JSON from <code>archive-to-markdown/md-to-api.py</code> into the archive.
+                    Feed episode or story JSON from the <code>archive-to-markdown</code> pipeline into the archive.
                 </p>
             </header>
-            <EpisodeImporter />
+            <ImportConsole />
         </main>
     );
 }

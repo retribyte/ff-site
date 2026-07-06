@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import IndexScan from '@/components/IndexScan';
+import DeleteStoryButton from './DeleteStoryButton';
 import styles from './storyIndex.module.scss';
 
 export interface IndexStory {
@@ -45,7 +46,7 @@ export default function StoryIndex({ stories }: { stories: IndexStory[] }) {
 
             <ul className={styles.shelf}>
                 {visible.map((s) => (
-                    <li key={s.slug}>
+                    <li key={s.slug} className={styles.row}>
                         <Link
                             href={`/stories/${s.slug}`}
                             className={styles.card}

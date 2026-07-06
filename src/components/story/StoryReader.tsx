@@ -8,6 +8,7 @@ import { characterColor } from '@/lib/characterColors';
 import { collectVoices, type SlimLine, type StoryData } from '@/lib/stories';
 import type { StorySegment } from '@/lib/types';
 import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
+import DeleteStoryButton from './DeleteStoryButton';
 import styles from './story.module.scss';
 
 // Stories read as prose: NARRATION is narrator voice, ACTION is a command the
@@ -225,7 +226,7 @@ const Line = memo(function Line({
     );
 });
 
-export default function StoryReader({ data }: { data: StoryData }) {
+export default function StoryReader({ data, canDelete = false }: { data: StoryData; canDelete?: boolean }) {
     const { colorMode } = useTheme();
     const searchParams = useSearchParams();
 

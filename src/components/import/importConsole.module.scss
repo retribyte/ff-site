@@ -1,0 +1,44 @@
+.tabs {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.9rem;
+}
+
+.tab,
+.tabActive {
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    border: var(--px) solid var(--border-loud);
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text-muted);
+    background: var(--surface-2);
+
+    &:hover {
+        color: var(--text);
+        border-color: var(--accent-soft);
+    }
+}
+
+.tabActive {
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, #000) 100%);
+    border-color: color-mix(in srgb, var(--accent) 60%, var(--border-loud));
+}
+
+.hint {
+    margin: 0 0 1.25rem;
+    color: var(--text-muted);
+
+    code {
+        font-family: var(--font-mono);
+        font-size: 0.85em;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0.1rem 0.35rem;
+    }
+}

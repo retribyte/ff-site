@@ -1,0 +1,51 @@
+// Shared delete/eject button UI (RecordEditor + story views).
+
+.delete,
+.cancel {
+    font-family: var(--font-pixel);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background: none;
+    border: 1px dashed;
+    border-radius: var(--radius);
+    padding: 0.45rem 0.7rem;
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--ff1);
+        color: var(--text);
+    }
+}
+
+.delete:hover {
+    color: var(--ff1);
+}
+
+.confirmGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.deleteConfirm {
+    font-family: var(--font-pixel);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--ff1);
+    border: 1px solid var(--ff1-2);
+    border-radius: var(--radius);
+    padding: 0.45rem 0.7rem;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        filter: brightness(1.15);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
+}
