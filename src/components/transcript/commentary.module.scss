@@ -1,5 +1,10 @@
 .thread {
-    margin-top: 0.25rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: auto;
+    margin-right: 1.5rem;
 }
 
 .chip {
@@ -11,8 +16,9 @@
     background: none;
     border: 1px dashed color-mix(in srgb, var(--char, var(--accent)) 40%, var(--border-loud));
     border-radius: var(--radius);
-    padding: 0.2rem 0.45rem;
+    padding: 0.2rem 0.5rem;
     cursor: pointer;
+    width: fit-content;
 
     &:hover {
         color: var(--text);
@@ -33,10 +39,18 @@
 }
 
 .panel {
+    // Floats above the transcript so opening a thread never resizes its line
+    position: absolute;
+    top: 100%;
+    right: 0;
     margin-top: 0.5rem;
-    padding: 0.7rem 0.9rem;
+    z-index: 3;
+    width: 22rem;
+    max-width: 80vw;
+    padding: 0.7rem 1rem;
     background: var(--surface-2);
     border: 1px dashed color-mix(in srgb, var(--char, var(--accent)) 40%, var(--border-loud));
+    box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
@@ -71,7 +85,7 @@
 
 .noteActions {
     display: flex;
-    gap: 0.4rem;
+    gap: 0.5rem;
 
     button {
         font-family: var(--font-pixel);
@@ -95,18 +109,18 @@
 .addRow {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.5rem;
     align-items: flex-start;
 
     textarea {
         width: 100%;
         font-family: var(--font-body);
-        font-size: 0.9rem;
+        font-size: 1rem;
         color: var(--text);
         background: var(--bg);
         border: 1px solid var(--border-loud);
         border-radius: var(--radius);
-        padding: 0.45rem 0.6rem;
+        padding: 0.5rem 0.6rem;
         resize: vertical;
 
         &:focus {

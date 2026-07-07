@@ -38,19 +38,21 @@ function parseEmbed(text: string): Embed | null {
     }
 }
 
-function MessageLine({ message, query }: { message: SlimMessage; query: string | null }) {
+function MessageLine({ message, query, children }: { message: SlimMessage; query: string | null; children?: React.ReactNode }) {
     switch (message.type) {
         case 'COMMAND':
             return (
-                <p className={styles.command}>
+                <div className={styles.command}>
                     <Highlighted text={message.text} query={query} />
-                </p>
+                    {children}
+                </div>
             );
         case 'ACTION':
             return (
-                <p className={styles.action}>
+                <div className={styles.action}>
                     <Highlighted text={message.text} query={query} />
-                </p>
+                    {children}
+                </div>
             );
         case 'EMBED': {
             const embed = parseEmbed(message.text);
@@ -60,6 +62,7 @@ function MessageLine({ message, query }: { message: SlimMessage; query: string |
                         <p>
                             <Highlighted text={message.text} query={query} />
                         </p>
+                        {children}
                     </div>
                 );
             }
@@ -72,15 +75,17 @@ function MessageLine({ message, query }: { message: SlimMessage; query: string |
                         </p>
                     ))}
                     {embed.footer && <p className={styles.embedFooter}>{embed.footer}</p>}
+                    {children}
                 </div>
             );
         }
         default:
             // QUOTE, BOT_RESPONSE, OTHER — plain transmission text
             return (
-                <p className={styles.plain}>
+                <div className={styles.plain}>
                     <Highlighted text={message.text} query={query} />
-                </p>
+                    {children}
+                </div>
             );
     }
 }
@@ -147,12 +152,13 @@ function StoryBlock({ block, episodeTitle, characters, players, targetNo, query,
                 </div>
                 {block.messages.map((message) => (
                     <div key={message.no} id={`m-${message.no}`}>
-                        <MessageLine message={message} query={query} />
-                        <CommentaryThread
-                            episodeTitle={episodeTitle}
-                            messageNo={message.no}
-                            initial={message.commentaries}
-                        />
+                        <MessageLine message={message} query={query}>
+                            <CommentaryThread
+                                episodeTitle={episodeTitle}
+                                messageNo={message.no}
+                                initial={message.commentaries}
+                            />
+                        </MessageLine>
                     </div>
                 ))}
             </div>

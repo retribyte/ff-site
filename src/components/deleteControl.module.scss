@@ -10,7 +10,7 @@
     background: none;
     border: 1px dashed;
     border-radius: var(--radius);
-    padding: 0.45rem 0.7rem;
+    padding: 0.5rem 0.7rem;
     cursor: pointer;
 
     &:hover {
@@ -37,7 +37,7 @@
     background: var(--ff1);
     border: 1px solid var(--ff1-2);
     border-radius: var(--radius);
-    padding: 0.45rem 0.7rem;
+    padding: 0.5rem 0.7rem;
     cursor: pointer;
 
     &:hover:not(:disabled) {

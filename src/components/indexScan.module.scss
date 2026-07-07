@@ -1,7 +1,7 @@
 .controls {
     position: sticky;
     top: var(--navbar-height);
-    z-index: 5;
+    z-index: 2;
     display: flex;
     align-items: center;
     gap: 0.6rem;
@@ -23,7 +23,7 @@
     flex: 1;
     min-width: 0;
     font-family: var(--font-mono);
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--text);
     background: transparent;
     border: none;
@@ -44,7 +44,7 @@
     background: var(--surface-2);
     border: 1px solid var(--border-loud);
     border-radius: var(--radius);
-    padding: 0.35rem 0.4rem;
+    padding: 0.35rem 0.5rem;
     max-width: 11rem;
     cursor: pointer;
 }
