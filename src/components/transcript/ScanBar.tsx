@@ -5,7 +5,25 @@ import styles from './transcript.module.scss';
 
 // In-episode search ("scan"), shared by the transcript and story readers.
 
+// The active reader registers a virtualizer-aware scroller here so jumps can
+// reach rows that aren't currently mounted. ChoiceJump / EpisodeSelect render
+// outside the reader and call scrollToMessage() without knowing about it; only
+// one reader is mounted per page, so a module-level slot is enough.
+type Scroller = (no: number, smooth: boolean) => boolean;
+let activeScroller: Scroller | null = null;
+
+export function registerScroller(fn: Scroller) {
+    activeScroller = fn;
+}
+
+export function clearScroller(fn: Scroller) {
+    // Only clear if we still own the slot (guards against unmount races)
+    if (activeScroller === fn) activeScroller = null;
+}
+
 export function scrollToMessage(no: number, smooth: boolean) {
+    // Prefer the virtualizer: it can bring an off-screen row into the DOM.
+    if (activeScroller?.(no, smooth)) return;
     const el = document.getElementById(`m-${no}`);
     if (!el) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

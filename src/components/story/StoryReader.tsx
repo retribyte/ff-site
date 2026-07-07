@@ -1,13 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
 import { collectVoices, type SlimLine, type StoryData } from '@/lib/stories';
 import type { StorySegment } from '@/lib/types';
-import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
+import {
+    clearScroller,
+    Highlighted,
+    registerScroller,
+    ScanBar,
+    scrollToMessage,
+    useScan,
+} from '@/components/transcript/ScanBar';
 import DeleteStoryButton from './DeleteStoryButton';
 import styles from './story.module.scss';
 
@@ -91,6 +99,9 @@ const Line = memo(function Line({
     query,
     highlighted,
     format,
+    measureRef,
+    dataIndex,
+    positionStyle,
 }: {
     line: SlimLine;
     characters: StoryData['characters'];
@@ -98,6 +109,10 @@ const Line = memo(function Line({
     query: string | null;
     highlighted: boolean;
     format: StoryData['format'];
+    // Wiring for the windowing virtualizer
+    measureRef?: (el: HTMLElement | null) => void;
+    dataIndex?: number;
+    positionStyle?: React.CSSProperties;
 }) {
     const [copied, setCopied] = useState(false);
 
@@ -211,7 +226,14 @@ const Line = memo(function Line({
     }
 
     return (
-        <div id={`m-${line.no}`} className={styles.line} data-target={highlighted || undefined}>
+        <div
+            ref={measureRef}
+            data-index={dataIndex}
+            id={`m-${line.no}`}
+            className={styles.line}
+            style={positionStyle}
+            data-target={highlighted || undefined}
+        >
             {content}
             <button
                 type='button'
@@ -230,6 +252,51 @@ export default function StoryReader({ data, canDelete = false }: { data: StoryDa
     const { colorMode } = useTheme();
     const searchParams = useSearchParams();
 
+    // line.no → row index for scrollToIndex (1:1 for stories)
+    const noToIndex = useMemo(() => {
+        const map = new Map<number, number>();
+        data.lines.forEach((line, i) => map.set(line.no, i));
+        return map;
+    }, [data.lines]);
+
+    // ── Windowing over the page scroll ────────────────────────────────────
+    const listRef = useRef<HTMLDivElement>(null);
+    // In state (not a ref) so the virtualizer re-renders once it's measured.
+    const [scrollMargin, setScrollMargin] = useState(0);
+    useEffect(() => {
+        const el = listRef.current;
+        if (el) setScrollMargin(el.getBoundingClientRect().top + window.scrollY);
+    }, [data.lines.length]);
+    const virtualizer = useWindowVirtualizer({
+        count: data.lines.length,
+        estimateSize: () => 80,
+        overscan: 8,
+        gap: 14, // was the flex `gap: 0.9rem` on .prose
+        scrollMargin,
+        initialRect: { width: 1280, height: 900 },
+    });
+
+    const jumpToNo = useCallback(
+        (no: number) => {
+            const index = noToIndex.get(no);
+            if (index === undefined) return false;
+            // Always an instant jump: react-virtual can't smooth-scroll to a
+            // dynamically-measured row (off-screen heights are only estimates,
+            // so a smooth animation never converges). Instant find-next also
+            // matches native browser find behavior.
+            virtualizer.scrollToIndex(index, { align: 'center' });
+            // First scroll uses size estimates; re-issue once the target has
+            // mounted and measured so we land exactly on it.
+            requestAnimationFrame(() => virtualizer.scrollToIndex(index, { align: 'center' }));
+            return true;
+        },
+        [noToIndex, virtualizer]
+    );
+    useEffect(() => {
+        registerScroller(jumpToNo);
+        return () => clearScroller(jumpToNo);
+    }, [jumpToNo]);
+
     const lineParam = searchParams.get('line');
     const targetNo = lineParam ? parseInt(lineParam) : null;
     useEffect(() => {
@@ -239,6 +306,7 @@ export default function StoryReader({ data, canDelete = false }: { data: StoryDa
     }, [targetNo]);
 
     const scan = useScan(data.lines);
+    const items = virtualizer.getVirtualItems();
 
     // Novel-style stories don't print speaker names inline, so a legend keys
     // the dialogue colors to their characters.
@@ -273,18 +341,34 @@ export default function StoryReader({ data, canDelete = false }: { data: StoryDa
                     })}
                 </ul>
             )}
-            <div className={styles.prose}>
-                {data.lines.map((line) => (
-                    <Line
-                        key={line.no}
-                        line={line}
-                        characters={data.characters}
-                        colorMode={colorMode}
-                        query={scan.activeQuery}
-                        highlighted={line.no === targetNo || line.no === scan.currentMatchNo}
-                        format={data.format}
-                    />
-                ))}
+            <div
+                ref={listRef}
+                className={styles.prose}
+                style={{ height: virtualizer.getTotalSize(), position: 'relative' }}
+            >
+                {items.map((vi) => {
+                    const line = data.lines[vi.index];
+                    return (
+                        <Line
+                            key={line.no}
+                            line={line}
+                            characters={data.characters}
+                            colorMode={colorMode}
+                            query={scan.activeQuery}
+                            highlighted={line.no === targetNo || line.no === scan.currentMatchNo}
+                            format={data.format}
+                            measureRef={virtualizer.measureElement}
+                            dataIndex={vi.index}
+                            positionStyle={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                transform: `translateY(${vi.start - virtualizer.options.scrollMargin}px)`,
+                            }}
+                        />
+                    );
+                })}
             </div>
         </div>
     );

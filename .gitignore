@@ -42,6 +42,7 @@ next-env.d.ts
 
 # legacy app symlinks (reference only)
 /ff-site
+/ff-site-old
 /ff-server
 /vortox-bot
 /space-builder

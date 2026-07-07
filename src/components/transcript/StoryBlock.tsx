@@ -93,9 +93,24 @@ interface Props {
     targetNo: number | null;
     query: string | null;
     currentMatchNo: number | null;
+    // Wiring for the windowing virtualizer; absent when rendered unvirtualized
+    measureRef?: (el: HTMLElement | null) => void;
+    dataIndex?: number;
+    positionStyle?: React.CSSProperties;
 }
 
-function StoryBlock({ block, episodeTitle, characters, players, targetNo, query, currentMatchNo }: Props) {
+function StoryBlock({
+    block,
+    episodeTitle,
+    characters,
+    players,
+    targetNo,
+    query,
+    currentMatchNo,
+    measureRef,
+    dataIndex,
+    positionStyle,
+}: Props) {
     const { colorMode } = useTheme();
     const [copied, setCopied] = useState(false);
 
@@ -121,8 +136,10 @@ function StoryBlock({ block, episodeTitle, characters, players, targetNo, query,
 
     return (
         <li
+            ref={measureRef}
+            data-index={dataIndex}
             className={styles.block}
-            style={{ '--char': color } as React.CSSProperties}
+            style={{ '--char': color, ...positionStyle } as React.CSSProperties}
             data-target={isTarget || hasCurrentMatch || undefined}
         >
             <PixelAvatar src={avatarSrc} name={speaker} color={color} />

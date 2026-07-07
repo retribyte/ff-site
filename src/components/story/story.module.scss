@@ -1,10 +1,10 @@
 // Story reader prose. --story/--story-2 are set inline per page from
 // storyColors() so every story carries its own identity colors.
 
+// Rows are absolutely positioned by the windowing virtualizer (StoryReader),
+// which sets the container height and owns the inter-row gap. max-width keeps
+// the centered reading column.
 .prose {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
     max-width: 42rem;
     margin: 0 auto;
 }
@@ -12,9 +12,6 @@
 // One addressable line of the story; anchor button lives in the margin
 .line {
     position: relative;
-
-    content-visibility: auto;
-    contain-intrinsic-size: auto 4rem;
 
     p {
         margin: 0;
