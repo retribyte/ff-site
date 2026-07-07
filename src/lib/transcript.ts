@@ -1,4 +1,5 @@
 import { apiPaged } from './api';
+import { cached, cacheTags } from './cache';
 import type { Message, MessageType } from './types';
 
 // Slim shapes shared by the transcript and story readers — the API includes
@@ -39,11 +40,13 @@ export interface TranscriptData {
 export async function fetchAllMessages(episodeTitle: string): Promise<Message[]> {
     const encoded = encodeURIComponent(episodeTitle);
     const limit = 1000;
-    const first = await apiPaged<Message>(`/episodes/${encoded}/messages?page=1&limit=${limit}`);
+    // Historical transcript — cache the reads; commentary mutations bust the tag.
+    const opts = cached([cacheTags.episodes]);
+    const first = await apiPaged<Message>(`/episodes/${encoded}/messages?page=1&limit=${limit}`, opts);
     const messages = [...first.data];
     const totalPages = Math.ceil(first.total / limit);
     for (let page = 2; page <= totalPages; page += 1) {
-        const next = await apiPaged<Message>(`/episodes/${encoded}/messages?page=${page}&limit=${limit}`);
+        const next = await apiPaged<Message>(`/episodes/${encoded}/messages?page=${page}&limit=${limit}`, opts);
         messages.push(...next.data);
     }
     return messages;

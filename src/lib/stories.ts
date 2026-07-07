@@ -1,4 +1,5 @@
 import { apiRaw } from './api';
+import { cached, cacheTags } from './cache';
 import type { SpeakerInfo } from './transcript';
 import type { Character, StoryChapter, StoryFormat, StoryLine, StoryLineType, StorySegment } from './types';
 
@@ -33,13 +34,15 @@ export async function fetchAllLines(
     const base = `/stories/${encodeURIComponent(slug)}/chapters/${chapterNo}/lines`;
     const limit = 1000;
     type LinesEnvelope = { data: StoryLine[]; total?: number; characters?: Character[] };
+    // Authored story content — cache the reads; story edits/deletes bust the tags.
+    const opts = cached([cacheTags.stories, cacheTags.story(slug)]);
 
-    const first = await apiRaw<LinesEnvelope>(`${base}?page=1&limit=${limit}`);
+    const first = await apiRaw<LinesEnvelope>(`${base}?page=1&limit=${limit}`, opts);
     const lines = [...(first.data ?? [])];
     const characters = [...(first.characters ?? [])];
     const totalPages = Math.ceil((first.total ?? lines.length) / limit);
     for (let page = 2; page <= totalPages; page += 1) {
-        const next = await apiRaw<LinesEnvelope>(`${base}?page=${page}&limit=${limit}`);
+        const next = await apiRaw<LinesEnvelope>(`${base}?page=${page}&limit=${limit}`, opts);
         lines.push(...(next.data ?? []));
         characters.push(...(next.characters ?? []));
     }

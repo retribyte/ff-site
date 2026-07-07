@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
+import { cached, cacheTags } from '@/lib/cache';
 import type { Message, Season } from '@/lib/types';
 import { episodeNoFromSlug, episodeSlug, findSeasonBySlug, seasonColors } from '@/lib/seasons';
 import { fetchAllMessages, slimTranscript } from '@/lib/transcript';
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { season: seasonParam, episode: episodeParam } = await params;
     const episodeNo = episodeNoFromSlug(episodeParam);
     try {
-        const seasons = await api<Season[]>('/seasons');
+        const seasons = await api<Season[]>('/seasons', cached([cacheTags.seasons]));
         const season = findSeasonBySlug(seasons, seasonParam);
         const episode = season?.episodes?.find((e) => e.episode_no === episodeNo);
         return { title: episode ? episode.title : 'Archives' };
@@ -37,7 +38,7 @@ export default async function EpisodePage({ params }: Props) {
     let episodeTitle: string;
 
     try {
-        seasons = await api<Season[]>('/seasons');
+        seasons = await api<Season[]>('/seasons', cached([cacheTags.seasons]));
         const season = findSeasonBySlug(seasons, seasonParam);
         const episode = season?.episodes?.find((e) => e.episode_no === episodeNo);
         if (!season || !episode) notFound();

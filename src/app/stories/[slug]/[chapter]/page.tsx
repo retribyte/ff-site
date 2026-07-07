@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
+import { cached, cacheTags } from '@/lib/cache';
 import type { Story } from '@/lib/types';
 import {
     chapterNoFromSlug,
@@ -19,13 +20,13 @@ interface Props {
     params: Promise<{ slug: string; chapter: string }>;
 }
 
-// Content comes from the live API — render per-request, not at build time
-export const dynamic = 'force-dynamic';
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug, chapter } = await params;
     try {
-        const story = await api<Story>(`/stories/${encodeURIComponent(slug)}`);
+        const story = await api<Story>(
+            `/stories/${encodeURIComponent(slug)}`,
+            cached([cacheTags.stories, cacheTags.story(slug)])
+        );
         const no = chapterNoFromSlug(chapter);
         const match = story.chapters?.find((c) => c.chapter_no === no);
         const chapterName = match?.title ?? (no !== null ? `Chapter ${no}` : null);
@@ -40,7 +41,10 @@ export default async function StoryChapterPage({ params }: Props) {
 
     let story: Story;
     try {
-        story = await api<Story>(`/stories/${encodeURIComponent(slug)}`);
+        story = await api<Story>(
+            `/stories/${encodeURIComponent(slug)}`,
+            cached([cacheTags.stories, cacheTags.story(slug)])
+        );
     } catch (error) {
         if (error instanceof ApiError && error.httpStatus === 404) notFound();
         return (
