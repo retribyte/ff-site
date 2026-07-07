@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as m;
+
 .importer {
     display: flex;
     flex-direction: column;
@@ -170,11 +172,7 @@
 }
 
 .error {
-    margin: 0;
-    font-family: var(--font-pixel);
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    color: var(--ff1);
+    @include m.pixel-error;
 }
 
 .success {

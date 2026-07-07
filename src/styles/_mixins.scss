@@ -1,0 +1,99 @@
+// Shared style primitives — the house patterns that recur across modules.
+// Consume with `@use '../../styles/mixins' as m;` then `@include m.<name>;`.
+// Every tint-aware mixin takes a CSS custom property (var(--char) / var(--type)
+// / var(--story) / var(--season)), never a literal — records are themed inline.
+//
+// See src/styles/consolidation-plan.md for the full mapping and rationale.
+
+// ── Lists ────────────────────────────────────────────────────────────────
+@mixin reset-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+// Responsive card grid (character/item/species indexes, member lists).
+@mixin auto-grid($min: 10.5rem, $gap: 0.9rem) {
+    @include reset-list;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax($min, 1fr));
+    gap: $gap;
+}
+
+// ── Text / links ─────────────────────────────────────────────────────────
+// Pixel-font uppercase nav link (breadcrumbs, pagers, chapter nav).
+@mixin pixel-nav-link($color: var(--text-muted)) {
+    font-family: var(--font-pixel);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    color: $color;
+
+    &:hover {
+        color: var(--link-hover);
+    }
+}
+
+// Terse pixel error line (form + action failures).
+@mixin pixel-error($size: 0.7rem) {
+    margin: 0;
+    font-family: var(--font-pixel);
+    font-size: $size;
+    letter-spacing: 0.05em;
+    color: var(--ff1);
+}
+
+// ── Quote block (character page + dedicated quotes page) ─────────────────
+@mixin quote-list {
+    @include reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+@mixin quote-item {
+    display: flex;
+    gap: 0.6rem;
+    background: color-mix(in srgb, var(--char) 7%, var(--surface));
+    border-left: var(--px) solid var(--char);
+    padding: 0.75rem 1rem;
+
+    blockquote {
+        margin: 0;
+        min-width: 0;
+
+        p {
+            margin: 0;
+            font-family: var(--font-prose);
+            font-style: italic;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        footer {
+            margin-top: 0.35rem;
+            font-family: var(--font-pixel);
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+
+            a {
+                color: var(--text-muted);
+                text-decoration: none;
+
+                &:hover {
+                    color: var(--link-hover);
+                }
+            }
+        }
+    }
+}
+
+@mixin quote-mark {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--char);
+    user-select: none;
+}

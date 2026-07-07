@@ -1,4 +1,5 @@
 // Story reader page chrome. --story/--story-2 are set inline from storyColors().
+@use '../../../styles/mixins' as m;
 
 .main {
     max-width: var(--reader-width);
@@ -14,16 +15,7 @@
     margin-bottom: 1.25rem;
 
     a {
-        font-family: var(--font-pixel);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        text-decoration: none;
-        color: var(--text-muted);
-
-        &:hover {
-            color: var(--link-hover);
-        }
+        @include m.pixel-nav-link;
     }
 }
 
@@ -116,15 +108,6 @@
     margin-top: 2.5rem;
 
     a {
-        font-family: var(--font-pixel);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        text-decoration: none;
-        color: var(--story);
-
-        &:hover {
-            color: var(--link-hover);
-        }
+        @include m.pixel-nav-link(var(--story));
     }
 }

@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as m;
+
 .main {
     max-width: var(--reader-width);
     margin: 0 auto;
@@ -12,16 +14,7 @@
     margin-bottom: 1.25rem;
 
     a {
-        font-family: var(--font-pixel);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        text-decoration: none;
-        color: var(--text-muted);
-
-        &:hover {
-            color: var(--link-hover);
-        }
+        @include m.pixel-nav-link;
     }
 }
 
@@ -52,16 +45,7 @@
     border-top: 1px dashed var(--border-loud);
 
     a {
-        font-family: var(--font-pixel);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        text-decoration: none;
-        color: var(--text-muted);
+        @include m.pixel-nav-link;
         max-width: 45%;
-
-        &:hover {
-            color: var(--link-hover);
-        }
     }
 }

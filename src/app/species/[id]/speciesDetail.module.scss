@@ -1,3 +1,5 @@
+@use '../../../styles/mixins' as m;
+
 .main {
     max-width: var(--content-width);
     margin: 0 auto;
@@ -8,16 +10,7 @@
     margin-bottom: 1.25rem;
 
     a {
-        font-family: var(--font-pixel);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        text-decoration: none;
-        color: var(--text-muted);
-
-        &:hover {
-            color: var(--link-hover);
-        }
+        @include m.pixel-nav-link;
     }
 }
 
@@ -80,12 +73,7 @@
 }
 
 .memberGrid {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
-    gap: 0.9rem;
+    @include m.auto-grid(10.5rem);
 }
 
 .infobox {
