@@ -113,13 +113,7 @@
     }
 
     select {
-        font-family: var(--font-mono);
-        font-size: 0.82rem;
-        color: var(--text);
-        background: var(--bg);
-        border: 1px solid var(--border-loud);
-        border-radius: var(--radius);
-        padding: 0.3rem 0.4rem;
+        @include m.form-field(0.82rem, 0.3rem 0.4rem, $focus: false);
         cursor: pointer;
         min-width: 0;
 
@@ -145,25 +139,7 @@
 }
 
 .upload {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    color: #fff;
-    background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, #000) 100%);
-    border: var(--px) solid color-mix(in srgb, var(--accent) 60%, var(--border-loud));
-    border-radius: var(--radius);
-    padding: 0.55rem 1.1rem;
-    cursor: pointer;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
-
-    &:hover:not(:disabled) {
-        filter: brightness(1.15);
-        box-shadow: var(--glow);
-    }
-
-    &:disabled {
-        opacity: 0.6;
-        cursor: default;
-    }
+    @include m.cta-button;
 }
 
 .progress {

@@ -49,34 +49,14 @@
 }
 
 .nowButton {
-    font-family: var(--font-pixel);
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--accent-soft);
-    background: var(--surface-2);
-    border: 1px dashed var(--border-loud);
-    border-radius: var(--radius);
-    padding: 0.3rem 0.55rem;
-    cursor: pointer;
-
-    &:hover {
-        color: var(--text);
-        border-color: var(--accent-soft);
-    }
+    @include m.ghost-button(var(--accent-soft), 0.3rem 0.55rem);
 }
 
 .eraRow {
     display: flex;
 
     select {
-        font-family: var(--font-mono);
-        font-size: 0.9rem;
-        color: var(--text);
-        background: var(--bg);
-        border: 1px solid var(--border-loud);
-        border-radius: var(--radius);
-        padding: 0.45rem 0.55rem;
+        @include m.form-field(0.9rem, 0.45rem 0.55rem, $focus: false);
         cursor: pointer;
     }
 }
@@ -88,25 +68,11 @@
 }
 
 .field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+    @include m.field-stack(0.3rem);
 
     input {
-        font-family: var(--font-mono);
-        font-size: 0.95rem;
-        color: var(--text);
-        background: var(--bg);
-        border: 1px solid var(--border-loud);
-        border-radius: var(--radius);
-        padding: 0.45rem 0.55rem;
+        @include m.form-field(0.95rem, 0.45rem 0.55rem);
         width: 100%;
-
-        &:focus {
-            outline: none;
-            border-color: var(--accent-soft);
-            box-shadow: 0 0 0 2px var(--highlight);
-        }
     }
 }
 

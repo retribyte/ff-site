@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as m;
+
 .tabs {
     display: flex;
     gap: 0.4rem;
@@ -24,9 +26,7 @@
 }
 
 .tabActive {
-    color: #fff;
-    background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, #000) 100%);
-    border-color: color-mix(in srgb, var(--accent) 60%, var(--border-loud));
+    @include m.cta-gradient;
 }
 
 .hint {

@@ -1,17 +1,6 @@
-.select {
-    font-family: var(--font-pixel);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text);
-    background: var(--surface-2);
-    border: 1px solid color-mix(in srgb, var(--story) 40%, var(--border-loud));
-    border-radius: var(--radius);
-    padding: 0.45rem 0.5rem;
-    max-width: 17rem;
-    cursor: pointer;
+@use '../../styles/mixins' as m;
 
-    &:hover {
-        border-color: var(--story);
-    }
+.select {
+    @include m.pixel-select(color-mix(in srgb, var(--story) 40%, var(--border-loud)), var(--story));
+    max-width: 17rem;
 }

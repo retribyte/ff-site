@@ -1,38 +1,16 @@
+@use '../styles/mixins' as m;
+
 .controls {
-    position: sticky;
-    top: var(--navbar-height);
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.5rem 0.75rem;
-    margin-bottom: 1.5rem;
-    background: var(--surface);
-    border: 1px solid var(--border-loud);
-    border-left: var(--px) solid var(--scan-accent, var(--accent));
-    box-shadow: 2px 2px 0 0 var(--shadow);
+    @include m.scan-bar(var(--scan-accent, var(--accent)), 0.6rem, 1.5rem);
 }
 
 .prompt {
-    font-family: var(--font-mono);
-    color: var(--accent-soft);
-    user-select: none;
+    @include m.scan-prompt;
 }
 
 .search {
-    flex: 1;
-    min-width: 0;
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    color: var(--text);
-    background: transparent;
-    border: none;
-    outline: none;
+    @include m.scan-input;
     height: 2rem;
-
-    &::placeholder {
-        color: var(--text-muted);
-    }
 }
 
 // for select-style filters passed in as children

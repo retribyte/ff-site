@@ -256,3 +256,143 @@
         transition: none;
     }
 }
+
+// ── Buttons ──────────────────────────────────────────────────────────────
+// The accent gradient fill with white text. Shared by the primary CTA and the
+// active console tab (which only wants the fill, not the whole button shell).
+@mixin cta-gradient {
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, #000) 100%);
+    border-color: color-mix(in srgb, var(--accent) 60%, var(--border-loud));
+}
+
+// Primary gradient action button (submit / save / upload).
+@mixin cta-button($font-size: 1rem, $pad: 0.55rem 1.1rem) {
+    font-family: var(--font-display);
+    font-size: $font-size;
+    @include cta-gradient;
+    border-style: solid;
+    border-width: var(--px);
+    border-radius: var(--radius);
+    padding: $pad;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+
+    &:hover:not(:disabled) {
+        filter: brightness(1.15);
+        box-shadow: var(--glow);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
+}
+
+// Secondary "ghost" button: pixel label on surface-2, dashed border, warms to
+// accent on hover (recordEditor .miniButton, converter .nowButton).
+@mixin ghost-button($color: var(--text-muted), $pad: 0.35rem 0.5rem) {
+    font-family: var(--font-pixel);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $color;
+    background: var(--surface-2);
+    border: 1px dashed var(--border-loud);
+    border-radius: var(--radius);
+    padding: $pad;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--text);
+        border-color: var(--accent-soft);
+    }
+}
+
+// ── Form controls ──────────────────────────────────────────────────────────
+// Vertical label + control wrapper.
+@mixin field-stack($gap: 0.35rem) {
+    display: flex;
+    flex-direction: column;
+    gap: $gap;
+}
+
+// Mono text input / textarea / select with the accent focus ring. Pass
+// $focus:false for controls that don't take the ring (bare selects).
+@mixin form-field($font-size: 0.92rem, $pad: 0.5rem 0.65rem, $focus: true) {
+    font-family: var(--font-mono);
+    font-size: $font-size;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border-loud);
+    border-radius: var(--radius);
+    padding: $pad;
+
+    @if $focus {
+        &:focus {
+            outline: none;
+            border-color: var(--accent-soft);
+            box-shadow: 0 0 0 2px var(--highlight);
+        }
+    }
+}
+
+// Small pixel-font <select> (choiceJump / episodeSelect). $border tints the
+// resting border, $hover the hover border-color.
+@mixin pixel-select($border: var(--border-loud), $hover: var(--accent-soft)) {
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid $border;
+    border-radius: var(--radius);
+    padding: 0.45rem 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+        border-color: $hover;
+    }
+}
+
+// ── Sticky scan / filter bar ─────────────────────────────────────────────
+// The sticky search console (indexScan .controls, transcript .scanBar,
+// itemIndex .filters). $accent tints the left rule.
+@mixin scan-bar($accent: var(--accent), $gap: 0.5rem, $margin: 1.25rem) {
+    position: sticky;
+    top: var(--navbar-height);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: $gap;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: $margin;
+    background: var(--surface);
+    border: 1px solid var(--border-loud);
+    border-left: var(--px) solid $accent;
+    box-shadow: 2px 2px 0 0 var(--shadow);
+}
+
+// The mono `>` prompt glyph inside a scan bar.
+@mixin scan-prompt {
+    font-family: var(--font-mono);
+    color: var(--accent-soft);
+    user-select: none;
+}
+
+// The transparent, borderless mono input that fills a scan bar.
+@mixin scan-input {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    outline: none;
+
+    &::placeholder {
+        color: var(--text-muted);
+    }
+}
