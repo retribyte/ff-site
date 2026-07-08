@@ -396,3 +396,28 @@
         color: var(--text-muted);
     }
 }
+
+// ── Chips ────────────────────────────────────────────────────────────────
+// Pixel-label link chip: dashed tinted border, rounded, warms + highlights on
+// hover (actionChip, wikiLink). $color is the resting text, $tint the border
+// mix source, $hover the hover text color.
+// (The static, radius-less record chips — typeChip/classChip/alias — vary too
+// much in size/padding and carry no radius, so they stay inline.)
+@mixin pixel-chip($color, $tint, $hover) {
+    font-family: var(--font-pixel);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $color;
+    text-decoration: none;
+    border: 1px dashed color-mix(in srgb, #{$tint} 55%, var(--border-loud));
+    border-radius: var(--radius);
+    padding: 0.25rem 0.5rem;
+    white-space: nowrap;
+    align-self: center;
+
+    &:hover {
+        color: $hover;
+        background: var(--highlight);
+    }
+}

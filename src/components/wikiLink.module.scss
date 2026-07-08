@@ -1,18 +1,5 @@
-.wikiLink {
-    font-family: var(--font-pixel);
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--link);
-    text-decoration: none;
-    border: 1px dashed color-mix(in srgb, var(--link) 55%, var(--border-loud));
-    border-radius: var(--radius);
-    padding: 0.25rem 0.5rem;
-    white-space: nowrap;
-    align-self: center;
+@use '../styles/mixins' as m;
 
-    &:hover {
-        color: var(--link-hover);
-        background: var(--highlight);
-    }
+.wikiLink {
+    @include m.pixel-chip(var(--link), var(--link), var(--link-hover));
 }
