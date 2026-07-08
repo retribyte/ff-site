@@ -1,9 +1,7 @@
 @use '../../../styles/mixins' as m;
 
 .main {
-    max-width: var(--content-width);
-    margin: 0 auto;
-    padding: 1.5rem 1.25rem 3rem;
+    @include m.page-main;
 }
 
 .breadcrumb {
@@ -14,16 +12,7 @@
     }
 }
 
-.layout {
-    display: grid;
-    grid-template-columns: 1fr 19rem;
-    gap: 2rem;
-    align-items: start;
-}
-
-.article {
-    min-width: 0;
-}
+@include m.detail-layout;
 
 .nameRow {
     display: flex;
@@ -34,10 +23,7 @@
 
 .name {
     margin: 0;
-    color: var(--accent-soft);
-    text-shadow:
-        calc(var(--px) * 1.2) calc(var(--px) * 1.2) 0 var(--shadow),
-        0 0 18px color-mix(in srgb, var(--accent) 45%, transparent);
+    @include m.glow-heading(var(--accent-soft), var(--accent), 45%);
 }
 
 .binomial {
@@ -77,68 +63,21 @@
 }
 
 .infobox {
-    padding: 0;
-    overflow: hidden;
+    @include m.infobox-panel(var(--accent), false);
 }
 
 .infoboxHeader {
-    display: flex;
-    justify-content: center;
-    padding: 1.25rem 1rem;
-    background:
-        var(--star-texture),
-        linear-gradient(150deg, color-mix(in srgb, var(--accent) 30%, var(--surface)) 0%, var(--surface) 85%);
-    background-size: 120px, auto;
-    border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+    @include m.infobox-header(var(--accent), 1.25rem);
 }
 
 .infoboxGlyph {
-    font-size: 3rem;
-    line-height: 1;
-    color: var(--accent-soft);
-    text-shadow: 2px 2px 0 var(--shadow);
+    @include m.infobox-glyph(var(--accent-soft));
 }
 
 .facts {
-    margin: 0;
-    padding: 0.5rem 0;
+    @include m.facts;
 }
 
 .fact {
-    display: grid;
-    grid-template-columns: 7rem 1fr;
-    gap: 0.6rem;
-    padding: 0.4rem 0.9rem;
-
-    &:nth-child(even) {
-        background: color-mix(in srgb, var(--accent) 7%, transparent);
-    }
-
-    dt {
-        font-family: var(--font-pixel);
-        font-size: 0.62rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--text-muted);
-        align-self: center;
-    }
-
-    dd {
-        margin: 0;
-        font-size: 0.92rem;
-        overflow-wrap: anywhere;
-    }
-}
-
-@media (max-width: 860px) {
-    .layout {
-        grid-template-columns: 1fr;
-    }
-
-    .infobox {
-        order: -1;
-        max-width: 22rem;
-        margin: 0 auto;
-        width: 100%;
-    }
+    @include m.fact(var(--accent), 7%);
 }

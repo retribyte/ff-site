@@ -1,9 +1,7 @@
 @use '../../../../styles/mixins' as m;
 
 .main {
-    max-width: var(--reader-width);
-    margin: 0 auto;
-    padding: 1.5rem 1.25rem 3rem;
+    @include m.page-main(var(--reader-width));
 }
 
 .breadcrumb {
@@ -24,10 +22,7 @@
 
 .title {
     margin: 0.2rem 0 0.4rem;
-    color: var(--season, var(--accent));
-    text-shadow:
-        calc(var(--px) * 1.2) calc(var(--px) * 1.2) 0 var(--shadow),
-        0 0 18px color-mix(in srgb, var(--season, var(--accent)) 40%, transparent);
+    @include m.glow-heading(var(--season, var(--accent)));
 }
 
 .summary {

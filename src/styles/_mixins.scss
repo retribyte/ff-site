@@ -97,3 +97,162 @@
     color: var(--char);
     user-select: none;
 }
+
+// ── Page scaffolding ─────────────────────────────────────────────────────
+// The standard centered reading/index column.
+@mixin page-main($width: var(--content-width)) {
+    max-width: $width;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+}
+
+// Plain (non-underlined) link that warms to --link-hover.
+@mixin plain-link($color: var(--link)) {
+    color: $color;
+    text-decoration: none;
+
+    &:hover {
+        color: var(--link-hover);
+    }
+}
+
+// ── Display headings ─────────────────────────────────────────────────────
+// Colored title with the signature chunky offset + soft glow. $glow defaults
+// to $color; pass it (and $mix) when the glow tint differs from the text.
+@mixin glow-heading($color, $glow: null, $mix: 40%) {
+    @if $glow == null {
+        $glow: $color;
+    }
+
+    color: $color;
+    text-shadow:
+        calc(var(--px) * 1.2) calc(var(--px) * 1.2) 0 var(--shadow),
+        0 0 18px color-mix(in srgb, #{$glow} #{$mix}, transparent);
+}
+
+// ── Dossier infobox (character / item / species detail sidebars) ─────────
+// The wiki portable-infobox: tinted pixel-panel, starfield header, striped
+// fact rows. $tint is the record's inline identity var.
+@mixin infobox-panel($tint, $glow: true) {
+    padding: 0;
+    overflow: hidden;
+
+    @if $glow {
+        border-color: color-mix(in srgb, #{$tint} 55%, var(--border-loud));
+        box-shadow:
+            var(--px) var(--px) 0 0 var(--shadow),
+            0 0 14px color-mix(in srgb, #{$tint} 25%, transparent);
+    }
+}
+
+@mixin infobox-header($tint, $pad: 1.5rem, $mix: 30%) {
+    display: flex;
+    justify-content: center;
+    padding: $pad 1rem;
+    background:
+        var(--star-texture),
+        linear-gradient(150deg, color-mix(in srgb, #{$tint} #{$mix}, var(--surface)) 0%, var(--surface) 85%);
+    background-size: 120px, auto;
+    border-bottom: 1px solid color-mix(in srgb, #{$tint} 40%, var(--border));
+}
+
+@mixin infobox-glyph($color) {
+    font-size: 3rem;
+    line-height: 1;
+    color: $color;
+    text-shadow: 2px 2px 0 var(--shadow);
+}
+
+// Definition-list container + one striped fact row (dt/dd grid).
+@mixin facts {
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+@mixin fact($tint, $stripe: 6%) {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 0.6rem;
+    padding: 0.4rem 0.9rem;
+
+    &:nth-child(even) {
+        background: color-mix(in srgb, #{$tint} #{$stripe}, transparent);
+    }
+
+    dt {
+        font-family: var(--font-pixel);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        align-self: center;
+    }
+
+    dd {
+        margin: 0;
+        font-size: 0.92rem;
+        overflow-wrap: anywhere;
+    }
+}
+
+// Article + sidebar grid that collapses (dossier reads first) under 860px.
+// Include at module root; emits .layout / .article / the mobile @media.
+@mixin detail-layout {
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 19rem;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .article {
+        min-width: 0;
+    }
+
+    @media (max-width: 860px) {
+        .layout {
+            grid-template-columns: 1fr;
+        }
+
+        .infobox {
+            order: -1;
+            max-width: 22rem;
+            margin: 0 auto;
+            width: 100%;
+        }
+    }
+}
+
+// ── Cards ────────────────────────────────────────────────────────────────
+// Flat tinted index card: color-mix panel, accent top rule, lift-on-hover.
+// (Gradient/starfield cards use starfield-panel instead.)
+@mixin tinted-card($tint, $gap: 0.4rem) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $gap;
+    padding: 1.1rem 0.75rem 0.9rem;
+    height: 100%;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text);
+
+    background: color-mix(in srgb, #{$tint} 7%, var(--surface));
+    border: 1px solid color-mix(in srgb, #{$tint} 30%, var(--border));
+    border-top: var(--px) solid #{$tint};
+    box-shadow: 2px 2px 0 0 var(--shadow);
+    transition: transform 0.12s ease-out;
+
+    &:hover,
+    &:focus-visible {
+        background: color-mix(in srgb, #{$tint} 13%, var(--surface));
+        transform: translateY(calc(var(--px) * -0.5));
+        box-shadow:
+            2px 2px 0 0 var(--shadow),
+            0 0 12px color-mix(in srgb, #{$tint} 40%, transparent);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}

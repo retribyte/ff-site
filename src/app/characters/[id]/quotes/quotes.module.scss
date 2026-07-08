@@ -3,9 +3,7 @@
 .main {
     --char: var(--char-dark);
 
-    max-width: var(--reader-width);
-    margin: 0 auto;
-    padding: 1.5rem 1.25rem 3rem;
+    @include m.page-main(var(--reader-width));
 }
 
 :global([data-theme='light']) .main {
@@ -29,10 +27,7 @@
 
 .title {
     margin: 0 0 0.25rem;
-    color: var(--char);
-    text-shadow:
-        calc(var(--px) * 1.2) calc(var(--px) * 1.2) 0 var(--shadow),
-        0 0 18px color-mix(in srgb, var(--char) 40%, transparent);
+    @include m.glow-heading(var(--char));
 }
 
 .quotes {
