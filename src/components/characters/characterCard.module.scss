@@ -1,27 +1,7 @@
+@use '../../styles/mixins' as m;
+
 .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem 0.75rem 1rem;
-    text-align: center;
-    text-decoration: none;
-    height: 100%;
-
-    background: color-mix(in srgb, var(--char) 7%, var(--surface));
-    border: 1px solid color-mix(in srgb, var(--char) 30%, var(--border));
-    border-top: var(--px) solid var(--char);
-    box-shadow: 2px 2px 0 0 var(--shadow);
-    transition: transform 0.12s ease-out;
-
-    &:hover,
-    &:focus-visible {
-        background: color-mix(in srgb, var(--char) 13%, var(--surface));
-        transform: translateY(calc(var(--px) * -0.5));
-        box-shadow:
-            2px 2px 0 0 var(--shadow),
-            0 0 12px color-mix(in srgb, var(--char) 40%, transparent);
-    }
+    @include m.tinted-card(var(--char), 0.5rem);
 }
 
 .cardName {
@@ -38,10 +18,4 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-muted);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .card {
-        transition: none;
-    }
 }

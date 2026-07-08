@@ -1,14 +1,12 @@
 // Wrapper for the reused RecordEditor delete UI — keeps the eject control and
 // its error message stacked and right-aligned wherever a story is shown.
+@use '../../styles/mixins' as m;
+
 .control {
     display: inline-block;
     margin-top: 0.5rem;
 }
 
 .error {
-    margin: 0;
-    font-family: var(--font-pixel);
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    color: var(--ff1);
+    @include m.pixel-error;
 }

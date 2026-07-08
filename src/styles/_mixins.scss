@@ -1,0 +1,423 @@
+// Shared style primitives — the house patterns that recur across modules.
+// Consume with `@use '../../styles/mixins' as m;` then `@include m.<name>;`.
+// Every tint-aware mixin takes a CSS custom property (var(--char) / var(--type)
+// / var(--story) / var(--season)), never a literal — records are themed inline.
+//
+// See src/styles/consolidation-plan.md for the full mapping and rationale.
+
+// ── Lists ────────────────────────────────────────────────────────────────
+@mixin reset-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+// Responsive card grid (character/item/species indexes, member lists).
+@mixin auto-grid($min: 10.5rem, $gap: 1rem) {
+    @include reset-list;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax($min, 1fr));
+    gap: $gap;
+}
+
+// ── Text / links ─────────────────────────────────────────────────────────
+// Pixel-font uppercase nav link (breadcrumbs, pagers, chapter nav).
+@mixin pixel-nav-link($color: var(--text-muted)) {
+    font-family: var(--font-pixel);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    color: $color;
+
+    &:hover {
+        color: var(--link-hover);
+    }
+}
+
+// Terse pixel error line (form + action failures).
+@mixin pixel-error($size: 0.7rem) {
+    margin: 0;
+    font-family: var(--font-pixel);
+    font-size: $size;
+    letter-spacing: 0.05em;
+    color: var(--ff1);
+}
+
+// ── Quote block (character page + dedicated quotes page) ─────────────────
+@mixin quote-list {
+    @include reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@mixin quote-item {
+    display: flex;
+    gap: 0.6rem;
+    background: color-mix(in srgb, var(--char) 7%, var(--surface));
+    border-left: var(--px) solid var(--char);
+    padding: 0.75rem 1rem;
+
+    blockquote {
+        margin: 0;
+        min-width: 0;
+
+        p {
+            margin: 0;
+            font-family: var(--font-prose);
+            font-style: italic;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        footer {
+            margin-top: 0.35rem;
+            font-family: var(--font-pixel);
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+
+            a {
+                color: var(--text-muted);
+                text-decoration: none;
+
+                &:hover {
+                    color: var(--link-hover);
+                }
+            }
+        }
+    }
+}
+
+@mixin quote-mark {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--char);
+    user-select: none;
+}
+
+// ── Page scaffolding ─────────────────────────────────────────────────────
+// The standard centered reading/index column.
+@mixin page-main($width: var(--content-width)) {
+    max-width: $width;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+}
+
+// Plain (non-underlined) link that warms to --link-hover.
+@mixin plain-link($color: var(--link)) {
+    color: $color;
+    text-decoration: none;
+
+    &:hover {
+        color: var(--link-hover);
+    }
+}
+
+// ── Display headings ─────────────────────────────────────────────────────
+// Colored title with the signature chunky offset + soft glow. $glow defaults
+// to $color; pass it (and $mix) when the glow tint differs from the text.
+@mixin glow-heading($color, $glow: null, $mix: 40%) {
+    @if $glow == null {
+        $glow: $color;
+    }
+
+    color: $color;
+    text-shadow:
+        calc(var(--px) * 1.2) calc(var(--px) * 1.2) 0 var(--shadow),
+        0 0 18px color-mix(in srgb, #{$glow} #{$mix}, transparent);
+}
+
+// ── Dossier infobox (character / item / species detail sidebars) ─────────
+// The wiki portable-infobox: tinted pixel-panel, starfield header, striped
+// fact rows. $tint is the record's inline identity var.
+@mixin infobox-panel($tint, $glow: true) {
+    padding: 0;
+    overflow: hidden;
+
+    @if $glow {
+        border-color: color-mix(in srgb, #{$tint} 55%, var(--border-loud));
+        box-shadow:
+            var(--px) var(--px) 0 0 var(--shadow),
+            0 0 14px color-mix(in srgb, #{$tint} 25%, transparent);
+    }
+}
+
+@mixin infobox-header($tint, $pad: 1.5rem, $mix: 30%) {
+    display: flex;
+    justify-content: center;
+    padding: $pad 1rem;
+    background:
+        var(--star-texture),
+        linear-gradient(150deg, color-mix(in srgb, #{$tint} #{$mix}, var(--surface)) 0%, var(--surface) 85%);
+    background-size: 120px, auto;
+    border-bottom: 1px solid color-mix(in srgb, #{$tint} 40%, var(--border));
+}
+
+@mixin infobox-glyph($color) {
+    font-size: 3rem;
+    line-height: 1;
+    color: $color;
+    text-shadow: 2px 2px 0 var(--shadow);
+}
+
+// Definition-list container + one striped fact row (dt/dd grid).
+@mixin facts {
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+@mixin fact($tint, $stripe: 6%) {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 0.6rem;
+    padding: 0.5rem 1rem;
+
+    &:nth-child(even) {
+        background: color-mix(in srgb, #{$tint} #{$stripe}, transparent);
+    }
+
+    dt {
+        font-family: var(--font-pixel);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        align-self: center;
+    }
+
+    dd {
+        margin: 0;
+        font-size: 0.92rem;
+        overflow-wrap: anywhere;
+    }
+}
+
+// Article + sidebar grid that collapses (dossier reads first) under 860px.
+// Include at module root; emits .layout / .article / the mobile @media.
+@mixin detail-layout {
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 19rem;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .article {
+        min-width: 0;
+    }
+
+    @media (max-width: 860px) {
+        .layout {
+            grid-template-columns: 1fr;
+        }
+
+        .infobox {
+            order: -1;
+            max-width: 22rem;
+            margin: 0 auto;
+            width: 100%;
+        }
+    }
+}
+
+// ── Cards ────────────────────────────────────────────────────────────────
+// Flat tinted index card: color-mix panel, accent top rule, lift-on-hover.
+// (Gradient/starfield cards use starfield-panel instead.)
+@mixin tinted-card($tint, $gap: 0.4rem) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $gap;
+    padding: 1rem 0.75rem 1rem;
+    height: 100%;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text);
+
+    background: color-mix(in srgb, #{$tint} 7%, var(--surface));
+    border: 1px solid color-mix(in srgb, #{$tint} 30%, var(--border));
+    border-top: var(--px) solid #{$tint};
+    box-shadow: 2px 2px 0 0 var(--shadow);
+    transition: transform 0.12s ease-out;
+
+    &:hover,
+    &:focus-visible {
+        background: color-mix(in srgb, #{$tint} 13%, var(--surface));
+        transform: translateY(calc(var(--px) * -0.5));
+        box-shadow:
+            2px 2px 0 0 var(--shadow),
+            0 0 12px color-mix(in srgb, #{$tint} 40%, transparent);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+// ── Buttons ──────────────────────────────────────────────────────────────
+// The accent gradient fill with white text. Shared by the primary CTA and the
+// active console tab (which only wants the fill, not the whole button shell).
+@mixin cta-gradient {
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, #000) 100%);
+    border-color: color-mix(in srgb, var(--accent) 60%, var(--border-loud));
+}
+
+// Primary gradient action button (submit / save / upload).
+@mixin cta-button($font-size: 1rem, $pad: 0.5rem 1rem) {
+    font-family: var(--font-display);
+    font-size: $font-size;
+    @include cta-gradient;
+    border-style: solid;
+    border-width: var(--px);
+    border-radius: var(--radius);
+    padding: $pad;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+
+    &:hover:not(:disabled) {
+        filter: brightness(1.15);
+        box-shadow: var(--glow);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
+}
+
+// Secondary "ghost" button: pixel label on surface-2, dashed border, warms to
+// accent on hover (recordEditor .miniButton, converter .nowButton).
+@mixin ghost-button($color: var(--text-muted), $pad: 0.35rem 0.5rem) {
+    font-family: var(--font-pixel);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $color;
+    background: var(--surface-2);
+    border: 1px dashed var(--border-loud);
+    border-radius: var(--radius);
+    padding: $pad;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--text);
+        border-color: var(--accent-soft);
+    }
+}
+
+// ── Form controls ──────────────────────────────────────────────────────────
+// Vertical label + control wrapper.
+@mixin field-stack($gap: 0.35rem) {
+    display: flex;
+    flex-direction: column;
+    gap: $gap;
+}
+
+// Mono text input / textarea / select with the accent focus ring. Pass
+// $focus:false for controls that don't take the ring (bare selects).
+@mixin form-field($font-size: 0.92rem, $pad: 0.5rem 0.65rem, $focus: true) {
+    font-family: var(--font-mono);
+    font-size: $font-size;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border-loud);
+    border-radius: var(--radius);
+    padding: $pad;
+
+    @if $focus {
+        &:focus {
+            outline: none;
+            border-color: var(--accent-soft);
+            box-shadow: 0 0 0 2px var(--highlight);
+        }
+    }
+}
+
+// Small pixel-font <select> (choiceJump / episodeSelect). $border tints the
+// resting border, $hover the hover border-color.
+@mixin pixel-select($border: var(--border-loud), $hover: var(--accent-soft)) {
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid $border;
+    border-radius: var(--radius);
+    padding: 0.5rem 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+        border-color: $hover;
+    }
+}
+
+// ── Sticky scan / filter bar ─────────────────────────────────────────────
+// The sticky search console (indexScan .controls, transcript .scanBar,
+// itemIndex .filters). $accent tints the left rule.
+@mixin scan-bar($accent: var(--accent), $gap: 0.5rem, $margin: 1.25rem) {
+    position: sticky;
+    top: var(--navbar-height);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: $gap;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: $margin;
+    background: var(--surface);
+    border: 1px solid var(--border-loud);
+    border-left: var(--px) solid $accent;
+    box-shadow: 2px 2px 0 0 var(--shadow);
+}
+
+// The mono `>` prompt glyph inside a scan bar.
+@mixin scan-prompt {
+    font-family: var(--font-mono);
+    color: var(--accent-soft);
+    user-select: none;
+}
+
+// The transparent, borderless mono input that fills a scan bar.
+@mixin scan-input {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    outline: none;
+
+    &::placeholder {
+        color: var(--text-muted);
+    }
+}
+
+// ── Chips ────────────────────────────────────────────────────────────────
+// Pixel-label link chip: dashed tinted border, rounded, warms + highlights on
+// hover (actionChip, wikiLink). $color is the resting text, $tint the border
+// mix source, $hover the hover text color.
+// (The static, radius-less record chips — typeChip/classChip/alias — vary too
+// much in size/padding and carry no radius, so they stay inline.)
+@mixin pixel-chip($color, $tint, $hover) {
+    font-family: var(--font-pixel);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $color;
+    text-decoration: none;
+    border: 1px dashed color-mix(in srgb, #{$tint} 55%, var(--border-loud));
+    border-radius: var(--radius);
+    padding: 0.25rem 0.5rem;
+    white-space: nowrap;
+    align-self: center;
+
+    &:hover {
+        color: $hover;
+        background: var(--highlight);
+    }
+}

@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as m;
+
 .main {
     display: flex;
     justify-content: center;
@@ -47,56 +49,20 @@
 }
 
 .field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+    @include m.field-stack;
     text-align: left;
 
     input {
-        font-family: var(--font-mono);
-        font-size: 0.95rem;
-        color: var(--text);
-        background: var(--bg);
-        border: 1px solid var(--border-loud);
-        border-radius: var(--radius);
-        padding: 0.5rem 0.7rem;
-
-        &:focus {
-            outline: none;
-            border-color: var(--accent-soft);
-            box-shadow: 0 0 0 2px var(--highlight);
-        }
+        @include m.form-field(0.95rem, 0.5rem 0.7rem);
     }
 }
 
 .error {
-    margin: 0;
-    font-family: var(--font-pixel);
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    color: var(--ff1);
+    @include m.pixel-error;
 }
 
 .submit {
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    color: #fff;
-    background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, #000) 100%);
-    border: var(--px) solid color-mix(in srgb, var(--accent) 60%, var(--border-loud));
-    border-radius: var(--radius);
-    padding: 0.6rem 1rem;
-    cursor: pointer;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
-
-    &:hover:not(:disabled) {
-        filter: brightness(1.15);
-        box-shadow: var(--glow);
-    }
-
-    &:disabled {
-        opacity: 0.6;
-        cursor: default;
-    }
+    @include m.cta-button(1.05rem, 0.6rem 1rem);
 }
 
 .hint {

@@ -1,38 +1,16 @@
+@use '../../styles/mixins' as m;
+
 // ── Scan bar (in-episode search console) ─────────────────────────────────
 .scanBar {
-    position: sticky;
-    top: var(--navbar-height);
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    margin-bottom: 1.25rem;
-    background: var(--surface);
-    border: 1px solid var(--border-loud);
-    border-left: var(--px) solid var(--accent);
-    box-shadow: 2px 2px 0 0 var(--shadow);
+    @include m.scan-bar;
 }
 
 .scanPrompt {
-    font-family: var(--font-mono);
-    color: var(--accent-soft);
-    user-select: none;
+    @include m.scan-prompt;
 }
 
 .scanInput {
-    flex: 1;
-    min-width: 0;
-    font-family: var(--font-mono);
-    font-size: 1rem;
-    color: var(--text);
-    background: transparent;
-    border: none;
-    outline: none;
-
-    &::placeholder {
-        color: var(--text-muted);
-    }
+    @include m.scan-input;
 }
 
 .scanStatus {

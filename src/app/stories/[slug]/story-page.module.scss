@@ -1,9 +1,8 @@
 // Story reader page chrome. --story/--story-2 are set inline from storyColors().
+@use '../../../styles/mixins' as m;
 
 .main {
-    max-width: var(--reader-width);
-    margin: 0 auto;
-    padding: 1.5rem 1.25rem 3rem;
+    @include m.page-main(var(--reader-width));
 }
 
 .breadcrumb {
@@ -14,16 +13,7 @@
     margin-bottom: 1.25rem;
 
     a {
-        font-family: var(--font-pixel);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        text-decoration: none;
-        color: var(--text-muted);
-
-        &:hover {
-            color: var(--link-hover);
-        }
+        @include m.pixel-nav-link;
     }
 }
 
@@ -34,10 +24,7 @@
 
 .title {
     margin: 0.2rem 0 0.5rem;
-    color: var(--story);
-    text-shadow:
-        calc(var(--px) * 1.2) calc(var(--px) * 1.2) 0 var(--shadow),
-        0 0 18px color-mix(in srgb, var(--story) 40%, transparent);
+    @include m.glow-heading(var(--story));
 }
 
 .chapterTitle {
@@ -116,15 +103,6 @@
     margin-top: 2.5rem;
 
     a {
-        font-family: var(--font-pixel);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        text-decoration: none;
-        color: var(--story);
-
-        &:hover {
-            color: var(--link-hover);
-        }
+        @include m.pixel-nav-link(var(--story));
     }
 }
