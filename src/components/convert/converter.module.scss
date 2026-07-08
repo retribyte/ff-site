@@ -49,14 +49,14 @@
 }
 
 .nowButton {
-    @include m.ghost-button(var(--accent-soft), 0.3rem 0.55rem);
+    @include m.ghost-button(var(--accent-soft), 0.3rem 0.5rem);
 }
 
 .eraRow {
     display: flex;
 
     select {
-        @include m.form-field(0.9rem, 0.45rem 0.55rem, $focus: false);
+        @include m.form-field(1rem, 0.5rem 0.5rem, $focus: false);
         cursor: pointer;
     }
 }
@@ -71,7 +71,7 @@
     @include m.field-stack(0.3rem);
 
     input {
-        @include m.form-field(0.95rem, 0.45rem 0.55rem);
+        @include m.form-field(0.95rem, 0.5rem 0.5rem);
         width: 100%;
     }
 }
@@ -84,7 +84,7 @@
     background: color-mix(in srgb, var(--vm) 8%, var(--bg));
     border: 1px dashed color-mix(in srgb, var(--vm) 45%, var(--border-loud));
     border-radius: var(--radius);
-    padding: 0.75rem 0.9rem;
+    padding: 0.75rem 1rem;
     min-height: 2.9rem;
     overflow-wrap: anywhere;
 

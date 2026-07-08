@@ -12,7 +12,7 @@
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    padding: 0.9rem 1.25rem;
+    padding: 1rem 1.25rem;
     text-decoration: none;
     color: var(--text);
 
@@ -79,7 +79,7 @@
 @media (max-width: 640px) {
     .episode {
         gap: 0.8rem;
-        padding: 0.75rem 0.9rem;
+        padding: 0.75rem 1rem;
     }
 
     .episodeDate {

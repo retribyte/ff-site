@@ -2,6 +2,7 @@
 
 .filters {
     @include m.scan-bar(var(--accent), 0.5rem, 1.5rem);
+    z-index: 2;
     flex-wrap: wrap;
 }
 
@@ -35,7 +36,7 @@
 }
 
 .card {
-    @include m.tinted-card(var(--type));
+    @include m.tinted-card(var(--type), 0.5rem);
 }
 
 .cardArt {

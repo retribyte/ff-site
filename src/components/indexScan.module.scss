@@ -2,6 +2,7 @@
 
 .controls {
     @include m.scan-bar(var(--scan-accent, var(--accent)), 0.6rem, 1.5rem);
+    z-index: 2;
 }
 
 .prompt {
@@ -22,7 +23,7 @@
     background: var(--surface-2);
     border: 1px solid var(--border-loud);
     border-radius: var(--radius);
-    padding: 0.35rem 0.4rem;
+    padding: 0.35rem 0.5rem;
     max-width: 11rem;
     cursor: pointer;
 }

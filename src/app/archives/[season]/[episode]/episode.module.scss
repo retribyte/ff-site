@@ -21,7 +21,7 @@
 }
 
 .title {
-    margin: 0.2rem 0 0.4rem;
+    margin: 0.2rem 0 0.5rem;
     @include m.glow-heading(var(--season, var(--accent)));
 }
 
