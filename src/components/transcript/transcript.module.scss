@@ -222,11 +222,17 @@
     color: var(--text-muted);
 }
 
-// ── Anchor copy button ───────────────────────────────────────────────────
-.anchor {
+// ── Block action tray (commentary thread + anchor copy button) ───────────
+.blockActions {
     position: absolute;
     bottom: 0.75rem;
     right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.anchor {
     width: 1.5rem;
     height: 1.5rem;
     opacity: 0;

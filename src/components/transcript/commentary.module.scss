@@ -3,8 +3,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    margin-left: auto;
-    margin-right: 1.5rem;
 }
 
 .chip {
@@ -12,17 +10,19 @@
     font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--text-muted);
+    color: var(--char);  
+    // background: var(--surface-2);
     background: none;
     border: 1px dashed color-mix(in srgb, var(--char, var(--accent)) 40%, var(--border-loud));
     border-radius: var(--radius);
     padding: 0.2rem 0.5rem;
     cursor: pointer;
     width: fit-content;
+    height: 1.5rem;
 
     &:hover {
-        color: var(--text);
-        background: var(--highlight);
+        color: var(--char);
+        // background: var(--highlight);
     }
 
     // "add note" affordance stays quiet until its line is hovered —
