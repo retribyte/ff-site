@@ -8,6 +8,7 @@ export type MessageType = 'BOT_RESPONSE' | 'COMMAND' | 'QUOTE' | 'ACTION' | 'EMB
 export type ItemType = 'WEAPON' | 'EQUIPMENT' | 'ARTIFACT' | 'OTHER';
 export type StoryLineType = 'NARRATION' | 'DIALOGUE' | 'ACTION' | 'TRANSCRIPT' | 'BREAK' | 'HEADING';
 export type StoryFormat = 'SCRIPT' | 'PROSE';
+export type EightBallAnswerType = 'YES' | 'NO' | 'MAYBE';
 
 export interface PublicUser {
     id: number;
@@ -145,6 +146,12 @@ export interface StoryLine {
     speaker: string | null; // display-name fallback when no Character row exists
     segments?: StorySegment[] | null; // sub-paragraph dialogue spans (NARRATION only); concat === text
     character?: Character;
+}
+
+export interface EightBallAnswer {
+    id: number;
+    type: EightBallAnswerType;
+    text: string;
 }
 
 export interface Item {
