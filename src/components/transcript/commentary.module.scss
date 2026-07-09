@@ -7,13 +7,15 @@
 
 .chip {
     font-family: var(--font-pixel);
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--char);  
     // background: var(--surface-2);
-    background: none;
-    border: 1px dashed color-mix(in srgb, var(--char, var(--accent)) 40%, var(--border-loud));
+    // background: none;
+    // border: 1px dashed color-mix(in srgb, var(--char, var(--accent)) 40%, var(--border-loud))
+    background: var(--surface-2);
+    border: 1px solid color-mix(in srgb, var(--char) 45%, var(--border-loud));;
     border-radius: var(--radius);
     padding: 0.2rem 0.5rem;
     cursor: pointer;

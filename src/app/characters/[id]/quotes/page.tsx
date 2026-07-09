@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
-import type { Character, Message } from '@/lib/types';
+import type { CharacterQuotes, Character } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
 import { lineUrl } from '@/lib/seasons';
+import { quotedSpanText, storyQuoteUrl } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
 import styles from './quotes.module.scss';
@@ -29,10 +30,10 @@ export default async function CharacterQuotesPage({ params }: Props) {
     if (Number.isNaN(id)) notFound();
 
     let character: Character;
-    let quotes: Message[];
+    let quotes: CharacterQuotes;
     try {
         character = await api<Character>(`/characters/${id}`);
-        quotes = await api<Message[]>(`/characters/${id}/quotes`);
+        quotes = await api<CharacterQuotes>(`/characters/${id}/quotes`);
     } catch (error) {
         if (error instanceof ApiError && error.httpStatus === 404) notFound();
         return (
@@ -46,6 +47,9 @@ export default async function CharacterQuotesPage({ params }: Props) {
         '--char-dark': characterColor(character.name, character.themeColor, 'dark'),
         '--char-light': characterColor(character.name, character.themeColor, 'light'),
     } as React.CSSProperties;
+
+    const { messages, storyQuotes } = quotes;
+    const total = messages.length + storyQuotes.length;
 
     return (
         <main className={styles.main} style={style}>
@@ -63,36 +67,64 @@ export default async function CharacterQuotesPage({ params }: Props) {
                 <div>
                     <h1 className={styles.title}>Quote log</h1>
                     <p className='pixel-label'>
-                        {quotes.length} recorded transmission{quotes.length === 1 ? '' : 's'} from {character.name}
+                        {total} recorded quote{total === 1 ? '' : 's'} from {character.name}
                     </p>
                 </div>
             </header>
 
-            {quotes.length === 0 && (
+            {total === 0 && (
                 <p className='pixel-label' style={{ textAlign: 'center', padding: '3rem 0' }}>
-                    no transmissions on record
+                    no quotes on record
                 </p>
             )}
 
-            <ol className={styles.quotes}>
-                {quotes.map((quote) => (
-                    <li key={`${quote.episodeTitle}-${quote.messageNo}`} className={styles.quote}>
-                        <span className={styles.quoteMark} aria-hidden>
-                            “
-                        </span>
-                        <blockquote>
-                            <p>{quote.text}</p>
-                            {quote.episode && (
-                                <footer>
-                                    <Link href={lineUrl(quote.episode, quote.messageNo)}>
-                                        {quote.episode.seasonTitle} · {quote.episodeTitle} · line {quote.messageNo}
-                                    </Link>
-                                </footer>
-                            )}
-                        </blockquote>
-                    </li>
-                ))}
-            </ol>
+            {messages.length > 0 && (
+                <section className={styles.section}>
+                    <h2 className={styles.sectionTitle}>Intercepted transmissions</h2>
+                    <ol className={styles.quotes}>
+                        {messages.map((quote) => (
+                            <li key={`${quote.episodeTitle}-${quote.messageNo}`} className={styles.quote}>
+                                <span className={styles.quoteMark} aria-hidden>
+                                    “
+                                </span>
+                                <blockquote>
+                                    <p>{quote.text}</p>
+                                    {quote.episode && (
+                                        <footer>
+                                            <Link href={lineUrl(quote.episode, quote.messageNo)}>
+                                                {quote.episode.seasonTitle} · {quote.episodeTitle} · line {quote.messageNo}
+                                            </Link>
+                                        </footer>
+                                    )}
+                                </blockquote>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
+            )}
+
+            {storyQuotes.length > 0 && (
+                <section className={styles.section}>
+                    <h2 className={styles.sectionTitle}>Story appearances</h2>
+                    <ol className={styles.quotes}>
+                        {storyQuotes.map((quote) => (
+                            <li key={quote.id} className={styles.quote}>
+                                <span className={styles.quoteMark} aria-hidden>
+                                    “
+                                </span>
+                                <blockquote>
+                                    <p>{quotedSpanText(quote, id)}</p>
+                                    <footer>
+                                        <Link href={storyQuoteUrl(quote)}>
+                                            {quote.storyTitle} · ch. {quote.chapterNo} · line {quote.line_no}
+                                        </Link>
+                                    </footer>
+                                </blockquote>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
+            )}
         </main>
     );
 }

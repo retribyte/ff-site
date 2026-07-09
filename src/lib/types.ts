@@ -147,6 +147,30 @@ export interface StoryLine {
     character?: Character;
 }
 
+// A StoryLine where this character speaks — either as the line's own
+// characterId (whole DIALOGUE line) or inside a segment (inline quote in a
+// NARRATION paragraph) — with enough story/chapter context to link back.
+export interface StoryQuote {
+    id: number;
+    chapterId: number;
+    line_no: number;
+    type: StoryLineType;
+    text: string;
+    characterId: number | null;
+    speaker: string | null;
+    segments: StorySegment[] | null;
+    storySlug: string;
+    storyTitle: string;
+    chapterNo: number;
+}
+
+// Response shape of GET /characters/:id/quotes — two sources with no shared
+// sort key (message timestamp vs. story/chapter/line position), kept separate.
+export interface CharacterQuotes {
+    messages: Message[];
+    storyQuotes: StoryQuote[];
+}
+
 export interface Item {
     id: number;
     name: string;
