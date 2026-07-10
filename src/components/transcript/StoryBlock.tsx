@@ -159,6 +159,11 @@ function StoryBlock({ block, episodeTitle, characters, players, targetNo, query,
             </div>
 
             <div className={styles.blockActions}>
+                <CommentaryThread
+                    episodeTitle={episodeTitle}
+                    messageNo={block.key}
+                    initial={block.messages[0].commentaries}
+                />
                 <button
                     type='button'
                     className={styles.anchor}
@@ -168,11 +173,6 @@ function StoryBlock({ block, episodeTitle, characters, players, targetNo, query,
                 >
                     {copied ? '✓' : '#'}
                 </button>
-                <CommentaryThread
-                    episodeTitle={episodeTitle}
-                    messageNo={block.key}
-                    initial={block.messages[0].commentaries}
-                />
             </div>
         </li>
     );

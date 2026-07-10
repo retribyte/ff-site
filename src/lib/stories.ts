@@ -1,6 +1,6 @@
 import { apiRaw } from './api';
 import type { SpeakerInfo } from './transcript';
-import type { Character, StoryChapter, StoryFormat, StoryLine, StoryLineType, StorySegment } from './types';
+import type { Character, StoryChapter, StoryFormat, StoryLine, StoryLineType, StoryQuote, StorySegment } from './types';
 
 // Slim shapes for the story reader — the API includes full character objects
 // on every line; we send an id-keyed lookup table to the client instead.
@@ -175,4 +175,22 @@ export function chapterSlug(chapter: Pick<StoryChapter, 'chapter_no' | 'title'>)
 export function chapterNoFromSlug(slug: string): number | null {
     const match = slug.match(/^(\d+)(-|$)/);
     return match ? parseInt(match[1]) : null;
+}
+
+/**
+ * The character's own words from a StoryQuote — for a whole DIALOGUE line
+ * that's the full `text`, but for a segmented NARRATION paragraph it's just
+ * the matching segment span(s), not the surrounding narration prose.
+ */
+export function quotedSpanText(quote: StoryQuote, characterId: number): string {
+    if (!quote.segments) return quote.text;
+    return quote.segments
+        .filter((s) => s.characterId === characterId)
+        .map((s) => s.text)
+        .join(' ');
+}
+
+/** Deep link to a StoryQuote's line — chapter route only needs the leading number. */
+export function storyQuoteUrl(quote: StoryQuote): string {
+    return `/stories/${quote.storySlug}/${quote.chapterNo}?line=${quote.line_no}`;
 }

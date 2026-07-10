@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
-import type { Character, Message, Species } from '@/lib/types';
+import type { CharacterQuotes, Character, Species } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
 import { formatEarthDate, formatGuyDate, guyToEarthDate, guyWeekday } from '@/lib/guy-time';
 import { lineUrl } from '@/lib/seasons';
+import { quotedSpanText, storyQuoteUrl } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
 import { getSessionUser } from '@/lib/auth';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
@@ -50,13 +51,13 @@ export default async function CharacterPage({ params }: Props) {
 
     let character: Character | null;
     let species: Species | null = null;
-    let quotes: Message[] = [];
+    let quotes: CharacterQuotes = { messages: [], storyQuotes: [] };
     try {
         character = await getCharacter(id);
         if (character) {
             [species, quotes] = await Promise.all([
                 api<Species>(`/species/${character.speciesId}`).catch(() => null),
-                api<Message[]>(`/characters/${id}/quotes`).catch(() => [] as Message[]),
+                api<CharacterQuotes>(`/characters/${id}/quotes`).catch(() => quotes),
             ]);
         }
     } catch {
@@ -79,10 +80,28 @@ export default async function CharacterPage({ params }: Props) {
 
     const aliases = character.aliases ?? [];
     const relationships = character.relationships ?? [];
+
+    // Transcript messages and story-embedded dialogue have no shared sort
+    // key (message timestamp vs. story/chapter/line position) — flatten to a
+    // display-only teaser list, keeping each source's own link context.
+    const teaserQuotes = [
+        ...quotes.messages.map((m) => ({
+            key: `msg-${m.episodeTitle}-${m.messageNo}`,
+            text: m.text,
+            href: m.episode ? lineUrl(m.episode, m.messageNo) : undefined,
+            context: m.episode ? `${m.episode.seasonTitle} · ${m.episodeTitle}` : undefined,
+        })),
+        ...quotes.storyQuotes.map((q) => ({
+            key: `story-${q.id}`,
+            text: quotedSpanText(q, id),
+            href: storyQuoteUrl(q),
+            context: `${q.storyTitle} · ch. ${q.chapterNo}`,
+        })),
+    ];
     // Fresh random intercepts on every visit — intentional impurity on a
     // dynamic server-rendered route (nothing rehydrates against it).
     // eslint-disable-next-line react-hooks/purity
-    const sampleQuotes = [...quotes].sort(() => Math.random() - 0.5).slice(0, 3);
+    const sampleQuotes = [...teaserQuotes].sort(() => Math.random() - 0.5).slice(0, 3);
 
     const facts: [string, React.ReactNode][] = [];
     if (species) {
@@ -154,22 +173,20 @@ export default async function CharacterPage({ params }: Props) {
                         </section>
                     )}
 
-                    {quotes.length > 0 && (
+                    {teaserQuotes.length > 0 && (
                         <section className={styles.section}>
                             <h2 className={styles.sectionTitle}>Intercepted transmissions</h2>
                             <ul className={styles.quotes}>
                                 {sampleQuotes.map((quote) => (
-                                    <li key={`${quote.episodeTitle}-${quote.messageNo}`} className={styles.quote}>
+                                    <li key={quote.key} className={styles.quote}>
                                         <span className={styles.quoteMark} aria-hidden>
                                             “
                                         </span>
                                         <blockquote>
                                             <p>{quote.text}</p>
-                                            {quote.episode && (
+                                            {quote.href && (
                                                 <footer>
-                                                    <Link href={lineUrl(quote.episode, quote.messageNo)}>
-                                                        {quote.episode.seasonTitle} · {quote.episodeTitle}
-                                                    </Link>
+                                                    <Link href={quote.href}>{quote.context}</Link>
                                                 </footer>
                                             )}
                                         </blockquote>
@@ -177,7 +194,7 @@ export default async function CharacterPage({ params }: Props) {
                                 ))}
                             </ul>
                             <Link href={`/characters/${character.id}/quotes`} className={styles.quotesLink}>
-                                full quote log ({quotes.length}) →
+                                full quote log ({teaserQuotes.length}) →
                             </Link>
                         </section>
                     )}

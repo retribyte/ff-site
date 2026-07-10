@@ -116,7 +116,7 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
                 onClick={() => setOpen(!open)}
                 aria-expanded={open}
             >
-                ✎ {notes.length > 0 ? `${notes.length} note${notes.length === 1 ? '' : 's'}` : 'add note'}
+                ✎ {notes.length > 0 ? `${notes.length} note${notes.length === 1 ? '' : 's'}` : ''}
             </button>
 
             {open && (
