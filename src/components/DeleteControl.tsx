@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useShiftKey } from '@/hooks/useShiftKey';
 import styles from './deleteControl.module.scss';
 
 // Shared "eject" affordance: a subdued Delete button that expands into a
@@ -24,6 +25,7 @@ export default function DeleteControl({
     cancelLabel?: string;
 }) {
     const [confirming, setConfirming] = useState(false);
+    const shiftHeld = useShiftKey();
 
     if (confirming) {
         return (
@@ -45,7 +47,11 @@ export default function DeleteControl({
     }
 
     return (
-        <button type='button' className={styles.delete} onClick={() => setConfirming(true)}>
+        <button
+            type='button'
+            className={styles.delete}
+            onClick={() => (shiftHeld ? onConfirm() : setConfirming(true))}
+        >
             {deleteLabel}
         </button>
     );
