@@ -66,8 +66,8 @@ export default function EightBall() {
     return (
         <main className={styles.main}>
             <header className={styles.header}>
-                <h1 className={styles.title}>FF 8-Ball</h1>
-                <p className='pixel-label'>transmit a question to the oracle</p>
+                <h1 className={styles.title}>Magic 8-Ball</h1>
+                <p className='pixel-label'>ponder the orbacle</p>
             </header>
 
             <form className={styles.form} onSubmit={handleSubmit}>
@@ -129,7 +129,7 @@ export default function EightBall() {
 
                 {!shaking && result && askedQuestion && (
                     <p className={styles.echo}>
-                        “{askedQuestion}”{user && ` — asked by ${user.username}`}
+                        {user && `${user.username} asked: `}“<span>{askedQuestion}</span>”
                     </p>
                 )}
             </form>

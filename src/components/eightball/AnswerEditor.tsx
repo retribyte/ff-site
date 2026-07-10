@@ -142,7 +142,7 @@ export default function AnswerEditor({ isAdmin }: { isAdmin: boolean }) {
                                                 <DeleteControl
                                                     onConfirm={() => deleteAnswer(a.id)}
                                                     busy={busyIds.has(a.id)}
-                                                    prompt='eject this answer?'
+                                                    prompt=''
                                                 />
                                             )}
                                         </li>
@@ -161,7 +161,7 @@ export default function AnswerEditor({ isAdmin }: { isAdmin: boolean }) {
                                         type='text'
                                         value={drafts[type]}
                                         onChange={(e) => setDrafts((prev) => ({ ...prev, [type]: e.target.value }))}
-                                        placeholder={`new ${type.toLowerCase()} answer…`}
+                                        placeholder={`new '${type.toLowerCase()}' answer…`}
                                         aria-label={`New ${type} answer`}
                                     />
                                     <button type='submit' className={styles.addButton} disabled={addBusy === type || !drafts[type].trim()}>
