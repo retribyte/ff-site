@@ -13,6 +13,7 @@ const links = [
     { href: '/characters', label: 'Characters' },
     { href: '/species', label: 'Species' },
     { href: '/items', label: 'Items' },
+    { href: '/galaxy', label: 'Galaxy' },
     { href: '/convert', label: 'Convert' },
     { href: '/8ball', label: '8-Ball' },
 ];

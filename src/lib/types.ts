@@ -9,6 +9,8 @@ export type ItemType = 'WEAPON' | 'EQUIPMENT' | 'ARTIFACT' | 'OTHER';
 export type StoryLineType = 'NARRATION' | 'DIALOGUE' | 'ACTION' | 'TRANSCRIPT' | 'BREAK' | 'HEADING';
 export type StoryFormat = 'SCRIPT' | 'PROSE';
 export type EightBallAnswerType = 'YES' | 'NO' | 'MAYBE';
+export type CelestialBodyType = 'STAR' | 'PLANET' | 'MOON';
+export type BodyComposition = 'TERRESTRIAL' | 'GAS' | 'ICE';
 
 export interface PublicUser {
     id: number;
@@ -188,5 +190,59 @@ export interface Item {
     characterId: number | null;
     wikiArticle: string | null;
     character?: Character;
+    creator?: PublicUser;
+}
+
+export interface Galaxy {
+    id: number;
+    slug: string;
+    name: string;
+    description: string | null;
+    image: string | null; // background map, e.g. /space/galaxy.png
+    systems?: StarSystem[];
+    landmarks?: Landmark[];
+}
+
+export interface StarSystem {
+    id: number;
+    galaxyId: number;
+    name: string;
+    description: string | null;
+    // Map position normalized to 0..1 of the galaxy map (legacy 0..1000 / 1000)
+    xPos: number | null;
+    yPos: number | null;
+    creatorId: number;
+    wikiArticle: string | null;
+    galaxy?: Galaxy;
+    bodies?: CelestialBody[]; // nested tree — children live on each body
+    creator?: PublicUser;
+}
+
+export interface CelestialBody {
+    id: number;
+    systemId: number;
+    parentId: number | null; // null = orbits nothing (the star); planet→star, moon→planet
+    type: CelestialBodyType;
+    name: string;
+    radiusKm: number;
+    // Orbital distance from parent: AU for planets, km for moons (unit implied by type), null for stars
+    distance: number | null;
+    composition: BodyComposition | null; // planets/moons only
+    temperatureK: number | null; // stars only (drives rendered color)
+    color: string | null; // optional render override
+    description: string | null;
+    wikiArticle: string | null;
+    children?: CelestialBody[]; // nested tree as returned by the API
+}
+
+export interface Landmark {
+    id: number;
+    galaxyId: number;
+    name: string;
+    description: string | null;
+    xPos: number;
+    yPos: number;
+    creatorId: number;
+    wikiArticle: string | null;
     creator?: PublicUser;
 }

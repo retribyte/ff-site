@@ -1,0 +1,479 @@
+// Shared astrogation-console chrome — toolbar, rail, tree, telemetry, meter,
+// viewport + crosshair — reused by both /galaxy and /galaxy/systems/[id].
+// Port of the space-builder-mockup CSS onto the site's real tokens: the
+// mockup's --amber is this app's --accent-2; --space-orbit/--space-grid/
+// --space-star/--space-landmark already live in _tokens.scss.
+
+@use '../../styles/mixins' as m;
+
+// ---------- Toolbar (the scan-bar idiom) ----------
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border-loud);
+    border-bottom: none;
+    border-left: var(--px) solid var(--accent-2);
+}
+
+.crumb {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-pixel);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+    white-space: nowrap;
+
+    a {
+        color: var(--text);
+        text-decoration: none;
+
+        &:hover {
+            color: var(--link-hover);
+        }
+    }
+}
+
+.crumbArrow {
+    color: var(--accent-2);
+}
+
+.crumbDim {
+    color: var(--text-muted);
+}
+
+.spacer {
+    flex: 1;
+}
+
+.gridRef {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent-2);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+// ---------- Shell / rail / viewport grid ----------
+
+.shell {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-loud);
+    box-shadow: 2px 2px 0 0 var(--shadow);
+    background: var(--surface);
+}
+
+.body {
+    display: grid;
+    grid-template-columns: 16rem 1fr;
+    min-height: 30rem;
+
+    &[data-collapsed] {
+        grid-template-columns: 2.5rem 1fr;
+    }
+
+    @media (max-width: 780px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(20rem, 55vh);
+
+        &[data-collapsed] {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+.rail {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-right: 1px solid var(--border-loud);
+    background: var(--surface);
+    overflow-y: auto;
+}
+
+.railHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px dashed var(--border-loud);
+    flex: none;
+}
+
+.railHeaderLabel {
+    font-family: var(--font-pixel);
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chev {
+    flex: none;
+    font-family: var(--font-pixel);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.15rem 0.3rem;
+
+    &:hover {
+        color: var(--text);
+    }
+}
+
+.railContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 0.75rem;
+    min-width: 0;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.sectionHeader {
+    font-family: var(--font-pixel);
+    font-size: 0.66rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.divider {
+    width: 100%;
+    border: 0;
+    border-top: 1px dashed var(--border-loud);
+    margin: 0.1rem 0;
+}
+
+.desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.attribution {
+    font-family: var(--font-pixel);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+// ---------- Registry / overview tree ----------
+
+.tree {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    font-size: 0.88rem;
+}
+
+.treeButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.4rem;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    min-width: 0;
+
+    span:last-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &:hover {
+        background: var(--highlight);
+    }
+
+    &:focus-visible {
+        outline: 2px dashed var(--accent-soft);
+        outline-offset: 1px;
+    }
+}
+
+.treeButtonSelected {
+    border: 1px dashed var(--accent-2);
+    background: var(--highlight);
+}
+
+.unplaced {
+    margin-left: auto;
+    flex: none;
+    font-family: var(--font-pixel);
+    font-size: 0.58rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    flex: none;
+    border-radius: 50%;
+}
+
+.dotStar {
+    background: var(--space-star);
+    box-shadow: 0 0 6px var(--space-star);
+}
+
+.dotPlanet {
+    background: var(--accent-soft);
+}
+
+.dotMoon {
+    background: var(--text-muted);
+    transform: scale(0.7);
+}
+
+.dotLandmark {
+    background: var(--space-landmark);
+    border-radius: 0;
+    transform: rotate(45deg) scale(0.8);
+}
+
+.indent1 {
+    margin-left: 1.1rem;
+}
+
+.indent2 {
+    margin-left: 2.2rem;
+}
+
+// ---------- Coordinate fields (read-only for now) ----------
+
+.coordFields {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.coordField {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.coordField label {
+    font-family: var(--font-pixel);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+}
+
+.coordValue {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border-loud);
+    border-radius: var(--radius);
+    padding: 0.2rem 0.4rem;
+}
+
+// ---------- Buttons / row actions ----------
+
+.rowActions {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.btn {
+    @include m.ghost-button(var(--text), 0.68rem, 0.35rem 0.6rem);
+    text-decoration: none;
+    display: inline-block;
+    border-style: solid;
+
+    &:hover {
+        color: var(--text);
+    }
+}
+
+.btnPrimary {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+}
+
+// ---------- Telemetry spec sheet ----------
+
+.telemetry {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.trow {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.83rem;
+}
+
+.tk {
+    color: var(--text-muted);
+    flex: none;
+}
+
+.tleader {
+    flex: 1;
+    border-bottom: 1px dotted var(--border-loud);
+    transform: translateY(-3px);
+    min-width: 0.8rem;
+}
+
+.tv {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.colorChip {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid var(--border-loud);
+    box-shadow: 0 0 8px 1px currentColor;
+}
+
+// ---------- Habitability meter ----------
+
+.meter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.15rem;
+}
+
+.meterSegs {
+    display: flex;
+    gap: 3px;
+}
+
+.seg {
+    width: 0.72rem;
+    height: 0.88rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border-loud);
+}
+
+.segOn1 {
+    background: var(--ff1);
+    border-color: var(--ff1);
+}
+
+.segOn2 {
+    background: var(--vm);
+    border-color: var(--vm);
+}
+
+.segOn3 {
+    background: var(--ff3);
+    border-color: var(--ff3);
+}
+
+.meterPct {
+    font-family: var(--font-pixel);
+    font-size: 0.66rem;
+    color: var(--vm);
+}
+
+// ---------- Viewport (shared instrument screen) ----------
+// Stays deep-space dark in BOTH themes — it's an instrument screen, not chrome.
+
+.viewportSlot {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.viewport {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    background:
+        radial-gradient(ellipse 60% 45% at 52% 46%, rgba(93, 75, 229, 0.22), transparent 70%),
+        radial-gradient(ellipse 30% 22% at 40% 60%, rgba(232, 178, 59, 0.1), transparent 70%),
+        #0b0b22;
+}
+
+.viewportEmpty {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: #7a80ab;
+    text-align: center;
+    padding: 1rem;
+}
+
+.canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+}
+
+// ---------- Crosshair ----------
+
+.xh {
+    position: absolute;
+    background: var(--accent-2);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.xhV {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+}
+
+.xhH {
+    left: 0;
+    right: 0;
+    height: 1px;
+}
+
+.viewport:hover .xh {
+    opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .xh {
+        transition: none;
+    }
+}

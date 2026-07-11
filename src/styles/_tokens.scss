@@ -59,6 +59,14 @@
     --shadow: rgba(0, 0, 0, 0.55);
     --glow: 0 0 14px rgba(93, 75, 229, 0.35);
     --star-opacity: 0.5;
+
+    // Space builder / astrogation console — marker colors stay identical
+    // across themes (the map viewport stays deep-space dark); only the
+    // orbit/grid overlays get theme-tuned values below.
+    --space-star: #ffcc73;
+    --space-landmark: #6fb7ff;
+    --space-orbit: rgba(147, 147, 219, 0.45);
+    --space-grid: rgba(149, 130, 238, 0.14);
 }
 
 :root[data-theme='light'] {
@@ -78,4 +86,11 @@
     --shadow: rgba(50, 40, 90, 0.28);
     --glow: 0 0 14px rgba(93, 75, 229, 0.22);
     --star-opacity: 0; // white stars are invisible on paper — hide the texture
+
+    // Space builder — the map viewport stays deep-space dark in both themes,
+    // so only the orbit/grid overlays (which sit against page chrome, not
+    // the canvas) get muted light-theme values. --space-star/--space-landmark
+    // are unchanged (see the dark block above).
+    --space-orbit: rgba(90, 90, 160, 0.45);
+    --space-grid: rgba(93, 75, 229, 0.12);
 }
