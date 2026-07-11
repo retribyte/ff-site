@@ -41,7 +41,10 @@
   "exclude": [
     "node_modules",
     "ff-site",
+    "ff-site-old",
     "ff-server",
-    "vortox-bot"
+    "vortox-bot",
+    "space-builder",
+    "space-builder-mockup"
   ]
 }
