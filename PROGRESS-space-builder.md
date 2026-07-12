@@ -5,7 +5,7 @@
 > Check tasks off as they land. Phases are ordered; modules within a phase
 > can interleave where dependencies allow.
 
-**Status: Phases 1–4 done (implemented + verified, uncommitted — pending PM review/commit). Phase 5 (optional legacy import) not started.**
+**Status: Phases 1–4 DONE and committed (ff-site-new `66d47dc` → `d12e80c` → `f2d76a0` → `ac7029a`; ff-server `8fc786f`, `5da7e0c` — both repos on `space-builder` branches). Only Phase 5 (optional Firebase import) remains, pending user decision on whether real legacy data exists.**
 
 ## IMPORTANT NOTE FOR NEXT FABLE ADVISOR
 Hello, this is a message from the user that invoked you.
@@ -296,6 +296,8 @@ wikiArticle?, moons: [{name, radiusKm, distance /*km*/, composition, ...}]}]}}`
       diff --stat`: 1 file, +21/-0); `FR-AUTH-4` and all other existing ids
       untouched. Edited only — not committed (ff-server is the PM's repo to
       commit).
+- [x] PM review + commits: `f2d76a0` (3.3) and `ac7029a` (Phase 4) in
+      ff-site-new; `5da7e0c` (design doc, FR-SPACE-1..9) in ff-server.
 
 ---
 
