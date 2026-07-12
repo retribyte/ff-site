@@ -560,7 +560,27 @@
     touch-action: none;
 }
 
+// ---------- Image rect box ----------
+// Mirrors the drawn map image's rect (contain-fit, set imperatively by
+// GalaxyMap's draw()) so the crosshair and the placement-confirm flash — DOM
+// overlays, not canvas draws — can be positioned by plain percentage and
+// automatically land on the same image pixel as a canvas-drawn marker.
+// overflow: hidden is a second line of defense alongside the explicit
+// opacity toggle in GalaxyMap's pointermove handler: content positioned
+// outside [0,100]% (e.g. a stale drag preview) never leaks into the
+// letterbox margin.
+
+.imageBox {
+    position: absolute;
+    overflow: hidden;
+    pointer-events: none;
+}
+
 // ---------- Crosshair ----------
+// Hairlines are confined to the image rect (a plotting chart's crosshair
+// belongs to the plot area, not the letterbox margins around it) and hide
+// entirely — not just stop updating — the moment the pointer leaves the
+// image, matching how the readout already behaves on pointer-leave.
 
 .xh {
     position: absolute;

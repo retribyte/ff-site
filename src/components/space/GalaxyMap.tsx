@@ -25,6 +25,21 @@ import styles from './space.module.scss';
 //    it apart from a plain click-to-select. The live drag position is kept
 //    in a ref and pushed straight into a manual draw() call — no re-render
 //    per pixel, same trick as the crosshair.
+//
+// Coordinate spaces (the map-projection fix): `xPos`/`yPos` on systems and
+// landmarks are normalized **image** coordinates — (0,0) is the top-left of
+// /space/galaxy.png, (1,1) its bottom-right — independent of the viewport's
+// aspect ratio. The image itself is drawn **contain-fit** (aspect-preserved,
+// centered, fully visible, letterboxed as needed) rather than cover-fit,
+// since cover-fit would crop parts of the map offscreen and make some
+// positions unreachable. `imageRect()` computes the drawn image's rect in
+// canvas CSS-pixel space; `imageToCanvas()`/`canvasToImage()` are the only
+// conversions between image-fraction space and canvas-pixel space, and
+// every consumer below (draw, hit-test, hover, crosshair, click-to-place,
+// drag) goes through them. The `.imageBox` DOM node mirrors the same rect
+// for the crosshair/flash DOM overlays, so they need no separate math: a
+// child positioned at `{x*100}%` of `.imageBox` lands on the same image
+// pixel as a canvas marker plotted via `imageToCanvas`.
 
 interface Props {
     mapImage: string | null;
@@ -32,7 +47,9 @@ interface Props {
     landmarks: GalaxyLandmarkSummary[];
     selected: GalaxySelection | null;
     onSelect: (sel: GalaxySelection | null) => void;
-    /** Live pointer coordinates (normalized 0..1), or null on pointer-leave. The
+    /** Live pointer coordinates (normalized 0..1 **image** space), or null on
+     *  pointer-leave *or* whenever the pointer is over the letterbox (outside
+     *  the drawn image rect) — treated the same as leaving the canvas. The
      *  parent owns the toolbar's grid-ref DOM node and mutates it itself — a
      *  callback (not a ref prop) keeps that mutation local to its owner, which
      *  the React Compiler's immutability check requires. */
@@ -43,10 +60,12 @@ interface Props {
     isAdmin: boolean;
     /** The marker armed for click-to-place, or null. While armed, any click
      *  on the map (regardless of what's under the cursor) stamps the armed
-     *  marker there via onPlace. */
+     *  marker there via onPlace — unless the click lands in the letterbox,
+     *  which is ignored entirely (no placement outside the image). */
     armed: GalaxySelection | null;
-    /** Fired at the end of a click-to-place or a completed drag, with the
-     *  normalized 0..1 coordinates. The parent does the optimistic update + PUT. */
+    /** Fired at the end of a click-to-place or a completed drag, with
+     *  normalized 0..1 **image** coordinates. The parent does the optimistic
+     *  update + PUT. */
     onPlace: (sel: GalaxySelection, coords: { x: number; y: number }) => void;
     /** Bumped (new token) by the parent after a successful place/move to
      *  trigger the two-blink confirm at the marker's new position. */
@@ -58,6 +77,29 @@ const DRAG_THRESHOLD_PX = 5;
 
 function clamp01(n: number): number {
     return Math.min(1, Math.max(0, n));
+}
+
+/** The drawn map image's rect, in canvas CSS-pixel space (contain-fit:
+ *  aspect-preserved, centered, letterboxed). Falls back to the full canvas
+ *  when there's no loaded image, so an imageless galaxy behaves like a
+ *  borderless plot (no letterbox to speak of). */
+interface Rect {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+/** image-fraction (0..1, may be temporarily out of range mid-drag/hover) → canvas CSS pixels */
+function imageToCanvas(pos: { x: number; y: number }, rect: Rect): { x: number; y: number } {
+    return { x: rect.x + pos.x * rect.width, y: rect.y + pos.y * rect.height };
+}
+
+/** canvas CSS pixels → image-fraction (unclamped — caller decides whether
+ *  out-of-[0,1] means "in the letterbox, ignore" or "clamp to the edge"). */
+function canvasToImage(px: number, py: number, rect: Rect): { x: number; y: number } | null {
+    if (rect.width <= 0 || rect.height <= 0) return null;
+    return { x: (px - rect.x) / rect.width, y: (py - rect.y) / rect.height };
 }
 
 export default function GalaxyMap({
@@ -75,6 +117,7 @@ export default function GalaxyMap({
 }: Props) {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const imageBoxRef = useRef<HTMLDivElement>(null);
     const xhVRef = useRef<HTMLDivElement>(null);
     const xhHRef = useRef<HTMLDivElement>(null);
     const imgRef = useRef<HTMLImageElement | null>(null);
@@ -86,12 +129,30 @@ export default function GalaxyMap({
 
     const placed = systems.filter((s): s is GalaxySystemSummary & { xPos: number; yPos: number } => s.xPos !== null && s.yPos !== null);
 
+    // The single source of truth for where the image is drawn, given the
+    // *current* imgRef (natural size) and a requested viewport size. Not a
+    // useCallback: it's a cheap closure over a ref, recreated each render
+    // like any other plain function, and called fresh inside draw()/pointer
+    // handlers rather than memoized.
+    const imageRect = (w: number, h: number): Rect => {
+        const img = imgRef.current;
+        if (!img || !img.complete || img.naturalWidth <= 0 || img.naturalHeight <= 0) {
+            return { x: 0, y: 0, width: w, height: h };
+        }
+        const scale = Math.min(w / img.naturalWidth, h / img.naturalHeight);
+        const width = img.naturalWidth * scale;
+        const height = img.naturalHeight * scale;
+        return { x: (w - width) / 2, y: (h - height) / 2, width, height };
+    };
+
     // Two-blink placement confirm: when the parent bumps flashSignal's token
     // after a successful place/move, render a short-lived DOM overlay at the
     // marker's (now updated) position. This adjusts state during render
     // (React's documented escape hatch for "derive state from a change")
     // rather than an effect, since a plain effect here would set state
-    // synchronously on mount/update.
+    // synchronously on mount/update. Position is a plain image-fraction —
+    // the overlay lives inside `.imageBox` (sized/positioned in draw()) and
+    // is placed via percentage, same as a marker's image-space coords.
     if (flashSignal && flashSignal.token !== seenFlashToken) {
         setSeenFlashToken(flashSignal.token);
         const { sel } = flashSignal;
@@ -124,6 +185,8 @@ export default function GalaxyMap({
     // Live drag position, read directly inside draw() (refs don't need to be
     // in the useCallback dep list — draw() is invoked manually on every
     // pointermove tick while dragging, and each call reads .current fresh).
+    // Coordinates here are image-fraction, clamped to [0,1] (dragging past
+    // the image edge pins to the border).
     const dragPreviewRef = useRef<{ sel: GalaxySelection; x: number; y: number } | null>(null);
 
     const draw = useCallback(() => {
@@ -151,29 +214,47 @@ export default function GalaxyMap({
         const selectColor = cs.getPropertyValue('--accent-2').trim() || '#f39e3b';
         const monoFont = cs.getPropertyValue('--font-mono').trim() || 'monospace';
 
-        // Background map image (cover-fit)
-        const img = imgRef.current;
-        if (img && img.complete && img.naturalWidth > 0) {
-            const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
-            const dw = img.naturalWidth * scale;
-            const dh = img.naturalHeight * scale;
-            ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+        const imgR = imageRect(w, h);
+
+        // Report the image rect to the DOM overlay layer (crosshair, flash)
+        // so they can position themselves by simple percentage of a box that
+        // already matches the drawn image exactly.
+        const box = imageBoxRef.current;
+        if (box) {
+            box.style.left = `${imgR.x}px`;
+            box.style.top = `${imgR.y}px`;
+            box.style.width = `${imgR.width}px`;
+            box.style.height = `${imgR.height}px`;
         }
 
-        // Graticule
+        // Background map image (contain-fit: aspect-preserved, centered,
+        // letterboxed — never crops the art, so every normalized position
+        // stays reachable regardless of viewport aspect ratio).
+        const img = imgRef.current;
+        if (img && img.complete && img.naturalWidth > 0) {
+            ctx.drawImage(img, imgR.x, imgR.y, imgR.width, imgR.height);
+        }
+
+        // Graticule — confined to the image rect (a plotting chart's grid
+        // covers its plot area, not the letterbox margins around it).
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(imgR.x, imgR.y, imgR.width, imgR.height);
+        ctx.clip();
         ctx.strokeStyle = gridColor;
         ctx.lineWidth = 1;
         const step = 60;
         ctx.beginPath();
-        for (let x = 0; x <= w; x += step) {
-            ctx.moveTo(x + 0.5, 0);
-            ctx.lineTo(x + 0.5, h);
+        for (let x = imgR.x; x <= imgR.x + imgR.width; x += step) {
+            ctx.moveTo(x + 0.5, imgR.y);
+            ctx.lineTo(x + 0.5, imgR.y + imgR.height);
         }
-        for (let y = 0; y <= h; y += step) {
-            ctx.moveTo(0, y + 0.5);
-            ctx.lineTo(w, y + 0.5);
+        for (let y = imgR.y; y <= imgR.y + imgR.height; y += step) {
+            ctx.moveTo(imgR.x, y + 0.5);
+            ctx.lineTo(imgR.x + imgR.width, y + 0.5);
         }
         ctx.stroke();
+        ctx.restore();
 
         ctx.font = `12px ${monoFont}`;
         ctx.textAlign = 'center';
@@ -183,8 +264,7 @@ export default function GalaxyMap({
         // Landmarks — diamond markers
         for (const lm of landmarks) {
             const dragged = dragPreview && dragPreview.sel.kind === 'landmark' && dragPreview.sel.id === lm.id;
-            const x = (dragged ? dragPreview.x : lm.xPos) * w;
-            const y = (dragged ? dragPreview.y : lm.yPos) * h;
+            const { x, y } = imageToCanvas({ x: dragged ? dragPreview.x : lm.xPos, y: dragged ? dragPreview.y : lm.yPos }, imgR);
             const isSel = selected?.kind === 'landmark' && selected.id === lm.id;
 
             ctx.save();
@@ -223,8 +303,7 @@ export default function GalaxyMap({
         // Systems — star markers
         for (const sys of placed) {
             const dragged = dragPreview && dragPreview.sel.kind === 'system' && dragPreview.sel.id === sys.id;
-            const x = (dragged ? dragPreview.x : sys.xPos) * w;
-            const y = (dragged ? dragPreview.y : sys.yPos) * h;
+            const { x, y } = imageToCanvas({ x: dragged ? dragPreview.x : sys.xPos, y: dragged ? dragPreview.y : sys.yPos }, imgR);
             const color = sys.star?.color || (sys.star?.temperatureK != null ? starColor(sys.star.temperatureK) : starFallback);
             const isSel = selected?.kind === 'system' && selected.id === sys.id;
 
@@ -292,19 +371,17 @@ export default function GalaxyMap({
     }, [draw]);
 
     const hitTest = useCallback(
-        (px: number, py: number, w: number, h: number): GalaxySelection | null => {
+        (px: number, py: number, rect: Rect): GalaxySelection | null => {
             let best: { sel: GalaxySelection; dist: number } | null = null;
             for (const sys of placed) {
-                const x = sys.xPos * w;
-                const y = sys.yPos * h;
+                const { x, y } = imageToCanvas({ x: sys.xPos, y: sys.yPos }, rect);
                 const dist = Math.hypot(x - px, y - py);
                 if (dist <= HIT_RADIUS_PX && (!best || dist < best.dist)) {
                     best = { sel: { kind: 'system', id: sys.id }, dist };
                 }
             }
             for (const lm of landmarks) {
-                const x = lm.xPos * w;
-                const y = lm.yPos * h;
+                const { x, y } = imageToCanvas({ x: lm.xPos, y: lm.yPos }, rect);
                 const dist = Math.hypot(x - px, y - py);
                 if (dist <= HIT_RADIUS_PX && (!best || dist < best.dist)) {
                     best = { sel: { kind: 'landmark', id: lm.id }, dist };
@@ -339,7 +416,7 @@ export default function GalaxyMap({
         const rect = container.getBoundingClientRect();
         const px = e.clientX - rect.left;
         const py = e.clientY - rect.top;
-        const hit = hitTest(px, py, rect.width, rect.height);
+        const hit = hitTest(px, py, imageRect(rect.width, rect.height));
 
         // While armed, every pointer gesture is a placement — never a drag,
         // even if it lands on a different (unrelated) marker.
@@ -353,11 +430,31 @@ export default function GalaxyMap({
         const container = containerRef.current;
         if (!container) return;
         const rect = container.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const y = (e.clientY - rect.top) / rect.height;
-        if (xhVRef.current) xhVRef.current.style.left = `${x * 100}%`;
-        if (xhHRef.current) xhHRef.current.style.top = `${y * 100}%`;
-        onCoordsChange({ x, y });
+        const px = e.clientX - rect.left;
+        const py = e.clientY - rect.top;
+        const imgR = imageRect(rect.width, rect.height);
+        const imgPos = canvasToImage(px, py, imgR);
+        const inside = imgPos != null && imgPos.x >= 0 && imgPos.x <= 1 && imgPos.y >= 0 && imgPos.y <= 1;
+
+        // Crosshair hairlines + readout are confined to the image rect (a
+        // plotting chart's crosshair belongs to the plot, not its margins):
+        // both move together and both hide together the moment the pointer
+        // leaves the image, same treatment as leaving the canvas entirely.
+        if (inside && imgPos) {
+            if (xhVRef.current) {
+                xhVRef.current.style.left = `${imgPos.x * 100}%`;
+                xhVRef.current.style.opacity = '';
+            }
+            if (xhHRef.current) {
+                xhHRef.current.style.top = `${imgPos.y * 100}%`;
+                xhHRef.current.style.opacity = '';
+            }
+            onCoordsChange(imgPos);
+        } else {
+            if (xhVRef.current) xhVRef.current.style.opacity = '0';
+            if (xhHRef.current) xhHRef.current.style.opacity = '0';
+            onCoordsChange(null);
+        }
 
         const pr = pointerRef.current;
         if (pr && pr.dragEligible) {
@@ -367,8 +464,9 @@ export default function GalaxyMap({
                 pr.dragging = true;
                 setCursor('grabbing');
             }
-            if (pr.dragging && pr.hit) {
-                dragPreviewRef.current = { sel: pr.hit, x: clamp01(x), y: clamp01(y) };
+            if (pr.dragging && pr.hit && imgPos) {
+                // Dragging past the image edge naturally pins to the border.
+                dragPreviewRef.current = { sel: pr.hit, x: clamp01(imgPos.x), y: clamp01(imgPos.y) };
                 draw();
                 return;
             }
@@ -380,12 +478,14 @@ export default function GalaxyMap({
         if (armedEditable) {
             setCursor('crosshair');
         } else {
-            const hoverHit = hitTest(x * rect.width, y * rect.height, rect.width, rect.height);
+            const hoverHit = hitTest(px, py, imgR);
             setCursor(hoverHit && isPlaced(hoverHit) && canEditSelection(hoverHit) ? 'grab' : 'default');
         }
     };
 
     const handlePointerLeave = () => {
+        if (xhVRef.current) xhVRef.current.style.opacity = '0';
+        if (xhHRef.current) xhHRef.current.style.opacity = '0';
         onCoordsChange(null);
     };
 
@@ -399,24 +499,29 @@ export default function GalaxyMap({
         const rect = container.getBoundingClientRect();
         const px = e.clientX - rect.left;
         const py = e.clientY - rect.top;
-        const x = clamp01(px / rect.width);
-        const y = clamp01(py / rect.height);
+        const imgR = imageRect(rect.width, rect.height);
+        const raw = canvasToImage(px, py, imgR);
 
         if (pr?.dragging && pr.hit) {
             dragPreviewRef.current = null;
             setCursor('default');
-            onPlace(pr.hit, { x, y });
+            // Drag-release always commits, clamped to the image edge — you
+            // can't drag a marker "into the letterbox" and lose it.
+            if (raw) onPlace(pr.hit, { x: clamp01(raw.x), y: clamp01(raw.y) });
             return;
         }
         dragPreviewRef.current = null;
 
         // A plain click (no drag). Armed mode places wherever the pointer
-        // landed; otherwise it's ordinary select/deselect.
+        // landed, *unless* that's the letterbox — a click outside the image
+        // is ignored outright, not silently clamped onto the border.
         if (armedEditable) {
-            onPlace(armedEditable, { x, y });
+            if (raw && raw.x >= 0 && raw.x <= 1 && raw.y >= 0 && raw.y <= 1) {
+                onPlace(armedEditable, raw);
+            }
             return;
         }
-        onSelect(hitTest(px, py, rect.width, rect.height));
+        onSelect(hitTest(px, py, imgR));
     };
 
     // Belt-and-suspenders cleanup: onAnimationEnd normally clears the flash,
@@ -449,19 +554,24 @@ export default function GalaxyMap({
             onPointerUp={handlePointerUp}
         >
             <canvas ref={canvasRef} className={styles.canvas} role='img' aria-label={mapAriaLabel} />
-            <div ref={xhVRef} className={`${styles.xh} ${styles.xhV}`} aria-hidden />
-            <div ref={xhHRef} className={`${styles.xh} ${styles.xhH}`} aria-hidden />
+            {/* Mirrors the drawn image's rect exactly (set imperatively in
+                draw()) so children below can be positioned by simple
+                percentage — the same projection the canvas markers use. */}
+            <div ref={imageBoxRef} className={styles.imageBox}>
+                <div ref={xhVRef} className={`${styles.xh} ${styles.xhV}`} aria-hidden />
+                <div ref={xhHRef} className={`${styles.xh} ${styles.xhH}`} aria-hidden />
+                {flash && (
+                    <div
+                        key={flash.key}
+                        className={styles.flash}
+                        style={{ left: `${flash.x * 100}%`, top: `${flash.y * 100}%` }}
+                        aria-hidden
+                        onAnimationEnd={() => setFlash(null)}
+                    />
+                )}
+            </div>
             {armedEditable && (
                 <p className={styles.armedBanner}>◈ armed — click the map to place</p>
-            )}
-            {flash && (
-                <div
-                    key={flash.key}
-                    className={styles.flash}
-                    style={{ left: `${flash.x * 100}%`, top: `${flash.y * 100}%` }}
-                    aria-hidden
-                    onAnimationEnd={() => setFlash(null)}
-                />
             )}
         </div>
     );
