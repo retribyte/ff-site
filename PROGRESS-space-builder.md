@@ -5,7 +5,7 @@
 > Check tasks off as they land. Phases are ordered; modules within a phase
 > can interleave where dependencies allow.
 
-**Status: Phases 1–4 DONE and committed (ff-site-new `66d47dc` → `d12e80c` → `f2d76a0` → `ac7029a`; ff-server `8fc786f`, `5da7e0c` — both repos on `space-builder` branches). Only Phase 5 (optional Firebase import) remains, pending user decision on whether real legacy data exists.**
+**Status: Phases 1–4 DONE; Phase 5 DROPPED (Firebase long gone); Phase 6 tweaks DONE — all committed (ff-site-new `66d47dc` → `d12e80c` → `f2d76a0` → `ac7029a` → `6055e1b` → `1423179`; ff-server `8fc786f`, `5da7e0c`; both repos on `space-builder` branches). No open items.**
 
 ## IMPORTANT NOTE FOR NEXT FABLE ADVISOR
 Hello, this is a message from the user that invoked you.
