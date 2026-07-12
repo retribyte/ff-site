@@ -18,6 +18,7 @@
     border: 1px solid var(--border-loud);
     border-bottom: none;
     border-left: var(--px) solid var(--accent-2);
+    height: 3rem;
 }
 
 .crumb {
@@ -81,7 +82,7 @@
 
 .body {
     display: grid;
-    grid-template-columns: 16rem 1fr;
+    grid-template-columns: 17rem 1fr;
     flex: 1;
     min-height: 0;
 
@@ -354,6 +355,15 @@
 // it doesn't compete with .btnPrimary for attention.
 .btnQuiet {
     border-style: dashed;
+    color: var(--text-muted);
+
+    &:hover {
+        color: var(--text);
+    }
+}
+
+.btnSimple {
+    border-style: none;
     color: var(--text-muted);
 
     &:hover {

@@ -293,6 +293,11 @@ export default function GalaxyConsole({ galaxy }: { galaxy: GalaxyDetail }) {
                                     {sys.xPos === null && <span className={styles.unplaced}>unplaced</span>}
                                 </button>
                             ))}
+                            {user && (
+                                <Link href='/galaxy/systems/new' className={`${styles.btn} ${styles.btnSimple}`}>
+                                    + New system
+                                </Link>
+                            )}
                         </div>
                     </div>
 
@@ -316,6 +321,11 @@ export default function GalaxyConsole({ galaxy }: { galaxy: GalaxyDetail }) {
                                     <span>{lm.name}</span>
                                 </button>
                             ))}
+                            {user && (
+                                <Link href='/galaxy/landmarks/new' className={`${styles.btn} ${styles.btnSimple}`}>
+                                    + New landmark
+                                </Link>
+                            )}
                         </div>
                     </div>
 
