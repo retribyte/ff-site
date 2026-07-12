@@ -119,6 +119,26 @@ export default function GalaxyConsole({ galaxy }: { galaxy: GalaxyDetail }) {
     const toggleLandmark = (id: number) =>
         setSelected((prev) => (prev?.kind === 'landmark' && prev.id === id ? null : { kind: 'landmark', id }));
 
+    // Rail double-click → system view. Timed ourselves (not the native
+    // `dblclick` event, whose threshold is OS-configurable) so the window is
+    // exactly 500ms everywhere — using the click event's own `timeStamp`
+    // (a pure read of the event arg, unlike `Date.now()`) so the compiler's
+    // purity check has nothing to flag. The first click always toggles
+    // selection as before; a second click on the same row within the window
+    // additionally navigates — even though that click's own toggle may have
+    // just deselected the row, which is fine since we're leaving the page.
+    // Landmarks have no detail page, so they keep plain toggleLandmark.
+    const lastSystemClickRef = useRef<{ id: number; time: number } | null>(null);
+    const handleSystemRowClick = (id: number, timeStamp: number) => {
+        toggleSystem(id);
+        const last = lastSystemClickRef.current;
+        lastSystemClickRef.current = { id, time: timeStamp };
+        if (last && last.id === id && timeStamp - last.time < 500) {
+            lastSystemClickRef.current = null;
+            router.push(`/galaxy/systems/${id}`);
+        }
+    };
+
     const toggleArm = (sel: GalaxySelection) =>
         setArmed((prev) => (prev && prev.kind === sel.kind && prev.id === sel.id ? null : sel));
 
@@ -258,7 +278,7 @@ export default function GalaxyConsole({ galaxy }: { galaxy: GalaxyDetail }) {
                                     className={`${styles.treeButton} ${
                                         selected?.kind === 'system' && selected.id === sys.id ? styles.treeButtonSelected : ''
                                     }`}
-                                    onClick={() => toggleSystem(sys.id)}
+                                    onClick={(e) => handleSystemRowClick(sys.id, e.timeStamp)}
                                     aria-pressed={selected?.kind === 'system' && selected.id === sys.id}
                                 >
                                     <span
