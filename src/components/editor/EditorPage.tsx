@@ -17,11 +17,14 @@ export default async function EditorPage({ kind, recordId }: { kind: EditorKind;
     if (recordId !== undefined) {
         if (Number.isNaN(recordId)) notFound();
         try {
-            record = await api<Record<string, unknown>>(`${schema.basePath}/${recordId}`);
+            record = schema.loadRecord
+                ? await schema.loadRecord(recordId)
+                : await api<Record<string, unknown>>(`${schema.basePath}/${recordId}`);
         } catch (error) {
             if (error instanceof ApiError && error.httpStatus === 404) notFound();
             throw error;
         }
+        if (!record) notFound();
         const ownsRecord = record.creatorId === user.id || user.role === 'ADMIN';
         if (!ownsRecord) redirect(schema.viewPath(recordId));
     }

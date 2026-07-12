@@ -329,6 +329,75 @@
     color: var(--accent-2);
 }
 
+// Subdued action (Exit, Cancel) — same footprint as .btn, dashed + muted so
+// it doesn't compete with .btnPrimary for attention.
+.btnQuiet {
+    border-style: dashed;
+    color: var(--text-muted);
+
+    &:hover {
+        color: var(--text);
+    }
+}
+
+.addRow {
+    color: var(--text-muted);
+
+    &:hover {
+        color: var(--accent-2);
+        background: var(--highlight);
+    }
+}
+
+// ---------- Builder inline forms (star/planet/moon create + edit) ----------
+
+.builderForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0.65rem;
+    border: 1px dashed var(--border-loud);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+}
+
+.builderField {
+    @include m.field-stack(0.25rem);
+
+    input,
+    textarea,
+    select {
+        @include m.form-field(0.85rem, 0.4rem 0.55rem);
+        width: 100%;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 3.5rem;
+    }
+}
+
+.tempRow {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+
+    input {
+        flex: 1;
+    }
+}
+
+.builderActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.15rem;
+}
+
+.formError {
+    @include m.pixel-error(0.68rem);
+}
+
 // ---------- Telemetry spec sheet ----------
 
 .telemetry {

@@ -85,7 +85,8 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
         }
 
         try {
-            const res = await fetch(`/api/ff${schema.basePath}${isEdit ? `/${recordId}` : ''}`, {
+            const url = isEdit ? `/api/ff${schema.basePath}/${recordId}` : `/api/ff${schema.createPath ?? schema.basePath}`;
+            const res = await fetch(url, {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -96,7 +97,13 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
                 return;
             }
             const id = envelope.data?.id ?? recordId;
-            router.push(id !== undefined ? schema.viewPath(id) : schema.indexPath);
+            if (id === undefined) {
+                router.push(schema.indexPath);
+            } else if (!isEdit && schema.afterCreatePath) {
+                router.push(schema.afterCreatePath(id));
+            } else {
+                router.push(schema.viewPath(id));
+            }
             router.refresh();
         } catch {
             setError('The lore server is not answering');
@@ -264,7 +271,9 @@ function Field({
                 <input
                     id={id}
                     type={field.kind === 'number' ? 'number' : 'text'}
-                    step={field.kind === 'number' ? 'any' : undefined}
+                    step={field.kind === 'number' ? (field.step ?? 'any') : undefined}
+                    min={field.kind === 'number' ? field.min : undefined}
+                    max={field.kind === 'number' ? field.max : undefined}
                     value={value as string}
                     onChange={(e) => onChange(e.target.value)}
                     required={field.required}

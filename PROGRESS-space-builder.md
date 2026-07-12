@@ -5,7 +5,7 @@
 > Check tasks off as they land. Phases are ordered; modules within a phase
 > can interleave where dependencies allow.
 
-**Status: in progress — Phases 1, 2, and 2.5 done (2.5 implemented + verified, uncommitted — pending PM review/commit). Phase 3 next.**
+**Status: in progress — Phases 1, 2, 2.5, and 3.1+3.2 done (implemented + verified, uncommitted — pending PM review/commit). Phase 3.3 (map authoring) next.**
 
 ## IMPORTANT NOTE FOR NEXT FABLE ADVISOR
 Hello, this is a message from the user that invoked you.
@@ -167,33 +167,45 @@ wikiArticle?, moons: [{name, radiusKm, distance /*km*/, composition, ...}]}]}}`
       place — verify, don't assume)
 - [x] Playwright both pages × both themes: no vertical page scrollbar,
       console fills window, toolbar stats present; tsc + eslint clean
-- [ ] Commit (ff-site-new only; no server changes)
+- [x] Commit (ff-site-new only; no server changes) — `66d47dc`
 
 ---
 
 ## Phase 3 — Authoring
 
-### 3.1 Editor schemas (flat records → RecordEditor)
-- [ ] `landmarkSchema` in `EDITOR_SCHEMAS` (name, description, xPos, yPos,
-      wikiArticle) + create/edit routes
-- [ ] `starSystemSchema` for system **metadata** (name, description,
-      wikiArticle) — body tree stays in the builder
-- [ ] Confirm RecordEditor handles the nested create path
-      (`POST /galaxies/:slug/systems`) or add basePath override
+### 3.1 Editor schemas (flat records → RecordEditor) — DONE 2026-07-11
+- [x] `landmarkSchema` in `EDITOR_SCHEMAS` (name, description, xPos, yPos,
+      wikiArticle) + create/edit routes (`/galaxy/landmarks/new`,
+      `/galaxy/landmarks/[id]/edit`)
+- [x] `starSystemSchema` for system **metadata** (name, description,
+      wikiArticle) — body tree stays in the builder. Routes:
+      `/galaxy/systems/new` (create) + `/galaxy/systems/[id]/meta` (edit)
+- [x] RecordEditor didn't support the nested create path — added a generic
+      `createPath?`/`afterCreatePath?`/`loadRecord?` override triple to
+      `EntitySchema` (not a "galaxy" special-case in editor core)
 
-### 3.2 SystemBuilder (`/galaxy/systems/[id]/edit`, `/galaxy/systems/new`)
-- [ ] Client route, auth-gated via `useSession` (creator/admin for edit)
-- [ ] Local tree state (ids or temp keys, no name-keyed identity);
+### 3.2 SystemBuilder (`/galaxy/systems/[id]/edit`, `/galaxy/systems/new`) — DONE 2026-07-11
+- [x] Client route, gated server-side (mirrors EditorPage's precedent, not
+      `useSession` — see route file for why) — any member can create,
+      creator/admin can edit
+- [x] Local tree state (negative-int temp keys, no name-keyed identity);
       live `SystemDiagram` preview
-- [ ] Contextual creation: empty state renders the star form; `+ planet`
+- [x] Contextual creation: empty state renders the star form; `+ planet`
       under the star, `+ moon` under each planet — inline form pre-scoped to
       parent, controlled inputs throughout
-- [ ] Star form temperature field shows the **live star-color chip**
-- [ ] Edit + delete of bodies in the rail detail section
-- [ ] Save via whole-tree `PUT /systems/:id/bodies` through `/api/ff` proxy;
-      `SAVED!` text swap; unsaved-changes indicator in the toolbar crumb;
-      Exit action
-- [ ] Toolbar actions (Save / Exit), not floating buttons
+- [x] Star form temperature field shows the **live star-color chip**
+- [x] Edit + delete of bodies in the rail detail section (delete confirm
+      copy calls out that a planet's moons go with it)
+- [x] Save via whole-tree `PUT /systems/:id/bodies` through `/api/ff` proxy;
+      `SAVED!` text swap; unsaved-changes indicator (`· UNSAVED`) in the
+      toolbar crumb; Exit action
+- [x] Toolbar actions (Save / Exit), not floating buttons; added `.btnQuiet`
+- [x] Playwright-verified end-to-end as Trey (create → builder → star + 2
+      planets + moon → save → reload persists → edit → save → read page
+      matches → delete a planet-with-moon → save → verified); permission
+      checks (logged-out, Bill) confirmed denied both server-side and via
+      the read page's conditional Edit link; both themes screenshotted;
+      tsc + eslint clean; test records deleted via API
 
 ### 3.3 Map authoring (GalaxyMap upgrades)
 - [ ] Click-to-place for the selected owned/admin system or landmark —
@@ -266,3 +278,5 @@ wikiArticle?, moons: [{name, radiusKm, distance /*km*/, composition, ...}]}]}}`
 | 2026-07-11 | 1 | ff-server done (agent): schema pushed, galaxy seeded, space module + openapi, full curl matrix green (validation, 403s, cascade, sanitize). Uncommitted by instruction. Dev server left running on :3000. `npm run docs` (redocly) breakage pre-exists on base branch. |
 | 2026-07-11 | 1 | Committed in ff-server: `8fc786f` (branch `space-builder`). Per-phase commit policy adopted. |
 | 2026-07-11 | 2 | Read path done (agent): ConsoleShell/Toolbar/GalaxyMap/GalaxyConsole/SystemDiagram/BodyTree/BodyInfoPanel + both pages + navbar link. Playwright green both themes, screenshots PM-reviewed vs mockup. Committed `e8c84d9` (+ tsconfig fix `7635f87`) on ff-site-new `space-builder` branch (both repos now on same-named feature branches). Phase 3 extension points: Toolbar `actions` prop, ConsoleShell `rail` slot, read-only coord spans to swap, `.btnQuiet` to add. |
+| 2026-07-11 | 2.5 | Full-screen console (agent, user requirement): page headers dropped, `console-main` mixin (`100vh - --navbar-height`, flex chain to grid row), stats → toolbar, mobile row `minmax(0,1fr)`. Playwright: both pages × themes × 2 sizes, DPR-2, rail internal scroll, SignalLost, no page scroll. PM-reviewed diff + screenshot. Committed `66d47dc`. Phase 3 unblocked; split as A=3.1+3.2 (schemas+builder) then B=3.3 (map authoring). |
+| 2026-07-11 | 3.1+3.2 | Editor schemas + SystemBuilder done (agent). Pre-flight curl check found `GET /landmarks/:id` doesn't exist (only `POST .../landmarks`, `PUT/DELETE /landmarks/:id` — landmarks only ever come back nested in `GET /galaxies/:slug`); handled with a generic `EntitySchema.loadRecord?` override (landmarkSchema fetches `/galaxies/ff` and finds by id) rather than touching ff-server. Also added `createPath?`/`afterCreatePath?` to `EntitySchema` for the nested-create-vs-flat-basePath mismatch. Routes: `/galaxy/landmarks/new`+`/[id]/edit`, `/galaxy/systems/new` (metadata create → redirects to builder) + `/galaxy/systems/[id]/meta` (metadata edit), `/galaxy/systems/[id]/edit` (builder, new components `SystemBuilder`/`BuilderBodyTree`/`BodyForm`/`builderTree.ts`). Builder auth is gated server-side in the route's `page.tsx` (mirrors EditorPage's precedent) rather than client `useSession`, to avoid `useSession().loading`'s race flashing unauthorized content; added a small "Edit system" entry point on the read-only `SystemConsole` (creator/admin only, via `useSession`) since nothing else in 3.1/3.2 gave the builder a discoverable entry point (map "New system" buttons stay 3.3's job). Local tree uses negative-int temp keys (real ids are always positive) so the read-only `SystemDiagram`/`BodyInfoPanel` components could be reused unchanged. Playwright end-to-end as Trey (create → builder → star+2 planets+moon → save → reload persists → edit body → save → read page matches → delete planet-with-moon, confirmed via independent fresh load, not just same-session DOM check → save); permission checks (logged-out redirects to /login, Bill redirected off the edit route + API 403, both denied the read-page Edit link); landmark create → edit → verified via direct API read; both themes screenshotted at 1440×900. tsc + eslint clean repo-wide. Test records (systems 4/5, landmark 4) deleted via API; DB back to Herakl (3) + Cassin Deep (3). Uncommitted by instruction. |

@@ -1,5 +1,10 @@
+import { api } from '@/lib/api';
 import { formatGuyDate, parseGuyDate } from '@/lib/guy-time';
 import { ITEM_TYPE_META, SENTIENCE_LABELS } from '@/lib/lore';
+
+// The one FF galaxy, per the Phase 1 seed (src/lib/space.ts and the space
+// console components hardcode the same slug).
+const GALAXY_SLUG = 'ff';
 
 // Schema-driven editing: every record type declares its fields once and the
 // RecordEditor renders/validates/submits any of them.
@@ -13,6 +18,10 @@ export interface FieldDef {
     required?: boolean;
     placeholder?: string;
     help?: string;
+    /** number: HTML5 min/max/step hints (validation still happens server-side) */
+    min?: number;
+    max?: number;
+    step?: number | 'any';
     /** select: the enum choices */
     options?: { value: string; label: string }[];
     /** entity-ref: which collection the picker loads (API path + label field) */
@@ -29,12 +38,23 @@ export interface FieldDef {
 
 export interface EntitySchema {
     kind: string;
-    /** API collection, e.g. '/characters' */
+    /** API collection for GET-by-id (edit mode) / PUT / DELETE, e.g. '/characters' */
     basePath: string;
-    /** where to land after save/delete */
+    /** POST path for create, when it differs from basePath (e.g. a nested
+     *  '/galaxies/ff/systems' create route backed by a flat '/systems/:id' resource).
+     *  Defaults to basePath. */
+    createPath?: string;
+    /** where to land after an edit-save/delete, and the "back" link target */
     viewPath: (id: number | string) => string;
+    /** where to land after a *create* save, when it differs from viewPath
+     *  (e.g. system metadata creation hands off to the body-tree builder) */
+    afterCreatePath?: (id: number | string) => string;
     indexPath: string;
     fields: FieldDef[];
+    /** override how the existing record is loaded server-side in edit mode;
+     *  default: GET `${basePath}/${id}`. For resources with no GET-by-id
+     *  route (e.g. landmarks, only returned nested inside the galaxy payload). */
+    loadRecord?: (id: number) => Promise<Record<string, unknown> | null>;
 }
 
 const SEX_OPTIONS = [
@@ -142,10 +162,71 @@ export const itemSchema: EntitySchema = {
     ],
 };
 
+export const landmarkSchema: EntitySchema = {
+    kind: 'landmark',
+    basePath: '/landmarks',
+    createPath: `/galaxies/${GALAXY_SLUG}/landmarks`,
+    // No detail page for landmarks — they only ever show as markers on
+    // /galaxy, so both the post-save and back-link destinations are the map.
+    viewPath: () => '/galaxy',
+    indexPath: '/galaxy',
+    // There's no GET /landmarks/:id route (landmarks are only ever returned
+    // nested inside GET /galaxies/:slug) — load the record from there instead.
+    loadRecord: async (id) => {
+        const galaxy = await api<{ landmarks: Record<string, unknown>[] }>(`/galaxies/${GALAXY_SLUG}`);
+        return galaxy.landmarks.find((landmark) => landmark.id === id) ?? null;
+    },
+    fields: [
+        { name: 'name', label: 'name', kind: 'text', required: true },
+        { name: 'description', label: 'description', kind: 'textarea' },
+        {
+            name: 'xPos',
+            label: 'x position',
+            kind: 'number',
+            required: true,
+            min: 0,
+            max: 1,
+            step: 0.01,
+            help: '0..1, normalized to the galaxy map',
+        },
+        {
+            name: 'yPos',
+            label: 'y position',
+            kind: 'number',
+            required: true,
+            min: 0,
+            max: 1,
+            step: 0.01,
+            help: '0..1, normalized to the galaxy map',
+        },
+        { name: 'wikiArticle', label: 'wiki article', kind: 'text' },
+    ],
+};
+
+// System *metadata* only (name/description/wiki) — the body tree (star →
+// planets → moons) is edited in the dedicated SystemBuilder, not here.
+export const starSystemSchema: EntitySchema = {
+    kind: 'system',
+    basePath: '/systems',
+    createPath: `/galaxies/${GALAXY_SLUG}/systems`,
+    viewPath: (id) => `/galaxy/systems/${id}`,
+    // Creating a system is just the metadata shell — the natural next hop is
+    // the body-tree builder, not the (still-empty) read-only page.
+    afterCreatePath: (id) => `/galaxy/systems/${id}/edit`,
+    indexPath: '/galaxy',
+    fields: [
+        { name: 'name', label: 'name', kind: 'text', required: true },
+        { name: 'description', label: 'description', kind: 'textarea' },
+        { name: 'wikiArticle', label: 'wiki article', kind: 'text' },
+    ],
+};
+
 export const EDITOR_SCHEMAS = {
     character: characterSchema,
     species: speciesSchema,
     item: itemSchema,
+    landmark: landmarkSchema,
+    system: starSystemSchema,
 } as const;
 
 export type EditorKind = keyof typeof EDITOR_SCHEMAS;

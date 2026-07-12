@@ -1,0 +1,12 @@
+@use '../../../../../styles/mixins' as m;
+
+.main {
+    @include m.console-main;
+}
+
+// Error/denied fallback only: center the panel both ways instead of letting
+// it sit flush top-left of the full-bleed shell (matches system.module.scss).
+.mainCenter {
+    align-items: center;
+    justify-content: center;
+}

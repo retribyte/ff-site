@@ -8,6 +8,7 @@ import SystemDiagram from './SystemDiagram';
 import BodyTree from './BodyTree';
 import BodyInfoPanel from './BodyInfoPanel';
 import WikiLink from '@/components/WikiLink';
+import { useSession } from '@/components/auth/SessionProvider';
 import type { CelestialBody, StarSystem } from '@/lib/types';
 import styles from './space.module.scss';
 
@@ -22,12 +23,17 @@ function findBody(body: CelestialBody | null, id: number): CelestialBody | null 
 }
 
 // /galaxy/systems/[id] page composition: overview tree + telemetry in the
-// rail, SystemDiagram in the viewport. Read-only — no delete/edit controls
-// (Phase 3).
+// rail, SystemDiagram in the viewport. Read-only, plus a self-gated "Edit"
+// entry point to the builder for the system's creator/admin (the builder
+// route re-checks ownership server-side regardless — this is just the
+// visible way to reach it; the map-authoring "New system" entry points are
+// Phase 3.3's job).
 export default function SystemConsole({ system }: { system: StarSystem }) {
     const star = system.bodies?.[0] ?? null;
     const [selectedId, setSelectedId] = useState<number | null>(star?.id ?? null);
     const selected = selectedId != null ? findBody(star, selectedId) : null;
+    const { user } = useSession();
+    const canEdit = user != null && (user.id === system.creatorId || user.role === 'ADMIN');
 
     return (
         <ConsoleShell
@@ -61,6 +67,13 @@ export default function SystemConsole({ system }: { system: StarSystem }) {
                         {system.description && <p className={styles.desc}>{system.description}</p>}
                         {system.creator && <p className={styles.attribution}>charted by {system.creator.username}</p>}
                         <WikiLink article={system.wikiArticle} />
+                        {canEdit && (
+                            <div className={styles.rowActions}>
+                                <Link href={`/galaxy/systems/${system.id}/edit`} className={`${styles.btn} ${styles.btnPrimary}`}>
+                                    Edit system
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     {selected && (
