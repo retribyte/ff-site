@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { starColor } from '@/lib/space';
 import type { GalaxyLandmarkSummary, GalaxySelection, GalaxySystemSummary } from './types';
@@ -11,6 +11,20 @@ import styles from './space.module.scss';
 // position updates via direct DOM refs (not React state) so it never forces
 // a re-render. Canvas hit-testing selects a marker; selection also drives
 // (and is driven by) the rail list in the parent.
+//
+// Authoring (3.3): GalaxyMap is purely an interaction surface — it reports
+// clicks/drags via callbacks and never persists anything itself. The parent
+// (GalaxyConsole) owns `systems`/`landmarks` as local optimistic state, does
+// the PUT, and reverts on failure; this component just redraws whatever it's
+// handed. Two modes layer on top of plain select:
+//  - "armed" (parent-driven): every click anywhere on the map places the
+//    armed marker at that point. Drag-start is suppressed while armed so a
+//    stray drag on a *different* marker can't hijack the placement.
+//  - drag-to-move: pointerdown on an editable, already-placed marker (only
+//    when nothing is armed) starts a drag; a small movement threshold tells
+//    it apart from a plain click-to-select. The live drag position is kept
+//    in a ref and pushed straight into a manual draw() call — no re-render
+//    per pixel, same trick as the crosshair.
 
 interface Props {
     mapImage: string | null;
@@ -23,11 +37,42 @@ interface Props {
      *  callback (not a ref prop) keeps that mutation local to its owner, which
      *  the React Compiler's immutability check requires. */
     onCoordsChange: (coords: { x: number; y: number } | null) => void;
+    /** Session identity, used only to decide drag/arm eligibility — the
+     *  server re-checks ownership regardless. */
+    currentUserId: number | null;
+    isAdmin: boolean;
+    /** The marker armed for click-to-place, or null. While armed, any click
+     *  on the map (regardless of what's under the cursor) stamps the armed
+     *  marker there via onPlace. */
+    armed: GalaxySelection | null;
+    /** Fired at the end of a click-to-place or a completed drag, with the
+     *  normalized 0..1 coordinates. The parent does the optimistic update + PUT. */
+    onPlace: (sel: GalaxySelection, coords: { x: number; y: number }) => void;
+    /** Bumped (new token) by the parent after a successful place/move to
+     *  trigger the two-blink confirm at the marker's new position. */
+    flashSignal: { sel: GalaxySelection; token: number } | null;
 }
 
 const HIT_RADIUS_PX = 14;
+const DRAG_THRESHOLD_PX = 5;
 
-export default function GalaxyMap({ mapImage, systems, landmarks, selected, onSelect, onCoordsChange }: Props) {
+function clamp01(n: number): number {
+    return Math.min(1, Math.max(0, n));
+}
+
+export default function GalaxyMap({
+    mapImage,
+    systems,
+    landmarks,
+    selected,
+    onSelect,
+    onCoordsChange,
+    currentUserId,
+    isAdmin,
+    armed,
+    onPlace,
+    flashSignal,
+}: Props) {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const xhVRef = useRef<HTMLDivElement>(null);
@@ -35,7 +80,51 @@ export default function GalaxyMap({ mapImage, systems, landmarks, selected, onSe
     const imgRef = useRef<HTMLImageElement | null>(null);
     const { colorMode } = useTheme();
 
+    const [cursor, setCursor] = useState<'default' | 'crosshair' | 'grab' | 'grabbing'>('default');
+    const [flash, setFlash] = useState<{ x: number; y: number; key: number } | null>(null);
+    const [seenFlashToken, setSeenFlashToken] = useState<number | null>(null);
+
     const placed = systems.filter((s): s is GalaxySystemSummary & { xPos: number; yPos: number } => s.xPos !== null && s.yPos !== null);
+
+    // Two-blink placement confirm: when the parent bumps flashSignal's token
+    // after a successful place/move, render a short-lived DOM overlay at the
+    // marker's (now updated) position. This adjusts state during render
+    // (React's documented escape hatch for "derive state from a change")
+    // rather than an effect, since a plain effect here would set state
+    // synchronously on mount/update.
+    if (flashSignal && flashSignal.token !== seenFlashToken) {
+        setSeenFlashToken(flashSignal.token);
+        const { sel } = flashSignal;
+        let pos: { x: number; y: number } | null = null;
+        if (sel.kind === 'system') {
+            const sys = systems.find((s) => s.id === sel.id);
+            if (sys && sys.xPos !== null && sys.yPos !== null) pos = { x: sys.xPos, y: sys.yPos };
+        } else {
+            const lm = landmarks.find((l) => l.id === sel.id);
+            if (lm) pos = { x: lm.xPos, y: lm.yPos };
+        }
+        if (pos) setFlash({ x: pos.x, y: pos.y, key: flashSignal.token });
+    }
+
+    const canEditSelection = useCallback(
+        (sel: GalaxySelection): boolean => {
+            if (currentUserId == null) return false;
+            if (isAdmin) return true;
+            if (sel.kind === 'system') return systems.find((s) => s.id === sel.id)?.creatorId === currentUserId;
+            return landmarks.find((l) => l.id === sel.id)?.creatorId === currentUserId;
+        },
+        [currentUserId, isAdmin, systems, landmarks]
+    );
+
+    // Defense in depth: only trust `armed` if it's still actually editable
+    // (parent should never arm something the user can't touch, but the
+    // server is the real gate either way).
+    const armedEditable = armed && canEditSelection(armed) ? armed : null;
+
+    // Live drag position, read directly inside draw() (refs don't need to be
+    // in the useCallback dep list — draw() is invoked manually on every
+    // pointermove tick while dragging, and each call reads .current fresh).
+    const dragPreviewRef = useRef<{ sel: GalaxySelection; x: number; y: number } | null>(null);
 
     const draw = useCallback(() => {
         const canvas = canvasRef.current;
@@ -89,10 +178,13 @@ export default function GalaxyMap({ mapImage, systems, landmarks, selected, onSe
         ctx.font = `12px ${monoFont}`;
         ctx.textAlign = 'center';
 
+        const dragPreview = dragPreviewRef.current;
+
         // Landmarks — diamond markers
         for (const lm of landmarks) {
-            const x = lm.xPos * w;
-            const y = lm.yPos * h;
+            const dragged = dragPreview && dragPreview.sel.kind === 'landmark' && dragPreview.sel.id === lm.id;
+            const x = (dragged ? dragPreview.x : lm.xPos) * w;
+            const y = (dragged ? dragPreview.y : lm.yPos) * h;
             const isSel = selected?.kind === 'landmark' && selected.id === lm.id;
 
             ctx.save();
@@ -130,8 +222,9 @@ export default function GalaxyMap({ mapImage, systems, landmarks, selected, onSe
 
         // Systems — star markers
         for (const sys of placed) {
-            const x = sys.xPos * w;
-            const y = sys.yPos * h;
+            const dragged = dragPreview && dragPreview.sel.kind === 'system' && dragPreview.sel.id === sys.id;
+            const x = (dragged ? dragPreview.x : sys.xPos) * w;
+            const y = (dragged ? dragPreview.y : sys.yPos) * h;
             const color = sys.star?.color || (sys.star?.temperatureK != null ? starColor(sys.star.temperatureK) : starFallback);
             const isSel = selected?.kind === 'system' && selected.id === sys.id;
 
@@ -222,6 +315,40 @@ export default function GalaxyMap({ mapImage, systems, landmarks, selected, onSe
         [placed, landmarks]
     );
 
+    // Pointerdown → pointerup bookkeeping for the click-vs-drag decision.
+    // Not React state: it changes every pointermove tick during a drag and
+    // must never trigger a re-render (same reasoning as the crosshair).
+    const pointerRef = useRef<{
+        pointerId: number;
+        downX: number;
+        downY: number;
+        hit: GalaxySelection | null;
+        dragEligible: boolean;
+        dragging: boolean;
+    } | null>(null);
+
+    const isPlaced = (sel: GalaxySelection): boolean => {
+        if (sel.kind === 'landmark') return true;
+        const sys = systems.find((s) => s.id === sel.id);
+        return sys != null && sys.xPos !== null && sys.yPos !== null;
+    };
+
+    const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+        const container = containerRef.current;
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        const px = e.clientX - rect.left;
+        const py = e.clientY - rect.top;
+        const hit = hitTest(px, py, rect.width, rect.height);
+
+        // While armed, every pointer gesture is a placement — never a drag,
+        // even if it lands on a different (unrelated) marker.
+        const dragEligible = !armedEditable && hit != null && isPlaced(hit) && canEditSelection(hit);
+
+        pointerRef.current = { pointerId: e.pointerId, downX: e.clientX, downY: e.clientY, hit, dragEligible, dragging: false };
+        if (dragEligible) container.setPointerCapture(e.pointerId);
+    };
+
     const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
         const container = containerRef.current;
         if (!container) return;
@@ -231,30 +358,84 @@ export default function GalaxyMap({ mapImage, systems, landmarks, selected, onSe
         if (xhVRef.current) xhVRef.current.style.left = `${x * 100}%`;
         if (xhHRef.current) xhHRef.current.style.top = `${y * 100}%`;
         onCoordsChange({ x, y });
+
+        const pr = pointerRef.current;
+        if (pr && pr.dragEligible) {
+            const dx = e.clientX - pr.downX;
+            const dy = e.clientY - pr.downY;
+            if (!pr.dragging && Math.hypot(dx, dy) > DRAG_THRESHOLD_PX) {
+                pr.dragging = true;
+                setCursor('grabbing');
+            }
+            if (pr.dragging && pr.hit) {
+                dragPreviewRef.current = { sel: pr.hit, x: clamp01(x), y: clamp01(y) };
+                draw();
+                return;
+            }
+        }
+
+        // Hover cursor (only relevant when not mid-drag): crosshair while
+        // armed, grab over a draggable marker, default otherwise. setCursor
+        // bails out on an unchanged value, so this doesn't spam re-renders.
+        if (armedEditable) {
+            setCursor('crosshair');
+        } else {
+            const hoverHit = hitTest(x * rect.width, y * rect.height, rect.width, rect.height);
+            setCursor(hoverHit && isPlaced(hoverHit) && canEditSelection(hoverHit) ? 'grab' : 'default');
+        }
     };
 
     const handlePointerLeave = () => {
         onCoordsChange(null);
     };
 
-    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
         const container = containerRef.current;
+        const pr = pointerRef.current;
+        pointerRef.current = null;
         if (!container) return;
+        if (pr && container.hasPointerCapture(e.pointerId)) container.releasePointerCapture(e.pointerId);
+
         const rect = container.getBoundingClientRect();
         const px = e.clientX - rect.left;
         const py = e.clientY - rect.top;
-        const hit = hitTest(px, py, rect.width, rect.height);
-        onSelect(hit);
+        const x = clamp01(px / rect.width);
+        const y = clamp01(py / rect.height);
+
+        if (pr?.dragging && pr.hit) {
+            dragPreviewRef.current = null;
+            setCursor('default');
+            onPlace(pr.hit, { x, y });
+            return;
+        }
+        dragPreviewRef.current = null;
+
+        // A plain click (no drag). Armed mode places wherever the pointer
+        // landed; otherwise it's ordinary select/deselect.
+        if (armedEditable) {
+            onPlace(armedEditable, { x, y });
+            return;
+        }
+        onSelect(hitTest(px, py, rect.width, rect.height));
     };
+
+    // Belt-and-suspenders cleanup: onAnimationEnd normally clears the flash,
+    // but prefers-reduced-motion drops the animation entirely (no end event).
+    useEffect(() => {
+        if (!flash) return;
+        const timer = setTimeout(() => setFlash(null), 2400);
+        return () => clearTimeout(timer);
+    }, [flash]);
 
     return (
         <div
             ref={containerRef}
             className={styles.viewport}
-            style={{ width: '100%', height: '100%', minHeight: '26rem' }}
+            style={{ width: '100%', height: '100%', minHeight: '26rem', cursor }}
+            onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerLeave={handlePointerLeave}
-            onClick={handleClick}
+            onPointerUp={handlePointerUp}
         >
             <canvas
                 ref={canvasRef}
@@ -264,6 +445,18 @@ export default function GalaxyMap({ mapImage, systems, landmarks, selected, onSe
             />
             <div ref={xhVRef} className={`${styles.xh} ${styles.xhV}`} aria-hidden />
             <div ref={xhHRef} className={`${styles.xh} ${styles.xhH}`} aria-hidden />
+            {armedEditable && (
+                <p className={styles.armedBanner}>◈ armed — click the map to place</p>
+            )}
+            {flash && (
+                <div
+                    key={flash.key}
+                    className={styles.flash}
+                    style={{ left: `${flash.x * 100}%`, top: `${flash.y * 100}%` }}
+                    aria-hidden
+                    onAnimationEnd={() => setFlash(null)}
+                />
+            )}
         </div>
     );
 }

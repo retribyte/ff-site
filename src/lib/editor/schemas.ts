@@ -22,6 +22,10 @@ export interface FieldDef {
     min?: number;
     max?: number;
     step?: number | 'any';
+    /** pre-filled value on *create* only (never overrides an existing record's
+     *  null in edit mode) — e.g. landmark xPos/yPos default to map-center so a
+     *  required field doesn't block creation before the record exists to place. */
+    default?: string;
     /** select: the enum choices */
     options?: { value: string; label: string }[];
     /** entity-ref: which collection the picker loads (API path + label field) */
@@ -187,7 +191,8 @@ export const landmarkSchema: EntitySchema = {
             min: 0,
             max: 1,
             step: 0.01,
-            help: '0..1, normalized to the galaxy map',
+            default: '0.5',
+            help: '0..1, normalized to the galaxy map — defaults to center; drag it into place from /galaxy after creating',
         },
         {
             name: 'yPos',
@@ -197,7 +202,8 @@ export const landmarkSchema: EntitySchema = {
             min: 0,
             max: 1,
             step: 0.01,
-            help: '0..1, normalized to the galaxy map',
+            default: '0.5',
+            help: '0..1, normalized to the galaxy map — defaults to center; drag it into place from /galaxy after creating',
         },
         { name: 'wikiArticle', label: 'wiki article', kind: 'text' },
     ],
@@ -247,7 +253,14 @@ export function recordToValues(schema: EntitySchema, record: Record<string, unkn
             const items = Array.isArray(raw) ? raw : [];
             values[field.name] = items.map((item) => String((item as Record<string, unknown>)[field.itemKey!] ?? ''));
         } else if (raw === null || raw === undefined) {
-            values[field.name] = field.kind === 'select' ? (field.options?.[0]?.value ?? '') : '';
+            // `default` only applies when there's no record at all (create
+            // mode) — an edit-mode null is a real value, not a blank form.
+            values[field.name] =
+                record === null && field.default !== undefined
+                    ? field.default
+                    : field.kind === 'select'
+                      ? (field.options?.[0]?.value ?? '')
+                      : '';
         } else {
             values[field.name] = String(raw);
         }
