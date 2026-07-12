@@ -5,7 +5,7 @@
 > Check tasks off as they land. Phases are ordered; modules within a phase
 > can interleave where dependencies allow.
 
-**Status: in progress — Phases 1, 2, 2.5, and 3 (3.1+3.2+3.3) done (implemented + verified, uncommitted — pending PM review/commit). Phase 4 (polish) next.**
+**Status: Phases 1–4 done (implemented + verified, uncommitted — pending PM review/commit). Phase 5 (optional legacy import) not started.**
 
 ## IMPORTANT NOTE FOR NEXT FABLE ADVISOR
 Hello, this is a message from the user that invoked you.
@@ -219,20 +219,83 @@ wikiArticle?, moons: [{name, radiusKm, distance /*km*/, composition, ...}]}]}}`
 
 ---
 
-## Phase 4 — Polish + verify
+## Phase 4 — Polish + verify — DONE 2026-07-11
 
-- [ ] Empty-state tutorial overlay (port of `CreateTutorial`, console voice:
-      "Chart your first system")
-- [ ] Mobile/narrow: rail becomes a bottom sheet via CSS breakpoint
-- [ ] `prefers-reduced-motion` drops the placement blink
-- [ ] Focus outlines (dashed accent) on tree/toolbar/forms; a11y pass on
-      both pages (tree = keyboard path to everything the canvas shows)
-- [ ] Theme sweep: both themes on both pages, canvas colors from CSS props
-- [ ] Headless Playwright end-to-end from the scratchpad: log in → new system
-      (star/planet/moon) → save → place on map → reload → verify positions +
-      diagram (`.pixel-label` compares case-insensitively)
-- [ ] `npm run build` clean (separate `.next-build` distDir)
-- [ ] Update ff-server `FF design document.md` if new FR ids are wanted (net-new scope)
+- [x] Empty-state tutorial overlay (port of `CreateTutorial`, console voice:
+      "Chart your first system") — `GalaxyConsole` renders it in the
+      viewport (never over the toolbar) when `systems.length === 0 &&
+      landmarks.length === 0`; logged-in copy points at the toolbar's New
+      system/New landmark buttons, logged-out copy links to `/login`;
+      dismissible (component state, no persistence — it "almost never
+      shows"). Verified by temporarily stubbing `systems`/`landmarks` to `[]`
+      in `GalaxyConsole` (not DB deletion), screenshotting both themes ×
+      both auth states, then reverting — confirmed via `git diff` the stub
+      left no trace.
+- [x] Mobile/narrow: rail becomes a bottom sheet via CSS breakpoint — the
+      `[rail][viewport]` grid at ≤780px is replaced by a single consolidated
+      block at the end of `space.module.scss` (wins the cascade over the
+      base `.body`/`.rail`/`.viewportSlot` rules by source order): viewport
+      fills the body, rail becomes a `position: absolute` bottom sheet
+      (max-height capped, internal scroll) layered over it, collapsible via
+      the existing chevron (collapsed = header bar only, canvas fully
+      visible behind it). CSS-only, no resize listeners. Verified at
+      375×667 and 768×1024 on `/galaxy`, the read-only system page, and the
+      builder (confirmed the sheet auto-scrolls to and the `+ planet` form
+      is fully usable — filled a field, screenshotted); no horizontal
+      overflow (`scrollWidth`/`clientWidth` check) anywhere.
+- [x] `prefers-reduced-motion` drops the placement blink — already handled
+      in 3.3 (`.flash` animation + `setTimeout` cleanup). Swept the rest of
+      the space module and this phase's new CSS for other animated
+      surfaces (tutorial overlay, bottom sheet) — none added, nothing else
+      needed guarding.
+- [x] Focus outlines (dashed accent) on tree/toolbar/forms; a11y pass on
+      both pages (tree = keyboard path to everything the canvas shows) —
+      `.treeButton` already had the dashed-accent `:focus-visible` ring
+      (verified computed style: `outline-style: dashed`, `--accent-soft`,
+      2px); added the same treatment to `.btn`/`.chev`/`.coordInput`/
+      `.builderField` inputs (all local to this feature — left the
+      site-wide `RecordEditor`/`form-field` mixin alone since its existing
+      `:focus` box-shadow ring is already a visible indicator, just not
+      dashed). Playwright keyboard-only pass on `/galaxy`: Tab reaches the
+      Herakl tree row, Enter selects it, further Tabs reach the x/y coord
+      inputs, Apply, Move, View, Edit, Delete in order. Same pass on the
+      builder: Tab reaches every tree row (Herakl/Cinder/Ash/+moon/Vell/
+      +moon/+planet), Edit info, and the selected body's Edit/Delete — all
+      native `<button>`s, no `role="tree"`/roving-tabindex added (not
+      required — Tab-reachability alone satisfies the floor). Also updated
+      `GalaxyMap`'s canvas `aria-label` to mention the current placement
+      affordance (armed vs. "select an owned marker to move/place it") on
+      top of the existing plot-count summary.
+- [x] Theme sweep: both themes on both pages, canvas colors from CSS props —
+      screenshotted `/galaxy`, `/galaxy/systems/3`, `/galaxy/systems/3/edit`,
+      `/galaxy/systems/new`, `/galaxy/landmarks/new` × dark/light (10
+      screenshots); no hard-coded-looking colors, contrast held up, the
+      viewport's deep-space background is deliberately theme-stable per the
+      design direction while all chrome/text follows theme. Confirmed the
+      `useTheme()` redraw hook fires on a live theme flip (toggled
+      `data-theme` via the same `MutationObserver` path the real toggle
+      button uses) on both the galaxy map canvas and the system diagram.
+- [x] Headless Playwright end-to-end from the scratchpad: log in as Trey →
+      NEW SYSTEM → metadata → builder → star + planet + moon → SAVE → EXIT
+      → select the (auto-armed, unplaced) system on `/galaxy` → click the
+      map to place → reload → verified via independent API read (`xPos`/
+      `yPos` matched the click target) and the read-only page's tree +
+      diagram both showed all three bodies → deleted via API. DB left with
+      only Herakl (3) + Cassin Deep (3) — confirmed via a final `GET
+      /galaxies/ff`.
+- [x] `npm run build` clean (separate `.next-build` distDir) — Turbopack
+      build succeeded, all `/galaxy*` routes correctly marked dynamic (ƒ);
+      dev server on :3001 confirmed still serving after the build.
+- [x] Update ff-server `FF design document.md` with new FR ids (net-new
+      scope) — added §3.13 "Galaxy / Space Builder" (`FR-SPACE-1`..`9`:
+      shared canonical galaxy, system/landmark creation + ownership +
+      edit/delete gating, the map, read-only system view, derived-not-
+      persisted stats), plus matching `Galaxy`/`StarSystem`/`CelestialBody`/
+      `Landmark` entries in §4.2/§4.4/§4.5 and a `space-builder` row in the
+      §8 legacy mapping table. Diff is additions-only (`git -C ff-server
+      diff --stat`: 1 file, +21/-0); `FR-AUTH-4` and all other existing ids
+      untouched. Edited only — not committed (ff-server is the PM's repo to
+      commit).
 
 ---
 
@@ -282,3 +345,4 @@ wikiArticle?, moons: [{name, radiusKm, distance /*km*/, composition, ...}]}]}}`
 | 2026-07-11 | 3.1+3.2 | Schemas + builder (agent): `landmarkSchema`/`starSystemSchema` with generic `createPath`/`afterCreatePath`/`loadRecord` editor hooks (landmarks have no GET-by-id — loaded via galaxy payload); routes `/galaxy/landmarks/{new,[id]/edit}`, `/galaxy/systems/{new,[id]/meta,[id]/edit}`. Builder: local tree (negative temp keys), contextual `+ planet`/`+ moon` inline forms, live diagram + star-color chip, whole-tree PUT, SAVED!/unsaved crumb, server-side gating (avoids useSession first-paint flash). E2E verified incl. permissions (Bill 403/redirect); DB restored to Herakl+Cassin Deep. PM-reviewed. Committed `d12e80c`. |
 | 2026-07-11 | 3.1+3.2 | Editor schemas + SystemBuilder done (agent). Pre-flight curl check found `GET /landmarks/:id` doesn't exist (only `POST .../landmarks`, `PUT/DELETE /landmarks/:id` — landmarks only ever come back nested in `GET /galaxies/:slug`); handled with a generic `EntitySchema.loadRecord?` override (landmarkSchema fetches `/galaxies/ff` and finds by id) rather than touching ff-server. Also added `createPath?`/`afterCreatePath?` to `EntitySchema` for the nested-create-vs-flat-basePath mismatch. Routes: `/galaxy/landmarks/new`+`/[id]/edit`, `/galaxy/systems/new` (metadata create → redirects to builder) + `/galaxy/systems/[id]/meta` (metadata edit), `/galaxy/systems/[id]/edit` (builder, new components `SystemBuilder`/`BuilderBodyTree`/`BodyForm`/`builderTree.ts`). Builder auth is gated server-side in the route's `page.tsx` (mirrors EditorPage's precedent) rather than client `useSession`, to avoid `useSession().loading`'s race flashing unauthorized content; added a small "Edit system" entry point on the read-only `SystemConsole` (creator/admin only, via `useSession`) since nothing else in 3.1/3.2 gave the builder a discoverable entry point (map "New system" buttons stay 3.3's job). Local tree uses negative-int temp keys (real ids are always positive) so the read-only `SystemDiagram`/`BodyInfoPanel` components could be reused unchanged. Playwright end-to-end as Trey (create → builder → star+2 planets+moon → save → reload persists → edit body → save → read page matches → delete planet-with-moon, confirmed via independent fresh load, not just same-session DOM check → save); permission checks (logged-out redirects to /login, Bill redirected off the edit route + API 403, both denied the read-page Edit link); landmark create → edit → verified via direct API read; both themes screenshotted at 1440×900. tsc + eslint clean repo-wide. Test records (systems 4/5, landmark 4) deleted via API; DB back to Herakl (3) + Cassin Deep (3). Uncommitted by instruction. |
 | 2026-07-11 | 3.3 | Map authoring done (agent). `GalaxyMap` becomes a pure interaction surface (reports pointer gestures via `onSelect`/`onPlace`/`onCoordsChange` callbacks; never persists), `GalaxyConsole` owns `systems`/`landmarks` as local optimistic state (resynced from the server `galaxy` prop via a render-time adjustment, not an effect — see below) plus the PUT/DELETE calls and revert-on-failure. Interaction design: **armed** is a single piece of state — auto-set the moment an *unplaced* editable system is selected (nothing to accidentally move yet), otherwise toggled explicitly via a rail "Move"/"Cancel move" button; while armed, every click on the map (regardless of what's under the cursor) places the armed marker there, so drag-start is suppressed entirely while armed (resolves the "armed for A, pointerdown lands on B" ambiguity flagged in review). **Drag-to-move**: pointerdown hit-tests an editable *placed* marker, a 5px movement threshold distinguishes click-to-select from drag (live drag position kept in a ref + manual `draw()` call, same zero-re-render trick as the crosshair — never touches React state per pixel), pointerup fires the same `onPlace(sel, coords)` callback drag or click alike. **Two-blink confirm**: a short-lived DOM overlay (not a canvas draw) positioned at the marker's new coordinates, `steps(1)` animation at the same 1.1s-per-cycle cadence as the house `.blink` but bounded to 2 iterations via `animation-iteration-count`; `prefers-reduced-motion` drops it via media query, with a `setTimeout` belt-and-suspenders cleanup since a dropped animation never fires `animationend`. **Keyboard path**: plain 0..1/step-0.01 number inputs + Apply button in the rail, resynced from the live position via the same render-time-adjustment pattern (not effects). **Entry points**: NEW SYSTEM/NEW LANDMARK landed in the *toolbar* (not rail) — matches the Save/Exit precedent from `SystemBuilder`'s toolbar and keeps the rail focused on selection detail; gated on `user != null` (any member can create, not just creator/admin). Selected-system rail detail gets VIEW (always, for editable) + EDIT → the builder route (`/galaxy/systems/[id]/edit`, matching `SystemConsole`'s existing "Edit system" link) + `DeleteControl`; landmark gets EDIT → `/galaxy/landmarks/[id]/edit` + `DeleteControl`. **Landmark xPos/yPos friction**: the schema requires both on create, which fights a genuine place-on-map flow (there's nothing to place until the record exists) — added a generic `default?: string` to `FieldDef`/`recordToValues` (applied only in create mode, never overrides an edit-mode null) and set landmark xPos/yPos to default `'0.5'`; landmarks now create at map-center and get dragged into place afterward. Flagging for the PM: this is a real asymmetry vs. systems (which are *genuinely* unplaced, no default needed) — the center-default is a reasonable smoothing but is itself a product call. **React-Compiler eslint note**: an initial draft used `useEffect` to resync local state from props/selection, which the project's `react-hooks/set-state-in-effect` and `react-hooks/refs` rules rejected (calling `setState` synchronously in an effect body, and a false-positive on refs triggered by wrapping rail JSX in per-render IIFEs); rewrote all three as the React-documented "adjust state during render" pattern (compare current vs. a `prev*` state slot, call `setState` inline, guarded so it only fires on an actual change) and flattened the IIFEs into plain precomputed consts — both `tsc --noEmit` and `eslint` are clean with zero disables needed for this file. Verification: full Playwright matrix from the scratchpad — Trey creates landmark (confirms 0.5/0.5 default) + system (confirms unplaced/auto-armed) → click-places the system → drags it elsewhere → plain click (no movement) confirmed as select-only (position provably unchanged) → coord-field Apply → same drag+coords check on the landmark → deletes both via `DeleteControl`; Bill's drag attempts on Trey's Herakl/Cassin Deep verified numerically inert (position unchanged) with Move/coord-fields/Delete absent from the rail, then Bill creates+moves+deletes his own landmark; logged-out verified read-only (no entry-point buttons, drag attempt inert, no Move/Delete in detail). All assertions read back through the API independently, not same-session DOM state. Screenshots: both themes at 1440×900 (rail detail + Move/View/Edit/Delete visible), 1024×768 toolbar with both entry-point buttons + stats + grid-ref (no overflow, confirmed via `scrollWidth` check), and the armed-state banner. DB restored to Herakl (3) + Cassin Deep (3) only. Uncommitted by instruction. |
+| 2026-07-11 | 4 | Polish + verify done. Tutorial overlay (GalaxyConsole, dismissible, console voice, logged-in/-out copy) verified by temporarily stubbing local state to `[]` (not DB deletion) — reverted, confirmed via `git diff`. Mobile bottom sheet: single consolidated `@media (max-width: 780px)` block at the end of `space.module.scss` (position:absolute overlay, wins cascade by source order) replaces the old stacking-row narrow layout; verified 375×667 + 768×1024 on all three console pages, including filling a builder form inside the sheet. Focus outlines: `.treeButton` already had the dashed-accent ring from 3.x; added the same to `.btn`/`.chev`/`.coordInput`/`.builderField` inputs (feature-local only — left the shared `RecordEditor`/`form-field` mixin's box-shadow ring as-is, a deliberate scope call). Keyboard-only Playwright pass confirmed Tab reaches every tree row and every rail action (Move/View/Edit/Delete, Apply, +planet/+moon, Edit info) on both `/galaxy` and the builder — no `role="tree"`/roving-tabindex added, native `<button>` Tab-reachability is sufficient. `GalaxyMap`'s canvas `aria-label` now mentions the live placement affordance (armed vs. general). `prefers-reduced-motion` sweep found nothing new needing a guard beyond the existing `.flash`/`.xh` handling. Theme sweep: 5 URLs × 2 themes screenshotted and eyeballed clean; confirmed the `useTheme()` `MutationObserver` redraw fires on both canvases. Full Playwright E2E from the scratchpad (login → new system → metadata → builder star+planet+moon → save → exit → auto-armed click-to-place on `/galaxy` → reload → verified via independent API read + read-only page → deleted via API) all green; DB confirmed back to Herakl (3) + Cassin Deep (3) only. `npm run build` (Turbopack, `.next-build` distDir) clean, all `/galaxy*` routes correctly dynamic; dev server on :3001 unaffected. Added `FR-SPACE-1..9` (§3.13) + matching Data Requirements/mapping-table entries to ff-server's `FF design document.md` (additions-only diff, `FR-AUTH-4` and all existing ids untouched) — edited, not committed (ff-server is the PM's repo). Also checked the one untested intersection an advisor pass flagged — tutorial overlay at mobile width with the bottom sheet open (the sheet's z-index sits above the tutorial's): re-stubbed empty state at 375×667, both sheet-expanded and sheet-collapsed. No clipping in practice — an empty-galaxy rail has almost no content, so the sheet's content-driven height stays well short of its cap and never reaches the top-anchored tutorial; dismiss button fully visible/clickable in both states. tsc + eslint clean throughout. Uncommitted by instruction. |

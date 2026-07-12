@@ -427,6 +427,17 @@ export default function GalaxyMap({
         return () => clearTimeout(timer);
     }, [flash]);
 
+    // Base plot summary, plus whatever placement affordance currently
+    // applies — the tree/coordinate fields are the actual keyboard path for
+    // placing/moving (this label just orients a screen-reader user to what
+    // pointer interaction, if any, the canvas itself currently offers.
+    const mapAriaLabel = (() => {
+        const base = `Galaxy chart: ${placed.length} system${placed.length === 1 ? '' : 's'} and ${landmarks.length} landmark${landmarks.length === 1 ? '' : 's'} plotted.`;
+        if (armedEditable) return `${base} Click anywhere on the chart to place the armed marker.`;
+        if (currentUserId != null) return `${base} Select an owned system or landmark to move or place it.`;
+        return base;
+    })();
+
     return (
         <div
             ref={containerRef}
@@ -437,12 +448,7 @@ export default function GalaxyMap({
             onPointerLeave={handlePointerLeave}
             onPointerUp={handlePointerUp}
         >
-            <canvas
-                ref={canvasRef}
-                className={styles.canvas}
-                role='img'
-                aria-label={`Galaxy chart: ${placed.length} system${placed.length === 1 ? '' : 's'} and ${landmarks.length} landmark${landmarks.length === 1 ? '' : 's'} plotted`}
-            />
+            <canvas ref={canvasRef} className={styles.canvas} role='img' aria-label={mapAriaLabel} />
             <div ref={xhVRef} className={`${styles.xh} ${styles.xhV}`} aria-hidden />
             <div ref={xhHRef} className={`${styles.xh} ${styles.xhH}`} aria-hidden />
             {armedEditable && (

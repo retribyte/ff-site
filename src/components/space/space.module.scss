@@ -89,14 +89,9 @@
         grid-template-columns: 2.5rem 1fr;
     }
 
-    @media (max-width: 780px) {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto minmax(0, 1fr);
-
-        &[data-collapsed] {
-            grid-template-columns: 1fr;
-        }
-    }
+    // Narrow layout lives in the consolidated bottom-sheet block at the end
+    // of this file (it needs to win the cascade over .rail/.viewportSlot's
+    // base rules too, not just this one).
 }
 
 .rail {
@@ -141,6 +136,11 @@
 
     &:hover {
         color: var(--text);
+    }
+
+    &:focus-visible {
+        outline: 2px dashed var(--accent-soft);
+        outline-offset: 1px;
     }
 }
 
@@ -312,6 +312,14 @@
 .coordInput {
     @include m.form-field(0.8rem, 0.2rem 0.4rem);
     width: 4.5rem;
+
+    // House dashed-accent ring on top of the shared mixin's box-shadow ring —
+    // this input is local to the console rail, not the shared RecordEditor
+    // forms, so it gets the console's own focus treatment.
+    &:focus-visible {
+        outline: 2px dashed var(--accent-soft);
+        outline-offset: 1px;
+    }
 }
 
 // ---------- Buttons / row actions ----------
@@ -329,6 +337,11 @@
 
     &:hover {
         color: var(--text);
+    }
+
+    &:focus-visible {
+        outline: 2px dashed var(--accent-soft);
+        outline-offset: 2px;
     }
 }
 
@@ -377,6 +390,11 @@
     select {
         @include m.form-field(0.85rem, 0.4rem 0.55rem);
         width: 100%;
+
+        &:focus-visible {
+            outline: 2px dashed var(--accent-soft);
+            outline-offset: 1px;
+        }
     }
 
     textarea {
@@ -564,6 +582,70 @@
     }
 }
 
+// ---------- Empty-state welcome overlay (console voice port of the legacy
+// CreateTutorial) ----------
+// Sits over the map viewport (`.viewportSlot` is the positioning context),
+// never over the toolbar. Shown only when the galaxy has zero systems and
+// zero landmarks — near-never in practice, so kept small and dismissible.
+
+.tutorial {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    max-width: 26rem;
+    width: calc(100% - 2rem);
+    padding: 0.85rem 2rem 0.9rem 1rem;
+    border-left: var(--px) solid var(--accent-2);
+    text-align: left;
+}
+
+.tutorialTitle {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-pixel);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+}
+
+.tutorialBody {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text);
+
+    a {
+        color: var(--link);
+
+        &:hover {
+            color: var(--link-hover);
+        }
+    }
+}
+
+.tutorialDismiss {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    cursor: pointer;
+    padding: 0.2rem 0.35rem;
+
+    &:hover {
+        color: var(--text);
+    }
+
+    &:focus-visible {
+        outline: 2px dashed var(--accent-soft);
+        outline-offset: 1px;
+    }
+}
+
 // ---------- Placement affordances (armed banner + two-blink confirm) ----------
 
 .armedBanner {
@@ -610,5 +692,42 @@
 @media (prefers-reduced-motion: reduce) {
     .flash {
         animation: none;
+    }
+}
+
+// ---------- Mobile / narrow layout: rail becomes a bottom sheet ----------
+// Below the console's narrow breakpoint the two-column [rail][viewport] grid
+// stops making sense on a phone-width screen. CSS-only (no resize
+// listeners): the viewport fills the whole body, the rail becomes a fixed
+// bottom sheet layered *over* it — the one intentional overlay the plan
+// calls for — collapsible via the existing chevron (collapsed = just the
+// header bar; ConsoleShell already unmounts the content when collapsed).
+// Placed last in the file so it wins the cascade over the base .body/.rail/
+// .viewportSlot rules above at equal specificity.
+@media (max-width: 780px) {
+    .body {
+        display: block;
+        position: relative;
+    }
+
+    .viewportSlot {
+        position: absolute;
+        inset: 0;
+    }
+
+    .rail {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 6;
+        max-height: min(60vh, 26rem);
+        border-right: none;
+        border-top: 1px solid var(--border-loud);
+        box-shadow: 0 -3px 10px var(--shadow);
+    }
+
+    .body[data-collapsed] .rail {
+        max-height: none;
     }
 }

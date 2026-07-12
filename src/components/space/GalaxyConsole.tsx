@@ -50,6 +50,9 @@ export default function GalaxyConsole({ galaxy }: { galaxy: GalaxyDetail }) {
         setLandmarks(galaxy.landmarks);
     }
 
+    const [tutorialDismissed, setTutorialDismissed] = useState(false);
+    const showTutorial = systems.length === 0 && landmarks.length === 0 && !tutorialDismissed;
+
     const [selected, setSelected] = useState<GalaxySelection | null>(null);
     const [armed, setArmed] = useState<GalaxySelection | null>(null);
     const [coordDraft, setCoordDraft] = useState<{ x: string; y: string } | null>(null);
@@ -470,19 +473,44 @@ export default function GalaxyConsole({ galaxy }: { galaxy: GalaxyDetail }) {
                 </>
             }
             viewport={
-                <GalaxyMap
-                    mapImage={galaxy.image}
-                    systems={systems}
-                    landmarks={landmarks}
-                    selected={selected}
-                    onSelect={setSelected}
-                    onCoordsChange={handleCoordsChange}
-                    currentUserId={user?.id ?? null}
-                    isAdmin={user?.role === 'ADMIN'}
-                    armed={armed}
-                    onPlace={handlePlace}
-                    flashSignal={flashSignal}
-                />
+                <>
+                    <GalaxyMap
+                        mapImage={galaxy.image}
+                        systems={systems}
+                        landmarks={landmarks}
+                        selected={selected}
+                        onSelect={setSelected}
+                        onCoordsChange={handleCoordsChange}
+                        currentUserId={user?.id ?? null}
+                        isAdmin={user?.role === 'ADMIN'}
+                        armed={armed}
+                        onPlace={handlePlace}
+                        flashSignal={flashSignal}
+                    />
+                    {showTutorial && (
+                        <div className={`pixel-panel ${styles.tutorial}`}>
+                            <button
+                                type='button'
+                                className={styles.tutorialDismiss}
+                                onClick={() => setTutorialDismissed(true)}
+                                aria-label='Dismiss welcome message'
+                            >
+                                ✕
+                            </button>
+                            <p className={styles.tutorialTitle}>◈ Chart your first system</p>
+                            {user ? (
+                                <p className={styles.tutorialBody}>
+                                    This galaxy is unmapped. Use <strong>New system</strong> or <strong>New landmark</strong> in the
+                                    toolbar above to start plotting — then click the map to place it.
+                                </p>
+                            ) : (
+                                <p className={styles.tutorialBody}>
+                                    This galaxy is unmapped. <Link href='/login'>Log in</Link> to chart the first system or landmark.
+                                </p>
+                            )}
+                        </div>
+                    )}
+                </>
             }
         />
     );
