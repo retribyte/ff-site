@@ -60,11 +60,19 @@
     font-variant-numeric: tabular-nums;
 }
 
+// The toolbar's stat readout (e.g. "N systems · M landmarks charted") —
+// same status idiom as IndexScan's result count.
+.status {
+    white-space: nowrap;
+}
+
 // ---------- Shell / rail / viewport grid ----------
 
 .shell {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-height: 0;
     border: 1px solid var(--border-loud);
     box-shadow: 2px 2px 0 0 var(--shadow);
     background: var(--surface);
@@ -73,7 +81,8 @@
 .body {
     display: grid;
     grid-template-columns: 16rem 1fr;
-    min-height: 30rem;
+    flex: 1;
+    min-height: 0;
 
     &[data-collapsed] {
         grid-template-columns: 2.5rem 1fr;
@@ -81,7 +90,7 @@
 
     @media (max-width: 780px) {
         grid-template-columns: 1fr;
-        grid-template-rows: auto minmax(20rem, 55vh);
+        grid-template-rows: auto minmax(0, 1fr);
 
         &[data-collapsed] {
             grid-template-columns: 1fr;

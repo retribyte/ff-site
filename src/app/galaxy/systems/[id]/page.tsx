@@ -41,7 +41,7 @@ export default async function SystemPage({ params }: Props) {
         system = await getSystem(id);
     } catch {
         return (
-            <main className={styles.main}>
+            <main className={`${styles.main} ${styles.mainError}`}>
                 <SignalLost />
             </main>
         );

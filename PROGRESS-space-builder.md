@@ -5,7 +5,24 @@
 > Check tasks off as they land. Phases are ordered; modules within a phase
 > can interleave where dependencies allow.
 
-**Status: in progress — Phase 1 (ff-server API) and Phase 2.1/2.2 (frontend libs) running in parallel via Sonnet 5 agents.**
+**Status: in progress — Phases 1, 2, and 2.5 done (2.5 implemented + verified, uncommitted — pending PM review/commit). Phase 3 next.**
+
+## IMPORTANT NOTE FOR NEXT FABLE ADVISOR
+Hello, this is a message from the user that invoked you.
+I have a new requirement for the layout of the `/galaxy` page.
+I dislike that the entire space builder application is contained inside a small window.
+The space builder should fill the entire screen. It should BE `<main>`, not live inside of it.
+`--content-width` can be ignored. This page isn't content like a text transcript. It's an application.
+The `<header>` can be completely removed. It takes up valuable screen real estate.
+I know this might change some of your layout decisions.
+You are free to add new items to the progress list, even a new phase if you need to.
+The aforementioned requirements must be fulfilled before you begin Phase 3.
+
+> **PM note 2026-07-11:** acknowledged — captured as **Phase 2.5** below.
+> User clarified: the site Navbar **stays**; it's the page-level `<header>`
+> (the big "Galaxy" `<h1>` + stats) that goes. The console becomes a
+> full-bleed `<main>` filling the viewport below the navbar; `--content-width`
+> does not apply on `/galaxy` routes.
 
 ## Standing constraints (apply to every phase)
 
@@ -134,6 +151,26 @@ wikiArticle?, moons: [{name, radiusKm, distance /*km*/, composition, ...}]}]}}`
 
 ---
 
+## Phase 2.5 — Full-screen console layout (user requirement; blocks Phase 3)
+
+- [x] `/galaxy`: drop the page `<header>` (h1 + stats); `<main>` becomes the
+      console itself — full-bleed width (no `--content-width`), filling the
+      viewport height below the navbar (no page scroll; the canvas viewport
+      absorbs the space, rail scrolls internally if needed)
+- [x] Move the "N systems · M landmarks charted" stat line into the console
+      toolbar (pixel-label status idiom) so the info isn't lost
+- [x] `/galaxy/systems/[id]`: same treatment — header gone, system name lives
+      in the toolbar crumb (already does), full-viewport console
+- [x] `SignalLost` fallback on both pages still renders acceptably in the
+      full-bleed main
+- [x] Canvas redraw handles the larger viewport (ResizeObserver already in
+      place — verify, don't assume)
+- [x] Playwright both pages × both themes: no vertical page scrollbar,
+      console fills window, toolbar stats present; tsc + eslint clean
+- [ ] Commit (ff-site-new only; no server changes)
+
+---
+
 ## Phase 3 — Authoring
 
 ### 3.1 Editor schemas (flat records → RecordEditor)
@@ -227,3 +264,5 @@ wikiArticle?, moons: [{name, radiusKm, distance /*km*/, composition, ...}]}]}}`
 | 2026-07-11 | 2.1+2.2 | Frontend libs done (agent): types.ts mirrors, space.ts (physics verified: Earth 5.97e24 kg / 9.82 m/s² / 365 d / habit. 97), tokens, map asset. tsc clean in src/ (73 pre-existing errors in unexcluded legacy `ff-site-old/` — not ours). Phase 1 agent still running. |
 | 2026-07-11 | — | All symlinks added to tsconfig excludes (user request); tsc fully clean. |
 | 2026-07-11 | 1 | ff-server done (agent): schema pushed, galaxy seeded, space module + openapi, full curl matrix green (validation, 403s, cascade, sanitize). Uncommitted by instruction. Dev server left running on :3000. `npm run docs` (redocly) breakage pre-exists on base branch. |
+| 2026-07-11 | 1 | Committed in ff-server: `8fc786f` (branch `space-builder`). Per-phase commit policy adopted. |
+| 2026-07-11 | 2 | Read path done (agent): ConsoleShell/Toolbar/GalaxyMap/GalaxyConsole/SystemDiagram/BodyTree/BodyInfoPanel + both pages + navbar link. Playwright green both themes, screenshots PM-reviewed vs mockup. Committed `e8c84d9` (+ tsconfig fix `7635f87`) on ff-site-new `space-builder` branch (both repos now on same-named feature branches). Phase 3 extension points: Toolbar `actions` prop, ConsoleShell `rail` slot, read-only coord spans to swap, `.btnQuiet` to add. |

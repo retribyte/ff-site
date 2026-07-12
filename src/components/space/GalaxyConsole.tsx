@@ -32,6 +32,12 @@ export default function GalaxyConsole({ galaxy }: { galaxy: GalaxyDetail }) {
     const toggleLandmark = (id: number) =>
         setSelected((prev) => (prev?.kind === 'landmark' && prev.id === id ? null : { kind: 'landmark', id }));
 
+    // Was the page header's stat line — moved into the toolbar so it isn't
+    // lost now that the console is full-bleed and header-less.
+    const statusText = `${galaxy.systems.length} system${galaxy.systems.length === 1 ? '' : 's'} · ${
+        galaxy.landmarks.length
+    } landmark${galaxy.landmarks.length === 1 ? '' : 's'} charted`;
+
     // Owns the toolbar's grid-ref DOM node and mutates it directly on pointer
     // move — the crosshair readout must not force a React re-render.
     const handleCoordsChange = (coords: { x: number; y: number } | null) => {
@@ -56,6 +62,7 @@ export default function GalaxyConsole({ galaxy }: { galaxy: GalaxyDetail }) {
                             x ·––– y ·–––
                         </span>
                     }
+                    actions={<span className={`pixel-label ${styles.status}`}>{statusText}</span>}
                 />
             }
             railTitle='Registry'

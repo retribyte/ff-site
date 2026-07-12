@@ -17,7 +17,7 @@ export default async function GalaxyPage() {
         galaxy = await api<GalaxyDetail>('/galaxies/ff');
     } catch {
         return (
-            <main className={styles.main}>
+            <main className={`${styles.main} ${styles.mainError}`}>
                 <SignalLost />
             </main>
         );
@@ -25,13 +25,6 @@ export default async function GalaxyPage() {
 
     return (
         <main className={styles.main}>
-            <header className={styles.header}>
-                <h1>Galaxy</h1>
-                <p className='pixel-label'>
-                    {galaxy.systems.length} system{galaxy.systems.length === 1 ? '' : 's'} ·{' '}
-                    {galaxy.landmarks.length} landmark{galaxy.landmarks.length === 1 ? '' : 's'} charted
-                </p>
-            </header>
             <GalaxyConsole galaxy={galaxy} />
         </main>
     );

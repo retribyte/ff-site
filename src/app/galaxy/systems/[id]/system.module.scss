@@ -1,5 +1,12 @@
 @use '../../../../styles/mixins' as m;
 
 .main {
-    @include m.page-main(var(--content-width));
+    @include m.console-main;
+}
+
+// Error fallback only: center the SignalLost panel both ways instead of
+// letting it sit flush top-left of the full-bleed shell.
+.mainError {
+    align-items: center;
+    justify-content: center;
 }
