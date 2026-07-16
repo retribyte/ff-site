@@ -39,7 +39,7 @@ export default async function SpeciesIndexPage() {
                 species={sorted.map((s) => ({
                     id: s.id,
                     name: s.name,
-                    binomialName: s.binomialName,
+                    slug: s.slug,
                     class: s.class,
                     members: s.Character?.length ?? 0,
                 }))}

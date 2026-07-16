@@ -48,19 +48,6 @@
     }
 }
 
-.list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
-}
-
-.listRow {
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
-}
-
 .miniButton {
     @include m.ghost-button;
     flex-shrink: 0;

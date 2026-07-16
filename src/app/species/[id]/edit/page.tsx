@@ -5,5 +5,5 @@ export const metadata: Metadata = { title: 'Edit species' };
 
 export default async function EditSpeciesPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    return <EditorPage kind='species' recordId={parseInt(id)} />;
+    return <EditorPage kind='species' recordParam={id} />;
 }

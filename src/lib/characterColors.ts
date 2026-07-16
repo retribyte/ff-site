@@ -20,12 +20,12 @@ export function stringToColor(input: string): string {
 
 /**
  * Resolve a character's display color.
- * DB themeColor holds the dark-mode color; the legacy color table supplies
+ * DB color holds the dark-mode color; the legacy color table supplies
  * hand-tuned light-mode variants for the main cast.
  */
-export function characterColor(name: string, themeColor: string | null, mode: ColorMode): string {
+export function characterColor(name: string, color: string | null, mode: ColorMode): string {
     if (mode === 'light') {
-        return COLORS.light[name] ?? themeColor ?? stringToColor(name);
+        return COLORS.light[name] ?? color ?? stringToColor(name);
     }
-    return themeColor ?? COLORS.dark[name] ?? stringToColor(name);
+    return color ?? COLORS.dark[name] ?? stringToColor(name);
 }

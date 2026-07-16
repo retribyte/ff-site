@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import type { Season } from '@/lib/types';
-import { seasonColors, seasonDisplayName, seasonSlug } from '@/lib/seasons';
+import { seasonColors, seasonDisplayName } from '@/lib/seasons';
 import SignalLost from '@/components/SignalLost';
 import styles from './archives.module.scss';
 
@@ -58,7 +58,7 @@ export default async function ArchivesPage() {
                         );
                     }
 
-                    const href = `/archives/${seasonSlug(title)}`;
+                    const href = `/archives/${season.slug}`;
 
                     return (
                         <Link key={title} href={href} className={styles.strip} style={style}>

@@ -9,24 +9,23 @@ import styles from './characterCard.module.scss';
 export interface CardCharacter {
     id: number;
     name: string;
-    themeColor: string | null;
+    color: string | null;
     image: string | null;
-    alias?: string | null;
+    slug: string;
 }
 
 export default function CharacterCard({ character }: { character: CardCharacter }) {
     const { colorMode } = useTheme();
-    const color = characterColor(character.name, character.themeColor, colorMode);
+    const color = characterColor(character.name, character.color, colorMode);
 
     return (
         <Link
-            href={`/characters/${character.id}`}
+            href={`/characters/${character.slug}`}
             className={styles.card}
             style={{ '--char': color } as React.CSSProperties}
         >
             <PixelAvatar src={character.image} name={character.name} color={color} size={56} />
             <span className={styles.cardName}>{character.name}</span>
-            {character.alias && <span className={styles.cardAlias}>a.k.a. {character.alias}</span>}
         </Link>
     );
 }

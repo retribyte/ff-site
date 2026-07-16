@@ -41,7 +41,7 @@ export default async function ItemsPage() {
                     name: item.name,
                     itemType: item.itemType,
                     image: item.image,
-                    bearer: item.character ? { id: item.character.id, name: item.character.name } : null,
+                    slug: item.slug,
                 }))}
             />
         </main>

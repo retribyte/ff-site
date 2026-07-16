@@ -192,7 +192,7 @@ export default function EpisodeImporter() {
                 setSeasonTitles(new Set([...seasonTitles, payload.seasonTitle]));
             }
 
-            await ff('/episodes', {
+            const createdEpisode = await ff<{ slug?: string }>('/episodes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -228,6 +228,7 @@ export default function EpisodeImporter() {
             const href = `/archives/${seasonSlug(payload.seasonTitle)}/${episodeSlug({
                 title: payload.episode.title,
                 episode_no: payload.episode.episode_no,
+                slug: createdEpisode?.slug,
             })}`;
             setPhase({ step: 'success', count: total, href });
             setEpisodeExists(true);

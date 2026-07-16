@@ -26,13 +26,6 @@
     @include m.glow-heading(var(--accent-soft), var(--accent), 45%);
 }
 
-.binomial {
-    margin: 0.25rem 0 1.25rem;
-    font-family: var(--font-prose);
-    font-style: italic;
-    color: var(--text-muted);
-}
-
 .description {
     font-family: var(--font-prose);
     font-size: 1.05rem;

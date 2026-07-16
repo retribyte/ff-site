@@ -57,7 +57,7 @@ export function slimTranscript(messages: Message[]): TranscriptData {
         if (message.character && !(message.character.id in characters)) {
             characters[message.character.id] = {
                 name: message.character.name,
-                color: message.character.themeColor,
+                color: message.character.color,
                 image: message.character.image,
             };
         }

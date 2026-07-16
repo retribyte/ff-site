@@ -29,7 +29,7 @@ export default async function CharactersPage() {
 
     // Portraited main cast up front, then the named masses, alphabetical within
     const sorted = [...characters].sort((a, b) => {
-        const rank = (c: Character) => (c.image ? 0 : c.themeColor ? 1 : 2);
+        const rank = (c: Character) => (c.image ? 0 : c.color ? 1 : 2);
         return rank(a) - rank(b) || a.name.localeCompare(b.name);
     });
 
@@ -44,10 +44,10 @@ export default async function CharactersPage() {
                 characters={sorted.map((c) => ({
                     id: c.id,
                     name: c.name,
-                    themeColor: c.themeColor,
+                    color: c.color,
                     image: c.image,
                     speciesId: c.speciesId,
-                    aliases: (c.aliases ?? []).map((a) => a.name),
+                    slug: c.slug,
                 }))}
                 species={species.map((s) => ({ id: s.id, name: s.name }))}
             />

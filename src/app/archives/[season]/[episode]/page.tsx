@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
 import type { Message, Season } from '@/lib/types';
-import { episodeNoFromSlug, episodeSlug, findSeasonBySlug, seasonColors } from '@/lib/seasons';
+import { episodeSlug, findEpisodeBySlug, findSeasonBySlug, seasonColors } from '@/lib/seasons';
 import { fetchAllMessages, slimTranscript } from '@/lib/transcript';
 import SignalLost from '@/components/SignalLost';
 import TranscriptReader from '@/components/transcript/TranscriptReader';
@@ -16,11 +16,10 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { season: seasonParam, episode: episodeParam } = await params;
-    const episodeNo = episodeNoFromSlug(episodeParam);
     try {
         const seasons = await api<Season[]>('/seasons');
         const season = findSeasonBySlug(seasons, seasonParam);
-        const episode = season?.episodes?.find((e) => e.episode_no === episodeNo);
+        const episode = season?.episodes && findEpisodeBySlug(season.episodes, episodeParam);
         return { title: episode ? episode.title : 'Archives' };
     } catch {
         return { title: 'Archives' };
@@ -29,8 +28,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function EpisodePage({ params }: Props) {
     const { season: seasonParam, episode: episodeParam } = await params;
-    const episodeNo = episodeNoFromSlug(episodeParam);
-    if (episodeNo === null) notFound();
 
     let seasons: Season[];
     let messages: Message[];
@@ -39,7 +36,7 @@ export default async function EpisodePage({ params }: Props) {
     try {
         seasons = await api<Season[]>('/seasons');
         const season = findSeasonBySlug(seasons, seasonParam);
-        const episode = season?.episodes?.find((e) => e.episode_no === episodeNo);
+        const episode = season?.episodes && findEpisodeBySlug(season.episodes, episodeParam);
         if (!season || !episode) notFound();
         episodeTitle = episode.title;
         messages = await fetchAllMessages(episode.title);
@@ -55,7 +52,7 @@ export default async function EpisodePage({ params }: Props) {
 
     const season = findSeasonBySlug(seasons, seasonParam)!;
     const episodes = [...(season.episodes ?? [])].sort((a, b) => a.episode_no - b.episode_no);
-    const episode = episodes.find((e) => e.episode_no === episodeNo)!;
+    const episode = findEpisodeBySlug(episodes, episodeParam)!;
     const index = episodes.indexOf(episode);
     const prev = index > 0 ? episodes[index - 1] : null;
     const next = index < episodes.length - 1 ? episodes[index + 1] : null;
@@ -66,10 +63,10 @@ export default async function EpisodePage({ params }: Props) {
     return (
         <main className={styles.main} style={{ '--season': colors.primary } as React.CSSProperties}>
             <nav className={styles.breadcrumb}>
-                <Link href={`/archives/${seasonParam}`}>← {season.title} episodes</Link>
+                <Link href={`/archives/${season.slug}`}>← {season.title} episodes</Link>
                 <EpisodeSelect
-                    seasonSlug={seasonParam}
-                    currentNo={episodeNo}
+                    seasonSlug={season.slug}
+                    currentNo={episode.episode_no}
                     options={episodes.map((e) => ({
                         value: episodeSlug(e),
                         label: e.title,
@@ -102,14 +99,14 @@ export default async function EpisodePage({ params }: Props) {
 
             <nav className={styles.pager}>
                 {prev ? (
-                    <Link href={`/archives/${seasonParam}/${episodeSlug(prev)}`}>
+                    <Link href={`/archives/${season.slug}/${episodeSlug(prev)}`}>
                         ← {prev.episode_no}. {prev.title}
                     </Link>
                 ) : (
                     <span />
                 )}
                 {next ? (
-                    <Link href={`/archives/${seasonParam}/${episodeSlug(next)}`}>
+                    <Link href={`/archives/${season.slug}/${episodeSlug(next)}`}>
                         {next.episode_no}. {next.title} →
                     </Link>
                 ) : (

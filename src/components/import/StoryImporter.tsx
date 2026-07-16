@@ -58,7 +58,7 @@ type Phase =
     | { step: 'success'; count: number; href: string }
     | { step: 'failed'; message: string; storyCreated: boolean };
 
-const SLUG_RE = /^[a-z0-9-]+$/;
+const SLUG_RE = /^[a-z0-9]+(_[a-z0-9]+)*$/;
 
 function parsePayload(raw: string): ImportPayload {
     let json: unknown;
@@ -126,13 +126,9 @@ export default function StoryImporter() {
         ff<{ id: number; username: string }[]>('/users')
             .then((data) => setUsers(data.map((u) => ({ id: u.id, name: u.username }))))
             .catch(() => setUsers([]));
-        // Characters, with aliases, so dialogue speakers match by name or alias
-        ff<{ id: number; name: string; aliases?: { name: string }[] }[]>('/characters')
-            .then((data) =>
-                setCharacters(
-                    data.map((c) => ({ id: c.id, names: [c.name, ...(c.aliases ?? []).map((a) => a.name)] }))
-                )
-            )
+        // Characters, so dialogue speakers can be matched by exact name
+        ff<{ id: number; name: string }[]>('/characters')
+            .then((data) => setCharacters(data.map((c) => ({ id: c.id, names: [c.name] }))))
             .catch(() => setCharacters([]));
     }, []);
 

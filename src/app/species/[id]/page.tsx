@@ -15,9 +15,9 @@ interface Props {
     params: Promise<{ id: string }>;
 }
 
-async function getSpecies(id: number): Promise<Species | null> {
+async function getSpecies(param: string): Promise<Species | null> {
     try {
-        return await api<Species>(`/species/${id}`);
+        return await api<Species>(`/species/${param}`);
     } catch (error) {
         if (error instanceof ApiError && error.httpStatus === 404) return null;
         throw error;
@@ -27,7 +27,7 @@ async function getSpecies(id: number): Promise<Species | null> {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
     try {
-        const species = await getSpecies(parseInt(id));
+        const species = await getSpecies(id);
         return { title: species ? species.name : 'Species' };
     } catch {
         return { title: 'Species' };
@@ -36,12 +36,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SpeciesPage({ params }: Props) {
     const { id: idParam } = await params;
-    const id = parseInt(idParam);
-    if (Number.isNaN(id)) notFound();
 
     let species: Species | null;
     try {
-        species = await getSpecies(id);
+        species = await getSpecies(idParam);
     } catch {
         return (
             <main className={styles.main}>
@@ -55,17 +53,11 @@ export default async function SpeciesPage({ params }: Props) {
     const canEdit = user !== null && (user.role === 'ADMIN' || user.id === species.creatorId);
 
     const members = [...(species.Character ?? [])].sort((a, b) => {
-        const rank = (c: { image: string | null; themeColor: string | null }) =>
-            c.image ? 0 : c.themeColor ? 1 : 2;
+        const rank = (c: { image: string | null; color: string | null }) => (c.image ? 0 : c.color ? 1 : 2);
         return rank(a) - rank(b) || a.name.localeCompare(b.name);
     });
 
     const facts: [string, string][] = [['sentience', SENTIENCE_LABELS[species.class]]];
-    if (species.binomialName) facts.push(['binomial', species.binomialName]);
-    facts.push(['lifespan', species.lifespan]);
-    if (species.diet) facts.push(['diet', species.diet]);
-    if (species.habitat) facts.push(['habitat', species.habitat]);
-    if (species.placeOfOrigin) facts.push(['origin', species.placeOfOrigin]);
 
     return (
         <main className={styles.main}>
@@ -77,10 +69,9 @@ export default async function SpeciesPage({ params }: Props) {
                 <article className={styles.article}>
                     <div className={styles.nameRow}>
                         <h1 className={styles.name}>{species.name}</h1>
-                        <WikiLink article={species.wikiArticle} />
-                        {canEdit && <ActionChip href={`/species/${species.id}/edit`} label='edit ✎' />}
+                        <WikiLink slug={species.slug} />
+                        {canEdit && <ActionChip href={`/species/${species.slug}/edit`} label='edit ✎' />}
                     </div>
-                    {species.binomialName && <p className={styles.binomial}>{species.binomialName}</p>}
 
                     <p className={styles.description}>{species.description}</p>
 
@@ -98,8 +89,9 @@ export default async function SpeciesPage({ params }: Props) {
                                             character={{
                                                 id: member.id,
                                                 name: member.name,
-                                                themeColor: member.themeColor,
+                                                color: member.color,
                                                 image: member.image,
+                                                slug: member.slug,
                                             }}
                                         />
                                     </li>

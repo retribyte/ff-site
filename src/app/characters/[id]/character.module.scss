@@ -38,25 +38,6 @@
     @include m.glow-heading(var(--char));
 }
 
-.aliases {
-    margin: 0 0 1.25rem;
-    font-family: var(--font-pixel);
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: baseline;
-}
-
-.alias {
-    border: 1px dashed color-mix(in srgb, var(--char) 50%, var(--border-loud));
-    color: var(--text);
-    padding: 0.15rem 0.5rem;
-}
-
 .blurb {
     font-family: var(--font-prose);
     font-size: 1.05rem;
@@ -80,20 +61,6 @@
         content: '';
         flex: 1;
         border-top: 1px dashed color-mix(in srgb, var(--char) 45%, var(--border-loud));
-    }
-}
-
-.relations {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    li::before {
-        content: '⌁ ';
-        color: var(--char);
     }
 }
 

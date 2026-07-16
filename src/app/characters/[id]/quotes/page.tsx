@@ -17,7 +17,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
     try {
-        const character = await api<Character>(`/characters/${parseInt(id)}`);
+        const character = await api<Character>(`/characters/${id}`);
         return { title: `${character.name} · Quotes` };
     } catch {
         return { title: 'Quotes' };
@@ -26,14 +26,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CharacterQuotesPage({ params }: Props) {
     const { id: idParam } = await params;
-    const id = parseInt(idParam);
-    if (Number.isNaN(id)) notFound();
 
     let character: Character;
     let quotes: CharacterQuotes;
     try {
-        character = await api<Character>(`/characters/${id}`);
-        quotes = await api<CharacterQuotes>(`/characters/${id}/quotes`);
+        character = await api<Character>(`/characters/${idParam}`);
+        quotes = await api<CharacterQuotes>(`/characters/${character.id}/quotes`);
     } catch (error) {
         if (error instanceof ApiError && error.httpStatus === 404) notFound();
         return (
@@ -44,8 +42,8 @@ export default async function CharacterQuotesPage({ params }: Props) {
     }
 
     const style = {
-        '--char-dark': characterColor(character.name, character.themeColor, 'dark'),
-        '--char-light': characterColor(character.name, character.themeColor, 'light'),
+        '--char-dark': characterColor(character.name, character.color, 'dark'),
+        '--char-light': characterColor(character.name, character.color, 'light'),
     } as React.CSSProperties;
 
     const { messages, storyQuotes } = quotes;
@@ -54,14 +52,14 @@ export default async function CharacterQuotesPage({ params }: Props) {
     return (
         <main className={styles.main} style={style}>
             <nav className={styles.breadcrumb}>
-                <Link href={`/characters/${character.id}`}>← {character.name}&apos;s dossier</Link>
+                <Link href={`/characters/${character.slug}`}>← {character.name}&apos;s dossier</Link>
             </nav>
 
             <header className={styles.header}>
                 <ThemedAvatar
                     src={character.image}
                     name={character.name}
-                    themeColor={character.themeColor}
+                    color={character.color}
                     size={64}
                 />
                 <div>
@@ -113,7 +111,7 @@ export default async function CharacterQuotesPage({ params }: Props) {
                                     “
                                 </span>
                                 <blockquote>
-                                    <p>{quotedSpanText(quote, id)}</p>
+                                    <p>{quotedSpanText(quote, character.id)}</p>
                                     <footer>
                                         <Link href={storyQuoteUrl(quote)}>
                                             {quote.storyTitle} · ch. {quote.chapterNo} · line {quote.line_no}

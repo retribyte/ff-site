@@ -49,12 +49,6 @@
     white-space: pre-wrap;
 }
 
-.bearer {
-    a {
-        @include m.plain-link;
-    }
-}
-
 .infobox {
     @include m.infobox-panel(var(--type));
 }
@@ -77,8 +71,4 @@
 
 .fact {
     @include m.fact(var(--type));
-}
-
-.factLink {
-    @include m.plain-link;
 }

@@ -11,7 +11,7 @@ import styles from './speciesIndex.module.scss';
 export interface IndexSpecies {
     id: number;
     name: string;
-    binomialName: string | null;
+    slug: string;
     class: SentienceClass;
     members: number;
 }
@@ -25,7 +25,7 @@ export default function SpeciesIndex({ species }: { species: IndexSpecies[] }) {
         return species.filter((s) => {
             if (classFilter !== '' && s.class !== classFilter) return false;
             if (!q) return true;
-            return s.name.toLowerCase().includes(q) || (s.binomialName ?? '').toLowerCase().includes(q);
+            return s.name.toLowerCase().includes(q);
         });
     }, [species, query, classFilter]);
 
@@ -34,8 +34,8 @@ export default function SpeciesIndex({ species }: { species: IndexSpecies[] }) {
             <IndexScan
                 query={query}
                 onQueryChange={setQuery}
-                placeholder='search by name or binomial…'
-                label='Search species by name or binomial name'
+                placeholder='search by name…'
+                label='Search species by name'
                 count={visible.length}
             >
                 <select
@@ -62,9 +62,8 @@ export default function SpeciesIndex({ species }: { species: IndexSpecies[] }) {
             <ul className={styles.grid}>
                 {visible.map((s) => (
                     <li key={s.id}>
-                        <Link href={`/species/${s.id}`} className={styles.card}>
+                        <Link href={`/species/${s.slug}`} className={styles.card}>
                             <span className={styles.cardName}>{s.name}</span>
-                            {s.binomialName && <span className={styles.cardBinomial}>{s.binomialName}</span>}
                             <span className={styles.cardMeta}>
                                 <span className={styles.classChip}>{SENTIENCE_LABELS[s.class]}</span>
                                 <span className='pixel-label'>

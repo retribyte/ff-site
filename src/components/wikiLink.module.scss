@@ -1,5 +1,5 @@
 @use '../styles/mixins' as m;
 
 .wikiLink {
-    @include m.pixel-chip(var(--link), var(--link), var(--link-hover));
+    @include m.pixel-chip(var(--char), var(--char), var(--char));
 }

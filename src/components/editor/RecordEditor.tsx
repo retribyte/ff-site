@@ -24,7 +24,7 @@ interface Props {
 interface Envelope {
     status: 'success' | 'error';
     message?: string;
-    data?: { id?: number };
+    data?: { id?: number; slug?: string };
 }
 
 /** Loads the options for an entity-ref picker (species list, character list…). */
@@ -68,7 +68,7 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
     const [busy, setBusy] = useState(false);
     const refOptions = useRefOptions(schema.fields);
 
-    const set = (name: string, value: string | string[]) => setValues((prev) => ({ ...prev, [name]: value }));
+    const set = (name: string, value: string) => setValues((prev) => ({ ...prev, [name]: value }));
 
     const submit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -95,8 +95,8 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
                 setError(envelope.message ?? `Save failed (HTTP ${res.status})`);
                 return;
             }
-            const id = envelope.data?.id ?? recordId;
-            router.push(id !== undefined ? schema.viewPath(id) : schema.indexPath);
+            const idOrSlug = envelope.data?.slug ?? envelope.data?.id ?? recordId;
+            router.push(idOrSlug !== undefined ? schema.viewPath(idOrSlug) : schema.indexPath);
             router.refresh();
         } catch {
             setError('The lore server is not answering');
@@ -159,8 +159,8 @@ function Field({
     refOptions,
 }: {
     field: FieldDef;
-    value: string | string[];
-    onChange: (value: string | string[]) => void;
+    value: string;
+    onChange: (value: string) => void;
     refOptions: { id: number; label: string }[];
 }) {
     const id = `field-${field.name}`;
@@ -171,7 +171,7 @@ function Field({
             control = (
                 <textarea
                     id={id}
-                    value={value as string}
+                    value={value}
                     onChange={(e) => onChange(e.target.value)}
                     required={field.required}
                     placeholder={field.placeholder}
@@ -181,7 +181,7 @@ function Field({
             break;
         case 'select':
             control = (
-                <select id={id} value={value as string} onChange={(e) => onChange(e.target.value)} required={field.required}>
+                <select id={id} value={value} onChange={(e) => onChange(e.target.value)} required={field.required}>
                     {field.options!.map((option) => (
                         <option key={option.value} value={option.value}>
                             {option.label}
@@ -192,7 +192,7 @@ function Field({
             break;
         case 'entity-ref':
             control = (
-                <select id={id} value={value as string} onChange={(e) => onChange(e.target.value)} required={field.required}>
+                <select id={id} value={value} onChange={(e) => onChange(e.target.value)} required={field.required}>
                     <option value=''>{field.required ? 'select…' : '(none)'}</option>
                     {refOptions.map((option) => (
                         <option key={option.id} value={option.id}>
@@ -208,13 +208,13 @@ function Field({
                     <input
                         type='color'
                         aria-label={`${field.label} picker`}
-                        value={/^#[0-9a-fA-F]{6}$/.test(value as string) ? (value as string) : '#5d4be5'}
+                        value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : '#5d4be5'}
                         onChange={(e) => onChange(e.target.value)}
                     />
                     <input
                         id={id}
                         type='text'
-                        value={value as string}
+                        value={value}
                         onChange={(e) => onChange(e.target.value)}
                         placeholder='#62DE2C'
                         pattern='#[0-9a-fA-F]{6}'
@@ -227,45 +227,13 @@ function Field({
                 </span>
             );
             break;
-        case 'list': {
-            const items = value as string[];
-            control = (
-                <span className={styles.list}>
-                    {items.map((item, index) => (
-                        <span key={index} className={styles.listRow}>
-                            <input
-                                type='text'
-                                value={item}
-                                placeholder={field.placeholder}
-                                aria-label={`${field.label} ${index + 1}`}
-                                onChange={(e) =>
-                                    onChange(items.map((existing, i) => (i === index ? e.target.value : existing)))
-                                }
-                            />
-                            <button
-                                type='button'
-                                className={styles.miniButton}
-                                aria-label={`Remove ${field.label} ${index + 1}`}
-                                onClick={() => onChange(items.filter((_, i) => i !== index))}
-                            >
-                                ✕
-                            </button>
-                        </span>
-                    ))}
-                    <button type='button' className={styles.miniButton} onClick={() => onChange([...items, ''])}>
-                        + add
-                    </button>
-                </span>
-            );
-            break;
-        }
         default:
             control = (
                 <input
                     id={id}
                     type={field.kind === 'number' ? 'number' : 'text'}
                     step={field.kind === 'number' ? 'any' : undefined}
-                    value={value as string}
+                    value={value}
                     onChange={(e) => onChange(e.target.value)}
                     required={field.required}
                     placeholder={field.placeholder}

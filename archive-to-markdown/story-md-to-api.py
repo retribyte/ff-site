@@ -9,7 +9,7 @@ Usage:
 Markdown format (see README, "Stories"):
 
     ---
-    slug: the-last-squoatling          required, ^[a-z0-9-]+$
+    slug: the_last_squoatling          required, ^[a-z0-9]+(_[a-z0-9]+)*$
     title: The Last Squoatling         required
     blurb: One-line summary.           optional
     author: Trey                       optional username, resolved at upload
@@ -66,7 +66,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 OUT_DIR = ROOT / "api" / "stories"
 
-SLUG_RE = re.compile(r"^[a-z0-9-]+$")
+SLUG_RE = re.compile(r"^[a-z0-9]+(_[a-z0-9]+)*$")
 CHAPTER_RE = re.compile(r"^#\s+Chapter\s+(\d+)(?:\s*:\s*(.+?))?\s*$", re.IGNORECASE)
 DIALOGUE_RE = re.compile(r"^>\s*(.+?):\s+(.*)$")
 BREAK_RE = re.compile(r"^(\*\s*\*\s*\*+|-{3,}|_{3,})\s*$")
@@ -280,7 +280,7 @@ def convert(md_path):
         if not meta.get(key):
             sys.exit(f"error: frontmatter is missing {key!r}")
     if not SLUG_RE.match(meta["slug"]):
-        sys.exit(f"error: slug {meta['slug']!r} must match ^[a-z0-9-]+$")
+        sys.exit(f"error: slug {meta['slug']!r} must match ^[a-z0-9]+(_[a-z0-9]+)*$")
 
     story = {"slug": meta["slug"], "title": meta["title"]}
     if meta.get("blurb"):

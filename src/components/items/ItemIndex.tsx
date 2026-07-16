@@ -13,7 +13,7 @@ export interface IndexItem {
     name: string;
     itemType: ItemType;
     image: string | null;
-    bearer: { id: number; name: string } | null;
+    slug: string;
 }
 
 const TYPES = Object.keys(ITEM_TYPE_META) as ItemType[];
@@ -27,7 +27,7 @@ export default function ItemIndex({ items }: { items: IndexItem[] }) {
         return items.filter((i) => {
             if (typeFilter && i.itemType !== typeFilter) return false;
             if (!q) return true;
-            return i.name.toLowerCase().includes(q) || (i.bearer?.name ?? '').toLowerCase().includes(q);
+            return i.name.toLowerCase().includes(q);
         });
     }, [items, query, typeFilter]);
 
@@ -36,8 +36,8 @@ export default function ItemIndex({ items }: { items: IndexItem[] }) {
             <IndexScan
                 query={query}
                 onQueryChange={setQuery}
-                placeholder='search by name or bearer…'
-                label='Search items by name or bearer'
+                placeholder='search by name…'
+                label='Search items by name'
                 count={visible.length}
             />
             <div className={styles.filters} role='group' aria-label='Filter by item type'>
@@ -79,7 +79,7 @@ export default function ItemIndex({ items }: { items: IndexItem[] }) {
                     return (
                         <li key={item.id}>
                             <Link
-                                href={`/items/${item.id}`}
+                                href={`/items/${item.slug}`}
                                 className={styles.card}
                                 style={{ '--type': meta.color } as React.CSSProperties}
                             >
@@ -92,7 +92,6 @@ export default function ItemIndex({ items }: { items: IndexItem[] }) {
                                 </span>
                                 <span className={styles.cardName}>{item.name}</span>
                                 <span className={styles.cardType}>{meta.label}</span>
-                                {item.bearer && <span className='pixel-label'>held by {item.bearer.name}</span>}
                             </Link>
                         </li>
                     );

@@ -15,9 +15,9 @@ interface Props {
     params: Promise<{ id: string }>;
 }
 
-async function getItem(id: number): Promise<Item | null> {
+async function getItem(param: string): Promise<Item | null> {
     try {
-        return await api<Item>(`/items/${id}`);
+        return await api<Item>(`/items/${param}`);
     } catch (error) {
         if (error instanceof ApiError && error.httpStatus === 404) return null;
         throw error;
@@ -27,7 +27,7 @@ async function getItem(id: number): Promise<Item | null> {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
     try {
-        const item = await getItem(parseInt(id));
+        const item = await getItem(id);
         return { title: item ? item.name : 'Items' };
     } catch {
         return { title: 'Items' };
@@ -36,12 +36,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ItemPage({ params }: Props) {
     const { id: idParam } = await params;
-    const id = parseInt(idParam);
-    if (Number.isNaN(id)) notFound();
 
     let item: Item | null;
     try {
-        item = await getItem(id);
+        item = await getItem(idParam);
     } catch {
         return (
             <main className={styles.main}>
@@ -66,8 +64,8 @@ export default async function ItemPage({ params }: Props) {
                 <article className={styles.article}>
                     <div className={styles.nameRow}>
                         <h1 className={styles.name}>{item.name}</h1>
-                        <WikiLink article={item.wikiArticle} />
-                        {canEdit && <ActionChip href={`/items/${item.id}/edit`} label='edit ✎' />}
+                        <WikiLink slug={item.slug} />
+                        {canEdit && <ActionChip href={`/items/${item.slug}/edit`} label='edit ✎' />}
                     </div>
                     <p className={styles.typeLine}>
                         <span className={styles.typeChip}>
@@ -76,15 +74,6 @@ export default async function ItemPage({ params }: Props) {
                     </p>
 
                     <p className={styles.description}>{item.description}</p>
-
-                    {item.character && (
-                        <p className={styles.bearer}>
-                            <span className='pixel-label'>
-                                held by&nbsp;
-                                <Link href={`/characters/${item.character.id}`}>{item.character.name}</Link>
-                            </span>
-                        </p>
-                    )}
                 </article>
 
                 <aside className={`pixel-panel ${styles.infobox}`}>
@@ -102,16 +91,6 @@ export default async function ItemPage({ params }: Props) {
                             <dt>type</dt>
                             <dd>{meta.label}</dd>
                         </div>
-                        {item.character && (
-                            <div className={styles.fact}>
-                                <dt>bearer</dt>
-                                <dd>
-                                    <Link href={`/characters/${item.character.id}`} className={styles.factLink}>
-                                        {item.character.name}
-                                    </Link>
-                                </dd>
-                            </div>
-                        )}
                         {item.creator && (
                             <div className={styles.fact}>
                                 <dt>recorded by</dt>

@@ -76,12 +76,13 @@ export default async function SeasonPage({ params }: Props) {
             </header>
 
             <EpisodeList
-                seasonTitle={season.title}
+                seasonSlug={season.slug}
                 episodes={episodes.map((e) => ({
                     episode_no: e.episode_no,
                     title: e.title,
                     summary: e.summary,
                     playedDate: e.playedDate,
+                    slug: e.slug,
                 }))}
             />
         </main>

@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { CharacterQuotes, Character, Species } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
-import { formatEarthDate, formatGuyDate, guyToEarthDate, guyWeekday } from '@/lib/guy-time';
 import { lineUrl } from '@/lib/seasons';
 import { quotedSpanText, storyQuoteUrl } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
@@ -18,16 +17,9 @@ interface Props {
     params: Promise<{ id: string }>;
 }
 
-const SEX_LABELS: Record<Character['sex'], string | null> = {
-    MALE: 'male',
-    FEMALE: 'female',
-    OTHER: 'other',
-    UNSPECIFIED: null,
-};
-
-async function getCharacter(id: number): Promise<Character | null> {
+async function getCharacter(param: string): Promise<Character | null> {
     try {
-        return await api<Character>(`/characters/${id}`);
+        return await api<Character>(`/characters/${param}`);
     } catch (error) {
         if (error instanceof ApiError && error.httpStatus === 404) return null;
         throw error;
@@ -37,7 +29,7 @@ async function getCharacter(id: number): Promise<Character | null> {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
     try {
-        const character = await getCharacter(parseInt(id));
+        const character = await getCharacter(id);
         return { title: character ? character.name : 'Characters' };
     } catch {
         return { title: 'Characters' };
@@ -46,18 +38,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CharacterPage({ params }: Props) {
     const { id: idParam } = await params;
-    const id = parseInt(idParam);
-    if (Number.isNaN(id)) notFound();
 
     let character: Character | null;
     let species: Species | null = null;
     let quotes: CharacterQuotes = { messages: [], storyQuotes: [] };
     try {
-        character = await getCharacter(id);
+        character = await getCharacter(idParam);
         if (character) {
             [species, quotes] = await Promise.all([
                 api<Species>(`/species/${character.speciesId}`).catch(() => null),
-                api<CharacterQuotes>(`/characters/${id}/quotes`).catch(() => quotes),
+                api<CharacterQuotes>(`/characters/${character.id}/quotes`).catch(() => quotes),
             ]);
         }
     } catch {
@@ -74,12 +64,9 @@ export default async function CharacterPage({ params }: Props) {
 
     // Both theme variants go on the page root; CSS picks per data-theme
     const style = {
-        '--char-dark': characterColor(character.name, character.themeColor, 'dark'),
-        '--char-light': characterColor(character.name, character.themeColor, 'light'),
+        '--char-dark': characterColor(character.name, character.color, 'dark'),
+        '--char-light': characterColor(character.name, character.color, 'light'),
     } as React.CSSProperties;
-
-    const aliases = character.aliases ?? [];
-    const relationships = character.relationships ?? [];
 
     // Transcript messages and story-embedded dialogue have no shared sort
     // key (message timestamp vs. story/chapter/line position) — flatten to a
@@ -93,7 +80,7 @@ export default async function CharacterPage({ params }: Props) {
         })),
         ...quotes.storyQuotes.map((q) => ({
             key: `story-${q.id}`,
-            text: quotedSpanText(q, id),
+            text: quotedSpanText(q, character.id),
             href: storyQuoteUrl(q),
             context: `${q.storyTitle} · ch. ${q.chapterNo}`,
         })),
@@ -107,30 +94,11 @@ export default async function CharacterPage({ params }: Props) {
     if (species) {
         facts.push([
             'species',
-            <Link key='species' href={`/species/${species.id}`} className={styles.factLink}>
+            <Link key='species' href={`/species/${species.slug}`} className={styles.factLink}>
                 {species.name}
             </Link>,
         ]);
     }
-    const sexLabel = SEX_LABELS[character.sex];
-    if (sexLabel) facts.push(['sex', sexLabel]);
-    if (character.dob !== null) {
-        facts.push([
-            'born',
-            <span key='dob'>
-                {guyWeekday(character.dob)}, {formatGuyDate(character.dob)} GUY
-                <small style={{ display: 'block', color: 'var(--text-muted)' }}>
-                    ≈ {formatEarthDate(guyToEarthDate(character.dob))}
-                </small>
-            </span>,
-        ]);
-    }
-    if (character.pob) facts.push(['birthplace', character.pob]);
-    if (character.homePlanet) facts.push(['home planet', character.homePlanet]);
-    if (character.height !== null) facts.push(['height', `${character.height} m`]);
-    if (character.weight !== null) facts.push(['weight', `${character.weight} kg`]);
-    if (character.hairColor) facts.push(['hair', character.hairColor]);
-    if (character.eyeColor) facts.push(['eyes', character.eyeColor]);
 
     return (
         <main className={styles.main} style={style}>
@@ -142,35 +110,14 @@ export default async function CharacterPage({ params }: Props) {
                 <article className={styles.article}>
                     <div className={styles.nameRow}>
                         <h1 className={styles.name}>{character.name}</h1>
-                        <WikiLink article={character.wikiArticle} />
-                        {canEdit && <ActionChip href={`/characters/${character.id}/edit`} label='edit ✎' />}
+                        <WikiLink slug={character.slug} />
+                        {canEdit && <ActionChip href={`/characters/${character.slug}/edit`} label='edit ✎' />}
                     </div>
-                    {aliases.length > 0 && (
-                        <p className={styles.aliases}>
-                            a.k.a.{' '}
-                            {aliases.map((alias) => (
-                                <span key={alias.id} className={styles.alias}>
-                                    {alias.name}
-                                </span>
-                            ))}
-                        </p>
-                    )}
 
                     {character.blurb ? (
                         <p className={styles.blurb}>{character.blurb}</p>
                     ) : (
                         <p className='pixel-label'>no dossier on file — records pending</p>
-                    )}
-
-                    {relationships.length > 0 && (
-                        <section className={styles.section}>
-                            <h2 className={styles.sectionTitle}>Known relations</h2>
-                            <ul className={styles.relations}>
-                                {relationships.map((rel) => (
-                                    <li key={rel.id}>{rel.description}</li>
-                                ))}
-                            </ul>
-                        </section>
                     )}
 
                     {teaserQuotes.length > 0 && (
@@ -193,7 +140,7 @@ export default async function CharacterPage({ params }: Props) {
                                     </li>
                                 ))}
                             </ul>
-                            <Link href={`/characters/${character.id}/quotes`} className={styles.quotesLink}>
+                            <Link href={`/characters/${character.slug}/quotes`} className={styles.quotesLink}>
                                 full quote log ({teaserQuotes.length}) →
                             </Link>
                         </section>
@@ -205,7 +152,7 @@ export default async function CharacterPage({ params }: Props) {
                         <ThemedAvatar
                             src={character.image}
                             name={character.name}
-                            themeColor={character.themeColor}
+                            color={character.color}
                             size={96}
                         />
                     </div>

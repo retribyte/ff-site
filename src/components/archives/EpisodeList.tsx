@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { episodeSlug, seasonSlug } from '@/lib/seasons';
+import { episodeSlug } from '@/lib/seasons';
 import IndexScan from '@/components/IndexScan';
 import styles from './episodeList.module.scss';
 
@@ -11,13 +11,14 @@ export interface IndexEpisode {
     title: string;
     summary: string | null;
     playedDate: string | null;
+    slug: string;
 }
 
 function formatPlayedDate(iso: string): string {
     return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-export default function EpisodeList({ seasonTitle, episodes }: { seasonTitle: string; episodes: IndexEpisode[] }) {
+export default function EpisodeList({ seasonSlug, episodes }: { seasonSlug: string; episodes: IndexEpisode[] }) {
     const [query, setQuery] = useState('');
 
     const visible = useMemo(() => {
@@ -48,7 +49,7 @@ export default function EpisodeList({ seasonTitle, episodes }: { seasonTitle: st
                 {visible.map((episode) => (
                     <li key={episode.episode_no}>
                         <Link
-                            href={`/archives/${seasonSlug(seasonTitle)}/${episodeSlug(episode)}`}
+                            href={`/archives/${seasonSlug}/${episodeSlug(episode)}`}
                             className={styles.episode}
                         >
                             <span className={styles.episodeNo}>{String(episode.episode_no).padStart(2, '0')}</span>

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import styles from './episodeSelect.module.scss';
 
 export interface EpisodeOption {
-    value: string; // URL segment, e.g. "3-shady-business"
+    value: string; // URL segment, e.g. "3_shady_business"
     label: string;
     episodeNo: number;
 }

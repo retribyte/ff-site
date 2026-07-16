@@ -77,7 +77,7 @@ W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 MONO_FONTS = {"courier new", "courier", "consolas", "roboto mono", "source code pro", "jetbrains mono"}
 CHAPTER_HEADING = re.compile(r"^chapter\s+(\d+)\s*[:.–—-]?\s*(.*)$", re.IGNORECASE)
 BREAK_TEXT = re.compile(r"^(\*\s*){3,}$|^(-\s*){3,}$|^(_\s*){3,}$")
-SLUG_OK = re.compile(r"^[a-z0-9-]+$")
+SLUG_OK = re.compile(r"^[a-z0-9]+(_[a-z0-9]+)*$")
 
 
 # ---------- docx reading ----------
@@ -156,7 +156,10 @@ def paragraph_text(paragraph):
 
 def slugify(text):
     text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
-    text = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    text = text.lower()
+    text = re.sub(r"[\s-]+", "_", text)
+    text = re.sub(r"[^a-z0-9_]+", "", text)
+    text = re.sub(r"_+", "_", text).strip("_")
     return text or "untitled"
 
 
@@ -192,7 +195,7 @@ def run_wizard(meta, colors, doc_title, doc_blurb, source_name):
         if SLUG_OK.match(slug):
             meta["slug"] = slug
             break
-        print("  slug must be lowercase letters/digits/hyphens")
+        print("  slug must be lowercase letters, digits, and underscores (^[a-z0-9]+(_[a-z0-9]+)*$)")
     meta["blurb"] = prompt("blurb", meta.get("blurb") or doc_blurb or None)
     meta["author"] = prompt("author (site username)", meta.get("author") or None)
     meta["published"] = prompt("published (YYYY-MM-DD)", meta.get("published") or None)

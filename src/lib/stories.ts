@@ -55,9 +55,9 @@ export function slimStoryChapter(
 ): StoryData {
     const characters: StoryData['characters'] = {};
 
-    const addCharacter = (c: Pick<Character, 'id' | 'name' | 'themeColor' | 'image'>) => {
+    const addCharacter = (c: Pick<Character, 'id' | 'name' | 'color' | 'image'>) => {
         if (!(c.id in characters)) {
-            characters[c.id] = { name: c.name, color: c.themeColor, image: c.image };
+            characters[c.id] = { name: c.name, color: c.color, image: c.image };
         }
     };
 

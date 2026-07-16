@@ -9,10 +9,10 @@ import styles from './characterIndex.module.scss';
 export interface IndexCharacter {
     id: number;
     name: string;
-    themeColor: string | null;
+    color: string | null;
     image: string | null;
     speciesId: number;
-    aliases: string[];
+    slug: string;
 }
 
 export default function CharacterIndex({
@@ -30,7 +30,7 @@ export default function CharacterIndex({
         return characters.filter((c) => {
             if (speciesId !== '' && c.speciesId !== speciesId) return false;
             if (!q) return true;
-            return c.name.toLowerCase().includes(q) || c.aliases.some((a) => a.toLowerCase().includes(q));
+            return c.name.toLowerCase().includes(q);
         });
     }, [characters, query, speciesId]);
 
@@ -39,8 +39,8 @@ export default function CharacterIndex({
             <IndexScan
                 query={query}
                 onQueryChange={setQuery}
-                placeholder='search by name or alias…'
-                label='Search characters by name or alias'
+                placeholder='search by name…'
+                label='Search characters by name'
                 count={visible.length}
             >
                 <select
@@ -71,9 +71,9 @@ export default function CharacterIndex({
                             character={{
                                 id: character.id,
                                 name: character.name,
-                                themeColor: character.themeColor,
+                                color: character.color,
                                 image: character.image,
-                                alias: character.aliases[0] ?? null,
+                                slug: character.slug,
                             }}
                         />
                     </li>

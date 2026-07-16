@@ -9,14 +9,14 @@ import PixelAvatar from '@/components/transcript/PixelAvatar';
 export default function ThemedAvatar({
     src,
     name,
-    themeColor,
+    color,
     size,
 }: {
     src: string | null;
     name: string;
-    themeColor: string | null;
+    color: string | null;
     size?: number;
 }) {
     const { colorMode } = useTheme();
-    return <PixelAvatar src={src} name={name} color={characterColor(name, themeColor, colorMode)} size={size} />;
+    return <PixelAvatar src={src} name={name} color={characterColor(name, color, colorMode)} size={size} />;
 }

@@ -2,7 +2,6 @@
 // Relation fields are optional because the API includes them only on some endpoints.
 
 export type UserRole = 'USER' | 'ADMIN';
-export type Sex = 'MALE' | 'FEMALE' | 'OTHER' | 'UNSPECIFIED';
 export type SentienceClass = 'BLACK' | 'HIGHER_SENTIENT' | 'LOWER_SENTIENT' | 'NON_SENTIENT';
 export type MessageType = 'BOT_RESPONSE' | 'COMMAND' | 'QUOTE' | 'ACTION' | 'EMBED' | 'OTHER';
 export type ItemType = 'WEAPON' | 'EQUIPMENT' | 'ARTIFACT' | 'OTHER';
@@ -18,37 +17,15 @@ export interface PublicUser {
     bio: string | null;
 }
 
-export interface Alias {
-    id: number;
-    name: string;
-    characterId: number;
-}
-
-export interface Relationship {
-    id: number;
-    description: string;
-    characterId: number;
-}
-
 export interface Character {
     id: number;
     name: string;
-    dob: number | null; // equinoxes since the GUY epoch — see lib/guy-time.ts
-    pob: string | null;
-    homePlanet: string | null;
     speciesId: number;
-    sex: Sex;
-    height: number | null; // meters
-    weight: number | null; // kilograms
-    hairColor: string | null;
-    eyeColor: string | null;
     creatorId: number;
     image: string | null;
-    themeColor: string | null;
+    color: string | null;
     blurb: string | null;
-    wikiArticle: string | null;
-    aliases?: Alias[];
-    relationships?: Relationship[];
+    slug: string;
     species?: Species;
     creator?: PublicUser;
 }
@@ -57,19 +34,15 @@ export interface Species {
     id: number;
     name: string;
     description: string;
-    binomialName: string | null;
     class: SentienceClass;
-    lifespan: string; // in GUYs
-    diet: string | null;
-    habitat: string | null;
-    placeOfOrigin: string | null;
     creatorId: number;
-    wikiArticle: string | null;
+    slug: string;
     Character?: Character[];
 }
 
 export interface Season {
     title: string;
+    slug: string;
     episodes?: Episode[];
 }
 
@@ -79,6 +52,7 @@ export interface Episode {
     episode_no: number;
     summary: string | null;
     playedDate: string | null;
+    slug: string;
     messages?: Message[];
 }
 
@@ -185,8 +159,6 @@ export interface Item {
     description: string;
     image: string | null;
     creatorId: number;
-    characterId: number | null;
-    wikiArticle: string | null;
-    character?: Character;
+    slug: string;
     creator?: PublicUser;
 }
