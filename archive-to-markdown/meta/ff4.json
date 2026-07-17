@@ -1,0 +1,200 @@
+{
+    "seasonTitle": "FF4",
+    "usernames": {
+        "Zander": "Zander",
+        "Trey": "Trey",
+        "Maxwell": "Maxwell",
+        "Silas": "Silas",
+        "Jonas": "Jonas",
+        "Michael": "Michael",
+        "Sean": "Sean",
+        "Brody": "Brody",
+        "Hunt": "Hunt520"
+    },
+    "bots": [
+        "Vortox"
+    ],
+    "cast": {
+        "Zander": {
+            "0": "Emmett Tawfeek",
+            "1": "Llafay Terrels",
+            "2": "Fungus",
+            "11": "Vec"
+        },
+        "Trey": {
+            "0": "Dr. Jorpa",
+            "1": "Zion Daybreaker"
+        },
+        "Maxwell": {
+            "0": "Mateo Krovak",
+            "1": "Edwin"
+        },
+        "Silas": {
+            "0": "Dutch Elkins"
+        },
+        "Jonas": {
+            "0": "Victor Chomsky",
+            "1": "Bellow Brightlight"
+        },
+        "Michael": {
+            "0": "Kumdome",
+            "1": "Llawdon Brandanowitz"
+        },
+        "Sean": {
+            "1": "Seth Im'Kin'ki"
+        },
+        "Brody": {
+            "0": "Sanya Dreadflower",
+            "1": "Morra"
+        },
+        "Hunt": {
+            "1": "Zacharias Smith"
+        }
+    },
+    "episodes": [
+        {
+            "title": "Welcome, New Recruits",
+            "file_name": "Episode 1",
+            "episode_number": 1,
+            "short_desc": ""
+        },
+        {
+            "title": "Fun Guy",
+            "file_name": "Episode 2",
+            "episode_number": 2,
+            "short_desc": ""
+        },
+        {
+            "title": "Ambush",
+            "file_name": "Episode 3",
+            "episode_number": 3,
+            "short_desc": ""
+        },
+        {
+            "title": "Blackjack",
+            "file_name": "Episode 4",
+            "episode_number": 4,
+            "short_desc": ""
+        },
+        {
+            "title": "Diplomacy",
+            "file_name": "Episode 5",
+            "episode_number": 5,
+            "short_desc": ""
+        },
+        {
+            "title": "Obligatory Shopping Episode",
+            "file_name": "Episode 6",
+            "episode_number": 6,
+            "short_desc": ""
+        },
+        {
+            "title": "Marv Attacks!",
+            "file_name": "Episode 7",
+            "episode_number": 7,
+            "short_desc": ""
+        },
+        {
+            "title": "Don't Be A Shitty Dad",
+            "file_name": "Episode 8",
+            "episode_number": 8,
+            "short_desc": ""
+        },
+        {
+            "title": "Are You Not Entertained?!",
+            "file_name": "Episode 9",
+            "episode_number": 9,
+            "short_desc": ""
+        },
+        {
+            "title": "High Roll On D100",
+            "file_name": "Episode 10",
+            "episode_number": 10,
+            "short_desc": ""
+        },
+        {
+            "title": "Wrong Answer",
+            "file_name": "Episode 11",
+            "episode_number": 11,
+            "short_desc": ""
+        },
+        {
+            "title": "Goblinators",
+            "file_name": "Episode 12",
+            "episode_number": 12,
+            "short_desc": ""
+        },
+        {
+            "title": "Tawfeek Residence",
+            "file_name": "Side Episode 1",
+            "episode_number": 13,
+            "short_desc": ""
+        },
+        {
+            "title": "Lights Out",
+            "file_name": "Side Episode 2",
+            "episode_number": 14,
+            "short_desc": ""
+        },
+        {
+            "title": "Sir, This Is A Chilzor's",
+            "file_name": "Episode 13",
+            "episode_number": 15,
+            "short_desc": ""
+        },
+        {
+            "title": "Crashlanded",
+            "file_name": "Episode 14",
+            "episode_number": 16,
+            "short_desc": ""
+        },
+        {
+            "title": "Don't Weld Yourself",
+            "file_name": "Episode 15",
+            "episode_number": 17,
+            "short_desc": ""
+        },
+        {
+            "title": "Mutiny",
+            "file_name": "Episode 16",
+            "episode_number": 18,
+            "short_desc": ""
+        },
+        {
+            "title": "Rumble Baby",
+            "file_name": "Episode 17",
+            "episode_number": 19,
+            "short_desc": ""
+        },
+        {
+            "title": "Event Horizon",
+            "file_name": "Episode 18",
+            "episode_number": 20,
+            "short_desc": ""
+        },
+        {
+            "title": "Welcome To Elf Heaven",
+            "file_name": "Side Episode 3",
+            "episode_number": 21,
+            "short_desc": ""
+        },
+        {
+            "title": "Usurper",
+            "file_name": "Side Episode 4",
+            "episode_number": 22,
+            "short_desc": ""
+        },
+        {
+            "title": "Finale",
+            "file_name": "Episode 19",
+            "episode_number": 23,
+            "short_desc": ""
+        },
+        {
+            "title": "Pilot",
+            "file_name": "Test One-shot",
+            "episode_number": 0,
+            "short_desc": ""
+        }
+    ]
+}
