@@ -2347,7 +2347,7 @@ _Seth holds his arms out to Jessica and crouches._
 
 **Jelsafan0** _(07-Oct-18 04:08 PM)_
 
-> `Jessica` I'M 12!!
+> `Jessica`: I'M 12!!
 
 _`Jessica`: Jessica screams louder, clearly upset._
 
@@ -3126,7 +3126,7 @@ _Hector stores his rifle on his back and then starts running as fast as he can o
 
 **Zander** _(07-Oct-18 04:33 PM)_
 
-> `Llamanian Soldier 2:` HOLD IT!
+> `Llamanian Soldier 2`: HOLD IT!
 
 _`Llamanian Solder 2`: The soldier takes a shot at the escapees running towards the camp._
 

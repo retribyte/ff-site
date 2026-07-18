@@ -775,7 +775,7 @@ _Seth hops off the boat and enters the castle, finding his way to the Death wing
 
 **Bagelwrecker** _(04-Sep-18 02:45 PM)_
 
-_The Goddess of Death swivels around in her rolling throne dramatically._
+_`Goddess of Death`: The Goddess of Death swivels around in her rolling throne dramatically._
 
 > `Goddess of Death`: Always the difficult one, aren't you Seth?
 
@@ -963,7 +963,7 @@ _Sanya shows her teeth and snarls at Emmett._
 
 **Bagelwrecker** _(04-Sep-18 02:51 PM)_
 
-_Her assistant, a small goblin-like creature with added elf ears, runs up to her frantically, handing her an antique scroll._
+_`Goddess of Death`: Her assistant, a small goblin-like creature with added elf ears, runs up to her frantically, handing her an antique scroll._
 
 > `Goddess of Death`: "Seth Im'Kin'ki is your name correct?"
 
@@ -1051,7 +1051,7 @@ _In his desparation, Emmett can only muster a bleat._
 
 **Bagelwrecker** _(04-Sep-18 02:55 PM)_
 
-_The Goddess adjusts her glasses, looking down at her records._
+_`Goddess of Death`: The Goddess adjusts her glasses, looking down at her records._
 
 > `Goddess of Death`: Hmmmm, it says here you made a deal with me and the Goddess of Love that gave you invincibility, but made you insane and required you to have sex every week.
 
@@ -3085,7 +3085,7 @@ _Kyle shakes his arm cannon uncontrollably._
 
 **Brakia** _(04-Sep-18 03:57 PM)_
 
-_Dread glares at the robot and snarls._
+_`Dread`: Dread glares at the robot and snarls._
 
 > `Dread`: You have no blood. I have no use for killing you. But if you continue your plight, I will end you.
 
@@ -3242,7 +3242,7 @@ t!choose Place Emmett in a clearing | Place Emmett in a lakeside
 
 **Brakia** _(04-Sep-18 04:01 PM)_
 
-_Dread smirks and speaks to Iris playfully._
+_`Dread`: Dread smirks and speaks to Iris playfully._
 
 > `Dread`: If you don't, you will die...!
 

@@ -2346,7 +2346,7 @@ _Seth appears out of Emmett's mouth somehow, like a worm protruding from an appl
 
 **Zander** _(28-Jul-18 06:37 PM)_
 
-_The dentist's face seems to switch to that of whom Emmett loved, glitching out momentarily. It appears that this dentist was in fact Fione, Emmett's first girlfriend previously thought to be killed by Seth!_
+_`Fione`: The dentist's face seems to switch to that of whom Emmett loved, glitching out momentarily. It appears that this dentist was in fact Fione, Emmett's first girlfriend previously thought to be killed by Seth!_
 
 > `Fione`: Get the fuck out of his mouth, Seth.
 
@@ -2440,7 +2440,7 @@ t!8ball Does Seth go out of Emmett's ear?
 
 **TheBlade** _(28-Jul-18 06:43 PM)_
 
-_Despite the nurse saying that the mechanic's was thirteen leaps away, it just so happened that the mechanic's wasn't that far at all. How convenient._
+_`Mechanic`: Despite the nurse saying that the mechanic's was thirteen leaps away, it just so happened that the mechanic's wasn't that far at all. How convenient._
 
 > `Mechanic`: Heya fellas, what can I do for ya'?
 

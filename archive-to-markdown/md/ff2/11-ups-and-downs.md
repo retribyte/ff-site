@@ -509,7 +509,7 @@ t!8ball Do the Women believe that its a mask?
 
 **Zander** _(04-Aug-18 05:36 PM)_
 
-_The cop tilts her head in Emmett's direction._
+_`Contraband Cop`: The cop tilts her head in Emmett's direction._
 
 > `Contraband Cop`: We don't see many of those around these parts.
 
@@ -1422,7 +1422,7 @@ t!8ball Does the Mickey Mouse Ghost possess the knife and try to stab the assass
 
 **Zander** _(04-Aug-18 06:20 PM)_
 
-_Kambras sighs upon seeing Seth._
+_`Kambras`: Kambras sighs upon seeing Seth._
 
 > `Kambras`: Seth.
 
@@ -1474,7 +1474,7 @@ _Emmett looks away in embarrassment._
 
 **Zander** _(04-Aug-18 06:27 PM)_
 
-_Kambras nudges Emmett in jest._
+_`Kambras`: Kambras nudges Emmett in jest._
 
 > `Kambras`: It was his first time though.
 
@@ -1821,7 +1821,7 @@ _`Floran Assassin`: The floran assassin picks up Ibraxas and tries to puff the f
 
 **Zander** _(04-Aug-18 06:47 PM)_
 
-_`Kambras takes her mind off of Fione and back onto Emmett, considering him for the future._
+_`Kambras`: takes her mind off of Fione and back onto Emmett, considering him for the future._
 
 > `Kambras`: Are your arms still soft?
 
