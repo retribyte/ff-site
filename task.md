@@ -1,0 +1,5 @@
+You have a plan in @PLAN-space-builder.md and an artifact/mockup in @space-builder-mockup and we're in the process of implementing it. This will be a long process. There's a markdown progress-tracking file at @PROGRESS-space-builder.md that separates the necessary additions and changes into phases and modules, with checkboxes for each individual task. Follow that file and pick up where it left off.
+
+For all code-writing and project exploring endeavors, use a Sonnet 5 subagent. Use them freely, but give them enough to work on (invoking an agent will use ~50k tokens), analyzing the amount of work each task will require. You are to act as the project manager for now, delegating tasks to Sonnet 5 (who is a great coder!... but YOU are better at organizing, planning, and managing).
+
+The progress file has a note for you at the first subheading.
