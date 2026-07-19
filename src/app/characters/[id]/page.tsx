@@ -76,8 +76,10 @@ export default async function CharacterPage({ params }: Props) {
             key: `msg-${m.episodeTitle}-${m.messageNo}`,
             text: m.text,
             href: m.episode ? lineUrl(m.episode, m.messageNo) : undefined,
+            // Name-less personas (look-only) carry no lore-relevant name, so
+            // they're skipped here — only named personas earn "(as X)".
             context: m.episode
-                ? `${m.episode.seasonTitle} · ${m.episodeTitle}${m.alias ? ` (as ${m.alias.alias})` : ''}`
+                ? `${m.episode.seasonTitle} · ${m.episodeTitle}${m.persona?.name ? ` (as ${m.persona.name})` : ''}`
                 : undefined,
         })),
         ...quotes.storyQuotes.map((q) => ({
@@ -116,16 +118,24 @@ export default async function CharacterPage({ params }: Props) {
                         {canEdit && <ActionChip href={`/characters/${character.slug}/edit`} label='edit ✎' />}
                     </div>
 
-                    {character.aliases && character.aliases.length > 0 && (
-                        <p className={styles.aliases}>
-                            <span className='pixel-label'>also known as</span>
-                            {character.aliases.map((a) => (
-                                <span key={a.id} className={styles.aliasChip}>
-                                    {a.alias}
-                                </span>
-                            ))}
-                        </p>
-                    )}
+                    {(() => {
+                        // Name-less personas (look-only: a new avatar/color
+                        // with the same name) are presentation plumbing, not
+                        // a lore fact — only named personas show as chips.
+                        const namedPersonas = character.personas?.filter((p) => p.name !== null) ?? [];
+                        return (
+                            namedPersonas.length > 0 && (
+                                <p className={styles.personas}>
+                                    <span className='pixel-label'>also known as</span>
+                                    {namedPersonas.map((p) => (
+                                        <span key={p.id} className={styles.personaChip}>
+                                            {p.name}
+                                        </span>
+                                    ))}
+                                </p>
+                            )
+                        );
+                    })()}
 
                     {character.blurb ? (
                         <p className={styles.blurb}>{character.blurb}</p>

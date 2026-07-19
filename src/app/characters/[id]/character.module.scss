@@ -38,7 +38,7 @@
     @include m.glow-heading(var(--char));
 }
 
-.aliases {
+.personas {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -46,7 +46,7 @@
     margin: 0 0 1rem;
 }
 
-.aliasChip {
+.personaChip {
     @include m.pixel-chip(var(--char), var(--char), var(--text));
 }
 

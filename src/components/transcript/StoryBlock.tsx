@@ -95,23 +95,26 @@ interface Props {
     episodeTitle: string;
     characters: TranscriptData['characters'];
     players: TranscriptData['players'];
-    aliases: TranscriptData['aliases'];
+    personas: TranscriptData['personas'];
     targetNo: number | null;
     query: string | null;
     currentMatchNo: number | null;
 }
 
-function StoryBlock({ block, episodeTitle, characters, players, aliases, targetNo, query, currentMatchNo }: Props) {
+function StoryBlock({ block, episodeTitle, characters, players, personas, targetNo, query, currentMatchNo }: Props) {
     const { colorMode } = useTheme();
     const [copied, setCopied] = useState(false);
 
     const character = block.characterId !== null ? characters[block.characterId] : null;
     const player = players[block.playerId];
-    const alias = block.aliasId !== null ? aliases[block.aliasId] : null;
-    const speaker = alias?.name ?? character?.name ?? player?.name ?? 'Unknown';
+    const persona = block.personaId !== null ? personas[block.personaId] : null;
+    // persona?.name is null for look-only personas (new avatar/color, same
+    // name) — falls through to the canonical name, per field, same as the
+    // avatar/color lookups below.
+    const speaker = persona?.name ?? character?.name ?? player?.name ?? 'Unknown';
     // Characterless speakers (the bot, table talk) still get legacy-table colors by name
-    const color = characterColor(speaker, character?.color ?? null, colorMode);
-    const avatarSrc = character?.image ?? player?.icon ?? null;
+    const color = characterColor(speaker, persona?.color ?? character?.color ?? null, colorMode);
+    const avatarSrc = persona?.image ?? character?.image ?? player?.icon ?? null;
 
     const isTarget =
         targetNo !== null && block.messages.some((m) => m.no === targetNo);

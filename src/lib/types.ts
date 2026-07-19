@@ -28,13 +28,21 @@ export interface Character {
     slug: string;
     species?: Species;
     creator?: PublicUser;
-    aliases?: Alias[];
+    personas?: Persona[];
 }
 
-export interface Alias {
+// A way a character is presented for some stretch of the archive: a
+// different name, a different look, or both. `name` is nullable — a
+// look-only persona (new avatar/color, same name) has no name opinion.
+// `label` is the admin-facing handle for distinguishing name-less personas
+// in editing UI; it's never rendered in transcripts.
+export interface Persona {
     id: number;
-    alias: string;
-    slug: string;
+    name: string | null;
+    label: string | null;
+    slug: string | null;
+    image: string | null;
+    color: string | null;
     characterId: number;
 }
 
@@ -69,13 +77,13 @@ export interface Message {
     messageNo: number;
     playerId: number;
     characterId: number | null;
-    aliasId: number | null;
+    personaId: number | null;
     timestamp: string | null;
     type: MessageType;
     text: string;
     player?: PublicUser;
     character?: Character;
-    alias?: { id: number; alias: string } | null;
+    persona?: { id: number; name: string | null; image: string | null; color: string | null } | null;
     episode?: Episode;
     commentaries?: Commentary[];
 }

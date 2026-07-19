@@ -1,0 +1,128 @@
+@use '../../styles/mixins' as m;
+
+.manager {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem 1.75rem;
+    max-width: 34rem;
+    margin: 1.5rem auto 0;
+}
+
+.help {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.list {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    border: 1px dashed var(--border-loud);
+    border-radius: var(--radius);
+}
+
+.swatch {
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    border: 1px solid var(--border-loud);
+    flex-shrink: 0;
+}
+
+.name {
+    font-weight: 600;
+
+    em {
+        font-weight: 400;
+        color: var(--text-muted);
+    }
+}
+
+.label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.slug {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    flex: 1;
+    text-align: right;
+}
+
+.remove {
+    @include m.ghost-button;
+}
+
+.empty {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.addGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    input {
+        @include m.form-field;
+    }
+}
+
+.fieldLabel {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.colorRow {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+
+    input[type='color'] {
+        width: 2.6rem;
+        height: 2.35rem;
+        padding: 0.2rem;
+        flex-shrink: 0;
+    }
+
+    input[type='text'] {
+        flex: 1;
+    }
+}
+
+.add {
+    @include m.cta-button(0.85rem, 0.45rem 0.9rem);
+    align-self: flex-start;
+}
+
+.hint {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.error {
+    @include m.pixel-error;
+}

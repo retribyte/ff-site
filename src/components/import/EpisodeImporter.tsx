@@ -37,9 +37,10 @@ interface Option {
     name: string;
 }
 
-interface AliasOption {
+interface PersonaOption {
     id: number;
-    alias: string;
+    name: string | null;
+    label: string | null;
     characterId: number;
 }
 
@@ -99,7 +100,7 @@ export default function EpisodeImporter() {
 
     const [users, setUsers] = useState<Option[]>([]);
     const [characters, setCharacters] = useState<Option[]>([]);
-    const [aliases, setAliases] = useState<AliasOption[]>([]);
+    const [personas, setPersonas] = useState<PersonaOption[]>([]);
     const [seasonTitles, setSeasonTitles] = useState<Set<string> | null>(null);
     const [episodeExists, setEpisodeExists] = useState(false);
 
@@ -116,11 +117,11 @@ export default function EpisodeImporter() {
         ff<{ id: number; name: string }[]>('/characters')
             .then((data) => setCharacters(data.map((c) => ({ id: c.id, name: c.name }))))
             .catch(() => setCharacters([]));
-        ff<{ id: number; alias: string; characterId: number }[]>('/aliases')
+        ff<{ id: number; name: string | null; label: string | null; characterId: number }[]>('/personas')
             .then((data) =>
-                setAliases(data.map((a) => ({ id: a.id, alias: a.alias, characterId: a.characterId })))
+                setPersonas(data.map((p) => ({ id: p.id, name: p.name, label: p.label, characterId: p.characterId })))
             )
-            .catch(() => setAliases([]));
+            .catch(() => setPersonas([]));
         ff<{ title: string }[]>('/seasons')
             .then((data) => setSeasonTitles(new Set(data.map((s) => s.title))))
             .catch(() => setSeasonTitles(new Set()));
@@ -169,18 +170,25 @@ export default function EpisodeImporter() {
         const byName = new Map(users.map((u) => [u.name, String(u.id)]));
         return Object.fromEntries(playerNames.map((n) => [n, playerOverrides[n] ?? byName.get(n) ?? '']));
     }, [playerNames, users, playerOverrides]);
-    // charMap values are encoded so an alias-resolved speaker carries both ids:
-    // 'char:<characterId>' for a direct character match, 'alias:<aliasId>' for
-    // an alias match (its characterId is looked up from `aliases` at upload time).
-    // A character-name match always wins over an alias-name match.
+    // charMap values are encoded so a persona-resolved speaker carries both
+    // ids: 'char:<characterId>' for a direct character match,
+    // 'persona:<personaId>' for a persona match (its characterId is looked
+    // up from `personas` at upload time). A character-name match always
+    // wins over a persona-name match. Name-less personas (look-only) have
+    // nothing to match an import speaker string against, so they're
+    // excluded from the match map (they still show up in the dropdown).
     const charNameById = useMemo(() => new Map(characters.map((c) => [c.id, c.name])), [characters]);
     const charMap = useMemo(() => {
         const byCharName = new Map(characters.map((c) => [c.name, `char:${c.id}`]));
-        const byAliasName = new Map(aliases.map((a) => [a.alias, `alias:${a.id}`]));
-        return Object.fromEntries(
-            characterNames.map((n) => [n, charOverrides[n] ?? byCharName.get(n) ?? byAliasName.get(n) ?? ''])
+        const byPersonaName = new Map(
+            personas
+                .filter((p): p is PersonaOption & { name: string } => p.name !== null)
+                .map((p) => [p.name, `persona:${p.id}`])
         );
-    }, [characterNames, characters, aliases, charOverrides]);
+        return Object.fromEntries(
+            characterNames.map((n) => [n, charOverrides[n] ?? byCharName.get(n) ?? byPersonaName.get(n) ?? ''])
+        );
+    }, [characterNames, characters, personas, charOverrides]);
 
     const unresolvedPlayers = playerNames.filter((n) => playerMap[n] === '');
     const unmatchedCharacters = characterNames.filter((n) => charMap[n] === '');
@@ -228,20 +236,20 @@ export default function EpisodeImporter() {
             const rows = payload.messages.map((msg) => {
                 const resolved = msg.character ? charMap[msg.character] : '';
                 let characterId: number | null = null;
-                let aliasId: number | null = null;
+                let personaId: number | null = null;
                 if (resolved.startsWith('char:')) {
                     characterId = parseInt(resolved.slice('char:'.length));
-                } else if (resolved.startsWith('alias:')) {
-                    aliasId = parseInt(resolved.slice('alias:'.length));
-                    characterId = aliases.find((a) => a.id === aliasId)?.characterId ?? null;
+                } else if (resolved.startsWith('persona:')) {
+                    personaId = parseInt(resolved.slice('persona:'.length));
+                    characterId = personas.find((p) => p.id === personaId)?.characterId ?? null;
                 }
                 return {
                     playerId: parseInt(playerMap[msg.player]),
                     characterId,
-                    aliasId,
+                    personaId,
                     timestamp: msg.timestamp,
                     // FR-MSG-4: a quote with no resolvable speaker becomes OTHER
-                    // (an alias-resolved quote IS attributed — characterId is set)
+                    // (a persona-resolved quote IS attributed — characterId is set)
                     type: msg.type === 'QUOTE' && characterId === null ? 'OTHER' : msg.type,
                     text: msg.text,
                 };
@@ -401,9 +409,9 @@ export default function EpisodeImporter() {
                                                     {c.name}
                                                 </option>
                                             ))}
-                                            {aliases.map((a) => (
-                                                <option key={`alias:${a.id}`} value={`alias:${a.id}`}>
-                                                    {charNameById.get(a.characterId) ?? '?'} (as {a.alias})
+                                            {personas.map((p) => (
+                                                <option key={`persona:${p.id}`} value={`persona:${p.id}`}>
+                                                    {charNameById.get(p.characterId) ?? '?'} (as {p.name ?? p.label})
                                                 </option>
                                             ))}
                                         </select>

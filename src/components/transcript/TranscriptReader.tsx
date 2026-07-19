@@ -11,7 +11,7 @@ export interface Block {
     key: number; // first messageNo in the block
     playerId: number;
     characterId: number | null;
-    aliasId: number | null;
+    personaId: number | null;
     timestamp: string | null;
     messages: SlimMessage[];
 }
@@ -29,7 +29,7 @@ function groupIntoBlocks(messages: SlimMessage[]): Block[] {
             prev &&
             prev.playerId === message.playerId &&
             prev.characterId === message.characterId &&
-            prev.aliasId === message.aliasId;
+            prev.personaId === message.personaId;
         const closeInTime =
             !prevLast?.timestamp ||
             !message.timestamp ||
@@ -42,7 +42,7 @@ function groupIntoBlocks(messages: SlimMessage[]): Block[] {
                 key: message.no,
                 playerId: message.playerId,
                 characterId: message.characterId,
-                aliasId: message.aliasId,
+                personaId: message.personaId,
                 timestamp: message.timestamp,
                 messages: [message],
             });
@@ -78,7 +78,7 @@ export default function TranscriptReader({ data }: { data: TranscriptData }) {
                         episodeTitle={data.episodeTitle}
                         characters={data.characters}
                         players={data.players}
-                        aliases={data.aliases}
+                        personas={data.personas}
                         targetNo={targetNo}
                         query={scan.activeQuery}
                         currentMatchNo={scan.currentMatchNo}
