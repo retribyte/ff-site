@@ -38,6 +38,18 @@
     @include m.glow-heading(var(--char));
 }
 
+.aliases {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 1rem;
+}
+
+.aliasChip {
+    @include m.pixel-chip(var(--char), var(--char), var(--text));
+}
+
 .blurb {
     font-family: var(--font-prose);
     font-size: 1.05rem;

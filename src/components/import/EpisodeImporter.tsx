@@ -37,6 +37,12 @@ interface Option {
     name: string;
 }
 
+interface AliasOption {
+    id: number;
+    alias: string;
+    characterId: number;
+}
+
 type Phase =
     | { step: 'idle' }
     | { step: 'uploading'; done: number; total: number }
@@ -93,6 +99,7 @@ export default function EpisodeImporter() {
 
     const [users, setUsers] = useState<Option[]>([]);
     const [characters, setCharacters] = useState<Option[]>([]);
+    const [aliases, setAliases] = useState<AliasOption[]>([]);
     const [seasonTitles, setSeasonTitles] = useState<Set<string> | null>(null);
     const [episodeExists, setEpisodeExists] = useState(false);
 
@@ -109,6 +116,11 @@ export default function EpisodeImporter() {
         ff<{ id: number; name: string }[]>('/characters')
             .then((data) => setCharacters(data.map((c) => ({ id: c.id, name: c.name }))))
             .catch(() => setCharacters([]));
+        ff<{ id: number; alias: string; characterId: number }[]>('/aliases')
+            .then((data) =>
+                setAliases(data.map((a) => ({ id: a.id, alias: a.alias, characterId: a.characterId })))
+            )
+            .catch(() => setAliases([]));
         ff<{ title: string }[]>('/seasons')
             .then((data) => setSeasonTitles(new Set(data.map((s) => s.title))))
             .catch(() => setSeasonTitles(new Set()));
@@ -157,10 +169,18 @@ export default function EpisodeImporter() {
         const byName = new Map(users.map((u) => [u.name, String(u.id)]));
         return Object.fromEntries(playerNames.map((n) => [n, playerOverrides[n] ?? byName.get(n) ?? '']));
     }, [playerNames, users, playerOverrides]);
+    // charMap values are encoded so an alias-resolved speaker carries both ids:
+    // 'char:<characterId>' for a direct character match, 'alias:<aliasId>' for
+    // an alias match (its characterId is looked up from `aliases` at upload time).
+    // A character-name match always wins over an alias-name match.
+    const charNameById = useMemo(() => new Map(characters.map((c) => [c.id, c.name])), [characters]);
     const charMap = useMemo(() => {
-        const byName = new Map(characters.map((c) => [c.name, String(c.id)]));
-        return Object.fromEntries(characterNames.map((n) => [n, charOverrides[n] ?? byName.get(n) ?? '']));
-    }, [characterNames, characters, charOverrides]);
+        const byCharName = new Map(characters.map((c) => [c.name, `char:${c.id}`]));
+        const byAliasName = new Map(aliases.map((a) => [a.alias, `alias:${a.id}`]));
+        return Object.fromEntries(
+            characterNames.map((n) => [n, charOverrides[n] ?? byCharName.get(n) ?? byAliasName.get(n) ?? ''])
+        );
+    }, [characterNames, characters, aliases, charOverrides]);
 
     const unresolvedPlayers = playerNames.filter((n) => playerMap[n] === '');
     const unmatchedCharacters = characterNames.filter((n) => charMap[n] === '');
@@ -206,12 +226,22 @@ export default function EpisodeImporter() {
             episodeCreated = true;
 
             const rows = payload.messages.map((msg) => {
-                const characterId = msg.character && charMap[msg.character] !== '' ? parseInt(charMap[msg.character]) : null;
+                const resolved = msg.character ? charMap[msg.character] : '';
+                let characterId: number | null = null;
+                let aliasId: number | null = null;
+                if (resolved.startsWith('char:')) {
+                    characterId = parseInt(resolved.slice('char:'.length));
+                } else if (resolved.startsWith('alias:')) {
+                    aliasId = parseInt(resolved.slice('alias:'.length));
+                    characterId = aliases.find((a) => a.id === aliasId)?.characterId ?? null;
+                }
                 return {
                     playerId: parseInt(playerMap[msg.player]),
                     characterId,
+                    aliasId,
                     timestamp: msg.timestamp,
                     // FR-MSG-4: a quote with no resolvable speaker becomes OTHER
+                    // (an alias-resolved quote IS attributed — characterId is set)
                     type: msg.type === 'QUOTE' && characterId === null ? 'OTHER' : msg.type,
                     text: msg.text,
                 };
@@ -367,8 +397,13 @@ export default function EpisodeImporter() {
                                         >
                                             <option value=''>(no character)</option>
                                             {characters.map((c) => (
-                                                <option key={c.id} value={c.id}>
+                                                <option key={`char:${c.id}`} value={`char:${c.id}`}>
                                                     {c.name}
+                                                </option>
+                                            ))}
+                                            {aliases.map((a) => (
+                                                <option key={`alias:${a.id}`} value={`alias:${a.id}`}>
+                                                    {charNameById.get(a.characterId) ?? '?'} (as {a.alias})
                                                 </option>
                                             ))}
                                         </select>

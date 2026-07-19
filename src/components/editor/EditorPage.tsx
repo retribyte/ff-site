@@ -3,6 +3,8 @@ import { notFound, redirect } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import { getSessionUser } from '@/lib/auth';
 import { EDITOR_SCHEMAS, type EditorKind } from '@/lib/editor/schemas';
+import AliasManager from '@/components/characters/AliasManager';
+import type { Alias } from '@/lib/types';
 import RecordEditor from './RecordEditor';
 
 // Server shell shared by every /new and /[id]/edit page: enforces the
@@ -50,6 +52,9 @@ export default async function EditorPage({ kind, recordParam }: { kind: EditorKi
                 </h1>
             </header>
             <RecordEditor kind={kind} record={record} recordId={recordId} />
+            {kind === 'character' && isEdit && (
+                <AliasManager characterId={recordId!} initial={(record!.aliases as Alias[] | undefined) ?? []} />
+            )}
         </main>
     );
 }

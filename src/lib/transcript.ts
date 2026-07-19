@@ -17,6 +17,7 @@ export interface SlimMessage {
     type: MessageType;
     text: string;
     characterId: number | null;
+    aliasId: number | null;
     playerId: number;
     timestamp: string | null;
     /** present only when the message has annotations */
@@ -34,6 +35,7 @@ export interface TranscriptData {
     messages: SlimMessage[];
     characters: Record<number, SpeakerInfo>;
     players: Record<number, { name: string; icon: string | null }>;
+    aliases: Record<number, { name: string }>;
 }
 
 export async function fetchAllMessages(episodeTitle: string): Promise<Message[]> {
@@ -52,6 +54,7 @@ export async function fetchAllMessages(episodeTitle: string): Promise<Message[]>
 export function slimTranscript(messages: Message[]): TranscriptData {
     const characters: TranscriptData['characters'] = {};
     const players: TranscriptData['players'] = {};
+    const aliases: TranscriptData['aliases'] = {};
 
     for (const message of messages) {
         if (message.character && !(message.character.id in characters)) {
@@ -67,17 +70,22 @@ export function slimTranscript(messages: Message[]): TranscriptData {
                 icon: message.player.icon,
             };
         }
+        if (message.alias && !(message.alias.id in aliases)) {
+            aliases[message.alias.id] = { name: message.alias.alias };
+        }
     }
 
     return {
         episodeTitle: messages[0]?.episodeTitle ?? '',
         characters,
         players,
+        aliases,
         messages: messages.map((m) => ({
             no: m.messageNo,
             type: m.type,
             text: m.text,
             characterId: m.characterId,
+            aliasId: m.aliasId,
             playerId: m.playerId,
             timestamp: m.timestamp,
             ...(m.commentaries && m.commentaries.length > 0

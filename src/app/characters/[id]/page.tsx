@@ -76,7 +76,9 @@ export default async function CharacterPage({ params }: Props) {
             key: `msg-${m.episodeTitle}-${m.messageNo}`,
             text: m.text,
             href: m.episode ? lineUrl(m.episode, m.messageNo) : undefined,
-            context: m.episode ? `${m.episode.seasonTitle} · ${m.episodeTitle}` : undefined,
+            context: m.episode
+                ? `${m.episode.seasonTitle} · ${m.episodeTitle}${m.alias ? ` (as ${m.alias.alias})` : ''}`
+                : undefined,
         })),
         ...quotes.storyQuotes.map((q) => ({
             key: `story-${q.id}`,
@@ -113,6 +115,17 @@ export default async function CharacterPage({ params }: Props) {
                         <WikiLink slug={character.slug} />
                         {canEdit && <ActionChip href={`/characters/${character.slug}/edit`} label='edit ✎' />}
                     </div>
+
+                    {character.aliases && character.aliases.length > 0 && (
+                        <p className={styles.aliases}>
+                            <span className='pixel-label'>also known as</span>
+                            {character.aliases.map((a) => (
+                                <span key={a.id} className={styles.aliasChip}>
+                                    {a.alias}
+                                </span>
+                            ))}
+                        </p>
+                    )}
 
                     {character.blurb ? (
                         <p className={styles.blurb}>{character.blurb}</p>

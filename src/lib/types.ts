@@ -28,6 +28,14 @@ export interface Character {
     slug: string;
     species?: Species;
     creator?: PublicUser;
+    aliases?: Alias[];
+}
+
+export interface Alias {
+    id: number;
+    alias: string;
+    slug: string;
+    characterId: number;
 }
 
 export interface Species {
@@ -61,11 +69,13 @@ export interface Message {
     messageNo: number;
     playerId: number;
     characterId: number | null;
+    aliasId: number | null;
     timestamp: string | null;
     type: MessageType;
     text: string;
     player?: PublicUser;
     character?: Character;
+    alias?: { id: number; alias: string } | null;
     episode?: Episode;
     commentaries?: Commentary[];
 }
