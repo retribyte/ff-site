@@ -8,6 +8,7 @@ import { fetchAllMessages, slimTranscript } from '@/lib/transcript';
 import SignalLost from '@/components/SignalLost';
 import TranscriptReader from '@/components/transcript/TranscriptReader';
 import EpisodeSelect from '@/components/transcript/EpisodeSelect';
+import PersonaStampPanel from '@/components/transcript/PersonaStampPanel';
 import styles from './episode.module.scss';
 
 interface Props {
@@ -59,6 +60,12 @@ export default async function EpisodePage({ params }: Props) {
 
     const colors = seasonColors(season.title);
     const data = slimTranscript(messages);
+    // Speaking characters only — the picker for an admin/owner action scoped
+    // to "presentation in this episode" has no use for characters who never
+    // appear here.
+    const speakingCharacters = Object.entries(data.characters)
+        .map(([id, info]) => ({ id: Number(id), name: info.name }))
+        .sort((a, b) => a.name.localeCompare(b.name));
 
     return (
         <main className={styles.main} style={{ '--season': colors.primary } as React.CSSProperties}>
@@ -94,6 +101,8 @@ export default async function EpisodePage({ params }: Props) {
                 <h1 className={styles.title}>{episodeTitle}</h1>
                 {episode.summary && <p className={styles.summary}>{episode.summary}</p>}
             </header>
+
+            <PersonaStampPanel scope='episode' scopeTitle={episodeTitle} characters={speakingCharacters} />
 
             <TranscriptReader data={data} />
 

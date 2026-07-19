@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
-import type { Season } from '@/lib/types';
+import type { Character, Season } from '@/lib/types';
 import { findSeasonBySlug, seasonColors, seasonDisplayName } from '@/lib/seasons';
 import SignalLost from '@/components/SignalLost';
 import EpisodeList from '@/components/archives/EpisodeList';
+import PersonaStampPanel from '@/components/transcript/PersonaStampPanel';
 import styles from './season.module.scss';
 
 interface Props {
@@ -44,6 +45,15 @@ export default async function SeasonPage({ params }: Props) {
     const season = findSeasonBySlug(seasons, slug);
     if (!season) notFound();
 
+    // No cheap "who speaks in this season" data at this level (that'd mean
+    // fetching every episode's messages) — offer every character instead,
+    // same fallback the plan calls for. A failed fetch just empties the
+    // picker rather than taking down the whole season page.
+    const characters = await api<Character[]>('/characters').catch(() => []);
+    const characterOptions = [...characters]
+        .map((c) => ({ id: c.id, name: c.name }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
     const episodes = [...(season.episodes ?? [])].sort((a, b) => a.episode_no - b.episode_no);
     const colors = seasonColors(season.title);
     const style = {
@@ -74,6 +84,8 @@ export default async function SeasonPage({ params }: Props) {
                     {dateRange && <> · recorded {dateRange}</>}
                 </p>
             </header>
+
+            <PersonaStampPanel scope='season' scopeTitle={season.title} characters={characterOptions} />
 
             <EpisodeList
                 seasonSlug={season.slug}

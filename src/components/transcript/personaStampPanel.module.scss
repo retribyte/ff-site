@@ -1,0 +1,55 @@
+@use '../../styles/mixins' as m;
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+}
+
+.help {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 12rem;
+    flex: 1;
+
+    select {
+        @include m.form-field;
+    }
+}
+
+.fieldLabel {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.apply {
+    @include m.cta-button(0.85rem, 0.5rem 1rem);
+}
+
+.success {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--accent-soft, var(--text));
+}
+
+.error {
+    @include m.pixel-error;
+}

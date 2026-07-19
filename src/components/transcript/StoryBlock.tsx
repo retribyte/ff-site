@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import { memo, useState } from 'react';
+import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
 import type { SlimMessage, TranscriptData } from '@/lib/transcript';
+import AttributionControl from './AttributionControl';
 import CommentaryThread from './CommentaryThread';
 import PixelAvatar from './PixelAvatar';
 import { Highlighted } from './ScanBar';
@@ -103,9 +105,11 @@ interface Props {
 
 function StoryBlock({ block, episodeTitle, characters, players, personas, targetNo, query, currentMatchNo }: Props) {
     const { colorMode } = useTheme();
+    const { user } = useSession();
     const [copied, setCopied] = useState(false);
 
-    const character = block.characterId !== null ? characters[block.characterId] : null;
+    const characterId = block.characterId;
+    const character = characterId !== null ? characters[characterId] : null;
     const player = players[block.playerId];
     const persona = block.personaId !== null ? personas[block.personaId] : null;
     // persona?.name is null for look-only personas (new avatar/color, same
@@ -139,8 +143,8 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
 
             <div className={styles.blockBody}>
                 <div className={styles.blockHeader}>
-                    {block.characterId !== null ? (
-                        <Link href={`/characters/${block.characterId}`} className={styles.speaker}>
+                    {characterId !== null ? (
+                        <Link href={`/characters/${characterId}`} className={styles.speaker}>
                             {speaker}
                         </Link>
                     ) : (
@@ -169,6 +173,15 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
                     messageNo={block.key}
                     initial={block.messages[0].commentaries}
                 />
+                {user?.role === 'ADMIN' && characterId !== null && (
+                    <AttributionControl
+                        episodeTitle={episodeTitle}
+                        characterId={characterId}
+                        anchorNo={block.key}
+                        blockNos={block.messages.map((m) => m.no)}
+                        currentPersonaId={block.personaId}
+                    />
+                )}
                 <button
                     type='button'
                     className={styles.anchor}
