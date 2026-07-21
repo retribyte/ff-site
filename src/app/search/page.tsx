@@ -18,6 +18,7 @@ export const dynamic = 'force-dynamic';
 
 interface MessageHit {
     episodeTitle: string;
+    episodeNo: number;
     messageNo: number;
     text: string;
     type: MessageType;
@@ -157,12 +158,12 @@ export default async function SearchPage({ searchParams }: Props) {
                     <h2>Transcripts</h2>
                     <p className='pixel-label'>{messagesResult.total} matches</p>
                     <ul className={styles.rowList}>
-                        {sortedMessages.map((m) => {
+                        {sortedMessages.sort((a, b) => a.episodeNo - b.episodeNo).map((m) => {
                             const episode = episodeMap.get(m.episodeTitle);
                             const text = messageSnippet(m.text, m.type, query);
                             const snippet = (
                                 <>
-                                    <span className={styles.rowMeta}>{m.episodeTitle}</span>{' '}
+                                    <span className={styles.rowMeta}>{m.episodeNo}-{m.episodeTitle}</span>{' '}
                                     <Highlighted text={text} query={query} />
                                 </>
                             );

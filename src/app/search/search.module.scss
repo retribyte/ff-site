@@ -46,6 +46,12 @@
 
     a {
         @include m.plain-link;
+        color: var(--text);
+    }
+
+    mark {
+        background-color: var(--accent);
+        color: var(--text);
     }
 }
 
