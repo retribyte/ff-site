@@ -190,7 +190,10 @@ export function quotedSpanText(quote: StoryQuote, characterId: number): string {
         .join(' ');
 }
 
-/** Deep link to a StoryQuote's line — chapter route only needs the leading number. */
-export function storyQuoteUrl(quote: StoryQuote): string {
+/** Deep link to a quoted line — chapter route only needs the leading number.
+ * Takes just the three fields it needs (not a full StoryQuote) so callers
+ * with a lighter-weight hit (e.g. a site-wide search result) can pass one
+ * directly; every existing StoryQuote caller still satisfies this. */
+export function storyQuoteUrl(quote: Pick<StoryQuote, 'storySlug' | 'chapterNo' | 'line_no'>): string {
     return `/stories/${quote.storySlug}/${quote.chapterNo}?line=${quote.line_no}`;
 }

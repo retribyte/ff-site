@@ -26,13 +26,13 @@ function formatTimestamp(iso: string | null): string | null {
     });
 }
 
-interface Embed {
+export interface Embed {
     title?: string;
     description?: string[];
     footer?: string;
 }
 
-function parseEmbed(text: string): Embed | null {
+export function parseEmbed(text: string): Embed | null {
     try {
         const parsed = JSON.parse(text);
         return typeof parsed === 'object' && parsed !== null ? (parsed as Embed) : null;

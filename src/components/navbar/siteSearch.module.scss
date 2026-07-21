@@ -1,0 +1,154 @@
+@use '../../styles/mixins' as m;
+
+// Fixed height regardless of collapsed/expanded state, so it never
+// contributes to the flex row's width (the expanded bar is positioned
+// absolutely, out of flow) and so .panel/.expandedBar have a stable anchor
+// to position against.
+.wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    flex: 0 0 auto;
+}
+
+// Matches .themeToggle in navbar.module.scss — same footprint whether
+// search is open or not, so it never pushes SessionArea/the theme toggle.
+.iconButton {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border-loud);
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    &:hover {
+        background: var(--highlight);
+    }
+}
+
+// Anchored to the icon's slot (top/right: 0 of .wrap) but wide enough to
+// extend leftward over `nav.links`, which precedes it in the navbar —
+// an overlay, not a reflow, so the rest of the row never shifts.
+.expandedBar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 4; // above .links (default stacking) but below .panel
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 18rem;
+    height: 100%;
+    padding: 0 0.6rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border-loud);
+    border-radius: var(--radius);
+    box-shadow: 2px 2px 0 0 var(--shadow);
+}
+
+.prompt {
+    @include m.scan-prompt;
+    font-size: 0.9rem;
+}
+
+.input {
+    @include m.scan-input;
+    font-size: 0.8rem;
+}
+
+.panel {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 20; // above the navbar (3), .expandedBar (4), and any in-page sticky scan bar (5)
+    width: 22rem;
+    max-width: calc(100vw - 2rem);
+    max-height: 70vh;
+    overflow-y: auto;
+    background: var(--surface);
+    border: 1px solid var(--border-loud);
+    box-shadow: 2px 2px 0 0 var(--shadow);
+    padding: 0.5rem;
+
+    mark {
+        background: var(--accent-2);
+        color: #1a1c22;
+        padding: 0 2px;
+    }
+}
+
+.section + .section {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--border-loud);
+}
+
+.sectionLabel {
+    display: block;
+    font-family: var(--font-pixel);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.4rem;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: var(--radius);
+
+    &:hover {
+        background: var(--highlight);
+    }
+}
+
+.rowPending {
+    color: var(--text-muted);
+    cursor: default;
+}
+
+.rowMeta {
+    flex-shrink: 0;
+    font-family: var(--font-pixel);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+.rowSnippet {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.85rem;
+}
+
+.status {
+    padding: 0.5rem 0.4rem;
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+    .expandedBar {
+        width: calc(100vw - 1.5rem);
+        right: -0.75rem;
+    }
+
+    .panel {
+        width: calc(100vw - 1.5rem);
+        right: -0.75rem;
+    }
+}
