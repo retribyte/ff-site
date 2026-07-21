@@ -99,3 +99,18 @@ export async function apiPaged<T>(path: string, options: RequestOptions = {}): P
         limit: envelope?.limit ?? data.length,
     };
 }
+
+// GET /search — grouped by category, not a single merged ranked list (a
+// message's keyword-relevance rank and a character's name match aren't
+// comparable scores). See ff-server's src/search/ for the backing endpoint.
+export interface SearchResults {
+    characters: { id: number; name: string; slug: string; image: string | null }[];
+    species: { id: number; name: string; slug: string }[];
+    items: { id: number; name: string; slug: string; image: string | null }[];
+    messages: { episodeTitle: string; messageNo: number; text: string }[];
+    storyLines: { storySlug: string; chapterNo: number; lineNo: number; text: string }[];
+}
+
+export async function searchSite(q: string, options: RequestOptions = {}): Promise<SearchResults> {
+    return api<SearchResults>(`/search?q=${encodeURIComponent(q)}`, options);
+}
