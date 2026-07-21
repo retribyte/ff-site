@@ -2,45 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { api, searchSite, type SearchResults } from '@/lib/api';
 import { episodesByTitle, lineUrl } from '@/lib/seasons';
 import { storyQuoteUrl } from '@/lib/stories';
 import { characterColor } from '@/lib/characterColors';
+import { messageSnippet, embedLast } from '@/lib/search';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { Highlighted } from '@/components/transcript/ScanBar';
 import PixelAvatar from '@/components/transcript/PixelAvatar';
-import { parseEmbed } from '@/components/transcript/StoryBlock';
 import type { Season, Episode } from '@/lib/types';
 import styles from './siteSearch.module.scss';
 
 const MIN_QUERY_LENGTH = 2;
-
-// An EMBED message's `text` is a JSON string ({title?, description[], footer?}
-// — see StoryBlock.tsx's parseEmbed), so the raw text isn't readable as a
-// snippet. Preview whichever field actually contains the query instead —
-// same literal-substring caveat `Highlighted` already has for stemmed FTS
-// matches elsewhere, so this falls back to the first available field rather
-// than showing nothing.
-function messageSnippet(text: string, type: string, query: string): string {
-    if (type !== 'EMBED') return text;
-    const embed = parseEmbed(text);
-    if (!embed) return text;
-    const q = query.toLowerCase();
-    const fields = [embed.title, ...(embed.description ?? []), embed.footer].filter(
-        (s): s is string => typeof s === 'string'
-    );
-    return fields.find((f) => f.toLowerCase().includes(q)) ?? fields[0] ?? text;
-}
-
-// EMBED hits read worse than plain-text message types even after
-// messageSnippet's best-effort field pick, so push them to the end of the
-// list rather than wherever ts_rank happened to rank them. A stable sort
-// (guaranteed by the spec since ES2019), so ties keep the server's order.
-function embedLast<T extends { type: string }>(a: T, b: T): number {
-    return (a.type === 'EMBED' ? 1 : 0) - (b.type === 'EMBED' ? 1 : 0);
-}
 
 // One settled outcome, tagged with the query it answers — lets loading/
 // results/error all be *derived* from comparing `settled.query` against the
@@ -54,6 +29,7 @@ type Settled = { query: string; data: SearchResults } | { query: string; error: 
 export default function SiteSearch() {
     const { colorMode } = useTheme();
     const pathname = usePathname();
+    const router = useRouter();
     const [query, setQuery] = useState('');
     const [open, setOpen] = useState(false);
     // Collapsed to an icon by default so the bar doesn't reserve navbar width
@@ -144,6 +120,12 @@ export default function SiteSearch() {
         inputRef.current?.blur();
     }
 
+    function goToResultsPage() {
+        if (debouncedQuery.length < MIN_QUERY_LENGTH) return;
+        router.push(`/search?q=${encodeURIComponent(debouncedQuery)}`);
+        close();
+    }
+
     const hasAnyResults =
         !!results &&
         (results.characters.length > 0 ||
@@ -152,7 +134,10 @@ export default function SiteSearch() {
             results.messages.length > 0 ||
             results.storyLines.length > 0);
 
-    const sortedMessages = results ? [...results.messages].sort(embedLast) : [];
+    const sortedMessages = results 
+    ? [...results.messages]
+        .sort(embedLast) 
+    : [];
 
     return (
         <div className={styles.wrap} ref={containerRef}>
@@ -177,6 +162,7 @@ export default function SiteSearch() {
                         }}
                         onKeyDown={(e) => {
                             if (e.key === 'Escape') close();
+                            if (e.key === 'Enter') goToResultsPage();
                         }}
                         aria-label='Search the archive'
                         role='combobox'
@@ -318,6 +304,16 @@ export default function SiteSearch() {
 
                             {!loading && !hasAnyResults && (
                                 <p className={styles.status}>no signal — nothing matches that scan</p>
+                            )}
+
+                            {hasAnyResults && (
+                                <Link
+                                    href={`/search?q=${encodeURIComponent(debouncedQuery)}`}
+                                    className={styles.seeAll}
+                                    onClick={close}
+                                >
+                                    see all results for &ldquo;{debouncedQuery}&rdquo; →
+                                </Link>
                             )}
                         </>
                     )}

@@ -141,6 +141,15 @@
     color: var(--text-muted);
 }
 
+.seeAll {
+    @include m.pixel-nav-link(var(--accent-soft));
+    display: block;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--border-loud);
+    text-align: center;
+}
+
 @media (max-width: 640px) {
     .expandedBar {
         width: calc(100vw - 1.5rem);

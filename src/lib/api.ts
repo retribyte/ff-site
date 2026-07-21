@@ -114,7 +114,7 @@ export interface SearchResults {
     items: { id: number; name: string; slug: string; image: string | null }[];
     // `type` lets the UI preview the matched field of an EMBED message's JSON
     // body, rather than the raw JSON string, for non-EMBED types.
-    messages: { episodeTitle: string; messageNo: number; text: string; type: MessageType }[];
+    messages: { episodeTitle: string; episodeNo: number; messageNo: number; text: string; type: MessageType }[];
     storyLines: { storySlug: string; chapterNo: number; lineNo: number; text: string }[];
 }
 

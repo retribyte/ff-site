@@ -6,6 +6,7 @@ import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
 import { resolvePersonaIdentity } from '@/lib/personaIdentity';
+import { parseEmbed } from '@/lib/search';
 import type { SlimMessage, TranscriptData } from '@/lib/transcript';
 import AttributionControl from './AttributionControl';
 import CommentaryThread from './CommentaryThread';
@@ -24,21 +25,6 @@ function formatTimestamp(iso: string | null): string | null {
         minute: '2-digit',
         timeZone: 'UTC',
     });
-}
-
-export interface Embed {
-    title?: string;
-    description?: string[];
-    footer?: string;
-}
-
-export function parseEmbed(text: string): Embed | null {
-    try {
-        const parsed = JSON.parse(text);
-        return typeof parsed === 'object' && parsed !== null ? (parsed as Embed) : null;
-    } catch {
-        return null;
-    }
 }
 
 function MessageLine({ message, query, children }: { message: SlimMessage; query: string | null; children?: React.ReactNode }) {
