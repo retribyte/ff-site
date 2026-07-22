@@ -4,6 +4,9 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import type { MessageType } from '@/lib/types';
 import { episodeSlug, seasonSlug } from '@/lib/seasons';
+import { apiClient } from '@/lib/apiClient';
+import ImportWorkbench, { type UploadContext } from './ImportWorkbench';
+import MappingList from './MappingList';
 import styles from './episodeImporter.module.scss';
 
 // Payload produced by archive-to-markdown/md-to-api.py: one episode plus its
@@ -44,12 +47,6 @@ interface PersonaOption {
     characterId: number;
 }
 
-type Phase =
-    | { step: 'idle' }
-    | { step: 'uploading'; done: number; total: number }
-    | { step: 'success'; count: number; href: string }
-    | { step: 'failed'; message: string; episodeCreated: boolean };
-
 function parsePayload(raw: string): ImportPayload {
     let json: unknown;
     try {
@@ -84,19 +81,11 @@ function parsePayload(raw: string): ImportPayload {
     return payload;
 }
 
-async function ff<T>(path: string, init?: RequestInit): Promise<T> {
-    const res = await fetch(`/api/ff${path}`, init);
-    const envelope = (await res.json().catch(() => null)) as { status?: string; message?: string; data?: T } | null;
-    if (!res.ok || envelope?.status === 'error') {
-        throw new Error(envelope?.message ?? `HTTP ${res.status} on ${path}`);
-    }
-    return envelope?.data as T;
-}
-
 export default function EpisodeImporter() {
     const [payload, setPayload] = useState<ImportPayload | null>(null);
     const [fileName, setFileName] = useState('');
     const [parseError, setParseError] = useState<string | null>(null);
+    const [loadNonce, setLoadNonce] = useState(0);
 
     const [users, setUsers] = useState<Option[]>([]);
     const [characters, setCharacters] = useState<Option[]>([]);
@@ -108,27 +97,26 @@ export default function EpisodeImporter() {
     const [playerOverrides, setPlayerOverrides] = useState<Record<string, string>>({});
     const [charOverrides, setCharOverrides] = useState<Record<string, string>>({});
 
-    const [phase, setPhase] = useState<Phase>({ step: 'idle' });
-
     useEffect(() => {
-        ff<{ id: number; username: string }[]>('/users')
+        apiClient<{ id: number; username: string }[]>('/users')
             .then((data) => setUsers(data.map((u) => ({ id: u.id, name: u.username }))))
             .catch(() => setUsers([]));
-        ff<{ id: number; name: string }[]>('/characters')
+        apiClient<{ id: number; name: string }[]>('/characters')
             .then((data) => setCharacters(data.map((c) => ({ id: c.id, name: c.name }))))
             .catch(() => setCharacters([]));
-        ff<{ id: number; name: string | null; label: string | null; characterId: number }[]>('/personas')
+        apiClient<{ id: number; name: string | null; label: string | null; characterId: number }[]>('/personas')
             .then((data) =>
                 setPersonas(data.map((p) => ({ id: p.id, name: p.name, label: p.label, characterId: p.characterId })))
             )
             .catch(() => setPersonas([]));
-        ff<{ title: string }[]>('/seasons')
+        apiClient<{ title: string }[]>('/seasons')
             .then((data) => setSeasonTitles(new Set(data.map((s) => s.title))))
             .catch(() => setSeasonTitles(new Set()));
     }, []);
 
     const loadText = (raw: string, name: string) => {
-        setPhase({ step: 'idle' });
+        // Remount the workbench (fresh idle phase) for each new file.
+        setLoadNonce((n) => n + 1);
         setEpisodeExists(false);
         setPlayerOverrides({});
         setCharOverrides({});
@@ -205,268 +193,189 @@ export default function EpisodeImporter() {
     }, [payload]);
 
     // ---- upload -----------------------------------------------------------
-    const upload = async () => {
-        if (!payload) return;
+    const upload = async ({ onProgress, onCreated }: UploadContext) => {
+        if (!payload) throw new Error('No file loaded.');
         const total = payload.messages.length;
-        setPhase({ step: 'uploading', done: 0, total });
-        let episodeCreated = false;
-        try {
-            if (seasonTitles && !seasonTitles.has(payload.seasonTitle)) {
-                await ff('/seasons', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title: payload.seasonTitle }),
-                });
-                setSeasonTitles(new Set([...seasonTitles, payload.seasonTitle]));
-            }
+        onProgress(0, total);
 
-            const createdEpisode = await ff<{ slug?: string }>('/episodes', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: payload.episode.title,
-                    seasonTitle: payload.seasonTitle,
-                    episode_no: payload.episode.episode_no,
-                    summary: payload.episode.summary ?? undefined,
-                    playedDate: payload.episode.playedDate ?? undefined,
-                }),
-            });
-            episodeCreated = true;
-
-            const rows = payload.messages.map((msg) => {
-                const resolved = msg.character ? charMap[msg.character] : '';
-                let characterId: number | null = null;
-                let personaId: number | null = null;
-                if (resolved.startsWith('char:')) {
-                    characterId = parseInt(resolved.slice('char:'.length));
-                } else if (resolved.startsWith('persona:')) {
-                    personaId = parseInt(resolved.slice('persona:'.length));
-                    characterId = personas.find((p) => p.id === personaId)?.characterId ?? null;
-                }
-                return {
-                    playerId: parseInt(playerMap[msg.player]),
-                    characterId,
-                    personaId,
-                    timestamp: msg.timestamp,
-                    // FR-MSG-4: a quote with no resolvable speaker becomes OTHER
-                    // (a persona-resolved quote IS attributed — characterId is set)
-                    type: msg.type === 'QUOTE' && characterId === null ? 'OTHER' : msg.type,
-                    text: msg.text,
-                };
-            });
-            for (let offset = 0; offset < rows.length; offset += CHUNK_SIZE) {
-                await ff(`/episodes/${encodeURIComponent(payload.episode.title)}/messages`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: rows.slice(offset, offset + CHUNK_SIZE) }),
-                });
-                setPhase({ step: 'uploading', done: Math.min(offset + CHUNK_SIZE, total), total });
-            }
-
-            const href = `/archives/${seasonSlug(payload.seasonTitle)}/${episodeSlug({
-                title: payload.episode.title,
-                episode_no: payload.episode.episode_no,
-                slug: createdEpisode?.slug,
-            })}`;
-            setPhase({ step: 'success', count: total, href });
-            setEpisodeExists(true);
-        } catch (error) {
-            setPhase({
-                step: 'failed',
-                message: error instanceof Error ? error.message : 'The lore server is not answering.',
-                episodeCreated,
-            });
+        if (seasonTitles && !seasonTitles.has(payload.seasonTitle)) {
+            await apiClient('/seasons', { method: 'POST', body: { title: payload.seasonTitle } });
+            setSeasonTitles(new Set([...seasonTitles, payload.seasonTitle]));
         }
+
+        const createdEpisode = await apiClient<{ slug?: string }>('/episodes', {
+            method: 'POST',
+            body: {
+                title: payload.episode.title,
+                seasonTitle: payload.seasonTitle,
+                episode_no: payload.episode.episode_no,
+                summary: payload.episode.summary ?? undefined,
+                playedDate: payload.episode.playedDate ?? undefined,
+            },
+        });
+        onCreated();
+
+        const rows = payload.messages.map((msg) => {
+            const resolved = msg.character ? charMap[msg.character] : '';
+            let characterId: number | null = null;
+            let personaId: number | null = null;
+            if (resolved.startsWith('char:')) {
+                characterId = parseInt(resolved.slice('char:'.length));
+            } else if (resolved.startsWith('persona:')) {
+                personaId = parseInt(resolved.slice('persona:'.length));
+                characterId = personas.find((p) => p.id === personaId)?.characterId ?? null;
+            }
+            return {
+                playerId: parseInt(playerMap[msg.player]),
+                characterId,
+                personaId,
+                timestamp: msg.timestamp,
+                // FR-MSG-4: a quote with no resolvable speaker becomes OTHER
+                // (a persona-resolved quote IS attributed — characterId is set)
+                type: msg.type === 'QUOTE' && characterId === null ? 'OTHER' : msg.type,
+                text: msg.text,
+            };
+        });
+        for (let offset = 0; offset < rows.length; offset += CHUNK_SIZE) {
+            await apiClient(`/episodes/${encodeURIComponent(payload.episode.title)}/messages`, {
+                method: 'POST',
+                body: { messages: rows.slice(offset, offset + CHUNK_SIZE) },
+            });
+            onProgress(Math.min(offset + CHUNK_SIZE, total), total);
+        }
+
+        const href = `/archives/${seasonSlug(payload.seasonTitle)}/${episodeSlug({
+            title: payload.episode.title,
+            episode_no: payload.episode.episode_no,
+            slug: createdEpisode?.slug,
+        })}`;
+        setEpisodeExists(true);
+        return { count: total, href };
     };
 
     /** Roll back a partial import so the file can be re-uploaded cleanly. */
     const eject = async () => {
         if (!payload) return;
-        try {
-            await ff(`/episodes/${encodeURIComponent(payload.episode.title)}`, { method: 'DELETE' });
-            setPhase({ step: 'idle' });
-            setEpisodeExists(false);
-        } catch (error) {
-            setPhase({
-                step: 'failed',
-                message: `Rollback failed: ${error instanceof Error ? error.message : 'unknown error'}`,
-                episodeCreated: true,
-            });
-        }
+        await apiClient(`/episodes/${encodeURIComponent(payload.episode.title)}`, { method: 'DELETE' });
+        setEpisodeExists(false);
     };
 
-    const busy = phase.step === 'uploading';
-    const canUpload =
-        payload !== null && !busy && phase.step !== 'success' && unresolvedPlayers.length === 0 && !episodeExists;
-
     return (
-        <div className={styles.importer}>
-            <label className={`pixel-panel ${styles.dropzone}`}>
-                <input
-                    type='file'
-                    accept='.json,application/json'
-                    onChange={(e) => onFile(e.target.files?.[0])}
-                    disabled={busy}
-                />
-                <span className='pixel-label'>▲ select an episode .json</span>
-                <span className={styles.dropHint}>{fileName || 'from archive-to-markdown/api/…'}</span>
-            </label>
-
-            {parseError && (
-                <p className={styles.error} role='alert'>
-                    ✖ {parseError}
+        <ImportWorkbench
+            key={loadNonce}
+            dropLabel='▲ select an episode .json'
+            dropHint='from archive-to-markdown/api/…'
+            fileName={fileName}
+            parseError={parseError}
+            onFile={onFile}
+            ready={payload !== null}
+            uploadLabel={`Upload ${payload?.messages.length ?? 0} messages`}
+            uploadBlocked={unresolvedPlayers.length > 0}
+            exists={episodeExists}
+            existsMessage={
+                <p className={styles.error}>
+                    ✖ an episode titled &ldquo;{payload?.episode.title}&rdquo; already exists — eject it first or
+                    retitle this one in the meta file.
+                </p>
+            }
+            upload={upload}
+            eject={eject}
+            ejectLabel={`eject "${payload?.episode.title ?? ''}"`}
+            successMessage={(count, href) => (
+                <p className={styles.success}>
+                    ✔ {count} messages archived — <Link href={href}>read the transcript →</Link>
                 </p>
             )}
-
-            {payload && (
-                <section className={`pixel-panel ${styles.preview}`}>
-                    <h2 className='pixel-label'>manifest</h2>
-                    <dl className={styles.facts}>
-                        <div>
-                            <dt>season</dt>
-                            <dd>
-                                {payload.seasonTitle}
-                                {seasonTitles && !seasonTitles.has(payload.seasonTitle) && (
-                                    <span className={styles.badge}> new — will be created</span>
-                                )}
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>episode</dt>
-                            <dd>
-                                #{payload.episode.episode_no} · {payload.episode.title}
-                                {episodeExists && <span className={styles.badgeWarn}> already in the archive</span>}
-                            </dd>
-                        </div>
-                        {payload.episode.summary && (
+            partialHint='The episode was created but the transfer did not finish. Eject it before retrying, or messages will duplicate.'
+        >
+            {(busy) =>
+                payload && (
+                    <>
+                        <dl className={styles.facts}>
                             <div>
-                                <dt>summary</dt>
-                                <dd>{payload.episode.summary}</dd>
+                                <dt>season</dt>
+                                <dd>
+                                    {payload.seasonTitle}
+                                    {seasonTitles && !seasonTitles.has(payload.seasonTitle) && (
+                                        <span className={styles.badge}> new — will be created</span>
+                                    )}
+                                </dd>
                             </div>
-                        )}
-                        {payload.episode.playedDate && (
                             <div>
-                                <dt>played</dt>
-                                <dd>{new Date(payload.episode.playedDate).toDateString()}</dd>
+                                <dt>episode</dt>
+                                <dd>
+                                    #{payload.episode.episode_no} · {payload.episode.title}
+                                    {episodeExists && <span className={styles.badgeWarn}> already in the archive</span>}
+                                </dd>
                             </div>
-                        )}
-                        <div>
-                            <dt>messages</dt>
-                            <dd>
-                                {payload.messages.length} —{' '}
-                                {typeCounts.map(([type, count]) => `${count} ${type}`).join(', ')}
-                            </dd>
-                        </div>
-                    </dl>
-
-                    <h3 className='pixel-label'>players → users</h3>
-                    <ul className={styles.mappings}>
-                        {playerNames.map((name) => (
-                            <li key={name}>
-                                <span className={styles.mapName}>{name}</span>
-                                <select
-                                    value={playerMap[name] ?? ''}
-                                    onChange={(e) =>
-                                        setPlayerOverrides((prev) => ({ ...prev, [name]: e.target.value }))
-                                    }
-                                    disabled={busy}
-                                    aria-label={`user for ${name}`}
-                                >
-                                    <option value=''>— unresolved —</option>
-                                    {users.map((u) => (
-                                        <option key={u.id} value={u.id}>
-                                            {u.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </li>
-                        ))}
-                    </ul>
-                    {unresolvedPlayers.length > 0 && (
-                        <p className={styles.error}>
-                            ✖ every player needs a user account: {unresolvedPlayers.join(', ')}
-                        </p>
-                    )}
-
-                    {characterNames.length > 0 && (
-                        <>
-                            <h3 className='pixel-label'>characters</h3>
-                            <ul className={styles.mappings}>
-                                {characterNames.map((name) => (
-                                    <li key={name}>
-                                        <span className={styles.mapName}>{name}</span>
-                                        <select
-                                            value={charMap[name] ?? ''}
-                                            onChange={(e) =>
-                                                setCharOverrides((prev) => ({ ...prev, [name]: e.target.value }))
-                                            }
-                                            disabled={busy}
-                                            aria-label={`character for ${name}`}
-                                        >
-                                            <option value=''>(no character)</option>
-                                            {characters.map((c) => (
-                                                <option key={`char:${c.id}`} value={`char:${c.id}`}>
-                                                    {c.name}
-                                                </option>
-                                            ))}
-                                            {personas.map((p) => (
-                                                <option key={`persona:${p.id}`} value={`persona:${p.id}`}>
-                                                    {charNameById.get(p.characterId) ?? '?'} (as {p.name ?? p.label})
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </li>
-                                ))}
-                            </ul>
-                            {unmatchedCharacters.length > 0 && (
-                                <p className={styles.hint}>
-                                    unmatched characters stay unattributed; their quotes import as OTHER (
-                                    {downgradedQuotes} affected). Create the character first if that matters.
-                                </p>
+                            {payload.episode.summary && (
+                                <div>
+                                    <dt>summary</dt>
+                                    <dd>{payload.episode.summary}</dd>
+                                </div>
                             )}
-                        </>
-                    )}
-
-                    <div className={styles.actions}>
-                        <button type='button' className={styles.upload} onClick={upload} disabled={!canUpload}>
-                            {phase.step === 'uploading'
-                                ? `transmitting ${phase.done}/${phase.total}…`
-                                : `Upload ${payload.messages.length} messages`}
-                        </button>
-                        {phase.step === 'uploading' && (
-                            <progress value={phase.done} max={phase.total} className={styles.progress} />
-                        )}
-                    </div>
-
-                    {phase.step === 'success' && (
-                        <p className={styles.success}>
-                            ✔ {phase.count} messages archived — <Link href={phase.href}>read the transcript →</Link>
-                        </p>
-                    )}
-                    {phase.step === 'failed' && (
-                        <div className={styles.failure}>
-                            <p className={styles.error} role='alert'>
-                                ✖ {phase.message}
-                            </p>
-                            {phase.episodeCreated && (
-                                <p className={styles.hint}>
-                                    The episode was created but the transfer did not finish. Eject it before retrying,
-                                    or messages will duplicate.{' '}
-                                    <button type='button' className={styles.eject} onClick={eject}>
-                                        eject &ldquo;{payload.episode.title}&rdquo;
-                                    </button>
-                                </p>
+                            {payload.episode.playedDate && (
+                                <div>
+                                    <dt>played</dt>
+                                    <dd>{new Date(payload.episode.playedDate).toDateString()}</dd>
+                                </div>
                             )}
-                        </div>
-                    )}
-                    {episodeExists && phase.step !== 'success' && (
-                        <p className={styles.error}>
-                            ✖ an episode titled &ldquo;{payload.episode.title}&rdquo; already exists — eject it first
-                            or retitle this one in the meta file.
-                        </p>
-                    )}
-                </section>
-            )}
-        </div>
+                            <div>
+                                <dt>messages</dt>
+                                <dd>
+                                    {payload.messages.length} —{' '}
+                                    {typeCounts.map(([type, count]) => `${count} ${type}`).join(', ')}
+                                </dd>
+                            </div>
+                        </dl>
+
+                        <MappingList
+                            heading='players → users'
+                            names={playerNames}
+                            value={(name) => playerMap[name] ?? ''}
+                            onChange={(name, v) => setPlayerOverrides((prev) => ({ ...prev, [name]: v }))}
+                            options={[
+                                { value: '', label: '— unresolved —' },
+                                ...users.map((u) => ({ value: String(u.id), label: u.name })),
+                            ]}
+                            disabled={busy}
+                            ariaLabel={(name) => `user for ${name}`}
+                            note={
+                                unresolvedPlayers.length > 0 ? (
+                                    <p className={styles.error}>
+                                        ✖ every player needs a user account: {unresolvedPlayers.join(', ')}
+                                    </p>
+                                ) : null
+                            }
+                        />
+
+                        <MappingList
+                            heading='characters'
+                            names={characterNames}
+                            value={(name) => charMap[name] ?? ''}
+                            onChange={(name, v) => setCharOverrides((prev) => ({ ...prev, [name]: v }))}
+                            options={[
+                                { value: '', label: '(no character)' },
+                                ...characters.map((c) => ({ value: `char:${c.id}`, label: c.name })),
+                                ...personas.map((p) => ({
+                                    value: `persona:${p.id}`,
+                                    label: `${charNameById.get(p.characterId) ?? '?'} (as ${p.name ?? p.label})`,
+                                })),
+                            ]}
+                            disabled={busy}
+                            ariaLabel={(name) => `character for ${name}`}
+                            note={
+                                unmatchedCharacters.length > 0 ? (
+                                    <p className={styles.hint}>
+                                        unmatched characters stay unattributed; their quotes import as OTHER (
+                                        {downgradedQuotes} affected). Create the character first if that matters.
+                                    </p>
+                                ) : null
+                            }
+                        />
+                    </>
+                )
+            }
+        </ImportWorkbench>
     );
 }
