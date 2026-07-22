@@ -1,0 +1,14 @@
+node_modules
+.next
+.next-build
+out
+build
+coverage
+next-env.d.ts
+package-lock.json
+
+# Symlinked legacy repos / mockups — reference only, never format
+ff-site
+ff-server
+vortox-bot
+space-builder-mockup
