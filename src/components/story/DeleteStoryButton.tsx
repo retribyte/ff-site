@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/components/auth/SessionProvider';
 import DeleteControl from '@/components/DeleteControl';
+import { apiClient, errorMessage } from '@/lib/apiClient';
 import styles from './deleteStoryButton.module.scss';
 
 // Admin-only "eject" control for a whole story. Wraps the shared DeleteControl
@@ -21,16 +22,11 @@ export default function DeleteStoryButton({ slug, redirectTo }: { slug: string; 
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff/stories/${encodeURIComponent(slug)}`, { method: 'DELETE' });
-            if (!res.ok && res.status !== 204) {
-                const envelope = (await res.json().catch(() => null)) as { message?: string } | null;
-                setError(envelope?.message ?? `Delete failed (HTTP ${res.status})`);
-                return;
-            }
+            await apiClient(`/stories/${encodeURIComponent(slug)}`, { method: 'DELETE' });
             if (redirectTo) router.push(redirectTo);
             router.refresh();
-        } catch {
-            setError('The lore server is not answering');
+        } catch (e) {
+            setError(errorMessage(e));
         } finally {
             setBusy(false);
         }

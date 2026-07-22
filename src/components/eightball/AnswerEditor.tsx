@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import DeleteControl from '@/components/DeleteControl';
+import { apiClient, errorMessage } from '@/lib/apiClient';
 import { EIGHTBALL_TYPE_META } from '@/lib/lore';
 import type { EightBallAnswer, EightBallAnswerType } from '@/lib/types';
 import styles from './answerEditor.module.scss';
@@ -10,18 +11,6 @@ import styles from './answerEditor.module.scss';
 // columns the server always returns answers sorted by (YES/NO/MAYBE). Any
 // logged-in user can add answers; deletion is restricted to ADMIN via the
 // isAdmin prop (the server enforces the role on every write regardless).
-
-interface ListEnvelope {
-    status: 'success' | 'error';
-    message?: string;
-    data?: EightBallAnswer[];
-}
-
-interface ItemEnvelope {
-    status: 'success' | 'error';
-    message?: string;
-    data?: EightBallAnswer;
-}
 
 const TYPES: EightBallAnswerType[] = ['YES', 'NO', 'MAYBE'];
 
@@ -35,18 +24,13 @@ export default function AnswerEditor({ isAdmin }: { isAdmin: boolean }) {
 
     useEffect(() => {
         let cancelled = false;
-        fetch('/api/ff/8ball/answers')
-            .then((res) => res.json() as Promise<ListEnvelope>)
-            .then((envelope) => {
+        apiClient<EightBallAnswer[]>('/8ball/answers')
+            .then((data) => {
                 if (cancelled) return;
-                if (envelope.status === 'error' || !envelope.data) {
-                    setLoadError(envelope.message ?? 'Failed to load answers');
-                    return;
-                }
-                setAnswers(envelope.data);
+                setAnswers(data ?? []);
             })
-            .catch(() => {
-                if (!cancelled) setLoadError('The lore server is not answering');
+            .catch((e) => {
+                if (!cancelled) setLoadError(errorMessage(e));
             });
         return () => {
             cancelled = true;
@@ -59,21 +43,14 @@ export default function AnswerEditor({ isAdmin }: { isAdmin: boolean }) {
         setAddBusy(type);
         setActionError(null);
         try {
-            const res = await fetch('/api/ff/8ball/answers', {
+            const created = await apiClient<EightBallAnswer>('/8ball/answers', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type, text }),
+                body: { type, text },
             });
-            const envelope = (await res.json()) as ItemEnvelope;
-            if (!res.ok || envelope.status === 'error' || !envelope.data) {
-                setActionError(envelope.message ?? 'Add failed');
-                return;
-            }
-            const created = envelope.data;
             setAnswers((prev) => (prev ? [...prev, created] : [created]));
             setDrafts((prev) => ({ ...prev, [type]: '' }));
-        } catch {
-            setActionError('The lore server is not answering');
+        } catch (e) {
+            setActionError(errorMessage(e));
         } finally {
             setAddBusy(null);
         }
@@ -83,15 +60,10 @@ export default function AnswerEditor({ isAdmin }: { isAdmin: boolean }) {
         setBusyIds((prev) => new Set(prev).add(id));
         setActionError(null);
         try {
-            const res = await fetch(`/api/ff/8ball/answers/${id}`, { method: 'DELETE' });
-            if (!res.ok && res.status !== 204) {
-                const envelope = (await res.json().catch(() => null)) as { message?: string } | null;
-                setActionError(envelope?.message ?? `Delete failed (HTTP ${res.status})`);
-                return;
-            }
+            await apiClient(`/8ball/answers/${id}`, { method: 'DELETE' });
             setAnswers((prev) => (prev ? prev.filter((a) => a.id !== id) : prev));
-        } catch {
-            setActionError('The lore server is not answering');
+        } catch (e) {
+            setActionError(errorMessage(e));
         } finally {
             setBusyIds((prev) => {
                 const next = new Set(prev);

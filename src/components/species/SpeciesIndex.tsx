@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { SentienceClass } from '@/lib/types';
 import { SENTIENCE_LABELS } from '@/lib/lore';
 import IndexScan from '@/components/IndexScan';
+import EmptyState from '@/components/EmptyState';
+import { useIndexFilter } from '@/hooks/useIndexFilter';
 import scanStyles from '@/components/indexScan.module.scss';
 import styles from './speciesIndex.module.scss';
 
@@ -17,17 +19,12 @@ export interface IndexSpecies {
 }
 
 export default function SpeciesIndex({ species }: { species: IndexSpecies[] }) {
-    const [query, setQuery] = useState('');
     const [classFilter, setClassFilter] = useState<SentienceClass | ''>('');
 
-    const visible = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        return species.filter((s) => {
-            if (classFilter !== '' && s.class !== classFilter) return false;
-            if (!q) return true;
-            return s.name.toLowerCase().includes(q);
-        });
-    }, [species, query, classFilter]);
+    const { query, setQuery, visible } = useIndexFilter(
+        species,
+        (s, q) => (classFilter === '' || s.class === classFilter) && (!q || s.name.toLowerCase().includes(q))
+    );
 
     return (
         <div>
@@ -54,9 +51,9 @@ export default function SpeciesIndex({ species }: { species: IndexSpecies[] }) {
             </IndexScan>
 
             {visible.length === 0 && (
-                <p className='pixel-label' style={{ textAlign: 'center', padding: '3rem 0' }}>
+                <EmptyState>
                     {species.length === 0 ? 'no taxa catalogued yet' : 'no taxa match that scan'}
-                </p>
+                </EmptyState>
             )}
 
             <ul className={styles.grid}>

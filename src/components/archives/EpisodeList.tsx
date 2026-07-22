@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
 import { episodeSlug } from '@/lib/seasons';
 import IndexScan from '@/components/IndexScan';
+import EmptyState from '@/components/EmptyState';
+import { useIndexFilter } from '@/hooks/useIndexFilter';
 import styles from './episodeList.module.scss';
 
 export interface IndexEpisode {
@@ -19,15 +20,10 @@ function formatPlayedDate(iso: string): string {
 }
 
 export default function EpisodeList({ seasonSlug, episodes }: { seasonSlug: string; episodes: IndexEpisode[] }) {
-    const [query, setQuery] = useState('');
-
-    const visible = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        if (!q) return episodes;
-        return episodes.filter(
-            (e) => e.title.toLowerCase().includes(q) || (e.summary ?? '').toLowerCase().includes(q)
-        );
-    }, [episodes, query]);
+    const { query, setQuery, visible } = useIndexFilter(
+        episodes,
+        (e, q) => !q || e.title.toLowerCase().includes(q) || (e.summary ?? '').toLowerCase().includes(q)
+    );
 
     return (
         <div>
@@ -40,9 +36,9 @@ export default function EpisodeList({ seasonSlug, episodes }: { seasonSlug: stri
             />
 
             {visible.length === 0 && (
-                <p className='pixel-label' style={{ textAlign: 'center', padding: '3rem 0' }}>
+                <EmptyState>
                     {episodes.length === 0 ? 'no episodes recovered yet' : 'no episodes match that scan'}
-                </p>
+                </EmptyState>
             )}
 
             <ol className={styles.episodes}>
