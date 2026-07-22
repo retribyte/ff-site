@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSession } from '@/components/auth/SessionProvider';
+import { apiClient, errorMessage } from '@/lib/apiClient';
 import type { SlimCommentary } from '@/lib/transcript';
 import styles from './commentary.module.scss';
 
@@ -11,11 +12,7 @@ interface Props {
     initial?: SlimCommentary[];
 }
 
-interface Envelope {
-    status: 'success' | 'error';
-    message?: string;
-    data?: { id: number; content: string; creatorId: number; creator?: { username: string } };
-}
+type CommentaryRecord = { id: number; content: string; creatorId: number; creator?: { username: string } };
 
 // Margin notes on a transcript line. Reads come with the transcript;
 // after that the thread owns its own state via the authenticated proxy.
@@ -32,35 +29,29 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
     // Nothing to show: no notes, and no one logged in to add one
     if (notes.length === 0 && !user) return null;
 
-    const collectionUrl = `/api/ff/episodes/${encodeURIComponent(episodeTitle)}/messages/${messageNo}/commentaries`;
+    const collectionPath = `/episodes/${encodeURIComponent(episodeTitle)}/messages/${messageNo}/commentaries`;
 
     const add = async () => {
         if (!draft.trim()) return;
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(collectionUrl, {
+            const created = await apiClient<CommentaryRecord>(collectionPath, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: draft.trim() }),
+                body: { content: draft.trim() },
             });
-            const envelope = (await res.json()) as Envelope;
-            if (!res.ok || envelope.status === 'error' || !envelope.data) {
-                setError(envelope.message ?? 'Save failed');
-                return;
-            }
             setNotes((prev) => [
                 ...prev,
                 {
-                    id: envelope.data!.id,
-                    content: envelope.data!.content,
-                    creatorId: envelope.data!.creatorId,
-                    creatorName: envelope.data!.creator?.username ?? (user?.username ?? 'you'),
+                    id: created.id,
+                    content: created.content,
+                    creatorId: created.creatorId,
+                    creatorName: created.creator?.username ?? (user?.username ?? 'you'),
                 },
             ]);
             setDraft('');
-        } catch {
-            setError('The lore server is not answering');
+        } catch (e) {
+            setError(errorMessage(e));
         } finally {
             setBusy(false);
         }
@@ -71,20 +62,14 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff/commentaries/${id}`, {
+            const updated = await apiClient<CommentaryRecord>(`/commentaries/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: editDraft.trim() }),
+                body: { content: editDraft.trim() },
             });
-            const envelope = (await res.json()) as Envelope;
-            if (!res.ok || envelope.status === 'error' || !envelope.data) {
-                setError(envelope.message ?? 'Save failed');
-                return;
-            }
-            setNotes((prev) => prev.map((n) => (n.id === id ? { ...n, content: envelope.data!.content } : n)));
+            setNotes((prev) => prev.map((n) => (n.id === id ? { ...n, content: updated.content } : n)));
             setEditingId(null);
-        } catch {
-            setError('The lore server is not answering');
+        } catch (e) {
+            setError(errorMessage(e));
         } finally {
             setBusy(false);
         }
@@ -94,14 +79,10 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff/commentaries/${id}`, { method: 'DELETE' });
-            if (!res.ok && res.status !== 204) {
-                setError('Delete failed');
-                return;
-            }
+            await apiClient(`/commentaries/${id}`, { method: 'DELETE' });
             setNotes((prev) => prev.filter((n) => n.id !== id));
-        } catch {
-            setError('The lore server is not answering');
+        } catch (e) {
+            setError(errorMessage(e));
         } finally {
             setBusy(false);
         }

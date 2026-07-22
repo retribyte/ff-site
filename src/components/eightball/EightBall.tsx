@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSession } from '@/components/auth/SessionProvider';
+import { apiClient, errorMessage } from '@/lib/apiClient';
 import { EIGHTBALL_TYPE_META } from '@/lib/lore';
 import type { EightBallAnswer } from '@/lib/types';
 import AnswerEditor from './AnswerEditor';
@@ -10,12 +11,6 @@ import styles from './eightBall.module.scss';
 // FF 8-Ball — the archive's in-universe oracle. Shake produces a weighted
 // random answer from the server; the "shake" delay is purely cosmetic
 // suspense layered on top of the real request via Promise.all.
-
-interface ShakeEnvelope {
-    status: 'success' | 'error';
-    message?: string;
-    data?: EightBallAnswer;
-}
 
 const SHAKE_MS = 900;
 
@@ -37,19 +32,14 @@ export default function EightBall() {
         setError(null);
 
         try {
-            const [envelope] = await Promise.all([
-                fetch('/api/ff/8ball').then((res) => res.json() as Promise<ShakeEnvelope>),
+            const [answer] = await Promise.all([
+                apiClient<EightBallAnswer>('/8ball'),
                 new Promise((resolve) => setTimeout(resolve, SHAKE_MS)),
             ]);
-            if (envelope.status === 'error' || !envelope.data) {
-                setError(envelope.message ?? 'The oracle did not answer');
-                setResult(null);
-                return;
-            }
-            setResult(envelope.data);
+            setResult(answer);
             setAskedQuestion(asked);
-        } catch {
-            setError('The lore server is not answering');
+        } catch (e) {
+            setError(errorMessage(e));
             setResult(null);
         } finally {
             setShaking(false);

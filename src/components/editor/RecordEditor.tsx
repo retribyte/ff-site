@@ -12,6 +12,7 @@ import {
     type FormValues,
 } from '@/lib/editor/schemas';
 import DeleteControl from '@/components/DeleteControl';
+import { apiClient, errorMessage } from '@/lib/apiClient';
 import styles from './recordEditor.module.scss';
 
 interface Props {
@@ -19,12 +20,6 @@ interface Props {
     /** existing record (edit mode) as plain JSON, or null (create mode) */
     record: Record<string, unknown> | null;
     recordId?: number;
-}
-
-interface Envelope {
-    status: 'success' | 'error';
-    message?: string;
-    data?: { id?: number; slug?: string };
 }
 
 /** Loads the options for an entity-ref picker (species list, character list…). */
@@ -39,11 +34,10 @@ function useRefOptions(fields: FieldDef[]) {
         let cancelled = false;
         for (const path of refPaths) {
             const labelField = fields.find((f) => f.ref?.path === path)!.ref!.labelField;
-            fetch(`/api/ff${path}`)
-                .then((res) => res.json())
-                .then((envelope: { data?: Record<string, unknown>[] }) => {
-                    if (cancelled || !envelope.data) return;
-                    const opts = envelope.data
+            apiClient<Record<string, unknown>[]>(path)
+                .then((data) => {
+                    if (cancelled || !data) return;
+                    const opts = data
                         .map((r) => ({ id: r.id as number, label: String(r[labelField]) }))
                         .sort((a, b) => a.label.localeCompare(b.label));
                     setOptions((prev) => ({ ...prev, [path]: opts }));
@@ -85,21 +79,15 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
         }
 
         try {
-            const res = await fetch(`/api/ff${schema.basePath}${isEdit ? `/${recordId}` : ''}`, {
-                method: isEdit ? 'PUT' : 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
-            const envelope = (await res.json()) as Envelope;
-            if (!res.ok || envelope.status === 'error') {
-                setError(envelope.message ?? `Save failed (HTTP ${res.status})`);
-                return;
-            }
-            const idOrSlug = envelope.data?.slug ?? envelope.data?.id ?? recordId;
+            const data = await apiClient<{ id?: number; slug?: string }>(
+                `${schema.basePath}${isEdit ? `/${recordId}` : ''}`,
+                { method: isEdit ? 'PUT' : 'POST', body: payload }
+            );
+            const idOrSlug = data?.slug ?? data?.id ?? recordId;
             router.push(idOrSlug !== undefined ? schema.viewPath(idOrSlug) : schema.indexPath);
             router.refresh();
-        } catch {
-            setError('The lore server is not answering');
+        } catch (e) {
+            setError(errorMessage(e));
         } finally {
             setBusy(false);
         }
@@ -109,16 +97,11 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff${schema.basePath}/${recordId}`, { method: 'DELETE' });
-            if (!res.ok && res.status !== 204) {
-                const envelope = (await res.json().catch(() => null)) as Envelope | null;
-                setError(envelope?.message ?? `Delete failed (HTTP ${res.status})`);
-                return;
-            }
+            await apiClient(`${schema.basePath}/${recordId}`, { method: 'DELETE' });
             router.push(schema.indexPath);
             router.refresh();
-        } catch {
-            setError('The lore server is not answering');
+        } catch (e) {
+            setError(errorMessage(e));
         } finally {
             setBusy(false);
         }
