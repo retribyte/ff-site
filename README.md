@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Final Frontier — web frontend
 
-## Getting Started
+The [Final Frontier site](https://vortox.space) frontend: a Next.js rebuild of
+the legacy `ff-site` React app. It's a lore archive and authoring UI for a
+sci-fi TTRPG universe, and it consumes the `ff-server` Express/Prisma API.
 
-First, run the development server:
+Hand-rolled SCSS Modules + design tokens (no MUI, no Tailwind); retro sci-fi ×
+indie-web art direction.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Getting started
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requires **Node 22** (there's an `.nvmrc` — run `nvm use`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. `npm install`
+2. Copy `.env.example` to `.env` and point `NEXT_PUBLIC_API_URL` at a running
+   `ff-server` (defaults to `http://localhost:3000/api`).
+3. Start the API first — see the sibling `ff-server` repo (it runs on `:3000`).
+4. Start this app:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   npm run dev
+   ```
 
-## Learn More
+   It serves on **http://localhost:3001**. Production builds use a separate
+   distDir (`.next-build`) so `npm run build` can't corrupt a running dev
+   server.
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `npm run dev` — dev server on :3001
+- `npm run build` / `npm run start` — production build / serve
+- `npm run lint` — ESLint
+- `npm run format` / `npm run format:check` — Prettier
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Layout
 
-## Deploy on Vercel
+- `src/app/` — App Router pages + API route handlers (auth, and the generic
+  authenticated proxy `/api/ff/[...path]` to ff-server)
+- `src/components/`, `src/lib/`, `src/styles/` — components, data/logic
+  helpers, and design tokens
+- `archive-to-markdown/` — the episode/story import pipeline (Discord export →
+  markdown → API JSON → admin `/import` page)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `CLAUDE.md` for architecture, conventions, and the auth/data model.
