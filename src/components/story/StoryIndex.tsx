@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
 import IndexScan from '@/components/IndexScan';
-import DeleteStoryButton from './DeleteStoryButton';
+import EmptyState from '@/components/EmptyState';
+import { useIndexFilter } from '@/hooks/useIndexFilter';
 import styles from './storyIndex.module.scss';
 
 export interface IndexStory {
@@ -18,15 +18,10 @@ export interface IndexStory {
 }
 
 export default function StoryIndex({ stories }: { stories: IndexStory[] }) {
-    const [query, setQuery] = useState('');
-
-    const visible = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        if (!q) return stories;
-        return stories.filter(
-            (s) => s.title.toLowerCase().includes(q) || (s.blurb ?? '').toLowerCase().includes(q)
-        );
-    }, [stories, query]);
+    const { query, setQuery, visible } = useIndexFilter(
+        stories,
+        (s, q) => !q || s.title.toLowerCase().includes(q) || (s.blurb ?? '').toLowerCase().includes(q)
+    );
 
     return (
         <div>
@@ -39,9 +34,9 @@ export default function StoryIndex({ stories }: { stories: IndexStory[] }) {
             />
 
             {visible.length === 0 && (
-                <p className='pixel-label' style={{ textAlign: 'center', padding: '3rem 0' }}>
+                <EmptyState>
                     {stories.length === 0 ? 'no stories on the shelf yet' : 'no stories match that scan'}
-                </p>
+                </EmptyState>
             )}
 
             <ul className={styles.shelf}>

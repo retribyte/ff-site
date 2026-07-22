@@ -7,6 +7,7 @@ import { characterColor } from '@/lib/characterColors';
 import { lineUrl } from '@/lib/seasons';
 import { quotedSpanText, storyQuoteUrl } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
+import EmptyState from '@/components/EmptyState';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
 import styles from './quotes.module.scss';
 
@@ -70,11 +71,7 @@ export default async function CharacterQuotesPage({ params }: Props) {
                 </div>
             </header>
 
-            {total === 0 && (
-                <p className='pixel-label' style={{ textAlign: 'center', padding: '3rem 0' }}>
-                    no quotes on record
-                </p>
-            )}
+            {total === 0 && <EmptyState>no quotes on record</EmptyState>}
 
             {messages.length > 0 && (
                 <section className={styles.section}>

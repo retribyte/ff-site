@@ -1,8 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import CharacterCard from './CharacterCard';
 import IndexScan from '@/components/IndexScan';
+import EmptyState from '@/components/EmptyState';
+import { useIndexFilter } from '@/hooks/useIndexFilter';
 import scanStyles from '@/components/indexScan.module.scss';
 import styles from './characterIndex.module.scss';
 
@@ -22,17 +24,12 @@ export default function CharacterIndex({
     characters: IndexCharacter[];
     species: { id: number; name: string }[];
 }) {
-    const [query, setQuery] = useState('');
     const [speciesId, setSpeciesId] = useState<number | ''>('');
 
-    const visible = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        return characters.filter((c) => {
-            if (speciesId !== '' && c.speciesId !== speciesId) return false;
-            if (!q) return true;
-            return c.name.toLowerCase().includes(q);
-        });
-    }, [characters, query, speciesId]);
+    const { query, setQuery, visible } = useIndexFilter(
+        characters,
+        (c, q) => (speciesId === '' || c.speciesId === speciesId) && (!q || c.name.toLowerCase().includes(q))
+    );
 
     return (
         <div>
@@ -58,11 +55,7 @@ export default function CharacterIndex({
                 </select>
             </IndexScan>
 
-            {visible.length === 0 && (
-                <p className='pixel-label' style={{ textAlign: 'center', padding: '3rem 0' }}>
-                    no beings match that scan
-                </p>
-            )}
+            {visible.length === 0 && <EmptyState>no beings match that scan</EmptyState>}
 
             <ul className={styles.grid}>
                 {visible.map((character) => (

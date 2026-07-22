@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { ItemType } from '@/lib/types';
 import { ITEM_TYPE_META } from '@/lib/lore';
 import IndexScan from '@/components/IndexScan';
+import EmptyState from '@/components/EmptyState';
+import { useIndexFilter } from '@/hooks/useIndexFilter';
 import styles from './itemIndex.module.scss';
 
 export interface IndexItem {
@@ -19,17 +21,12 @@ export interface IndexItem {
 const TYPES = Object.keys(ITEM_TYPE_META) as ItemType[];
 
 export default function ItemIndex({ items }: { items: IndexItem[] }) {
-    const [query, setQuery] = useState('');
     const [typeFilter, setTypeFilter] = useState<ItemType | null>(null);
 
-    const visible = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        return items.filter((i) => {
-            if (typeFilter && i.itemType !== typeFilter) return false;
-            if (!q) return true;
-            return i.name.toLowerCase().includes(q);
-        });
-    }, [items, query, typeFilter]);
+    const { query, setQuery, visible } = useIndexFilter(
+        items,
+        (i, q) => (!typeFilter || i.itemType === typeFilter) && (!q || i.name.toLowerCase().includes(q))
+    );
 
     return (
         <div>
@@ -64,13 +61,13 @@ export default function ItemIndex({ items }: { items: IndexItem[] }) {
             </div>
 
             {visible.length === 0 && (
-                <p className='pixel-label' style={{ textAlign: 'center', padding: '3rem 0' }}>
+                <EmptyState>
                     {query.trim()
                         ? 'nothing in the vault matches that scan'
                         : `the vault is empty — nothing ${
                               typeFilter ? `of type ${ITEM_TYPE_META[typeFilter].label} ` : ''
                           }recovered yet`}
-                </p>
+                </EmptyState>
             )}
 
             <ul className={styles.grid}>
