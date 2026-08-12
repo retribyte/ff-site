@@ -45,6 +45,21 @@ BACKTICK_SPEAKER = re.compile(r"^`(.+?)`: (.*)$")
 PLAIN_SPEAKER = re.compile(r"^([A-Z][A-Za-z0-9 .'\-]{0,29}): (.*)$")
 ACTION_LINE = re.compile(r"^[_*](.+)[_*]$")
 
+# `Name`: is always trusted regardless of the season's cast list, so a
+# player's own shorthand for their character (typed the same way a bare
+# cast-default line would be, just spelled out by hand) fragments them
+# across two DB Character rows: the short form and the full cast-list name.
+# Canonicalize post-classification so both spellings land on one record.
+# Dread is deliberately NOT here -- Dread and Sanya were separate characters
+# through FF2/FF3 and only merge into one partway into FF4; aliasing "Dread"
+# here would wrongly fold that earlier, still-separate entity into Sanya.
+NAME_ALIASES = {
+    "Emmett": "Emmett Tawfeek",
+    "Seth": "Seth Im'Kin'ki",
+    "Chomsky": "Victor Chomsky",
+    "Sanya": "Sanya Dreadflower",
+}
+
 
 def load_meta(season):
     path = os.path.join(os.path.dirname(__file__), "meta", f"{season}.json")
@@ -182,6 +197,7 @@ def convert_file(md_file, meta, episode):
                 msg_type, text = "BOT_RESPONSE", line
             else:
                 msg_type, text, character = classify_line(line, character, cast_names)
+                character = NAME_ALIASES.get(character, character)
             # FR-MSG-4: a quote needs a speaker
             if msg_type == "QUOTE" and not character:
                 msg_type = "OTHER"
