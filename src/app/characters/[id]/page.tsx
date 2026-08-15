@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { CharacterQuotes, Character, Species } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
+import { personaHasName } from '@/lib/personaIdentity';
 import { lineUrl } from '@/lib/seasons';
 import { quotedSpanText, storyQuoteUrl } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
@@ -79,7 +80,7 @@ export default async function CharacterPage({ params }: Props) {
             // Name-less personas (look-only) carry no lore-relevant name, so
             // they're skipped here — only named personas earn "(as X)".
             context: m.episode
-                ? `${m.episode.seasonTitle} · ${m.episodeTitle}${m.persona?.name ? ` (as ${m.persona.name})` : ''}`
+                ? `${m.episode.seasonTitle} · ${m.episodeTitle}${personaHasName(m.persona) ? ` (as ${m.persona!.name})` : ''}`
                 : undefined,
         })),
         ...quotes.storyQuotes.map((q) => ({
@@ -122,7 +123,7 @@ export default async function CharacterPage({ params }: Props) {
                         // Name-less personas (look-only: a new avatar/color
                         // with the same name) are presentation plumbing, not
                         // a lore fact — only named personas show as chips.
-                        const namedPersonas = character.personas?.filter((p) => p.name !== null) ?? [];
+                        const namedPersonas = character.personas?.filter(personaHasName) ?? [];
                         return (
                             namedPersonas.length > 0 && (
                                 <p className={styles.personas}>

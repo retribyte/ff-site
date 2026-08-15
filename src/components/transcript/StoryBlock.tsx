@@ -5,6 +5,7 @@ import { memo, useState } from 'react';
 import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
+import { resolvePersonaIdentity } from '@/lib/personaIdentity';
 import type { SlimMessage, TranscriptData } from '@/lib/transcript';
 import AttributionControl from './AttributionControl';
 import CommentaryThread from './CommentaryThread';
@@ -112,13 +113,9 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
     const character = characterId !== null ? characters[characterId] : null;
     const player = players[block.playerId];
     const persona = block.personaId !== null ? personas[block.personaId] : null;
-    // persona?.name is null for look-only personas (new avatar/color, same
-    // name) — falls through to the canonical name, per field, same as the
-    // avatar/color lookups below.
-    const speaker = persona?.name ?? character?.name ?? player?.name ?? 'Unknown';
+    const { speaker, color: rawColor, avatarSrc } = resolvePersonaIdentity(persona, character, player);
     // Characterless speakers (the bot, table talk) still get legacy-table colors by name
-    const color = characterColor(speaker, persona?.color ?? character?.color ?? null, colorMode);
-    const avatarSrc = persona?.image ?? character?.image ?? player?.icon ?? null;
+    const color = characterColor(speaker, rawColor, colorMode);
 
     const isTarget =
         targetNo !== null && block.messages.some((m) => m.no === targetNo);

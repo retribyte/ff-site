@@ -42,13 +42,45 @@ DiscordChatExporter HTML  ──ff2.py / ff3.py──▶  markdown  ──md-to-
     "cast": {
         "Brody": { "1": "Serpile", "5": "Bail" }  // character from episode N onward
     },
+    "personaTimeline": {                 // optional; character name -> ordered spans.
+        "Vec": [                         // real ff4.json entries -- see PLAN-persona-timeline.md
+            { "from_episode": 2, "persona": "Fungus" },   // starts at ep2's top, no anchor needed
+            { "from_episode": 11, "persona": null }       // self-naming revert to canonical "Vec"
+        ]
+        // a mid-episode start would add "anchor_contains": "<snippet>" --
+        // verify against the raw export first; most of a lore doc's stated
+        // host/appearance changes turn out to be narration, not actual
+        // `Name:` overrides in the transcript (confirmed for Vec's other
+        // hosts -- Argonian, Llorpus, etc. -- which needed no entry at all)
+    },
     "episodes": [
         { "file_name": "1", "episode_number": 1, "title": "…", "short_desc": "…" }
     ]
 }
 ```
 
+`personaTimeline` is keyed by **character**, not player, and is separate
+from `cast` on purpose: `cast` tracks which character a player voices, at
+episode granularity (every confirmed swap lands on an episode boundary);
+`personaTimeline` tracks which *persona* of that character is active, which
+often changes mid-episode. A span with no `anchor_contains` starts at the
+top of `from_episode`; one with `anchor_contains` starts at whichever
+message contains that text (same content-match style as
+`FORCE_CHARACTER_CONTAINING` in `discord-json-to-api.py`) — deliberately not
+anchored to message position/number, which isn't stable. `persona: null` is
+an explicit revert to the character's canonical presentation, not absence.
+
 `file_name` matches the markdown basename, with or without its `NN-` prefix.
+
+## Testing
+
+`cast_character()` (both independent copies) and `PersonaTimeline` have
+`pytest` coverage — `test_cast_character.py`, `test_persona_timeline.py`.
+
+```
+python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
+.venv/bin/pytest
+```
 
 ## Markdown message format
 

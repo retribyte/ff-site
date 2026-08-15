@@ -33,6 +33,8 @@ import re
 import sys
 from datetime import datetime
 
+from persona_timeline import PersonaTimeline
+
 try:
     import readline  # noqa: F401 — line editing/history in the interactive prompts
 except ImportError:
@@ -155,6 +157,7 @@ def convert_file(md_file, meta, episode):
     usernames = meta.get("usernames", {})
     bots = set(meta.get("bots", []))
     cast_names = {name for spans in meta.get("cast", {}).values() for name in spans.values()}
+    persona_timeline = PersonaTimeline(meta, episode["episode_number"])
     messages = []
     played_date = None
 
@@ -170,12 +173,14 @@ def convert_file(md_file, meta, episode):
             closing = EMBED_CLOSE.match(line)
             if closing:
                 if closing.group(1) == "embed" and embed is not None:
+                    embed_text = json.dumps(embed, ensure_ascii=False)
                     messages.append({
                         "player": player,
                         "character": character,
+                        "persona": persona_timeline.resolve(character, embed_text),
                         "timestamp": timestamp,
                         "type": "EMBED",
-                        "text": json.dumps(embed, ensure_ascii=False),
+                        "text": embed_text,
                     })
                     embed = None
                 section = None
@@ -206,6 +211,7 @@ def convert_file(md_file, meta, episode):
             messages.append({
                 "player": player,
                 "character": character,
+                "persona": persona_timeline.resolve(character, text) if character else None,
                 "timestamp": timestamp,
                 "type": msg_type,
                 "text": text,

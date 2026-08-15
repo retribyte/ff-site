@@ -18,8 +18,7 @@
         "Zander": {
             "0": "Emmett Tawfeek",
             "1": "Llafay Terrels",
-            "2": "Fungus",
-            "11": "Vec"
+            "2": "Vec"
         },
         "Trey": {
             "0": "Dr. Jorpa",
@@ -51,6 +50,16 @@
             "3": "Terry",
             "4": "Zacharias Smith"
         }
+    },
+    "personaTimeline": {
+        "Vec": [
+            { "from_episode": 2, "persona": "Fungus" },
+            { "from_episode": 5, "persona": "Fursean", "anchor_contains": "Fursean scratches his head" },
+            { "from_episode": 5, "persona": "Fungus", "anchor_contains": "Fursean falls apart" },
+            { "from_episode": 11, "persona": null },
+            { "from_episode": 17, "persona": "Argonian", "anchor_contains": "An Argonian in a parka appears" },
+            { "from_episode": 20, "persona": null, "anchor_contains": "fell back, slamming into the side of the sofa" }
+        ]
     },
     "episodes": [
         {

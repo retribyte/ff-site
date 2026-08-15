@@ -49,6 +49,8 @@ import re
 import sys
 from datetime import datetime
 
+from persona_timeline import PersonaTimeline
+
 BACKTICK_SPEAKER = re.compile(r"^`([^`]+)`: (.*)$")
 SPEAKER_PREFIX = re.compile(r"^([A-Za-z0-9][A-Za-z0-9 .,'\-]{0,29}):\s?(.*)$")
 FULL_WRAP = re.compile(r"^(`{1,3}|[*_])(.+)\1$", re.S)
@@ -58,7 +60,7 @@ STRIKE = re.compile(r"~~(.+?)~~")
 ITALIC_PAIR = re.compile(r"(?<![*\w])\*([^*\s][^*]*?)\*(?![*\w])")
 CODE_PAIR = re.compile(r"`{1,3}([^`]+)`{1,3}")
 FENCE = re.compile(r"```(?:([A-Za-z0-9]+)\n)?(.*?)```", re.S)
-MULTILINE_CODE = re.compile(r"(`{1,2})([^`]*\n[^`]*?)\1")
+TICK_RUN = re.compile(r"`{1,2}")
 QUOTE_WRAPS = (('"', '"'), ("“", "”"))
 
 DEFAULT_INPUT_DIR = os.getcwd()
@@ -137,10 +139,12 @@ NAME_ALIASES = {
     "Llawdon": "Llawdon Brandanowitz",
     "Zion": "Zion Daybreaker",
     "Sanya": "Sanya Dreadflower",
-    # Same parasite, same player, across cast_character()'s per-episode
-    # default label -- "Fungus" (ep2-10) is its pre-self-naming identity,
-    # "Vec" (ep11+) is the name it settles on. Not a separate being (unlike
-    # Sanya/Dread) -- alias to unify under the name it actually keeps.
+    # "Fungus" (ep2-10) is Vec's pre-self-naming identity, tracked as a
+    # persona now (meta/ff4.json's personaTimeline), not a cast default --
+    # cast.Zander already resolves straight to "Vec" from ep2 on. This entry
+    # is still needed for the rare stray inline override (one line in
+    # Blackjack: "Fungus: `I think I just him splat.`") that names it
+    # literally rather than inheriting the ambient default.
     "Fungus": "Vec",
     # Sanya spends most of the Finale undercover, going by "Dread" or the
     # bare initial "S" until her reveal (`S: Call me Dreadflower...`).
@@ -548,7 +552,24 @@ def classify_line(line, character, cast_names, quote_ctx=False):
         return [("OTHER", text, character)], character
 
     out = []
-    for delim, text in segments:
+    for idx, (delim, text) in enumerate(segments):
+        if not delim:
+            # A `Name:` override embedded mid-line (e.g. after a leading
+            # *action* clause typed in the same message) never reaches the
+            # whole-line SPEAKER_PREFIX check above, since that's anchored
+            # to the start of the line. tokenize_spans already isolated it
+            # as its own bare segment sitting right before a wrapped span
+            # -- the same "remainder is markdown-wrapped" signal the
+            # line-start check uses, just split across segments instead of
+            # captured in one regex group. Retarget `character` for the
+            # rest of the line and drop the tag itself, same as the
+            # line-start override does with its own prefix.
+            prefix_match = SPEAKER_PREFIX.match(text)
+            next_is_wrapped = idx + 1 < len(segments) and segments[idx + 1][0]
+            if prefix_match and not prefix_match.group(2).strip() and next_is_wrapped:
+                character = prefix_match.group(1).split(",")[0].strip()
+                quote_ctx = True
+                continue
         if delim:
             msg_type, text = classify_span(delim, text)
         else:
@@ -584,20 +605,43 @@ def content_chunks(content):
 
 def split_multiline_spans(text):
     """An inline `code span` that crosses newlines becomes one wrapped span
-    per line, so the per-line classifier sees each line as dialogue."""
-    def per_line(match):
-        if not match.group(2).strip():
-            # Not a real multi-line span -- two separate single-line spans
-            # (`a`\n`b`) whose closing/opening ticks happen to touch across
-            # the newline, with nothing but the newline itself "inside".
-            # Matching this as one span would consume both real ticks and
-            # leave each line's quote unclosed. Leave it untouched so each
-            # line keeps its own pair.
-            return match.group(0)
-        tick = match.group(1)
-        parts = (p.strip() for p in match.group(2).split("\n"))
-        return "\n".join(f"{tick}{p}{tick}" if p else "" for p in parts)
-    return MULTILINE_CODE.sub(per_line, text)
+    per line, so the per-line classifier sees each line as dialogue.
+
+    Ticks are paired strictly left-to-right (1st opens/2nd closes, 3rd
+    opens/4th closes, ...) so a closing tick that already completed one
+    line's self-contained span is never re-examined as the opener of a new
+    span reaching into an unrelated line further down. A regex `.sub()`
+    can't guarantee that -- `re.sub` restarts its search from the *end* of
+    the previous match, but nothing stops the pattern from matching
+    *starting at* a tick that a previous match already consumed as its
+    close, which is exactly what let `Squina: `"..."`\\nEmmett: `"..."``
+    (two complete, independent single-line spans) get mispaired as one
+    fake span reaching from the first line's closing tick to the second
+    line's opening tick, stranding the second line's own quote unwrapped
+    and unattributed."""
+    ticks = list(TICK_RUN.finditer(text))
+    out = []
+    pos = 0
+    i = 0
+    while i < len(ticks):
+        open_m = ticks[i]
+        close_j = next((j for j in range(i + 1, len(ticks)) if ticks[j].group() == open_m.group()), None)
+        if close_j is None:
+            i += 1
+            continue
+        close_m = ticks[close_j]
+        span_text = text[open_m.end():close_m.start()]
+        if "\n" in span_text:
+            out.append(text[pos:open_m.start()])
+            tick = open_m.group()
+            parts = (p.strip() for p in span_text.split("\n"))
+            out.append("\n".join(f"{tick}{p}{tick}" if p else "" for p in parts))
+            pos = close_m.end()
+        # Advance past this pair either way -- close_m must never be
+        # reconsidered as a fresh opener, which is the mispairing bug above.
+        i = close_j + 1
+    out.append(text[pos:])
+    return "".join(out)
 
 
 def embed_to_json(embed):
@@ -622,7 +666,7 @@ def embed_to_json(embed):
     return out
 
 
-def convert_message(msg, meta, episode_number, usernames, bots, cast_names):
+def convert_message(msg, meta, episode_number, usernames, bots, cast_names, persona_timeline):
     """One Discord export message -> a list of API messages (zero, one, or
     several — a multi-line message, a mixed dialogue/action line, or one with
     both text and an embed can expand to more than one)."""
@@ -638,7 +682,7 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names):
     out = []
     character = cast_character(meta, player, episode_number)
 
-    def emit_line(msg_type, text, line_character):
+    def emit_line(msg_type, text, line_character, persona_override=None):
         if any(s in text for s in DROP_CHARACTER_CONTAINING) or line_character in DROP_CHARACTER_NAMES:
             line_character = None
         for needle, forced in FORCE_CHARACTER_CONTAINING:
@@ -663,6 +707,17 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names):
         if line_character == "Dread" and episode_number >= DREAD_MERGE_EPISODE:
             line_character = "Sanya Dreadflower"
         line_character = NAME_ALIASES.get(line_character, line_character)
+        # persona_override (e.g. the Ravens-fence prefix, which names the
+        # persona directly) always wins over the timeline lookup; otherwise
+        # ask the timeline what's active for this character right now. Must
+        # run before the OTHER/COMMAND blanking below, since resolve()
+        # advances timeline state chronologically and needs to see every
+        # line addressed to this character, not just the ones that end up
+        # carrying an attribution.
+        line_persona = (
+            persona_override if persona_override is not None
+            else persona_timeline.resolve(line_character, text)
+        )
         # FR-MSG-4: a quote needs a speaker
         if msg_type == "QUOTE" and not line_character:
             msg_type = "OTHER"
@@ -671,9 +726,11 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names):
         # don't let them carry the ambient default PC as a tagged speaker.
         if msg_type in ("OTHER", "COMMAND"):
             line_character = None
+            line_persona = None
         out.append({
             "player": player,
             "character": line_character,
+            "persona": line_persona,
             "timestamp": timestamp,
             "type": msg_type,
             "text": text,
@@ -701,15 +758,21 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names):
                         # decorative symmetry, not content) -- drop it.
                         if len(text) > 1 and text[-1] == prefix:
                             text = text[:-1].strip()
+                        line_persona_override = None
                         if player == "Trey":
                             line_character = RAVENS_PREFIXES[prefix]
                         elif player == "Zander" and prefix in VEC_HOSTED_RAVENS_PREFIXES:
+                            # The prefix names the persona directly (Vec
+                            # speaking through Marv's or Sascha's body) --
+                            # stronger and more precise than a personaTimeline
+                            # episode/anchor lookup, so it wins outright.
                             line_character = "Vec"
+                            line_persona_override = RAVENS_PREFIXES[prefix]
                         else:
                             # Anomaly: this player/prefix combination isn't in
                             # the confirmed Vec-hosts chronology -- don't guess.
                             line_character = None
-                        emit_line("QUOTE", text, line_character)
+                        emit_line("QUOTE", text, line_character, persona_override=line_persona_override)
                     else:
                         emit_line("OTHER", line, character)
                 continue
@@ -739,6 +802,7 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names):
         out.append({
             "player": player,
             "character": None,
+            "persona": None,
             "timestamp": timestamp,
             "type": "EMBED",
             "text": json.dumps(embed_json, ensure_ascii=False),
@@ -755,11 +819,12 @@ def convert_file(json_file, meta, episode):
     bots = set(meta.get("bots", []))
     cast_names = {name for spans in meta.get("cast", {}).values() for name in spans.values()}
     episode_number = episode["episode_number"]
+    persona_timeline = PersonaTimeline(meta, episode_number)
 
     messages = []
     played_date = None
     for msg in export.get("messages", []):
-        for out_msg in convert_message(msg, meta, episode_number, usernames, bots, cast_names):
+        for out_msg in convert_message(msg, meta, episode_number, usernames, bots, cast_names, persona_timeline):
             played_date = played_date or out_msg["timestamp"]
             messages.append(out_msg)
 
