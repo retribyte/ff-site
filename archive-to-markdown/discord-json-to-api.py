@@ -40,6 +40,15 @@ Messages from a bot author (author.isBot) are always BOT_RESPONSE, split one
 per non-empty content line. Embeds (embeds[]) become EMBED messages, one per
 embed, shaped {title?, description[], footer?} per the site's embed reader.
 RecipientAdd/RecipientRemove system messages are dropped.
+
+An episode's meta["messageBlacklist"] (optional, list[int]) skips messages by
+messageNo -- their 1-based position in this script's own *converted* output
+for that episode, matching the site's `messageNo` (same numbering as
+GET /episodes/:title/messages/:messageNo and the archive DB column) rather
+than raw position in the Discord export. This never touches the source
+export file; it only omits entries from the emitted episode JSON, so it's
+safe to use for dropping table talk / OOC lines from a direct (non-markdown)
+import without any lossy edit to the archive itself.
 """
 
 import glob
@@ -132,6 +141,7 @@ NAME_ALIASES = {
     "Emmett": "Emmett Tawfeek",
     "Seth": "Seth Im'Kin'ki",
     "Chomsky": "Victor Chomsky",
+    "Zach": "Zacharias Smith",
     "Dutch": "Dutch Elkins",
     "Dutchina": "Dutch Elkins",
     "Bellow": "Bellow Brightlight",
@@ -368,6 +378,19 @@ DROP_CHARACTER_NAMES = (
     "Morra in FF2",
 )
 
+# Plain third-person action narration typed as its own standalone line with
+# zero markdown (no `quote`/*action* wrapping at all) -- classify_line's
+# "plain line -> OTHER" default (deliberately conservative, since most
+# unwrapped standalone lines really are off-topic chatter) can't tell these
+# apart from genuine noise by text pattern alone; matched by known content
+# instead, same approach as FORCE_CHARACTER_CONTAINING.
+FORCE_ACTION_CONTAINING = (
+    "Dutch barges in the waiting room doors.",
+    "Dutch shuffles towards the receptionist, clearly hiding something in his coat.",
+    "Dutch ignores the receptionist and shuffles over to Chomsky, almost falling over before plopping down right next to him.",
+    "Dutch busts out laughing and pats Chomsky on the back a couple times.",
+)
+
 # Trey and Zander voice the Ravens (an antagonist faction) entirely through
 # colored code-fence formatting -- never `Name`: or `"quoted"` text -- since
 # that's the only way Discord lets you color a line. Each fence's leading
@@ -574,7 +597,16 @@ def classify_line(line, character, cast_names, quote_ctx=False):
             msg_type, text = classify_span(delim, text)
         else:
             text = clean_inline(text.strip("`"))
-            msg_type = "QUOTE" if quote_ctx else "OTHER"
+            # A plain segment on a line that also has a wrapped span (that's
+            # how it got here -- see the standalone-line branch above for
+            # lines with none) is prose accompanying that dialogue/action,
+            # not off-topic chatter -- e.g. "Doc pats Emmett on the head for
+            # *way* too long..." -- so it defaults to ACTION rather than
+            # OTHER. Known false positives from this (OOC asides that happen
+            # to share a line with a genuine `backtick`/*asterisk* span, e.g.
+            # a stray `/slash command`) are handled via messageBlacklist in
+            # meta/ff4.json instead of a narrower heuristic here.
+            msg_type = "QUOTE" if quote_ctx else "ACTION"
             if msg_type == "QUOTE":
                 text = unwrap_quotes(text)
         if not text:
@@ -683,6 +715,8 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names, pers
     character = cast_character(meta, player, episode_number)
 
     def emit_line(msg_type, text, line_character, persona_override=None):
+        if msg_type == "OTHER" and any(s in text for s in FORCE_ACTION_CONTAINING):
+            msg_type = "ACTION"
         if any(s in text for s in DROP_CHARACTER_CONTAINING) or line_character in DROP_CHARACTER_NAMES:
             line_character = None
         for needle, forced in FORCE_CHARACTER_CONTAINING:
@@ -828,6 +862,14 @@ def convert_file(json_file, meta, episode):
             played_date = played_date or out_msg["timestamp"]
             messages.append(out_msg)
 
+    blacklist = set(episode.get("messageBlacklist") or [])
+    if blacklist:
+        stale = blacklist - set(range(1, len(messages) + 1))
+        if stale:
+            print(f"  warning: messageBlacklist entries {sorted(stale)} are out of range "
+                  f"(episode has {len(messages)} converted messages) -- ignored, list may be stale")
+        messages = [m for i, m in enumerate(messages, start=1) if i not in blacklist]
+
     return {
         "seasonTitle": meta["seasonTitle"],
         "episode": {
@@ -867,7 +909,9 @@ def emit(json_file, meta, season, episode):
     for msg in payload["messages"]:
         types[msg["type"]] = types.get(msg["type"], 0) + 1
     summary = ", ".join(f"{count} {name}" for name, count in sorted(types.items()))
-    print(f"{json_file} -> {out_file} ({len(payload['messages'])} messages: {summary})")
+    blacklisted = len(episode.get("messageBlacklist") or [])
+    blacklist_note = f", {blacklisted} blacklisted" if blacklisted else ""
+    print(f"{json_file} -> {out_file} ({len(payload['messages'])} messages: {summary}{blacklist_note})")
     return out_file
 
 

@@ -66,145 +66,169 @@
             "title": "Welcome, New Recruits",
             "file_name": "Episode 1",
             "episode_number": 1,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [30, 336, 395, 425, 426, 427, 428, 655, 657, 659]
         },
         {
             "title": "Fun Guy",
             "file_name": "Episode 2",
             "episode_number": 2,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [633, 636, 669, 673, 674, 676, 691, 694, 696, 883, 906, 965, 966]
         },
         {
             "title": "Ambush",
             "file_name": "Episode 3",
             "episode_number": 3,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [1, 14, 126, 267, 354, 553, 554, 830, 862]
         },
         {
             "title": "Blackjack",
             "file_name": "Episode 4",
             "episode_number": 4,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [73, 254, 255, 256, 257, 258, 352, 353, 354, 355, 428, 501, 588, 607, 622, 640, 671, 675, 676, 729, 730, 731, 732, 779, 848, 849, 874, 912, 919, 920, 971, 972, 1010, 1013, 1030]
         },
         {
             "title": "Diplomacy",
             "file_name": "Episode 5",
             "episode_number": 5,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [13, 32, 33, 34, 36, 39, 41, 42, 44, 48, 49, 50, 51, 52, 66, 70, 98, 123, 125, 127, 128, 129, 130, 131, 182, 183, 184, 186, 187, 190, 243, 262, 267, 268, 270, 271, 286, 289, 290, 295, 297, 323, 327, 328, 352, 364, 365, 380, 837, 843, 847, 848, 850, 872, 874, 886, 888, 903, 921, 924, 997, 1052, 1053, 1054, 1055, 1056, 1057, 1058, 1088]
         },
         {
             "title": "Obligatory Shopping Episode",
             "file_name": "Episode 6",
             "episode_number": 6,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [64, 93, 131, 150, 175, 262, 263, 287, 288, 289, 290, 296, 297, 304, 334, 336, 338, 352, 353, 354, 355, 356, 358, 359, 389, 390, 405, 476, 477, 478, 480, 481, 530, 573, 616, 617, 686, 810, 821, 822, 823, 824, 826, 900, 901, 902, 904]
         },
         {
             "title": "Marv Attacks!",
             "file_name": "Episode 7",
             "episode_number": 7,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [16, 17, 44, 45, 46, 106, 120, 257, 265, 266, 267, 387, 428, 441, 443, 457, 527, 649, 736, 738, 740, 741, 742, 743, 747, 771, 803, 910, 947]
         },
         {
             "title": "Don't Be A Shitty Dad",
             "file_name": "Episode 8",
             "episode_number": 8,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [2, 44, 50, 52, 55, 73, 131, 151, 162, 163, 170, 223, 250, 252, 254, 256, 257, 281, 303, 433, 502, 518, 519, 520, 522, 524, 531, 635, 660, 662, 664, 700]
         },
         {
             "title": "Are You Not Entertained?!",
             "file_name": "Episode 9",
             "episode_number": 9,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [99, 152, 299, 300, 314, 426, 434, 486, 519, 520, 617, 712, 715, 718, 791, 792, 794, 803]
         },
         {
             "title": "High Roll On D100",
             "file_name": "Episode 10",
             "episode_number": 10,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [6, 42, 45, 67, 68, 70, 80, 92, 94, 139, 242, 243, 244, 251, 279, 280, 290, 294, 297, 298, 316, 369, 372, 401, 402, 412, 444, 531, 538, 545, 550, 551, 558, 564, 581, 584, 597, 598, 604, 621, 623, 624, 648, 727, 728, 730, 731, 732, 733, 740, 744, 761, 768, 772, 778, 800, 827, 834, 872, 875, 876, 877, 881, 927, 1013, 1014]
         },
         {
             "title": "Wrong Answer",
             "file_name": "Episode 11",
             "episode_number": 11,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [58, 111, 114, 152, 153, 155, 157, 158, 159, 161, 162, 163, 271, 295, 296, 460, 519, 580, 581, 586, 595, 596, 656, 951, 1044, 1045, 1046, 1093]
         },
         {
             "title": "Goblinators",
             "file_name": "Episode 12",
             "episode_number": 12,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [51, 61, 196, 211, 326, 469, 541, 556, 569, 885, 888, 1025, 1026]
         },
         {
             "title": "Tawfeek Residence",
             "file_name": "Side Episode 1",
             "episode_number": 13,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [90, 93]
         },
         {
             "title": "Lights Out",
             "file_name": "Side Episode 2",
             "episode_number": 14,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [2, 8, 9, 10, 11, 12, 24, 25, 33, 34, 35, 48, 49, 50, 51, 93, 99, 120, 125, 126, 137, 151, 164, 165, 185, 198, 199, 200, 201, 213, 214, 238, 248, 249, 250, 251, 252, 253, 324, 325, 326, 327, 328, 342, 346, 347, 348]
         },
         {
             "title": "Sir, This Is A Chilzor's",
             "file_name": "Episode 13",
             "episode_number": 15,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 22, 24, 25, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 43, 101, 102, 103, 170, 237, 247, 252, 390, 482, 513, 558, 559, 564, 652, 662, 664, 666, 667, 668, 671, 683, 684, 685, 686, 687, 688, 689, 711, 714, 715, 716, 717, 718, 719, 798, 799, 800, 801, 806, 859, 863, 864, 877, 938, 940, 941, 942]
         },
         {
             "title": "Crashlanded",
             "file_name": "Episode 14",
             "episode_number": 16,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [10, 19, 20, 34, 53, 62, 63, 64, 70, 89, 113, 128, 139, 151, 165, 166, 167, 168, 171, 172, 173, 181, 184, 185, 186, 188, 193, 194, 207, 208, 209, 229, 239, 271, 272, 354, 357, 474, 475, 476, 478, 481, 540, 546, 568, 569, 618, 630, 642, 665, 715, 815, 821, 885, 888, 907, 916, 917, 918, 919, 920, 921, 922, 929, 930, 963]
         },
         {
             "title": "Don't Weld Yourself",
             "file_name": "Episode 15",
             "episode_number": 17,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [8, 10, 31, 32, 162, 164, 167, 168, 195, 199, 382, 390, 415, 416, 417, 418, 419, 421, 504, 512, 569, 570, 571, 572, 573, 574, 575, 576, 578, 614]
         },
         {
             "title": "Mutiny",
             "file_name": "Episode 16",
             "episode_number": 18,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [7, 10, 81, 91, 114, 154, 159, 208, 324, 350, 368, 384, 405, 406, 414, 434, 446, 772, 773, 1046]
         },
         {
             "title": "Rumble Baby",
             "file_name": "Episode 17",
             "episode_number": 19,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [165, 235, 240, 297, 300, 376, 377, 379, 380, 383, 460, 471, 476, 496, 513, 553, 554, 555, 556, 557, 558, 559, 591, 609, 709, 770, 771, 793, 820, 835, 855, 906, 908, 997, 1109, 1156]
         },
         {
             "title": "Event Horizon",
             "file_name": "Episode 18",
             "episode_number": 20,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [3, 4, 19, 20, 25, 27, 30, 114, 131, 132, 133, 134, 135, 163, 238, 239, 263, 320, 328, 353, 418, 430, 453, 457, 476, 478, 492, 493, 496, 505, 522, 523, 577, 663, 696, 697, 698, 731, 745, 778, 831, 871, 881, 946, 975, 977, 978, 1001, 1013, 1240, 1263]
         },
         {
             "title": "Welcome To Elf Heaven",
             "file_name": "Side Episode 3",
             "episode_number": 21,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [1, 10, 11, 31, 125, 190, 288, 342]
         },
         {
             "title": "Usurper",
             "file_name": "Side Episode 4",
             "episode_number": 22,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [22, 23, 25, 71, 74, 82, 120, 140, 141, 142, 148, 155, 156, 157, 158, 159, 201, 207, 215, 219, 306, 315, 344, 345, 359, 362, 426, 441, 451]
         },
         {
             "title": "Finale",
             "file_name": "Episode 19",
             "episode_number": 23,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [3, 4, 14, 16, 30, 33, 35, 37, 171, 174, 278, 279, 312, 334, 414, 433, 443, 447, 453, 488, 608, 678, 687, 698, 699, 700, 701, 702, 703, 705, 732, 737, 757, 759, 760, 763, 765, 766, 768, 769, 824, 833, 834, 866, 868, 870, 872, 886, 888, 889, 890, 891, 929, 938, 946, 969, 971, 1111, 1134, 1193, 1220, 1285, 1315, 1316, 1342, 1379, 1391, 1435, 1462, 1520]
         },
         {
             "title": "Pilot",
             "file_name": "Test One-shot",
             "episode_number": 0,
-            "short_desc": ""
+            "short_desc": "",
+            "messageBlacklist": [1, 2, 12, 88, 90, 136, 168, 169, 224, 225, 289, 403, 455, 551, 604, 853]
         }
     ]
 }

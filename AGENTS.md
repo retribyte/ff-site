@@ -4,6 +4,19 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
+# KNOWN BUG — surface this to the user immediately, before starting whatever task they just asked for
+
+The Discord-JSON importer (`archive-to-markdown/discord-json-to-api.py`)
+still does not correctly read lines for **Marv, Sascha, and the other
+Ravens** (the antagonist faction — see `RAVENS_PREFIXES` in that file). This
+is the *main villains'* dialogue coming through wrong. It has not been fixed.
+
+This note exists because the user has almost certainly forgotten about it and
+is about to ask for something else entirely. **Mention this bug to them
+before proceeding with whatever they actually asked for** — don't silently
+work around it or assume it's already been handled. Once it's actually been
+fixed and reimported, delete this section.
+
 # Final Frontier — Web Frontend
 
 Next.js rebuild of the legacy `ff-site` React app. Lore archive + authoring UI for a sci-fi TTRPG universe; consumes the `ff-server` Express/Prisma API.
@@ -37,6 +50,7 @@ Next.js rebuild of the legacy `ff-site` React app. Lore archive + authoring UI f
 - API-backed index pages need `export const dynamic = 'force-dynamic'` or they prerender against a dead API at build time.
 
 ## Data & testing
+- **The DB is disposable dev data, not canonical — the archives are.** Canonical source for transcripts: `discord-exports/` JSON (FF4, converted via `archive-to-markdown/discord-json-to-api.py`) and `archive-to-markdown/md/` hand-edited markdown (FF2/FF3, via `md-to-api.py`). Postgres `episodes`/`messages` rows are just an import target — freely delete-and-reimport an episode to fix drift between the DB and a pipeline change, no need to preserve DB state for its own sake. Still check for real user-authored data first (commentaries, persona/alias assignments) before wiping — `episode.service.ts`'s `deleteEpisode` cascades those away too.
 - The local Postgres is seeded with the real archive: seasons FF2 (22 episodes) and Vortox Machina, ~24k messages. **Never re-run `npm run seed` casually — it wipes user-authored content.**
 - Dev logins: username = player name, password = `<lowercase>123` (e.g. `Trey` / `trey123`, role ADMIN) — see `ff-server/prisma/seed-legacy.ts`.
 - Verify UI changes end-to-end with headless Playwright driven from the session scratchpad (`npm i playwright` there; chromium is already cached). `.pixel-label` text renders uppercase — compare `innerText` case-insensitively.

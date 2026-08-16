@@ -54,10 +54,24 @@ DiscordChatExporter HTML  ──ff2.py / ff3.py──▶  markdown  ──md-to-
         // hosts -- Argonian, Llorpus, etc. -- which needed no entry at all)
     },
     "episodes": [
-        { "file_name": "1", "episode_number": 1, "title": "…", "short_desc": "…" }
+        {
+            "file_name": "1", "episode_number": 1, "title": "…", "short_desc": "…",
+            "messageBlacklist": [12, 88, 90]  // optional; see below
+        }
     ]
 }
 ```
+
+`messageBlacklist` (optional, `discord-json-to-api.py` only) drops table talk
+/ OOC lines from a direct Discord-JSON import without editing the source
+export. Entries are **messageNo** — 1-based position in that episode's
+*converted* output (after system messages are dropped and multi-span lines
+are expanded), i.e. the same numbering as `GET
+/episodes/:title/messages/:messageNo` and the DB's `messageNo` column — not
+raw position in the Discord export. It only omits entries from the emitted
+episode JSON; the export file itself is never modified. Out-of-range entries
+are logged as a warning and ignored (a sign the list may be stale against a
+pipeline change) rather than failing the conversion.
 
 `personaTimeline` is keyed by **character**, not player, and is separate
 from `cast` on purpose: `cast` tracks which character a player voices, at
