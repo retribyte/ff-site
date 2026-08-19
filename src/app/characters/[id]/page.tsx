@@ -12,6 +12,7 @@ import { getSessionUser } from '@/lib/auth';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
 import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
+import { renderWikiText, renderWikiList } from '@/lib/wiki';
 import styles from './character.module.scss';
 
 interface Props {
@@ -105,6 +106,28 @@ export default async function CharacterPage({ params }: Props) {
         ]);
     }
 
+    const wiki = character.wiki;
+    if (wiki?.fullname) facts.push(['full name', renderWikiText(wiki.fullname)]);
+    // Wiki-page nicknames — a different concept from the DB Persona "also
+    // known as" chips rendered in the article body below (alternate
+    // presentation eras, not nicknames). Kept as its own block so the two
+    // "aka"-shaped concepts never get visually conflated.
+    if (wiki?.aliases?.length) facts.push(['nicknames', renderWikiList(wiki.aliases)]);
+    if (wiki?.faction) facts.push(['faction', renderWikiText(wiki.faction)]);
+    if (wiki?.birthdate) facts.push(['born', renderWikiText(wiki.birthdate)]);
+    if (wiki?.birthplace) facts.push(['birthplace', renderWikiText(wiki.birthplace)]);
+    if (wiki?.deathdate) {
+        facts.push(['died', renderWikiText(wiki.deathdate)]);
+        if (wiki.deathcause) facts.push(['cause of death', renderWikiText(wiki.deathcause)]);
+    }
+    if (wiki?.relationship?.length) facts.push(['relationships', renderWikiList(wiki.relationship)]);
+    if (wiki?.planet?.length) facts.push(['planet', renderWikiList(wiki.planet)]);
+    if (wiki?.sex) facts.push(['sex', renderWikiText(wiki.sex)]);
+    if (wiki?.height) facts.push(['height', renderWikiText(wiki.height)]);
+    if (wiki?.weight) facts.push(['weight', renderWikiText(wiki.weight)]);
+    if (wiki?.hair) facts.push(['hair', renderWikiText(wiki.hair)]);
+    if (wiki?.eyes) facts.push(['eyes', renderWikiText(wiki.eyes)]);
+
     return (
         <main className={styles.main} style={style}>
             <nav className={styles.breadcrumb}>
@@ -123,6 +146,9 @@ export default async function CharacterPage({ params }: Props) {
                         // Name-less personas (look-only: a new avatar/color
                         // with the same name) are presentation plumbing, not
                         // a lore fact — only named personas show as chips.
+                        // Distinct from the infobox's "nicknames" row (wiki
+                        // aliases) — these are alternate presentation eras,
+                        // not nicknames.
                         const namedPersonas = character.personas?.filter(personaHasName) ?? [];
                         return (
                             namedPersonas.length > 0 && (

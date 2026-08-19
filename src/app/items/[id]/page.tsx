@@ -9,6 +9,7 @@ import { getSessionUser } from '@/lib/auth';
 import SignalLost from '@/components/SignalLost';
 import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
+import { renderWikiText } from '@/lib/wiki';
 import styles from './itemDetail.module.scss';
 
 interface Props {
@@ -54,6 +55,21 @@ export default async function ItemPage({ params }: Props) {
 
     const meta = ITEM_TYPE_META[item.itemType];
 
+    const facts: [string, React.ReactNode][] = [['type', meta.label]];
+    if (item.creator) facts.push(['recorded by', item.creator.username]);
+
+    const wiki = item.wiki;
+    if (wiki?.rarity) facts.push(['rarity', renderWikiText(wiki.rarity)]);
+    if (wiki?.use) facts.push(['use', renderWikiText(wiki.use)]);
+    if (wiki?.damage) facts.push(['damage', renderWikiText(wiki.damage)]);
+    if (wiki?.armor) facts.push(['armor', renderWikiText(wiki.armor)]);
+    if (wiki?.value) facts.push(['value', renderWikiText(wiki.value)]);
+    if (wiki?.market_value_free) facts.push(['market value', renderWikiText(wiki.market_value_free)]);
+    if (wiki?.faction) facts.push(['faction', renderWikiText(wiki.faction)]);
+    if (wiki?.character) facts.push(['used by', renderWikiText(wiki.character)]);
+    if (wiki?.age) facts.push(['age', renderWikiText(wiki.age)]);
+    if (wiki?.location) facts.push(['location', renderWikiText(wiki.location)]);
+
     return (
         <main className={styles.main} style={{ '--type': meta.color } as React.CSSProperties}>
             <nav className={styles.breadcrumb}>
@@ -87,16 +103,12 @@ export default async function ItemPage({ params }: Props) {
                         )}
                     </div>
                     <dl className={styles.facts}>
-                        <div className={styles.fact}>
-                            <dt>type</dt>
-                            <dd>{meta.label}</dd>
-                        </div>
-                        {item.creator && (
-                            <div className={styles.fact}>
-                                <dt>recorded by</dt>
-                                <dd>{item.creator.username}</dd>
+                        {facts.map(([label, value]) => (
+                            <div key={label} className={styles.fact}>
+                                <dt>{label}</dt>
+                                <dd>{value}</dd>
                             </div>
-                        )}
+                        ))}
                     </dl>
                 </aside>
             </div>

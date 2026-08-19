@@ -29,6 +29,28 @@ export interface Character {
     species?: Species;
     creator?: PublicUser;
     personas?: Persona[];
+    wiki?: WikiCharacterData | null;
+}
+
+// Bucket data pulled from the wiki's Character infobox, cached server-side
+// (ff-server's WikiCache). All fields optional — only present if the wiki
+// page actually set them. Unrelated to the DB `Persona` concept below:
+// `aliases` here is wiki-page nicknames, not presentation eras.
+export interface WikiCharacterData {
+    fullname?: string;
+    aliases?: string[];
+    faction?: string;
+    birthdate?: string;
+    birthplace?: string;
+    deathdate?: string;
+    deathcause?: string;
+    relationship?: string[];
+    planet?: string[];
+    sex?: string;
+    height?: string;
+    weight?: string;
+    hair?: string;
+    eyes?: string;
 }
 
 // A way a character is presented for some stretch of the archive: a
@@ -54,6 +76,21 @@ export interface Species {
     creatorId: number;
     slug: string;
     Character?: Character[];
+    wiki?: WikiSpeciesData | null;
+}
+
+// Bucket data pulled from the wiki's Species infobox, cached server-side.
+export interface WikiSpeciesData {
+    union_name?: string;
+    faction?: string;
+    lifespan?: string;
+    diet?: string;
+    procreation_method?: string;
+    habitat?: string;
+    homeworld?: string;
+    religion?: string;
+    government?: string;
+    technology_progression?: string;
 }
 
 export interface Season {
@@ -179,4 +216,20 @@ export interface Item {
     creatorId: number;
     slug: string;
     creator?: PublicUser;
+    wiki?: WikiItemData | null;
+}
+
+// Bucket data pulled from the wiki's Item infobox, cached server-side.
+export interface WikiItemData {
+    value?: string;
+    market_value_free?: string;
+    faction?: string;
+    rarity?: string;
+    type?: string;
+    use?: string;
+    damage?: string;
+    armor?: string;
+    character?: string;
+    age?: string;
+    location?: string;
 }
