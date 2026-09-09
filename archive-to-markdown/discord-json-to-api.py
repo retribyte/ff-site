@@ -391,6 +391,17 @@ FORCE_ACTION_CONTAINING = (
     "Dutch busts out laughing and pats Chomsky on the back a couple times.",
 )
 
+# "Marv. Take care of them." (Ep 3, Ambush) is a bare, unlabeled code fence
+# with no Ravens-prefix character -- unlike every other Marv/Sascha/Odran/
+# Ravens Leader line, which is voiced via a `+`/`[`/`-`/`>` prefix inside a
+# diff/ini/md fence (see RAVENS_PREFIXES below), so it falls into the
+# fenced-code catch-all as a bare OTHER line instead. Confirmed intended as
+# Ravens Leader dialogue despite the missing prefix; matched by content like
+# FORCE_ACTION_CONTAINING above.
+FORCE_QUOTE_CONTAINING = (
+    ("Marv. Take care of them.", "Ravens Leader"),
+)
+
 # Trey and Zander voice the Ravens (an antagonist faction) entirely through
 # colored code-fence formatting -- never `Name`: or `"quoted"` text -- since
 # that's the only way Discord lets you color a line. Each fence's leading
@@ -717,6 +728,12 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names, pers
     def emit_line(msg_type, text, line_character, persona_override=None):
         if msg_type == "OTHER" and any(s in text for s in FORCE_ACTION_CONTAINING):
             msg_type = "ACTION"
+        if msg_type == "OTHER":
+            for needle, forced in FORCE_QUOTE_CONTAINING:
+                if needle in text:
+                    msg_type = "QUOTE"
+                    line_character = forced
+                    break
         if any(s in text for s in DROP_CHARACTER_CONTAINING) or line_character in DROP_CHARACTER_NAMES:
             line_character = None
         for needle, forced in FORCE_CHARACTER_CONTAINING:
