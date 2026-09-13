@@ -1,3 +1,5 @@
+import re
+
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
@@ -20,6 +22,15 @@ player_list = {
     "FF 8Ball": "FFBot",
 }
 
+# Discord nicknames aren't unique — GheeseEmpty (Maxwell) was also nicknamed
+# "Zander" for part of FF3, colliding with lastingParadox's actual "Zander"
+# nickname. data-user-id is the stable per-account identifier, so resolve
+# through it first and only fall back to the nickname-keyed player_list above
+# when a user's id isn't one of these known collisions.
+player_list_by_user_id = {
+    "185741003209179136": "Maxwell",  # GheeseEmpty, nicknamed "Zander" in FF3
+}
+
 character_list = {
     "Zander": "Emmett",
     "Trey": "Garrick",
@@ -35,7 +46,23 @@ character_list = {
     "Preston": "Volentina",
     "Hunter": "Rachell",
     "Charles": "Vargas",
+    "Maxwell": "Mateo",
 }
+
+
+# Brody/Brakia's "D: ..." is Sanya's Dread persona talking, not Sanya — call it
+# out with the same backtick speaker-override convention FF2 uses for Dread
+# (`` `Dread`: line ``), rather than leaving the bare "D:" text as-is. Discord
+# also shows these wrapped in stray "~"s (a player-typed "telepathic voice"
+# marker); once the D: is called out as `Dread`, the tildes are redundant.
+DREAD_PREFIX = re.compile(r"(^|[~*])D:\s*")
+
+
+def apply_dread_convention(text, author):
+    if author != "Brody":
+        return text
+    text = DREAD_PREFIX.sub(r"\1`Dread`: ", text)
+    return text.replace("~", "")
 
 
 def parse_timestamp(timestamp_str):
@@ -64,14 +91,21 @@ def extract_messages(html_content):
     combined_message = ""
 
     for group in message_groups:
-        author = player_list.get(
-            (
-                group.find(class_="chatlog__author-name").get_text(strip=True)
-                if group.find(class_="chatlog__author-name")
-                else "Unknown"
-            ),
-            "Unknown",
+        author_name_element = group.find(class_="chatlog__author-name")
+        author_user_id = (
+            author_name_element.get("data-user-id") if author_name_element else None
         )
+        if author_user_id in player_list_by_user_id:
+            author = player_list_by_user_id[author_user_id]
+        else:
+            author = player_list.get(
+                (
+                    author_name_element.get_text(strip=True)
+                    if author_name_element
+                    else "Unknown"
+                ),
+                "Unknown",
+            )
         timestamp = parse_timestamp(
             group.find(class_="chatlog__timestamp").get_text(strip=True)
             if group.find(class_="chatlog__timestamp")
@@ -108,13 +142,37 @@ def extract_messages(html_content):
                         content += preserve_whitespace_text
 
                 else:
+                    # Direct children only (not findChildren()'s recursive
+                    # descendants) so that NavigableString text nodes sitting
+                    # next to <em>/mention/img/etc. siblings are visited too —
+                    # findChildren() only returns Tags, silently dropping any
+                    # plain text that isn't wrapped in an element.
                     preserve_whitespace_children = markdown_container.find(
                         class_="preserve-whitespace"
-                    ).findChildren()
+                    ).contents
                     for element in preserve_whitespace_children:
-                        if element.name == "em":
-                            temp = element.get_text().strip("\n")
-                            if previous_element != "em":
+                        if isinstance(element, str):
+                            stripped = apply_dread_convention(
+                                element.strip("\n"), author
+                            )
+                            content += stripped
+                            # A bare whitespace text node (e.g. the "\n" Discord
+                            # inserts between an <em> action and a following
+                            # pre--inline quote) shouldn't reset previous_element —
+                            # that would suppress the separator the next element
+                            # inserts based on what actually preceded it.
+                            if stripped.strip():
+                                previous_element = "other"
+                        elif element.name == "em":
+                            temp = apply_dread_convention(
+                                element.get_text().strip("\n"), author
+                            )
+                            # Only break onto a new paragraph if there's
+                            # something before it to separate from — content
+                            # is still "" when this em is the first thing in
+                            # the message, and a leading "\n\n" there just
+                            # left two blank lines under the message header.
+                            if previous_element != "em" and content:
                                 content += "\n\n"
                             content += f"*{temp}*"
                             previous_element = "em"
@@ -125,7 +183,7 @@ def extract_messages(html_content):
                             if previous_element == "em":
                                 content += "\n"
                             character_name = character_list.get(author, "Person")
-                            content += f"> {character_name}: {temp}"
+                            content += f"> `{character_name}`: {temp}"
                             previous_element = "pre--inline"
                         else:
                             content += element.get_text().strip("\n")
@@ -133,13 +191,20 @@ def extract_messages(html_content):
                     if len(preserve_whitespace_children) == 0:
                         content += markdown_container.get_text().strip("\n")
 
+                # Discord's "(edited)" marker is a sibling of preserve-whitespace,
+                # not a descendant of it — carry it through as its own line so
+                # md-to-api.py's existing "bare (edited) lines are dropped" rule
+                # still gets a line to drop.
+                if markdown_container.find(class_="chatlog__edited-timestamp"):
+                    content += "\n(edited)"
+
             content = content.replace("’", "'")
             # If
 
             if combine_previous:
                 combined_message += "\n" + content
             else:
-                if combined_message:
+                if combined_message.strip():
                     messages.append(
                         {
                             "author": previous_author,
@@ -155,7 +220,7 @@ def extract_messages(html_content):
             previous_timestamp = timestamp
 
     # Adding the last message if any
-    if combined_message:
+    if combined_message.strip():
         messages.append(
             {
                 "author": previous_author,
@@ -183,7 +248,8 @@ def parse_html_to_markdown(file_path):
 
 
 # Example usage:
-markdown_content = parse_html_to_markdown("./ff-archive/ff3.html")
+markdown_content = parse_html_to_markdown("/home/trey/Documents/final-frontier/ff-site/ff-site-old/archive-to-markdown/ff-archive/ff3.html")
+markdown_content = re.sub(r"\n\(edited\)", "", markdown_content)
 
 with open("./md/ff3/ff3.md", "w") as file:
     file.write(markdown_content)
