@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { useSession } from '@/components/auth/SessionProvider';
+import SiteSearch from './SiteSearch';
 import styles from './navbar.module.scss';
 
 const links = [
@@ -70,6 +71,8 @@ export default function Navbar() {
                     </Link>
                 ))}
             </nav>
+
+            <SiteSearch />
 
             <SessionArea />
 

@@ -18,7 +18,12 @@
         "Valentina": "#FFD080",
         "Vargas": "#FFFFFF",
         "Wes": "#BB54FF",
-        "KYL300": "#a66ade"
+        "KYL300": "#a66ade",
+        "Bellow": "#2D377A",
+        "Zion": "#00D2F4",
+        "Dutch": "#0000FF",
+        "Morra": "#FF00FF",
+        "Edwin": "#A9BA5A"
     },
     "light": {
         "Asier": "#A69C66",
@@ -39,6 +44,11 @@
         "Valentina": "#BF9000",
         "Vargas": "#000000",
         "Wes": "#77704A",
-        "KYL300": "#50207d"
+        "KYL300": "#50207d",
+        "Bellow": "#2D377A",
+        "Zion": "#00D2F4",
+        "Dutch": "#0000FF",
+        "Morra": "#FF00FF",
+        "Edwin": "#274E13"
     }
 }

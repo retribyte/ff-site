@@ -91,6 +91,17 @@ export function findEpisodeBySlug(episodes: Episode[], slug: string): Episode | 
     );
 }
 
+/** Looks up an Episode by its title across every season — for callers (e.g.
+ * a site-wide search result) that only have `episodeTitle`, not a season
+ * context, and need a full Episode to build a deep link via `lineUrl`. */
+export function episodesByTitle(seasons: Season[]): Map<string, Episode> {
+    const map = new Map<string, Episode>();
+    for (const season of seasons) {
+        for (const ep of season.episodes ?? []) map.set(ep.title, ep);
+    }
+    return map;
+}
+
 /** Deep link to one line of an episode. */
 export function lineUrl(
     episode: EpisodeSlugInput & Pick<Episode, 'seasonTitle'>,
