@@ -15,6 +15,7 @@ player_list = {
     "Sib": "Silas",
     "Multi": "Bill",
     "Michael": "Michael",
+    "!Nick Prime!": "Nick",  # Mr.WobblyShark (Nick, Lodas in FF2), guest in FF3 ep 5
     "ScootyDooty": "Preston",
     "Hunter": "Hunter",
     "Tatsu": "FFBot",

@@ -26,7 +26,7 @@
             "1": "Emmett Tawfeek"
         },
         "Maxwell": {
-            "1": "Mateo"
+            "1": "Mateo Krovak"
         },
         "Trey": {
             "1": "Garrick"
@@ -123,5 +123,18 @@
             "episode_number": 8,
             "short_desc": ""
         }
-    ]
+    ],
+    "personaTimeline": {
+        "Volentina Constantini": [
+            {
+                "from_episode": 2,
+                "persona": "Volonta"
+            },
+            {
+                "from_episode": 5,
+                "persona": null,
+                "anchor_contains": "I told you I'd be back"
+            }
+        ]
+    }
 }

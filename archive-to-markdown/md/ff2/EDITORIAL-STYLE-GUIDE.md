@@ -79,7 +79,7 @@ Every line in an episode is one of the following.
 | Bot reply | plain, one line | `🎱 \| Don't count on it, Zander.` |
 | Invented-language line + translation | glyph/gibberish dialogue, then `_<Language> Translation: text_` | `> Penes apis trous Matieu, camos sumtim!` / `_Martian Translation: Matieu get your head out of your pants…_` (also Zielic, Squoatian) |
 | In-world written note / message | `<embed>` / `<description>` … `</description>` / `</embed>`, one line per text line; `md-to-api.py` imports it as an EMBED message | Emmett's apology note in `14-crash-and-burn.md` |
-| Editor summary (rare, 3 uses) | `🐐 \| text` under the bot's header | `🐐 \| For the sake of readability, Bagelwrecker and Tom Thompson ask the 8ball back and forth… about twelve times until the 8ball finally says no to Bagelwrecker.` |
+| GM narration / editor summary | `🐐 \| text` under the bot's header. FFBot/Tatsumaki is the GM, so world and scene narration that isn't an action by the block owner's character goes here: establishing beats, scene cuts, ambient events, GM rulings and summaries. Only a handful of uses in FF2; FF3 uses it for all GM narration. | `🐐 \| For the sake of readability, Bagelwrecker and Tom Thompson ask the 8ball back and forth… about twelve times until the 8ball finally says no to Bagelwrecker.` |
 
 **Zielic** (Garrick's spectre language, also spoken by Chomsky) isn't raw
 gibberish. The raw log has either keyboard mash or a plain message. Editors
