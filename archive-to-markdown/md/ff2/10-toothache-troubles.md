@@ -185,7 +185,7 @@ t!8ball Does Emmett get a pink lemonade out of the fridge and chill in the loung
 
 > What do you expect from those who worship a "god emperor"?
 
-\*Seth laughs and puts a friendly arm around Emmett.
+_Seth laughs and puts a friendly arm around Emmett._
 
 **Brakia** _(28-Jul-18 05:14 PM)_
 
@@ -618,7 +618,7 @@ _The sounds of Jim being choked startles Emmett, causing him to spit out some le
 
 **Bagelwrecker** _(28-Jul-18 05:25 PM)_
 
-> Chill, sleaze.
+> Chill, binger.
 
 **Zander** _(28-Jul-18 05:25 PM)_
 
@@ -692,7 +692,7 @@ t!8ball Does Ibraxas uppercut Lodas with his robot arm, knocking him out?
 
 _Seth nods profusely, purposefully entering the hallway to be antagonistic._
 
-> Big baby have tantrum, like sleazeball.
+> Big baby have tantrum, like binger.
 
 **Mr.WobblyShark** _(28-Jul-18 05:26 PM)_
 
@@ -798,7 +798,7 @@ t!8ball Does Lodas break off one of Jim's hands and start slapping him with it?
 
 **Bagelwrecker** _(28-Jul-18 05:30 PM)_
 
-> WAAAAAAAAAAAAAAAAAAA MY NAME LODAS I BIG FAGGOT THAT CRY LIKE BABY AND JERK OFF TO CYBERDOG WHILE CRYING
+> WAAAAAAAAAAAAAAAAAAA MY NAME LODAS I BIG BINGER THAT CRY LIKE BABY AND JERK OFF TO CYBERDOG WHILE CRYING
 
 **Brakia** _(28-Jul-18 05:30 PM)_
 

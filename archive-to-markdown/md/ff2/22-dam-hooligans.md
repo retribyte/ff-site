@@ -1646,7 +1646,7 @@ _Garrick goes through the dam, to the other side and hears extremely muffled yel
 **Jelsafan0** _(07-Oct-18 03:41 PM)_
 
 > `Old Ottori Woman`: GET OUT OF MY HOUSE!
-> _`Old Ottori Woman`: The ottori chitters angrily._
+_`Old Ottori Woman`: The ottori chitters angrily._
 
 **RPretribution** _(07-Oct-18 03:41 PM)_
 
@@ -2544,7 +2544,7 @@ _Chomsky runs off from Seth and Garrick to find anyone else in the crew with san
 
 _Seth puts a hand to his chest and jutts the other one forward romantically._
 
-> Don't worry my future in-laws I am planning on marrying your daughter! My twin just was being a retard.
+> Don't worry my future in-laws I am planning on marrying your daughter! My twin just was being a stupidloid.
 
 **Jelsafan0** _(07-Oct-18 04:16 PM)_
 

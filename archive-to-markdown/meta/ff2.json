@@ -14,7 +14,8 @@
         "Mr.WobblyShark": "Nick",
         "Platinum_Pathos": "Rashidi",
         "Jelsafan0": "Lili",
-        "WatchfulDrake": "Bill"
+        "WatchfulDrake": "Bill",
+        "Deyner": "Deyner"
     },
     "bots": [
         "FF 8 Ball"
@@ -25,7 +26,8 @@
         },
         "Silas": {
             "1": "Laav Rokk",
-            "13": "KYL300"
+            "13": "KYL300",
+            "25": "Chase Sandeep"
         },
         "Trey": {
             "1": "Garrick"
@@ -76,6 +78,9 @@
         },
         "Bill": {
             "1": "Hector"
+        },
+        "Deyner": {
+            "20": "Deyner Revathen"
         }
     },
     "episodes": [
@@ -210,6 +215,24 @@
             "file_name": "dam-hooligans",
             "episode_number": 22,
             "short_desc": "The crew pillages a local village on Rivalri-2 and finds themselves in a bit of a pickle."
+        },
+        {
+            "title": "Bark and Bite",
+            "file_name": "bark-and-bite",
+            "episode_number": 23,
+            "short_desc": "Relaxing from their recent escapades, the crew pulls a prank that goes horribly wrong."
+        },
+        {
+            "title": "Feel the Heat",
+            "file_name": "feel-the-heat",
+            "episode_number": 24,
+            "short_desc": "Upon finding a map, the crew heads to a planet of demons and finds themselves betrayed."
+        },
+        {
+            "title": "Lap of the Gods",
+            "file_name": "lap-of-the-gods",
+            "episode_number": 25,
+            "short_desc": "After losing another crew member, tensions rise, and the crew finds themselves in a battle between gods."
         }
     ]
 }

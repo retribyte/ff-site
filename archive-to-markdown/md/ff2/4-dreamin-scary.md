@@ -923,7 +923,7 @@ _Emmett raises an eyebrow._
 
 **Enchantingtable2013** _(24-Jun-18 09:57 PM)_
 
-@Magic8Ball Is this game retarded?
+@Magic8Ball Is this game stupid?
 
 **Magic8Ball** _(24-Jun-18 09:57 PM)_
 

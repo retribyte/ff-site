@@ -521,7 +521,7 @@ _Jim rubs his hands together maliciously._
 
 _Seth scrunches up his face._
 
-> That's retarded.
+> That's stupid.
 
 **Arky** _(27-Jun-18 04:01 PM)_
 
@@ -985,7 +985,7 @@ _Jim furiously adds fake charges of rape under Seth's name into the police syste
 
 _Seth slaps Jim lightly, tired of hearing about Earth._
 
-> Whatever, your planet's laws are retarded.
+> Whatever, your planet's laws are stupid.
 
 **Zander** _(27-Jun-18 04:23 PM)_
 

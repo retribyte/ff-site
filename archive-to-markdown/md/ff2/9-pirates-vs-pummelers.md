@@ -1743,7 +1743,7 @@ _Lodas feels his helmet and cracks his fingers, furious._
 
 **Bagelwrecker** _(21-Jul-18 06:15 PM)_
 
-> Fuck you, sleazeball!
+> Fuck you, binger!
 
 **Brakia** _(21-Jul-18 06:15 PM)_
 
@@ -1757,7 +1757,7 @@ _Lodas tosses away his shotgun and grabs a minigun._
 
 **Bagelwrecker** _(21-Jul-18 06:15 PM)_
 
-> Your emperor is also a sleazeball.
+> Your emperor is also a binger.
 > I'll gas him.
 
 _Seth takes out his watch and plays a fart sound effect from it._
@@ -1847,7 +1847,7 @@ _Lodas's face becomes very wide, imitating the following ascii art face: "------
 
 **Bagelwrecker** _(21-Jul-18 06:18 PM)_
 
-> Nice fleshlight, sleazeball.
+> Nice fleshlight, binger.
 
 **Zander** _(21-Jul-18 06:18 PM)_
 

@@ -564,7 +564,7 @@ Yeah, I'll allow it.
 > `Garrick`: Thanks. What's on the news?
 
 **Sean** *(22-Apr-20 03:15 PM)*
-> `Seth`: Good morning retards
+> `Seth`: Good morning stupidloids
 
 **Brody** *(22-Apr-20 03:15 PM)*
 > `Dread`: Sorry. I guess that my dreams cross over into yours.
@@ -1172,7 +1172,7 @@ Outlook good.
 > `Emmett`: You pound any special pussy?
 
 **Sean** *(22-Apr-20 03:44 PM)*
-> `Seth`: No, none of them were retarded.
+> `Seth`: No, none of them were stupid.
 
 **Zander** *(22-Apr-20 03:44 PM)*
 > `Emmett`: Also, thank you Seth.
@@ -2955,7 +2955,7 @@ No
 *Realizing who he's dealing with, Wes starts thinking of a way he can get out of this mess.*
 
 **Zander** *(22-Apr-20 05:05 PM)*
-> `Emmett`: He's our retarded captain.
+> `Emmett`: He's our stupid captain.
 
 **Sean** *(22-Apr-20 05:05 PM)*
 > `Seth`: YOU ATE ALL MY ARTISNAL GRASS, THE ONE THAT YOU MUST ONLY SMOKE
@@ -7446,7 +7446,7 @@ Outlook good 🎱
 Volonta peeks his head out.> `Volentina`: Yes?
 
 **Zander** *(18-May-20 04:57 PM)*
-> `Emmett`: I swear, the people on this ship are retarded sometimes.
+> `Emmett`: I swear, the people on this ship are stupid sometimes.
 
 **Brody** *(18-May-20 04:58 PM)*
 *Sanya has jusst about fuckinn had it*
@@ -13095,7 +13095,7 @@ No, but something that the person before you decides upon happens.
 > `Emmett`: So, there's living water puddle and.... 8ball man.
 
 **Sean** *(26-May-20 04:50 PM)*
-> `Seth`: Its me retard.
+> `Seth`: Its me stupidloid.
 
 **Rashidi** *(26-May-20 04:50 PM)*
 *Dakari lounges on his own couch in the living room*
@@ -17236,7 +17236,7 @@ Outlook bad.
 yes
 
 **Sean** *(04-Jun-20 04:11 PM)*
-And I said 8ball not 8ball man, retard.
+And I said 8ball not 8ball man, stupidloid.
 
 **Zander** *(04-Jun-20 04:12 PM)*
 *Emmett sighs.* 
@@ -18406,7 +18406,7 @@ ok.
 *Sanya notices the rustling, and slowly pulls out her knife.*
 
 **Zander** *(04-Jun-20 05:08 PM)*
-> `Emmett`: "You think I'm retarded?"
+> `Emmett`: "You think I'm stupid?"
 
 **Brody** *(04-Jun-20 05:08 PM)*
 > `Sanya`: You wouldn't want to make a scene, would you?
@@ -18443,7 +18443,7 @@ She turns her comms back up to talk with those back on the ship> `Volentina`: Uh
 > `Vargas`: That was fun.
 
 **Brody** *(04-Jun-20 05:10 PM)*
-> `Sanya`: While my crew maybe be retarded, i assure you, i am a trained assassin.
+> `Sanya`: While my crew maybe be stupid, i assure you, i am a trained assassin.
 
 **Brody** *(04-Jun-20 05:10 PM)*
 > `Sanya`: So do not test me.

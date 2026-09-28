@@ -1101,7 +1101,7 @@ t!8ball Do I also set up spycams?
 
 **Zander** _(23-Jun-18 08:17 PM)_
 
-> Hey guys? I think Jacob is suffering even worse from mental retardation.
+> Hey guys? I think Jacob is suffering an even worse case of stupidloidism.
 
 **Enchantingtable2013** _(23-Jun-18 08:17 PM)_
 

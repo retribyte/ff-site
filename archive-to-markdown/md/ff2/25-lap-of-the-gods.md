@@ -1,57 +1,63 @@
 **Brakia** _(11-Nov-18 02:47 PM)_
 
+_The crew is still docked on the Planet of the Archidemons. Sanya stands at the top of the ramp, looking out over the city._
+
 t!8ball Does Sanya exit the ship to check out the planet?
 
 **Tatsumaki** _(11-Nov-18 02:47 PM)_
 
-> 🎱 | Yes,
-> Brakia
-> .
+🎱 | Yes, Brakia.
 
 **Brakia** _(11-Nov-18 02:48 PM)_
 
-> `So, this is where Iris is from...`
+_Sanya steps down the ramp and takes in the red sky and black spires._
+
+> So, this is where Iris is from...
 
 **Enchantingtable2013** _(11-Nov-18 02:48 PM)_
 
-t!8ball Do I respond idiotically?
+t!8ball Does Matieu respond idiotically?
 
 **Tatsumaki** _(11-Nov-18 02:48 PM)_
 
-> 🎱 | Most likely,
-> Enchantingtable2013
-> .
+🎱 | Most likely, Enchantingtable2013.
 
 **Enchantingtable2013** _(11-Nov-18 02:48 PM)_
+
+_Matieu hops down the ramp after her._
 
 > Wack.
 
 **Brakia** _(11-Nov-18 02:48 PM)_
 
-> `What?`
+> What?
 
 **Enchantingtable2013** _(11-Nov-18 02:49 PM)_
+
+_Matieu spreads his wings for emphasis._
 
 > Like, wack.
 > You don't know what wack means?
 
 **Zander** _(11-Nov-18 02:49 PM)_
 
+_Emmett's voice crackles over the comms from inside the ship._
+
 > Guys, I just got a notice over the Hypernet.
 
 **Brakia** _(11-Nov-18 02:50 PM)_
 
-> `What does that even mean, Matieu.`
+_Sanya ignores the comms entirely._
+
+> What does that even mean, Matieu?
 
 **Mica** _(11-Nov-18 02:50 PM)_
 
-t!8ball Does maia randomly appear on the hell planet?
+t!8ball Does Maia randomly appear on the hell planet?
 
 **Tatsumaki** _(11-Nov-18 02:50 PM)_
 
-> 🎱 | Very doubtful,
-> Mica
-> .
+🎱 | Very doubtful, Mica.
 
 **Enchantingtable2013** _(11-Nov-18 02:50 PM)_
 
@@ -59,31 +65,25 @@ t!8ball Does maia randomly appear on the hell planet?
 
 **Brakia** _(11-Nov-18 02:50 PM)_
 
-> `Then just say weird. Don't go confusing people.`
+> Then just say weird. Don't go confusing people.
+
+_Sanya shakes her head._
 
 **ProfessorTree** _(11-Nov-18 02:51 PM)_
 
-t!8ball does Chase wake up?
+_In a cryostasis pod in the ship's cargo hold, the Ottori stowaway stirs._
+
+t!8ball Does Chase wake up?
 
 **Tatsumaki** _(11-Nov-18 02:51 PM)_
 
-> 🎱 | Ask again later,
-> ProfessorTree
-> .
+🎱 | My sources say no, ProfessorTree.
 
 **Enchantingtable2013** _(11-Nov-18 02:51 PM)_
 
-> It's avosian slang, carried over from human slang.
+_Matieu puffs out his chest feathers._
 
-**ProfessorTree** _(11-Nov-18 02:51 PM)_
-
-t!8ball does Chase wake up?
-
-**Tatsumaki** _(11-Nov-18 02:51 PM)_
-
-> 🎱 | My sources say no,
-> ProfessorTree
-> .
+> It's Avosian slang, carried over from human slang.
 
 **Zander** _(11-Nov-18 02:51 PM)_
 
@@ -91,9 +91,7 @@ t!8ball Does Emmett check on the Ottori prisoner?
 
 **Tatsumaki** _(11-Nov-18 02:51 PM)_
 
-> 🎱 | Yes,
-> Zander
-> .
+🎱 | Yes, Zander.
 
 **Enchantingtable2013** _(11-Nov-18 02:51 PM)_
 
@@ -101,34 +99,30 @@ t!8ball Does Emmett check on the Ottori prisoner?
 
 **Brakia** _(11-Nov-18 02:52 PM)_
 
-> `Stop.`
+> Stop.
 
 **Enchantingtable2013** _(11-Nov-18 02:52 PM)_
 
-> WACK
+> WACK!
 
 **Brakia** _(11-Nov-18 02:52 PM)_
 
-> STOP
+_Sanya's hand drifts to her sword._
+
+> STOP!
 
 **Enchantingtable2013** _(11-Nov-18 02:52 PM)_
+
+_Matieu kicks at a charred rock._
 
 > It's seriously wack that we're here anyways.
 
 **Zander** _(11-Nov-18 02:52 PM)_
 
+_Emmett trudges down to the cargo hold and opens the pod, but Chase stays stubbornly asleep. Emmett starts shaking him._
+
 > Otter!
 > Wake up!
-
-**Brakia** _(11-Nov-18 02:52 PM)_
-
-t!8ball Does Sanya go searching for some shops?
-
-**Tatsumaki** _(11-Nov-18 02:52 PM)_
-
-> 🎱 | Concentrate and ask again,
-> Brakia
-> .
 
 **Brakia** _(11-Nov-18 02:52 PM)_
 
@@ -136,25 +130,31 @@ t!8ball Does Sanya look for some shops?
 
 **Tatsumaki** _(11-Nov-18 02:52 PM)_
 
-> 🎱 | Concentrate and ask again,
-> Brakia
-> .
+🎱 | Concentrate and ask again, Brakia.
 
 **ProfessorTree** _(11-Nov-18 02:53 PM)_
 
-> `Nnn...`
+_Chase groans, his whiskers twitching._
+
+> Nnn...
 
 **Zander** _(11-Nov-18 02:53 PM)_
+
+_Emmett dangles a fish in front of the Ottori's nose._
 
 > I'll give you some fish if you answer some questions.
 
 **Brakia** _(11-Nov-18 02:53 PM)_
 
-> `I'm going to explore. Do we need anything ?`
+_Sanya turns to go, then pauses._
+
+> I'm going to explore. Do we need anything?
 
 **ProfessorTree** _(11-Nov-18 02:53 PM)_
 
-> `Ghh...what do you want...?`
+_Chase cracks one eye open._
+
+> Ghh... what do you want...?
 
 **Enchantingtable2013** _(11-Nov-18 02:54 PM)_
 
@@ -162,19 +162,23 @@ t!8ball Does Matieu feel a strange presence just being here?
 
 **Tatsumaki** _(11-Nov-18 02:54 PM)_
 
-> 🎱 | My sources say no,
-> Enchantingtable2013
-> .
+🎱 | My sources say no, Enchantingtable2013.
 
 **Brakia** _(11-Nov-18 02:54 PM)_
 
-> `I'll take that as a no.`
+_Sanya waits a beat for an answer that doesn't come._
+
+> I'll take that as a no.
 
 **Zander** _(11-Nov-18 02:54 PM)_
+
+_Emmett tosses the fish into Chase's lap._
 
 > Listen here. You've been in cryostasis for a few months.
 
 **Enchantingtable2013** _(11-Nov-18 02:54 PM)_
+
+_Matieu scrambles after Sanya._
 
 > Wait!
 > I need birdseed.
@@ -182,41 +186,43 @@ t!8ball Does Matieu feel a strange presence just being here?
 
 **ProfessorTree** _(11-Nov-18 02:55 PM)_
 
-> `uh huh...`
+_Chase gnaws on the fish, still groggy._
+
+> Uh huh...
 
 **Brakia** _(11-Nov-18 02:55 PM)_
 
-> Sanya raises a single, non-existent eyebrow at Matieu's request.
+_Sanya raises a single, non-existent eyebrow at Matieu's request._
 
 **Zander** _(11-Nov-18 02:55 PM)_
 
-> You were a stowaway and we didn't know what to do to you.
+> You were a stowaway, and we didn't know what to do with you.
+
+_Emmett shrugs._
 
 **Brakia** _(11-Nov-18 02:55 PM)_
 
-> `Alright then...`
+> Alright then...
 
-**Mica** _(11-Nov-18 02:55 PM)_
-
-t!8ball Does Maia teleport to the hell planet to regroup with her comrades?
-
-**Tatsumaki** _(11-Nov-18 02:55 PM)_
-
-> 🎱 | Ask again later,
-> Mica
-> .
+_Sanya turns her back on Matieu._
 
 **Zander** _(11-Nov-18 02:55 PM)_
+
+_Emmett crouches down to eye level with the Ottori._
 
 > So, first question. You have a name?
 
 **Enchantingtable2013** _(11-Nov-18 02:55 PM)_
 
+_Matieu clasps his hands together._
+
 > Please just get it.
 
 **ProfessorTree** _(11-Nov-18 02:55 PM)_
 
-> `Yeah...it's Chase.`
+_Chase swallows a mouthful of fish._
+
+> Yeah... it's Chase.
 
 **Mica** _(11-Nov-18 02:55 PM)_
 
@@ -224,69 +230,83 @@ t!8ball Does Maia teleport to the hell planet to regroup with her comrades?
 
 **Tatsumaki** _(11-Nov-18 02:55 PM)_
 
-> 🎱 | Most likely,
-> Mica
-> .
+🎱 | Most likely, Mica.
 
 **Mica** _(11-Nov-18 02:56 PM)_
 
-> woosh
+_With a woosh of stardust, Maia materializes at the foot of the ship's ramp._
 
 **Brakia** _(11-Nov-18 02:56 PM)_
 
-> `Hm?`
+_Sanya spins around at the sound._
+
+> Hm?
 
 **Zander** _(11-Nov-18 02:56 PM)_
 
-> Second question, are you allies with the Llamanians?
+_Emmett's eyes narrow._
+
+> Second question: are you allies with the Llamanians?
 
 **Mica** _(11-Nov-18 02:57 PM)_
 
-> Hello my friends.
+> Hello, my friends.
 
 **Brakia** _(11-Nov-18 02:57 PM)_
 
-> `Oh hey. It's you.`
+_Sanya glances back over her shoulder at Maia._
+
+> Oh, hey. It's you.
 
 **Zander** _(11-Nov-18 02:57 PM)_
+
+_Emmett taps the side of the cryostasis pod._
 
 > It seemed like a trap your planet placed.
 
 **Mica** _(11-Nov-18 02:58 PM)_
 
+_Maia trots up the ramp, calling into the ship._
+
 > Emmett!
 
 **ProfessorTree** _(11-Nov-18 02:58 PM)_
 
-> `Yeah...Llamanians have been allied with us for years.`
+_Chase wipes his whiskers._
+
+> Yeah... Llamanians have been allied with us for years.
 
 **Zander** _(11-Nov-18 02:58 PM)_
 
-> Emmett slowly turns his head.
+_Emmett slowly turns his head toward the voice._
 
 **ProfessorTree** _(11-Nov-18 02:59 PM)_
 
-> `What?`
+> What?
 
 **Brakia** _(11-Nov-18 02:59 PM)_
 
-> Sanya walks off, in search for shops.
+_Sanya walks off in search of shops._
 
 **ProfessorTree** _(11-Nov-18 02:59 PM)_
 
-> `I never liked them, but our government did.`
+_Chase calls after Emmett's retreating back._
+
+> I never liked them, but our government did.
 
 **Mica** _(11-Nov-18 02:59 PM)_
 
-> she waves to her small goat friend
+_Maia waves to her small goat friend._
 
 **Zander** _(11-Nov-18 02:59 PM)_
 
-> Seemingly ignoring the answer, he greets Maia with open arms.
+_Seemingly ignoring Chase's answer, Emmett hurries up from the cargo hold and greets Maia with open arms._
 
 **ProfessorTree** _(11-Nov-18 02:59 PM)_
 
-> `Wait...you're a squoatling, aren't you?`
+_Chase squints after him._
+
+> Wait... you're a squoatling, aren't you?
 
 **Zander** _(11-Nov-18 02:59 PM)_
 
@@ -294,19 +314,25 @@ t!8ball Does Maia teleport to the hell planet to regroup with her comrades?
 
 **Mica** _(11-Nov-18 03:00 PM)_
 
+_Maia spreads her arms wide._
+
 > C'mere!
 
 **Enchantingtable2013** _(11-Nov-18 03:00 PM)_
 
-> romantic music plays
+_Matieu, watching from the ramp, hums a romantic tune under his breath._
 
 **Zander** _(11-Nov-18 03:01 PM)_
+
+_Emmett buries his face in Maia's fur._
 
 > I'm so glad you're back!
 
 **ProfessorTree** _(11-Nov-18 03:02 PM)_
 
-> `...`
+_Chase is left alone in the cargo hold._
+
+> ...
 
 **Zander** _(11-Nov-18 03:02 PM)_
 
@@ -314,29 +340,35 @@ t!8ball Does Matieu meet Chase?
 
 **Tatsumaki** _(11-Nov-18 03:02 PM)_
 
-> 🎱 | Most likely,
-> Zander
-> .
+🎱 | Most likely, Zander.
 
 **Mica** _(11-Nov-18 03:02 PM)_
 
-> she bends down and hugs him tight
+_Maia bends down and hugs Emmett tight._
 
 **Enchantingtable2013** _(11-Nov-18 03:02 PM)_
+
+_Matieu wanders into the cargo hold and spots the Ottori._
 
 > Oh, this is the otter, eh?
 
 **Zander** _(11-Nov-18 03:02 PM)_
 
+_Emmett's voice is muffled against her._
+
 > It's been so long.
 
 **Enchantingtable2013** _(11-Nov-18 03:02 PM)_
 
-> Welcome to the party man.
+_Matieu claps Chase on the back._
+
+> Welcome to the party, man.
 
 **ProfessorTree** _(11-Nov-18 03:02 PM)_
 
-> `...an Avian, eh?`
+_Chase looks Matieu over._
+
+> ...An Avian, eh?
 
 **Enchantingtable2013** _(11-Nov-18 03:02 PM)_
 
@@ -345,13 +377,19 @@ t!8ball Does Matieu meet Chase?
 
 **Mica** _(11-Nov-18 03:03 PM)_
 
-> Indeed, but I'm afraid.. I have some news.
+_Maia's smile fades._
+
+> Indeed, but I'm afraid... I have some news.
 
 **ProfessorTree** _(11-Nov-18 03:03 PM)_
 
-> `I've studied your species for years. Very interesting. Your wings are fascinating.`
+_Chase leans in to inspect Matieu's feathers._
+
+> I've studied your species for years. Very interesting. Your wings are fascinating.
 
 **Enchantingtable2013** _(11-Nov-18 03:03 PM)_
+
+_Matieu preens a little._
 
 > Thank you.
 
@@ -361,6 +399,8 @@ t!8ball Does Matieu meet Chase?
 
 **Enchantingtable2013** _(11-Nov-18 03:03 PM)_
 
+_Matieu folds his wings self-consciously._
+
 > I'm sure there hasn't been any religious studies on us recently?
 
 **Mica** _(11-Nov-18 03:03 PM)_
@@ -369,29 +409,40 @@ t!8ball Does Matieu meet Chase?
 
 **Brakia** _(11-Nov-18 03:03 PM)_
 
-> In a small market somewhere
-> `Hm. Food, jewelry, trinkets. Nothing is really catching my eyes.`
+_In a small market somewhere in the city, Sanya browses the stalls._
+
+> Hm. Food, jewelry, trinkets. Nothing is really catching my eye.
 
 **ProfessorTree** _(11-Nov-18 03:03 PM)_
 
-> `No, not from me at least. I've transitioned my research to a different species...` > `Speaking of which...` > `Is your friend really a Squoatling?`
+_Chase peeks out the cargo hold door toward the lounge, where Emmett is._
+
+> No, not from me, at least. I've transitioned my research to a different species...
+> Speaking of which...
+> Is your friend really a squoatling?
 
 **Enchantingtable2013** _(11-Nov-18 03:04 PM)_
+
+_Matieu lowers his voice._
 
 > Yes. He is.
 > His family died in the catastrophe.
 
 **ProfessorTree** _(11-Nov-18 03:04 PM)_
 
-> `Interesting...`
+_Chase strokes his chin._
+
+> Interesting...
 
 **Enchantingtable2013** _(11-Nov-18 03:04 PM)_
 
-> ...and everyone else.
+> ...And everyone else.
 
 **ProfessorTree** _(11-Nov-18 03:05 PM)_
 
-> `Yes, so I've heard.`
+> Yes, so I've heard.
+
+_Chase's ears droop._
 
 **Brakia** _(11-Nov-18 03:05 PM)_
 
@@ -399,23 +450,25 @@ t!choose back alley salesman | small shop
 
 **Tatsumaki** _(11-Nov-18 03:05 PM)_
 
-> 🤔 |
-> Brakia
-> , I pick
-> small shop
-> !
+🤔 | Brakia, I pick small shop!
 
 **Zander** _(11-Nov-18 03:05 PM)_
 
-> Wait, why Maia?
+_Emmett pulls back from the hug._
+
+> Wait, why, Maia?
 
 **Enchantingtable2013** _(11-Nov-18 03:05 PM)_
 
-> Speaking of religion, I may have some information for your studies on avians.
+_Matieu brightens._
+
+> Speaking of religion, I may have some information for your studies on Avians.
 
 **ProfessorTree** _(11-Nov-18 03:05 PM)_
 
-> `There's less than 1000 in the universe now, yes?`
+_Chase glances back toward the lounge._
+
+> There's less than a thousand in the universe now, yes?
 
 **Enchantingtable2013** _(11-Nov-18 03:05 PM)_
 
@@ -424,20 +477,27 @@ t!choose back alley salesman | small shop
 
 **Brakia** _(11-Nov-18 03:05 PM)_
 
-> `
-> "Hello! welcome to my weapon shop. wha- Oh."
+_Sanya ducks into a small weapon shop. The shopkeeper, an archidemon, looks up from the counter._
+
+> `Weapon Salesman`: Hello! Welcome to my weapon shop. Wha-- Oh.
 
 **Enchantingtable2013** _(11-Nov-18 03:06 PM)_
 
-> What I came to talk to you about was your species' thing with lamainians.
+_Matieu gets serious, leaning against a crate._
+
+> What I came to talk to you about was your species' thing with the Llamanians.
 
 **Mica** _(11-Nov-18 03:06 PM)_
 
-> My planet needs me permanently. The High king has passed away and I am next in line..
+_Maia looks down at her hooves._
+
+> My planet needs me permanently. The High King has passed away, and I am next in line...
 
 **Brakia** _(11-Nov-18 03:06 PM)_
 
-> "A Floran. and one with a strange aura. What do you want?"
+_The salesman looks Sanya up and down._
+
+> `Weapon Salesman`: A floran. And one with a strange aura. What do you want?
 
 **Zander** _(11-Nov-18 03:06 PM)_
 
@@ -445,7 +505,9 @@ t!choose back alley salesman | small shop
 
 **ProfessorTree** _(11-Nov-18 03:06 PM)_
 
-> `Ugh, those things. They're so...just...ech.`
+_Chase shudders._
+
+> Ugh, those things. They're so... just... ech.
 
 **Enchantingtable2013** _(11-Nov-18 03:07 PM)_
 
@@ -453,73 +515,100 @@ t!choose back alley salesman | small shop
 
 **Zander** _(11-Nov-18 03:07 PM)_
 
-> Emmett visibly frowns.
+_Emmett visibly frowns._
 
 **Enchantingtable2013** _(11-Nov-18 03:07 PM)_
+
+_Matieu jerks his head in Emmett's direction._
 
 > He has a problem with them.
 > So just, try not to bring them up, and try to prove you're not with them.
 
 **Brakia** _(11-Nov-18 03:07 PM)_
 
-> `Just a weapon.`
+_Sanya meets the salesman's gaze evenly._
+
+> Just a weapon.
 
 **ProfessorTree** _(11-Nov-18 03:07 PM)_
 
-> `Yes, the Llamanians don't have good relations with the Squoatlings, I've learned.`
+_Chase nods slowly._
+
+> Yes, the Llamanians don't have good relations with the squoatlings, I've learned.
 
 **Enchantingtable2013** _(11-Nov-18 03:07 PM)_
+
+_Matieu jerks a thumb toward the airlock._
 
 > Otherwise, airlock.
 
 **Mica** _(11-Nov-18 03:07 PM)_
 
-> I wish I had an alternative but I do not.
-> she pats his head
+> I wish I had an alternative, but I do not.
+
+_Maia pats Emmett's head._
 
 **ProfessorTree** _(11-Nov-18 03:08 PM)_
 
-> `...oh.`
+_Chase gulps, eyeing the airlock controls._
+
+> ...Oh.
 
 **Enchantingtable2013** _(11-Nov-18 03:08 PM)_
+
+_Matieu nods solemnly._
 
 > Yeah...
 
 **Brakia** _(11-Nov-18 03:08 PM)_
 
-> `"What type? i'm not just going to tell what type you want."`
+> `Weapon Salesman`: What type? I'm not just going to guess what type you want.
 
 **Zander** _(11-Nov-18 03:08 PM)_
+
+_Emmett looks down at his hooves._
 
 > I had a crush on you at one point, you know.
 
 **Enchantingtable2013** _(11-Nov-18 03:08 PM)_
 
-> That's the crew's number 1 problem solver.
+_Matieu pats the airlock door affectionately._
+
+> That's the crew's number one problem solver.
 
 **Brakia** _(11-Nov-18 03:08 PM)_
 
-> `What do you specialize in?`
+_Sanya folds her arms._
+
+> What do you specialize in?
 
 **ProfessorTree** _(11-Nov-18 03:08 PM)_
 
-> `That doesn't seem like an effective way to solve things.`
+_Chase frowns._
+
+> That doesn't seem like an effective way to solve things.
 
 **Brakia** _(11-Nov-18 03:08 PM)_
 
-> `"Rapiers."`
+> `Weapon Salesman`: Rapiers.
 
 **Mica** _(11-Nov-18 03:08 PM)_
 
-> I am aware. I do have something for you before I go though.~
+_Maia smiles softly._
+
+> I am aware. I do have something for you before I go, though.~
 
 **Enchantingtable2013** _(11-Nov-18 03:08 PM)_
 
+_Matieu grins._
+
 > But yet it is.
-> It is 100% efficient.
+> It is one hundred percent efficient.
 > Every problem that goes to the airlock gets solved.
 
 **Zander** _(11-Nov-18 03:09 PM)_
+
+_Emmett's ears perk up._
 
 > A good-bye gift?
 
@@ -529,20 +618,28 @@ t!choose back alley salesman | small shop
 
 **Brakia** _(11-Nov-18 03:09 PM)_
 
-> `I already have a blade.`
+_Sanya pats the sword at her hip._
+
+> I already have a blade.
 
 **ProfessorTree** _(11-Nov-18 03:09 PM)_
 
-> `...huh.`
+_Chase stares at the airlock, reconsidering._
+
+> ...Huh.
 
 **Zander** _(11-Nov-18 03:09 PM)_
 
+_Emmett pats his sweater pockets, finding nothing._
+
 > Well, that's thoughtful of you!
-> And I've nothing.
+> And I've got nothing.
 
 **ProfessorTree** _(11-Nov-18 03:09 PM)_
 
-> `I guess sometimes the simplest solution is the best one.`
+_Chase shrugs._
+
+> I guess sometimes the simplest solution is the best one.
 
 **Enchantingtable2013** _(11-Nov-18 03:10 PM)_
 
@@ -550,46 +647,46 @@ t!choose back alley salesman | small shop
 
 **Brakia** _(11-Nov-18 03:10 PM)_
 
-> `"These are small. So if you have a broadsword on your back, you could still carry one of these on your belt."`
+_The salesman sets a slim rapier on the counter._
+
+> `Weapon Salesman`: These are small. So if you have a broadsword on your back, you could still carry one of these on your belt.
 
 **Mica** _(11-Nov-18 03:10 PM)_
+
+_Maia smiles down at him._
 
 > Our friendship is well enough, dear.
 
 **Zander** _(11-Nov-18 03:10 PM)_
 
+_Emmett exhales._
+
 > That's relieving.
 
 **Enchantingtable2013** _(11-Nov-18 03:10 PM)_
 
-t!8ball Do I wave the otter goodbye for the time being?
-
-**Tatsumaki** _(11-Nov-18 03:10 PM)_
-
-> 🎱 | Concentrate and ask again,
-> Enchantingtable2013
-> .
-
-**Enchantingtable2013** _(11-Nov-18 03:11 PM)_
-
-t!8ball Do I wave the otter goodbye for the time being?
+t!8ball Does Matieu wave the otter goodbye for the time being?
 
 **Tatsumaki** _(11-Nov-18 03:11 PM)_
 
-> 🎱 | Without a doubt,
-> Enchantingtable2013
-> .
+🎱 | Without a doubt, Enchantingtable2013.
 
 **Enchantingtable2013** _(11-Nov-18 03:11 PM)_
+
+_Matieu gives Chase a two-fingered salute and heads for the door._
 
 > Welp, see you for now.
 > Don't try and escape.
 
 **ProfessorTree** _(11-Nov-18 03:11 PM)_
 
-> `I didn't catch your name.`
+_Chase calls after him._
+
+> I didn't catch your name.
 
 **Enchantingtable2013** _(11-Nov-18 03:11 PM)_
+
+_Matieu pauses in the doorway and turns._
 
 > Matieu.
 
@@ -599,144 +696,95 @@ t!8ball Does Maia give Emmett his gift?
 
 **Tatsumaki** _(11-Nov-18 03:11 PM)_
 
-> 🎱 | My sources say no,
-> Mica
-> .
+🎱 | My sources say no, Mica.
 
 **Enchantingtable2013** _(11-Nov-18 03:11 PM)_
 
-> But don't try anything
+_Matieu narrows his eyes._
+
+> But don't try anything.
 
 **ProfessorTree** _(11-Nov-18 03:11 PM)_
 
-> `Alright. I'll see you later, Matieu.`
+_Chase waves a paw._
+
+> Alright. I'll see you later, Matieu.
 
 **Enchantingtable2013** _(11-Nov-18 03:11 PM)_
 
+_Matieu lets the threat hang in the air._
+
 > Otherwise...
 
-**Platinum_Pathos** _(11-Nov-18 03:11 PM)_
-
-t!8ball Will Danny greet everybody with 78 dabs collectively?
-
 **Zander** _(11-Nov-18 03:12 PM)_
+
+_Emmett bounces on his hooves._
 
 > Well, what is it?
 
 **Enchantingtable2013** _(11-Nov-18 03:12 PM)_
 
+_Matieu mimes pushing a button._
+
 > I shouldn't even have to say it. Take a guess.
 
 **Mica** _(11-Nov-18 03:12 PM)_
 
-> I can't say just yet. It is a surprise after all.
+_Maia winks._
+
+> I can't say just yet. It is a surprise, after all.
 
 **ProfessorTree** _(11-Nov-18 03:12 PM)_
 
-> `Airlock, I know.`
+_Chase sighs._
+
+> Airlock, I know.
 
 **Enchantingtable2013** _(11-Nov-18 03:12 PM)_
 
 > Good.
-
-**Platinum_Pathos** _(11-Nov-18 03:12 PM)_
-
-t!8ball Will Danny greet everybody with 78 dabs collectively?
-
-**Enchantingtable2013** _(11-Nov-18 03:12 PM)_
-
 > I'm starting to warm up to you already.
-
-**Tatsumaki** _(11-Nov-18 03:12 PM)_
-
-> 🎱 | Cannot predict now,
-> Platinum_Pathos
-> .
-
-**Platinum_Pathos** _(11-Nov-18 03:12 PM)_
-
-t!8ball Will Danny greet everybody with 78 dabs collectively?
-t!8ball Will Danny greet everybody with 78 dabs collectively?
-
-**Tatsumaki** _(11-Nov-18 03:12 PM)_
-
-> 🎱 | Ask again later,
-> Platinum_Pathos
-> .
 
 **Brakia** _(11-Nov-18 03:13 PM)_
 
-> `
-Alright. I'll take one.
-*Sanya places the money on the counter, and the salesman yanks her by the wrist.*
-"I know your race. Your bloodlust. And most importantly, I know that aura. I advise you leave quickly, for many of us are true to our god."`
-> He releases her arm, and hands her a HellForged Rapier
+> Alright. I'll take one.
+
+_Sanya places the money on the counter, and the salesman yanks her by the wrist._
+
+> `Weapon Salesman`: I know your race. Your bloodlust. And most importantly, I know that aura. I advise you leave quickly, for many of us are true to our god.
+
+_The salesman releases her arm and hands her a HellForged Rapier._
 
 **Zander** _(11-Nov-18 03:13 PM)_
+
+_Emmett bounces on his hooves again._
 
 > Surprises! What!
 
 **Mica** _(11-Nov-18 03:14 PM)_
 
+_Maia giggles._
+
 > Hehe. Patience, Emmett.
-
-**ProfessorTree** _(11-Nov-18 03:14 PM)_
-
-t!8ball does Chase start exploring the ship?
-
-**Tatsumaki** _(11-Nov-18 03:14 PM)_
-
-> 🎱 | Concentrate and ask again,
-> ProfessorTree
-> .
-
-**ProfessorTree** _(11-Nov-18 03:14 PM)_
-
-t!8ball does Chase start exploring the ship?
-
-**Tatsumaki** _(11-Nov-18 03:14 PM)_
-
-> 🎱 | Reply hazy try again,
-> ProfessorTree
-> .
 
 **ProfessorTree** _(11-Nov-18 03:15 PM)_
 
-> `Hm...`
+_Alone again, Chase eyes the unlocked cargo hold door._
+
+> Hm...
 
 **Zander** _(11-Nov-18 03:16 PM)_
 
-t!8ball Does Emmett "accidentally" brush along one of Maia's wings while walking back towards the shipping compartment?
+t!8ball Does Emmett "accidentally" brush along one of Maia's wings while walking back towards the cargo hold?
 
 **Tatsumaki** _(11-Nov-18 03:16 PM)_
 
-> 🎱 | Yes, definitely,
-> Zander
-> .
-
-**Brakia** _(11-Nov-18 03:16 PM)_
-
-t!8ball Does Sanya test out her powers of Dread?
-
-**Tatsumaki** _(11-Nov-18 03:16 PM)_
-
-> 🎱 | Reply hazy try again,
-> Brakia
-> .
-
-**Brakia** _(11-Nov-18 03:16 PM)_
-
-t!8ball Does Sanya test out her powers of Dread?
-
-**Tatsumaki** _(11-Nov-18 03:16 PM)_
-
-> 🎱 | Ask again later,
-> Brakia
-> .
+🎱 | Yes, definitely, Zander.
 
 **Zander** _(11-Nov-18 03:17 PM)_
 
-> https://docs.google.com/document/d/1RMhoGNKR_KZB6DFC6T1cU8UJyzNedIiE_enrzHz2hrE/edit?usp=sharing
+_Emmett "accidentally" brushes along one of Maia's wings on his way back to the cargo hold, then stops in the doorway._
+
 > Wait a moment.
 > Where's Chase?
 
@@ -746,37 +794,49 @@ t!8ball Does the air around Matieu begin to become very cold?
 
 **Tatsumaki** _(11-Nov-18 03:19 PM)_
 
-> 🎱 | As I see it, yes,
-> Enchantingtable2013
-> .
+🎱 | As I see it, yes, Enchantingtable2013.
 
 **Brakia** _(11-Nov-18 03:19 PM)_
 
-> `I should head back to the ship. I shouldn't try to use any abilities while the entire city is watching my every move.`
+_Sanya tucks the rapier into her belt, feeling every eye in the street on her._
+
+> I should head back to the ship. I shouldn't try to use any abilities while the entire city is watching my every move.
 
 **ProfessorTree** _(11-Nov-18 03:19 PM)_
 
-> `I'm right here.`
+_Chase waves from the lounge couch._
+
+> I'm right here.
 
 **Enchantingtable2013** _(11-Nov-18 03:19 PM)_
+
+_Matieu shivers, rubbing his arms._
 
 > Jeez, Emmett must've turned on the air.
 
 **Zander** _(11-Nov-18 03:20 PM)_
 
+_Emmett's jaw drops._
+
 > What? Matieu let you out?
 
 **Enchantingtable2013** _(11-Nov-18 03:20 PM)_
+
+_Matieu stomps into the lounge, hugging himself._
 
 > Hey, Emmett, did you flip on the AC?
 
 **Zander** _(11-Nov-18 03:20 PM)_
 
+_Emmett glares at Matieu._
+
 > I wasn't really ready to do that.
 
 **ProfessorTree** _(11-Nov-18 03:20 PM)_
 
-> `Yeah, he did.`
+_Chase nods helpfully._
+
+> Yeah, he did.
 
 **Platinum_Pathos** _(11-Nov-18 03:20 PM)_
 
@@ -784,141 +844,175 @@ t!8ball Will Danny greet everybody with 78 dabs collectively?
 
 **Tatsumaki** _(11-Nov-18 03:20 PM)_
 
-> 🎱 | Don't count on it,
-> Platinum_Pathos
-> .
+🎱 | Don't count on it, Platinum_Pathos.
 
 **Brakia** _(11-Nov-18 03:20 PM)_
 
-> Sanya gets back to the ship.
+_Sanya gets back to the ship._
 
 **Platinum_Pathos** _(11-Nov-18 03:21 PM)_
 
-> Hello, all
+_Danny wanders into the lounge, sadly dab-free._
+
+> Hello, all.
 
 **ProfessorTree** _(11-Nov-18 03:21 PM)_
 
-> `I'll properly introduce myself. Chase Sandeep, Ottori Biologist and Engineer.`
+_Chase stands and offers a paw to Emmett._
 
-> `And you are?`
+> I'll properly introduce myself. Chase Sandeep, Ottori biologist and engineer.
+> And you are?
 
 **Zander** _(11-Nov-18 03:22 PM)_
 
-> Emmett Tawfeek. Pilot and Co-Captain of the Vortex Pummeler.
+_Emmett shakes the paw warily._
+
+> Emmett Tawfeek. Pilot and co-captain of the Vortox Pummelers.
 
 **ProfessorTree** _(11-Nov-18 03:22 PM)_
 
-> `And you're a Squoatling, yes?`
+_Chase leans in, studying Emmett's horns._
+
+> And you're a squoatling, yes?
 
 **Platinum_Pathos** _(11-Nov-18 03:22 PM)_
 
-> Just call me Danny, I don't know what I do on this ship.
+> Just call me Danny. I don't know what I do on this ship.
+
+_Nobody acknowledges him._
 
 **Zander** _(11-Nov-18 03:22 PM)_
 
-> He looks side-to-side.
+_Emmett looks side to side._
+
 > Uh, yeah.
 
 **Brakia** _(11-Nov-18 03:23 PM)_
 
-> `I forgot the birdseed, didn't I? I don't care. He can grab it himself.`
+_Sanya pauses at the top of the ramp._
+
+> I forgot the birdseed, didn't I? I don't care. He can grab it himself.
 
 **Zander** _(11-Nov-18 03:23 PM)_
 
-> Oh, and Matieu, I decreased the temperature if you were wondering.
+_Emmett calls over his shoulder._
+
+> Oh, and Matieu, I decreased the temperature, if you were wondering.
 
 **ProfessorTree** _(11-Nov-18 03:23 PM)_
 
-> `Fascinating...I'm honored to meet you, Emmett.`
+_Chase's eyes light up._
+
+> Fascinating... I'm honored to meet you, Emmett.
 
 **Enchantingtable2013** _(11-Nov-18 03:23 PM)_
 
-> This feels absolutely freezing though!
+_Matieu's breath fogs in front of his beak._
+
+> This feels absolutely freezing, though!
 
 **Mica** _(11-Nov-18 03:24 PM)_
 
-> Maia sits on the couch
+_Maia sits on the couch._
 
 **Zander** _(11-Nov-18 03:24 PM)_
+
+_Emmett takes a step back from Chase's intense stare._
 
 > Freezing? And, Chase, good to meet you too?
 
 **Platinum_Pathos** _(11-Nov-18 03:24 PM)_
 
+_Danny clears his throat pointedly._
+
 > Ahem.
 
 **Enchantingtable2013** _(11-Nov-18 03:24 PM)_
+
+_Matieu's teeth chatter._
 
 > What temperature is it at?
 
 **ProfessorTree** _(11-Nov-18 03:24 PM)_
 
-t!8ball does Chase notice anyone else?
+t!8ball Does Chase notice anyone else?
 
 **Tatsumaki** _(11-Nov-18 03:24 PM)_
 
-> 🎱 | Yes,
-> ProfessorTree
-> .
+🎱 | Yes, ProfessorTree.
 
 **ProfessorTree** _(11-Nov-18 03:25 PM)_
 
-> `Is that a Floran?`
+_Chase notices Sanya coming in, and completely overlooks Danny._
+
+> Is that a floran?
 
 **Brakia** _(11-Nov-18 03:26 PM)_
 
-> `I have a name. And who are you?`
+_Sanya's hand drifts to her new rapier._
+
+> I have a name. And who are you?
 
 **ProfessorTree** _(11-Nov-18 03:26 PM)_
 
-> `Chase Sandeep. You don't have a speech impediment. I'm surprised. Could I have your name?`
+_Chase bows slightly._
+
+> Chase Sandeep. You don't have a speech impediment. I'm surprised. Could I have your name?
 
 **Zander** _(11-Nov-18 03:26 PM)_
+
+_Emmett checks the thermostat._
 
 > It's about 19 degrees.
 
 **Mica** _(11-Nov-18 03:26 PM)_
 
-> there is also a giant horse woman
+_Maia shifts on the couch, conspicuously large and horse-shaped._
 
 **Enchantingtable2013** _(11-Nov-18 03:27 PM)_
 
-> Dude, this feels like 2 Celsius , dude.
+_Matieu's feathers are starting to frost over._
 
-**RPretribution** _(11-Nov-18 03:27 PM)_
-
-> bro chase is here
-> finally
+> Dude, this feels like 2 Celsius, dude.
 
 **Brakia** _(11-Nov-18 03:27 PM)_
 
-> `Sanya.`
-> As she extends her hand out, a faint feeling of dread emanates from her.
+> Sanya.
+
+_As she extends her hand, a faint feeling of dread emanates from her._
 
 **Platinum_Pathos** _(11-Nov-18 03:28 PM)_
 
-> Seeing as I am unanimously ignored, I shall go to the kitchen and do as I feel. Also someone fix the temperature.
+_Danny throws his hands up._
+
+> Seeing as I am unanimously ignored, I shall go to the kitchen and do as I feel. Also, someone fix the temperature.
 
 **Enchantingtable2013** _(11-Nov-18 03:28 PM)_
 
-> Holy crap it's cold as balls.
+> Holy crap, it's cold as balls.
 > SANYA!
 
 **ProfessorTree** _(11-Nov-18 03:28 PM)_
 
-> `Nice to meet you, Sanya...`
+_Chase shakes her hand, suppressing a shiver._
+
+> Nice to meet you, Sanya...
 
 **Brakia** _(11-Nov-18 03:28 PM)_
 
-> `Yes?`
+> Yes?
 
 **Enchantingtable2013** _(11-Nov-18 03:28 PM)_
+
+_Matieu turns hopefully to Sanya._
 
 > Do you have my birdseed?
 
 **Brakia** _(11-Nov-18 03:29 PM)_
 
-> `Nope. Forgot it when a shopkeeper threatened me.`
+> Nope. Forgot it when a shopkeeper threatened me.
+
+_Sanya doesn't sound sorry._
 
 **Enchantingtable2013** _(11-Nov-18 03:29 PM)_
 
@@ -932,60 +1026,71 @@ t!8ball Does Sanya head to her room to test out her powers of Dread?
 
 **Tatsumaki** _(11-Nov-18 03:29 PM)_
 
-> 🎱 | It is decidedly so,
-> Brakia
-> .
+🎱 | It is decidedly so, Brakia.
 
 **Enchantingtable2013** _(11-Nov-18 03:29 PM)_
+
+_Matieu throws his arms in the air._
 
 > Can you not just do me one, just ONE, solid? EVER?
 
 **Mica** _(11-Nov-18 03:29 PM)_
 
+_Maia rummages in her saddlebag._
+
 > I can give you seed.
 
 **Brakia** _(11-Nov-18 03:29 PM)_
 
-> `I'll be in my room. You can get your own damn seed.`
+> I'll be in my room. You can get your own damn seed.
+
+_Sanya stalks off._
 
 **Enchantingtable2013** _(11-Nov-18 03:30 PM)_
 
-> No, no, no... it's too late... it's too late....
+_Frost begins to creep along Matieu's feathers._
+
+> No, no, no... it's too late... it's too late...
 > I can feel it.
 
 **Mica** _(11-Nov-18 03:30 PM)_
 
-> Shh.. its ok! I have some!
+_Maia holds out a handful of seed._
+
+> Shh... it's okay! I have some!
 
 **ProfessorTree** _(11-Nov-18 03:30 PM)_
 
-> `Oh, hello there. A Centaur, I presume?`
+_Chase finally notices Maia on the couch._
+
+> Oh, hello there. A centaur, I presume?
 
 **Enchantingtable2013** _(11-Nov-18 03:30 PM)_
+
+_Matieu stares at the seed, shivering._
 
 > I'm already getting cold, it's too late...
 
 **Mica** _(11-Nov-18 03:30 PM)_
 
-> Oh! Yes indeed.
+> Oh! Yes, indeed.
 > I am Maia.
 
 **Brakia** _(11-Nov-18 03:30 PM)_
 
-> As Sanya enters her room, she pulls out her new weapon.
+_As Sanya enters her room, she pulls out her new weapon._
 
 **ProfessorTree** _(11-Nov-18 03:30 PM)_
 
-> `Nice to meet you. I'm Chase.`
+_Chase extends a paw._
 
-**RPretribution** _(11-Nov-18 03:30 PM)_
-
-> dread comes out of sanya's hand and calls everybody fat gay dead naked real fake naked dead dead naked fat
+> Nice to meet you. I'm Chase.
 
 **Brakia** _(11-Nov-18 03:31 PM)_
 
-> AMAZING
-> `Ok. He did it, so lets see if i can.`
+_Sanya holds the rapier out in front of her._
+
+> Okay. Let's see if I can do this.
 
 **Mica** _(11-Nov-18 03:31 PM)_
 
@@ -997,269 +1102,310 @@ t!8ball Does Matieu feel the blue light coming from his eyes?
 
 **Tatsumaki** _(11-Nov-18 03:31 PM)_
 
-> 🎱 | Signs point to yes,
-> Enchantingtable2013
-> .
+🎱 | Signs point to yes, Enchantingtable2013.
 
 **ProfessorTree** _(11-Nov-18 03:31 PM)_
 
-> `And you have wings as well...they're magnificent, I must say.`
+_Chase gazes at Maia's wings in awe._
+
+> And you have wings as well... they're magnificent, I must say.
 
 **Enchantingtable2013** _(11-Nov-18 03:31 PM)_
+
+_A cold blue light begins to pour from Matieu's eyes._
 
 > Holy shit, holy shit, holy shit...
-
-**RPretribution** _(11-Nov-18 03:31 PM)_
-
-> BLUE LIGHT COMING FROM HIS EYE
-
-**Brakia** _(11-Nov-18 03:31 PM)_
-
-> NO
-
-**Enchantingtable2013** _(11-Nov-18 03:31 PM)_
-
-> Why are you here
+> Why are you here?
 
 **Mica** _(11-Nov-18 03:32 PM)_
 
 > Thank you. The finest wings in the galaxy.
-> she blushes a little
+
+_Maia blushes a little._
 
 **Enchantingtable2013** _(11-Nov-18 03:32 PM)_
 
-> It's happening, you tried as hard as you could, but it's far too late...
+_Matieu clutches his head._
+
+> It's happening. You tried as hard as you could, but it's far too late...
 
 **Brakia** _(11-Nov-18 03:32 PM)_
 
-> She focuses, and she starts to encompass the blade in Dread.
+_Sanya focuses, and she starts to encompass the blade in Dread._
 
 **Mica** _(11-Nov-18 03:33 PM)_
 
-> Um..
+_Maia glances over at Matieu._
+
+> Um...
 
 **ProfessorTree** _(11-Nov-18 03:33 PM)_
 
-> `Sorry, wings are something I enjoy studying.`
+_Chase clears his throat, embarrassed._
 
-**Mica** _(11-Nov-18 03:33 PM)_
-
-t!8ball Does maia quickly assist the avian?
+> Sorry, wings are something I enjoy studying.
 
 **ProfessorTree** _(11-Nov-18 03:34 PM)_
 
-> `Matieu, are you okay...?`
+_Chase finally notices Matieu's glowing eyes._
+
+> Matieu, are you okay...?
 
 **Mica** _(11-Nov-18 03:34 PM)_
 
-t!8ball Does maia quickly assist the avian?
+t!8ball Does Maia quickly assist the Avian?
 
 **Tatsumaki** _(11-Nov-18 03:34 PM)_
 
-> 🎱 | Cannot predict now,
-> Mica
-> .
+🎱 | My sources say no, Mica.
 
 **Enchantingtable2013** _(11-Nov-18 03:34 PM)_
 
 > No, I'm not... I'm not...
-> 'Yes he is.'
 
-**Mica** _(11-Nov-18 03:34 PM)_
+_Matieu's voice drops an octave and takes on a strange, echoing quality. Something else is speaking through him now._
 
-t!8ball Does maia quickly assist the avian?
-
-**Tatsumaki** _(11-Nov-18 03:34 PM)_
-
-> 🎱 | My sources say no,
-> Mica
-> .
-
-**Enchantingtable2013** _(11-Nov-18 03:34 PM)_
-
-> 'Do not worry about him.'
-> 'I'm taking care of him.'
+> `Kluex`: Yes, he is.
+> `Kluex`: Do not worry about him.
+> `Kluex`: I'm taking care of him.
 
 **ProfessorTree** _(11-Nov-18 03:35 PM)_
 
-> `...never have I seen an Avian act like this.` > `Should I have something to fear?`
+_Chase takes a step back._
+
+> ...Never have I seen an Avian act like this.
+> Should I have something to fear?
 
 **Mica** _(11-Nov-18 03:35 PM)_
 
-> I have seed..
+_Maia holds out a handful of seed, uncertainly._
+
+> I have seed...
 
 **Enchantingtable2013** _(11-Nov-18 03:35 PM)_
 
-> 'He is not just any avian.'
-> 'He is of the Righteous Few.'
+> `Kluex`: He is not just any Avian.
+> `Kluex`: He is of the Righteous Few.
 
 **Brakia** _(11-Nov-18 03:36 PM)_
 
-> Sanya, visibly drained, comes out of her room.
+_Sanya, visibly drained, comes out of her room._
 
 **Enchantingtable2013** _(11-Nov-18 03:36 PM)_
 
-> 'You have nothing to fear by any means.'
+_Matieu's body stands up straighter than Matieu ever has._
 
-**RPretribution** _(11-Nov-18 03:36 PM)_
-
-> im sorry
+> `Kluex`: You have nothing to fear by any means.
 
 **Brakia** _(11-Nov-18 03:36 PM)_
 
-> `Hey gu- What.`
+> Hey, gu-- What.
 
 **Enchantingtable2013** _(11-Nov-18 03:36 PM)_
 
-> 'A benevolent god never hurts his subordinates.'
+_Kluex places a hand over Matieu's chest._
+
+> `Kluex`: A benevolent god never hurts his subordinates.
 
 **ProfessorTree** _(11-Nov-18 03:36 PM)_
 
-> `I have a fear.`
+_Chase edges behind the couch._
+
+> I have a fear.
 
 **Mica** _(11-Nov-18 03:36 PM)_
 
-> What the heck..
+_Maia's ears flatten._
+
+> What the heck...
 
 **Brakia** _(11-Nov-18 03:36 PM)_
 
-> `A god?`
+_Sanya crosses her arms, unimpressed._
 
-**RPretribution** _(11-Nov-18 03:36 PM)_
-
-> one fear
+> A god?
 
 **Enchantingtable2013** _(11-Nov-18 03:37 PM)_
 
-> 'For this one is of the purest line.'
-> 'The people hate him, I love them.'
+_Kluex gestures grandly at Matieu's body._
+
+> `Kluex`: For this one is of the purest line.
+> `Kluex`: The people hate him; I love them.
 
 **RPretribution** _(11-Nov-18 03:37 PM)_
 
-> Hey guys. What's this about Matieu not feeling so good?
+_Garrick floats in through the ceiling._
+
+> Hey, guys. What's this about Matieu not feeling so good?
 
 **Enchantingtable2013** _(11-Nov-18 03:37 PM)_
 
-> 'They are the purest of Avos.'
+_Kluex ignores Garrick entirely._
+
+> `Kluex`: They are the purest of Avos.
 
 **Brakia** _(11-Nov-18 03:37 PM)_
 
-> `Yeah, hating him is easy.`
+_Sanya snorts._
+
+> Yeah, hating him is easy.
 
 **ProfessorTree** _(11-Nov-18 03:37 PM)_
 
-> `A ghost...?` > `Could this day get any weirder?`
+_Chase stares at Garrick, then at Matieu._
+
+> A ghost...?
+> Could this day get any weirder?
 
 **Mica** _(11-Nov-18 03:38 PM)_
 
-> Be careful everyone..
+_Maia rises from the couch, her wings half-spread._
+
+> Be careful, everyone...
 
 **Brakia** _(11-Nov-18 03:38 PM)_
 
-> `Oh, hey Garrick.`
+> Oh, hey, Garrick.
 
 **Enchantingtable2013** _(11-Nov-18 03:38 PM)_
 
-> 'Not a ghost, one could say an all seeing entity.'
+_Kluex turns his glowing gaze on Chase._
+
+> `Kluex`: Not a ghost. One could say an all-seeing entity.
 
 **RPretribution** _(11-Nov-18 03:38 PM)_
+
+_Garrick peers at Chase._
 
 > Whoa, did we get another Ottori?
 
 **Mica** _(11-Nov-18 03:38 PM)_
 
+_Maia answers for him._
+
 > A god.
 
 **Enchantingtable2013** _(11-Nov-18 03:38 PM)_
 
-> 'Entity being a God.'
+_Kluex nods at Maia approvingly._
+
+> `Kluex`: Entity being a god.
 
 **ProfessorTree** _(11-Nov-18 03:38 PM)_
 
-> `I meant the bright yellow ghost that just showed up.`
+_Chase points at Garrick._
+
+> I meant the bright yellow ghost that just showed up.
 
 **Enchantingtable2013** _(11-Nov-18 03:38 PM)_
 
-> 'Correct! Good job.'
+_Kluex claps Matieu's hands together._
+
+> `Kluex`: Correct! Good job.
 
 **Brakia** _(11-Nov-18 03:38 PM)_
 
-> `It's your husband, Garrick.`
+_Sanya smirks at Chase._
+
+> It's your husband, Garrick.
 
 **ProfessorTree** _(11-Nov-18 03:38 PM)_
 
-> `What?`
+> What?
 
 **RPretribution** _(11-Nov-18 03:39 PM)_
+
+_Garrick puffs up proudly._
 
 > Well, I'm flattered, but I wouldn't call myself a god.
 
 **Enchantingtable2013** _(11-Nov-18 03:39 PM)_
 
-> 'You're especially bright, misses.'
+_Kluex turns to Maia._
+
+> `Kluex`: You're especially bright, missus.
 
 **ProfessorTree** _(11-Nov-18 03:39 PM)_
 
-> `...`
+> ...
 
 **Enchantingtable2013** _(11-Nov-18 03:39 PM)_
 
-> 'What should I call you?'
+_Kluex tilts Matieu's head curiously._
+
+> `Kluex`: What should I call you?
 
 **Brakia** _(11-Nov-18 03:39 PM)_
 
-> `Not you, Idiot.`
+_Sanya waves Garrick off._
+
+> Not you, idiot.
 
 **Mica** _(11-Nov-18 03:39 PM)_
 
-> I am a Demi-God.
+_Maia draws herself up to her full height._
+
+> I am a demigod.
 
 **Enchantingtable2013** _(11-Nov-18 03:39 PM)_
 
-> 'Honestly, shut up dude.'
+_Kluex rounds on Garrick._
+
+> `Kluex`: Honestly, shut up, dude.
 
 **RPretribution** _(11-Nov-18 03:39 PM)_
+
+_Garrick floats uncomfortably close to Kluex's face._
 
 > Oh, don't be such a buzzkill.
 
 **Mica** _(11-Nov-18 03:39 PM)_
 
-> So I am familiar..
+> So I am familiar...
 
 **Enchantingtable2013** _(11-Nov-18 03:40 PM)_
 
-> 'I could kill you if I wanted, kind sir.'
+_Kluex's eyes flare brighter._
+
+> `Kluex`: I could kill you if I wanted, kind sir.
 
 **Brakia** _(11-Nov-18 03:40 PM)_
 
-> `So, how many gods are in this crew, anyway?`
+_Sanya glances between Maia and Kluex._
+
+> So, how many gods are in this crew, anyway?
 
 **Enchantingtable2013** _(11-Nov-18 03:40 PM)_
 
-> 'Don't question my authority.'
+_Kluex jabs a finger in Sanya's direction._
+
+> `Kluex`: Don't question my authority.
 
 **Brakia** _(11-Nov-18 03:40 PM)_
 
-> `I'm not questioning anything. I'm just asking a question.`
+> I'm not questioning anything. I'm just asking a question.
 
 **Enchantingtable2013** _(11-Nov-18 03:41 PM)_
 
-> 'Not you, plantwoman. The Ghost.'
-> 'Matieu is not a god, per se.'
-> 'He's more like a vassal.'
+> `Kluex`: Not you, plantwoman. The ghost.
+> `Kluex`: Matieu is not a god, per se.
+> `Kluex`: He's more like a vassal.
 
 **RPretribution** _(11-Nov-18 03:41 PM)_
 
-> Garrick sticks his tongue out at Matieu.
+_Garrick sticks his tongue out at Matieu._
 
 **Brakia** _(11-Nov-18 03:41 PM)_
 
-> `Plantwoman?`
-> Sanya, again, raises her non-existent eybrow.
+> Plantwoman?
+
+_Sanya, again, raises her non-existent eyebrow._
 
 **Platinum_Pathos** _(11-Nov-18 03:42 PM)_
 
-> Guys the kitchen was not as entertaining as I remember.
+_Danny wanders back in from the kitchen, empty-handed._
+
+> Guys, the kitchen was not as entertaining as I remember.
 
 **Enchantingtable2013** _(11-Nov-18 03:42 PM)_
 
@@ -1267,52 +1413,25 @@ t!8ball Does the Entity slap Garrick off of the planet?
 
 **Tatsumaki** _(11-Nov-18 03:42 PM)_
 
-> 🎱 | My reply is no,
-> Enchantingtable2013
-> .
-
-**RPretribution** _(11-Nov-18 03:42 PM)_
-
-> nice
-
-**Enchantingtable2013** _(11-Nov-18 03:42 PM)_
-
-t!8ball Does the Entity slap Garrick off of the planet?
-
-**Tatsumaki** _(11-Nov-18 03:42 PM)_
-
-> 🎱 | You may rely on it,
-> Enchantingtable2013
-> .
-
-**RPretribution** _(11-Nov-18 03:42 PM)_
-
-> hey wait
+🎱 | You may rely on it, Enchantingtable2013.
 
 **Zander** _(11-Nov-18 03:42 PM)_
 
-> Emmett leaves the restroom, turning off the light.
+_Emmett leaves the restroom, turning off the light._
 
 **Enchantingtable2013** _(11-Nov-18 03:42 PM)_
 
-> 'Say goodbye to him, at least for now.'
+_Kluex backhands Garrick, and the spectre goes careening through the hull and off into the red sky._
 
-**RPretribution** _(11-Nov-18 03:42 PM)_
-
-> thats cheating
+> `Kluex`: Say goodbye to him, at least for now.
 
 **Enchantingtable2013** _(11-Nov-18 03:43 PM)_
 
-> 'Now, any questions you want answered?'
-> Deal with it
+> `Kluex`: Now, any questions you want answered?
 
 **Zander** _(11-Nov-18 03:43 PM)_
 
-> Garrick isn't slapped
-
-**RPretribution** _(11-Nov-18 03:43 PM)_
-
-> u smell
+_Being a ghost, Garrick is more offended than hurt._
 
 **Mica** _(11-Nov-18 03:43 PM)_
 
@@ -1320,120 +1439,142 @@ t!8ball Is Maia's time to go drawing near?
 
 **Tatsumaki** _(11-Nov-18 03:43 PM)_
 
-> 🎱 | You may rely on it,
-> Mica
-> .
+🎱 | You may rely on it, Mica.
 
 **Brakia** _(11-Nov-18 03:43 PM)_
 
-> `What god are you?`
+_Sanya leans against the wall._
 
-**Zander** _(11-Nov-18 03:43 PM)_
-
-> Because he's a ghost
-
-**RPretribution** _(11-Nov-18 03:43 PM)_
-
-> GOTEM
+> What god are you?
 
 **Mica** _(11-Nov-18 03:43 PM)_
+
+_Maia touches Emmett's arm gently._
 
 > Emmett.
 
 **Zander** _(11-Nov-18 03:43 PM)_
 
+_Emmett glances at the chaos in the lounge, then back at Maia._
+
 > You know, I usually ignore these guys.
 
 **Enchantingtable2013** _(11-Nov-18 03:43 PM)_
 
-> 'I am Klux.'
-
+> `Kluex`: I am Kluex.
 **Platinum_Pathos** _(11-Nov-18 03:44 PM)_
+
+_Danny slumps onto a stool._
 
 > Everyone always ignores me...
 
 **Enchantingtable2013** _(11-Nov-18 03:44 PM)_
 
-> 'The witty may have heard of me.'
-> 'Hello round man.'
+_Kluex spreads Matieu's wings dramatically._
+
+> `Kluex`: The witty may have heard of me.
+> `Kluex`: Hello, round man.
 
 **Zander** _(11-Nov-18 03:44 PM)_
 
-> They have all these God-things and all that shit.
+_Emmett waves a hand at the lounge._
+
+> They have all these god-things and all that shit.
 
 **Mica** _(11-Nov-18 03:44 PM)_
 
-> Emmett..
+> Emmett...
 
 **Zander** _(11-Nov-18 03:44 PM)_
 
-> And Danny, come meet Maia if you haven't.
+_Emmett spots Danny eyeing Maia hungrily._
 
+> And Danny, come meet Maia if you haven't.
 > She isn't food.
 
 **ProfessorTree** _(11-Nov-18 03:44 PM)_
 
-> `I don't think I was mentally ready to see all of this.`
+_Chase rubs his temples._
+
+> I don't think I was mentally ready to see all of this.
 
 **Platinum_Pathos** _(11-Nov-18 03:44 PM)_
 
-> Hello, "thing"
+_Danny waves at Maia._
+
+> Hello, "thing."
 
 **Brakia** _(11-Nov-18 03:44 PM)_
 
-> `Then go find a room, Ottori.`
+_Sanya doesn't even look at Chase._
+
+> Then go find a room, Ottori.
 
 **Mica** _(11-Nov-18 03:45 PM)_
 
-> H-hello..
-> she coughs up some stardust
+> H-hello...
+
+_Maia coughs up some stardust._
 
 **Zander** _(11-Nov-18 03:45 PM)_
+
+_Emmett turns to her, concerned._
 
 > Yes. Maia?
 
 **Enchantingtable2013** _(11-Nov-18 03:45 PM)_
 
-> 'Now, there is a special seed that can reverse this process, but until then, I am essentially Matieu.'
+_Kluex pats Matieu's chest._
+
+> `Kluex`: Now, there is a special seed that can reverse this process, but until then, I am essentially Matieu.
 
 **Platinum_Pathos** _(11-Nov-18 03:45 PM)_
 
-> Stop getting high on the job Maia
+> Stop getting high on the job, Maia.
 
 **Brakia** _(11-Nov-18 03:45 PM)_
 
-> `Can't be worse than he was.`
+_Sanya shrugs._
+
+> Can't be worse than he was.
 
 **Mica** _(11-Nov-18 03:45 PM)_
 
-> I..
+> I...
 
 **Zander** _(11-Nov-18 03:45 PM)_
 
 > I don't think she's high.
-> Emmett puts his digits on his hips.
+
+_Emmett puts his digits on his hips._
 
 **Brakia** _(11-Nov-18 03:46 PM)_
 
-> Sanya heads to the pool, no longer caring about the Avian's problems
+_Sanya heads to the pool, no longer caring about the Avian's problems._
 
 **Mica** _(11-Nov-18 03:46 PM)_
+
+_Maia wipes the stardust from her lips._
 
 > I must go very soon.
 
 **Platinum_Pathos** _(11-Nov-18 03:46 PM)_
 
-> Or maybe you're also high
+_Danny squints at Emmett._
+
+> Or maybe you're also high.
 
 **Zander** _(11-Nov-18 03:46 PM)_
 
-> Still you need to quit eating the ship.
+> Still, you need to quit eating the ship.
+
+_Emmett turns back to Maia._
 
 > So soon?
 
 **Platinum_Pathos** _(11-Nov-18 03:46 PM)_
 
-> I make no promises
+> I make no promises.
 
 **Mica** _(11-Nov-18 03:46 PM)_
 
@@ -1441,85 +1582,119 @@ t!8ball Is Maia's time to go drawing near?
 
 **Platinum_Pathos** _(11-Nov-18 03:46 PM)_
 
-> You can not stop me if we run out of food again
-> I will attempt to avoid all vital compenents though
+_Danny pats his stomach._
+
+> You cannot stop me if we run out of food again.
+> I will attempt to avoid all vital components, though.
 
 **Zander** _(11-Nov-18 03:47 PM)_
 
-> Emmett climbs atop of Maia's back.
+_Emmett climbs atop Maia's back._
 
 **ProfessorTree** _(11-Nov-18 03:47 PM)_
 
-> `A humanoid Poyo...` > `Interesting.`
+_Chase finally takes a good look at Danny._
+
+> A humanoid Poyo...
+> Interesting.
 
 **Platinum_Pathos** _(11-Nov-18 03:48 PM)_
+
+_Danny squints back at Chase._
 
 > Who are you?
 
 **Enchantingtable2013** _(11-Nov-18 03:48 PM)_
 
-> 'And one thing I must say...'
+> `Kluex`: And one thing I must say...
 
 **Mica** _(11-Nov-18 03:48 PM)_
+
+_Maia looks over her shoulder at Emmett._
 
 > Emmett. We need to go somewhere quiet.
 
 **ProfessorTree** _(11-Nov-18 03:48 PM)_
 
-> `I'm Chase. And you are?`
+_Chase offers a paw._
+
+> I'm Chase. And you are?
 
 **Zander** _(11-Nov-18 03:48 PM)_
+
+_Emmett settles on Maia's back._
 
 > Well, you can take me anywhere.
 
 **Platinum_Pathos** _(11-Nov-18 03:48 PM)_
 
-> There is no quiet Maia, only here
+> There is no quiet, Maia, only here.
 
 **Enchantingtable2013** _(11-Nov-18 03:48 PM)_
 
-> 'I know about one of your old friends, everyone.'
+_Kluex raises Matieu's hand for attention._
+
+> `Kluex`: I know about one of your old friends, everyone.
 
 **RPretribution** _(11-Nov-18 03:48 PM)_
 
-> Garrick floats back to the group.
+_Garrick floats back to the group through the wall, scowling._
+
 > That wasn't funny.
 
 **ProfessorTree** _(11-Nov-18 03:48 PM)_
 
-> `Oh ho ho. I see you two are...more than friends.`
+_Chase eyes Emmett, perched on Maia's back._
+
+> Oh ho ho. I see you two are... more than friends.
 
 **Platinum_Pathos** _(11-Nov-18 03:49 PM)_
 
-> Call me Danny
+_Danny shakes Chase's paw._
+
+> Call me Danny.
 
 **Enchantingtable2013** _(11-Nov-18 03:49 PM)_
 
-> 'By the name of Matthias, I believe.'
+_Kluex's glowing eyes fix on Emmett._
+
+> `Kluex`: By the name of Matthias, I believe.
 
 **Mica** _(11-Nov-18 03:49 PM)_
 
-> she smiles
+_Maia smiles._
 
 **Enchantingtable2013** _(11-Nov-18 03:49 PM)_
 
-> 'If anyone cares to listen, I will say he plans on returning to you.'
+> `Kluex`: If anyone cares to listen, I will say he plans on returning to you.
 
 **Platinum_Pathos** _(11-Nov-18 03:49 PM)_
 
-> Matieu are you high as well?
+_Danny leans in to sniff Matieu._
+
+> Matieu, are you high as well?
 
 **ProfessorTree** _(11-Nov-18 03:49 PM)_
 
-> `I believe the rest of the crew is occupied. You two should skedaddle.`
+_Chase winks at Emmett._
+
+> I believe the rest of the crew is occupied. You two should skedaddle.
 
 **Zander** _(11-Nov-18 03:50 PM)_
 
+_Emmett's ears shoot up._
+
 > Wait, Matthias is coming back?
+
+_Emmett grins at the thought._
+
+> Seth is going to be piiiiiisssed.
 
 **Enchantingtable2013** _(11-Nov-18 03:50 PM)_
 
-> 'Common misconception, I am not Matieu.'
+_Kluex holds up a finger._
+
+> `Kluex`: Common misconception. I am not Matieu.
 
 **Mica** _(11-Nov-18 03:50 PM)_
 
@@ -1527,211 +1702,183 @@ t!8ball Is Maia's time to go drawing near?
 
 **Enchantingtable2013** _(11-Nov-18 03:50 PM)_
 
-> 'I am Klux.'
+> `Kluex`: I am Kluex.
+
+> `Kluex`: And yes, he is.
 
 **Zander** _(11-Nov-18 03:50 PM)_
 
-> Seth is going to be piiiiiisssed.
-
-**Enchantingtable2013** _(11-Nov-18 03:50 PM)_
-
-> 'And yes, he is.'
-
-**Zander** _(11-Nov-18 03:50 PM)_
+_Emmett pats Maia's flank._
 
 > Lead the way, horsey.
 
 **Platinum_Pathos** _(11-Nov-18 03:50 PM)_
 
-> OK "Klux" so you are confirming you are high correct?
+_Danny makes air quotes._
+
+> Okay, "Kluex," so you are confirming you are high, correct?
 
 **Enchantingtable2013** _(11-Nov-18 03:50 PM)_
 
-> 'He has been especially righteous, so I decided to let him do as he wants.'
-> 'I am by no means high.'
+> `Kluex`: He has been especially righteous, so I decided to let him do as he wants.
+> `Kluex`: I am by no means high.
 
 **Platinum_Pathos** _(11-Nov-18 03:51 PM)_
+
+_Danny nods sagely._
 
 > I will consider that means you are high.
 
 **Enchantingtable2013** _(11-Nov-18 03:51 PM)_
 
-> 'There is only one drug in the galaxy, and its Yontreconicam.'
+> `Kluex`: There is only one drug in the galaxy, and it's Yontreconicam.
 
 **RPretribution** _(11-Nov-18 03:51 PM)_
+
+_Garrick floats in a slow circle around Kluex._
 
 > You're certainly acting high.
 > All high and mighty, that is.
 
 **Enchantingtable2013** _(11-Nov-18 03:51 PM)_
 
-> 'That drug is grown 99823.319 universal miles away.'
+> `Kluex`: That drug is grown 99823.319 light years away.
 
 **Mica** _(11-Nov-18 03:52 PM)_
 
-> She walks him to their old room, closing the door and placing him on her cloud bed so they were eye level.
-
-**RPretribution** _(11-Nov-18 03:52 PM)_
-
-> oh no
-
-**Enchantingtable2013** _(11-Nov-18 03:52 PM)_
-
-> Lewd this
-
-**Platinum_Pathos** _(11-Nov-18 03:52 PM)_
-
-> Too much lewd
-
-**Mica** _(11-Nov-18 03:52 PM)_
-
-> cucc
-
-**ProfessorTree** _(11-Nov-18 03:53 PM)_
-
-> wucc
-
-**RPretribution** _(11-Nov-18 03:53 PM)_
-
-> w
-> hat
-
-**ProfessorTree** _(11-Nov-18 03:53 PM)_
-
-> 5 dorra wuccy
-
-**Zander** _(11-Nov-18 03:54 PM)_
-
->
-
-**Mica** _(11-Nov-18 03:54 PM)_
-
-> I just wanted to say something to you before I leave.
-
-**ProfessorTree** _(11-Nov-18 03:54 PM)_
-
-> kirby man
-> cursed image
-
-**RPretribution** _(11-Nov-18 03:54 PM)_
-
-> its danny
+_Maia walks Emmett to their old room, closing the door and placing him on her cloud bed so they're eye level._
 
 **Brakia** _(11-Nov-18 03:54 PM)_
 
-> Sanya sits at the pool.. thinking.
+_Sanya sits at the pool... thinking._
 
-**RPretribution** _(11-Nov-18 03:55 PM)_
+**Mica** _(11-Nov-18 03:54 PM)_
 
-> baby
+_Maia sits on the edge of the cloud bed beside him._
+
+> I just wanted to say something to you before I leave.
 
 **Zander** _(11-Nov-18 03:56 PM)_
+
+_Emmett nods, his hooves dangling off the bed._
 
 > Okay.
 
 **ProfessorTree** _(11-Nov-18 03:56 PM)_
 
-> `I ponder what it would be like if two gods were to mate.`
+_Out in the lounge, Chase strokes his whiskers thoughtfully._
+
+> I ponder what it would be like if two gods were to mate.
 
 **Mica** _(11-Nov-18 03:56 PM)_
 
-> I wasn't very close to anyone on this ship, except for you.. and to be honest, I have very much enjoyed our companionship. I do apologize for not being here often.
+> I wasn't very close to anyone on this ship, except for you... and to be honest, I have very much enjoyed our companionship. I do apologize for not being here often.
 
 **RPretribution** _(11-Nov-18 03:56 PM)_
 
-t!8ball does garrick slap danny
+t!8ball Does Garrick slap Danny?
 
 **Tatsumaki** _(11-Nov-18 03:56 PM)_
 
-> 🎱 | You may rely on it,
-> RPretribution
-> .
+🎱 | You may rely on it, RPretribution.
+
+**RPretribution** _(11-Nov-18 03:56 PM)_
+
+_Garrick slaps Danny across the face for no apparent reason._
 
 **Zander** _(11-Nov-18 03:56 PM)_
+
+_Emmett shakes his head._
 
 > You're fine with that. You have responsibilities.
 
 **Enchantingtable2013** _(11-Nov-18 03:56 PM)_
 
-> 'I assume you'd pleasure in seeing that, Chase?'
+_Kluex arches Matieu's brow._
+
+> `Kluex`: I assume you'd take pleasure in seeing that, Chase?
 
 **RPretribution** _(11-Nov-18 03:57 PM)_
+
+_Garrick glares at Danny._
 
 > Bad blue man. Do not like him.
 
 **ProfessorTree** _(11-Nov-18 03:57 PM)_
 
-> `I'd want to see the results, for research purposes.`
+_Chase adjusts imaginary glasses._
+
+> I'd want to see the results, for research purposes.
 
 **Platinum_Pathos** _(11-Nov-18 03:57 PM)_
 
-> That is rude
+_Danny rubs his cheek._
+
+> That is rude.
 
 **Enchantingtable2013** _(11-Nov-18 03:57 PM)_
 
-> 'Research, old as time. Humans used that for many, many, strange reasons.'
+> `Kluex`: Research, old as time. Humans used that for many, many strange reasons.
 
 **Mica** _(11-Nov-18 03:57 PM)_
 
 > This responsibility was one I wasn't expecting so soon.
-> she starts to cry sparkly tears.
+
+_Maia starts to cry sparkly tears._
 
 **ProfessorTree** _(11-Nov-18 03:57 PM)_
 
-> `It would be a one-of-a-kind scientific discovery.`
+_Chase pulls out a notepad._
+
+> It would be a one-of-a-kind scientific discovery.
 
 **Brakia** _(11-Nov-18 03:57 PM)_
 
-> `Another god huh? How do you feel about that?`
-> "I never bothered with Klux. But now that he's here..."
+_By the pool, Sanya turns inward to the presence in her head._
+
+> Another god, huh? How do you feel about that?
+
+> `Dread`: I never bothered with Kluex. But now that he's here...
 
 **Enchantingtable2013** _(11-Nov-18 03:58 PM)_
 
-> 'Well usually science conflicts with religion.'
+> `Kluex`: Well, usually science conflicts with religion.
 
 **Zander** _(11-Nov-18 03:58 PM)_
+
+_Emmett wipes a sparkly tear from Maia's cheek._
 
 > Don't cry.
 
 **Enchantingtable2013** _(11-Nov-18 03:58 PM)_
 
-> 'I don't know how that would bode with my peers.'
+_Kluex rubs Matieu's chin thoughtfully._
+
+> `Kluex`: I don't know how that would bode with my peers.
 
 **Zander** _(11-Nov-18 03:58 PM)_
+
+_Emmett squeezes her hand._
 
 > Just remember the good times. Hope for the best, y'know?
 
 **Brakia** _(11-Nov-18 03:58 PM)_
 
-> `Hm.`
+> Hm.
 
 **Mica** _(11-Nov-18 03:59 PM)_
 
+_Maia sniffles and smiles._
+
 > I will. I will never forget my time spent here. As for now, I want to give you your gift.
 
-**RPretribution** _(11-Nov-18 03:59 PM)_
-
-> oh no
-
 **Zander** _(11-Nov-18 03:59 PM)_
 
 t!8ball Does Danny have a multidimensional tongue?
 
 **Tatsumaki** _(11-Nov-18 03:59 PM)_
 
-> 🎱 | Better not tell you now,
-> Zander
-> .
-
-**Zander** _(11-Nov-18 03:59 PM)_
-
-t!8ball Does Danny have a multidimensional tongue?
-
-**Tatsumaki** _(11-Nov-18 03:59 PM)_
-
-> 🎱 | It is decidedly so,
-> Zander
-> .
+🎱 | It is decidedly so, Zander.
 
 **Brakia** _(11-Nov-18 04:00 PM)_
 
@@ -1739,114 +1886,84 @@ t!choose keep sitting | swim
 
 **Tatsumaki** _(11-Nov-18 04:00 PM)_
 
-> 🤔 |
-> Brakia
-> , I pick
-> keep sitting
-> !
+🤔 | Brakia, I pick keep sitting!
 
 **Mica** _(11-Nov-18 04:00 PM)_
+
+_Maia takes both of Emmett's hands._
 
 > Something good is going to happen in the near future. Something I've wanted to happen since I've met you.
 
 **Zander** _(11-Nov-18 04:01 PM)_
 
+_Emmett's eyes go wide._
+
 > Really?
 
-**Enchantingtable2013** _(11-Nov-18 04:01 PM)_
-
-t!8ball Does Klux levitate over to Sanya?
-
-**Tatsumaki** _(11-Nov-18 04:01 PM)_
-
-> 🎱 | Reply hazy try again,
-> Enchantingtable2013
-> .
-
-**RPretribution** _(11-Nov-18 04:01 PM)_
-
-> oh no
-
 **Mica** _(11-Nov-18 04:01 PM)_
+
+_Maia glances down at her large centaur body._
 
 > Me being in this form has prevented me from fulfilling this.
 
 **Zander** _(11-Nov-18 04:01 PM)_
 
-> Emmett's starting to feel a little uneasy from the suspense.
+_Emmett's starting to feel a little uneasy from the suspense._
 
 **Enchantingtable2013** _(11-Nov-18 04:02 PM)_
 
-> 'God, plantwoman, you do not know how much that made my feet hurt.'
+_Kluex, in Matieu's body, trudges all the way out to the pool to join Sanya._
+
+> `Kluex`: God, plantwoman, you do not know how much that made my feet hurt.
 
 **Platinum_Pathos** _(11-Nov-18 04:02 PM)_
 
-> Clothes are not a form Maia!
+_Danny heckles through Maia's closed door._
+
+> Clothes are not a form, Maia!
 
 **Enchantingtable2013** _(11-Nov-18 04:02 PM)_
 
-> 'I haven't had to walk in ages!'
+> `Kluex`: I haven't had to walk in ages!
 
 **Brakia** _(11-Nov-18 04:03 PM)_
 
-> `Walking's good for bodies. I think.`
+_Sanya doesn't look up from the water._
+
+> Walking's good for bodies. I think.
 
 **Mica** _(11-Nov-18 04:03 PM)_
 
-> she rests a hand on his shoulder to comfort him
+_Maia rests a hand on Emmett's shoulder to comfort him._
 
 **Enchantingtable2013** _(11-Nov-18 04:03 PM)_
 
-> 'Well usually my vassals have strong bodies. Matieu is just extremely agile. It's almost inhuman.'
+_Kluex flexes Matieu's scrawny arm._
 
-**Mica** _(11-Nov-18 04:03 PM)_
-
-t!8ball Does Maia give Emmett his goodbye gift?
-
-**Enchantingtable2013** _(11-Nov-18 04:04 PM)_
-
-> YES
+> `Kluex`: Well, usually my vassals have strong bodies. Matieu is just extremely agile. It's almost inhuman.
 
 **Brakia** _(11-Nov-18 04:04 PM)_
 
-> `He's not human. There's your answer`
+_Sanya flicks a pebble into the pool._
+
+> He's not human. There's your answer.
 
 **Platinum_Pathos** _(11-Nov-18 04:04 PM)_
 
-> I do not respect you Garrick
-> t!8ball Does Danny slap Garrick with his multidimensional tongue?
+_Back in the lounge, Danny turns on Garrick._
 
-**Tatsumaki** _(11-Nov-18 04:04 PM)_
-
-> 🎱 | Ask again later,
-> Platinum_Pathos
-> .
-
-**Platinum_Pathos** _(11-Nov-18 04:04 PM)_
-
-t!8ball Does Danny slap Garrick with his multidimensional tongue?
-t!8ball Does Danny slap Garrick with his multidimensional tongue?
-
-**Tatsumaki** _(11-Nov-18 04:04 PM)_
-
-> 🎱 | Better not tell you now,
-> Platinum_Pathos
-> .
+> I do not respect you, Garrick.
 
 **Enchantingtable2013** _(11-Nov-18 04:04 PM)_
 
-> 'Oh shut up.'
-> 'You're quite the smartass.'
-
-**Tatsumaki** _(11-Nov-18 04:05 PM)_
-
-> 🎱 | My reply is no,
-> Platinum_Pathos
-> .
+> `Kluex`: Oh, shut up.
+> `Kluex`: You're quite the smartass.
 
 **Brakia** _(11-Nov-18 04:05 PM)_
 
-> `Awfully casual for a god.`
+_Sanya raises her non-existent eyebrow again._
+
+> Awfully casual for a god.
 
 **Platinum_Pathos** _(11-Nov-18 04:05 PM)_
 
@@ -1854,199 +1971,230 @@ t!8ball Does Danny slap Garrick with his multidimensional tongue?
 
 **Tatsumaki** _(11-Nov-18 04:05 PM)_
 
-> 🎱 | Yes,
-> Platinum_Pathos
-> .
-
-**RPretribution** _(11-Nov-18 04:05 PM)_
-
-> THAT'S IT
-
-**Enchantingtable2013** _(11-Nov-18 04:05 PM)_
-
-> 'Sometimes I just have to let it out, you know?'
-> 'I was alive once, you know.'
+🎱 | Yes, Platinum_Pathos.
 
 **Platinum_Pathos** _(11-Nov-18 04:05 PM)_
 
-> What's it!
+_Danny's tongue lashes out through several dimensions at once and slaps Garrick squarely across his intangible face._
+
+**RPretribution** _(11-Nov-18 04:05 PM)_
+
+> THAT'S IT!
+
+**Enchantingtable2013** _(11-Nov-18 04:05 PM)_
+
+_Kluex sits down on the pool's edge beside Sanya._
+
+> `Kluex`: Sometimes I just have to let it out, you know?
+> `Kluex`: I was alive once, you know.
+
+**Platinum_Pathos** _(11-Nov-18 04:05 PM)_
+
+_Danny reels his tongue back in, confused._
+
+> What's it?!
 
 **Brakia** _(11-Nov-18 04:06 PM)_
 
-> `A god was human?`
+> A god was human?
 
 **Enchantingtable2013** _(11-Nov-18 04:06 PM)_
 
-> 'I was the first of my line.'
+_Kluex gazes out over the water._
+
+> `Kluex`: I was the first of my line.
 
 **Brakia** _(11-Nov-18 04:06 PM)_
 
-> `Wait, if you are an avian god, why were you human?`
+> Wait, if you are an Avian god, why were you human?
 
 **Enchantingtable2013** _(11-Nov-18 04:06 PM)_
 
-> 'By who knows what, I was decidedly the most pure of the small group that was the Avians.'
+_Kluex shrugs Matieu's shoulders._
+
+> `Kluex`: By who knows what, I was decidedly the most pure of the small group that was the Avians.
 
 **RPretribution** _(11-Nov-18 04:06 PM)_
+
+_Garrick digs through his pockets for a weapon._
 
 t!choose hammer | taser | marshmallow
 
 **Tatsumaki** _(11-Nov-18 04:06 PM)_
 
-> 🤔 |
-> RPretribution
-> , I pick
-> taser
-> !
+🤔 | RPretribution, I pick taser!
 
 **RPretribution** _(11-Nov-18 04:07 PM)_
 
-> Garrick tases Danny.
+_Garrick tases Danny._
 
 **Enchantingtable2013** _(11-Nov-18 04:07 PM)_
 
-> 'I was never really good, but I learned.'
-> 'Avians were a horrible group of creatures until I intervened.'
+> `Kluex`: I was never really good, but I learned.
+> `Kluex`: Avians were a horrible group of creatures until I intervened.
 
 **Platinum_Pathos** _(11-Nov-18 04:08 PM)_
+
+_Danny twitches, his hair standing on end._
 
 > Garrick, I will warn you now, this will not be pretty if you continue in these actions.
 
 **Brakia** _(11-Nov-18 04:08 PM)_
 
-> `Hm. So, you didn't make the race, but you helped them?`
+> Hm. So, you didn't make the race, but you helped them?
 
 **Enchantingtable2013** _(11-Nov-18 04:08 PM)_
 
-> 'The majority of us divine beings were alive.'
-> 'Indeed.'
-> 'Nobody knows where Avians came from.'
-> 'They were just, there I guess.'
+> `Kluex`: The majority of us divine beings were alive.
+> `Kluex`: Indeed.
+> `Kluex`: Nobody knows where Avians came from.
+> `Kluex`: They were just, there, I guess.
 
 **Brakia** _(11-Nov-18 04:09 PM)_
 
-> `Hm. Our god created our race in his own image. He needed something to created... fear.`
+_Sanya's voice goes quiet._
+
+> Hm. Our god created our race in his own image. He needed something to create... fear.
 
 **Enchantingtable2013** _(11-Nov-18 04:10 PM)_
 
-> 'Odd. Seems very counterintuitive for a race.'
+_Kluex tilts his head at her._
+
+> `Kluex`: Odd. Seems very counterintuitive for a race.
 
 **RPretribution** _(11-Nov-18 04:10 PM)_
+
+_Garrick's form flickers with rage._
 
 > I have the sudden urge to kill you!
 
+_Garrick whacks Danny with a marshmallow._
+
 **Brakia** _(11-Nov-18 04:10 PM)_
 
-> `It fit his needs.`
+_Sanya looks away._
 
-**RPretribution** _(11-Nov-18 04:10 PM)_
-
-> He whacks Danny with a marshmallow.
+> It fit his needs.
 
 **Mica** _(11-Nov-18 04:11 PM)_
 
-> Maia starts to glow, turning into her pure celestial form. Her new form was small, similar to Emmett's size and shape. She hugged him gently and leaned into to him, caressing his cheek and planted a sweet kiss on his lips. "This isn't a good bye, but more of a see you later."
+_Maia starts to glow, turning into her pure celestial form. Her new form is small, similar to Emmett's size and shape. She hugs him gently and leans into him, caressing his cheek, and plants a sweet kiss on his lips._
+
+> This isn't a goodbye, but more of a see-you-later.
 
 **Platinum_Pathos** _(11-Nov-18 04:11 PM)_
 
-> You have no urges you pile of ectoplasm!
+_Danny wipes the marshmallow off his face._
+
+> You have no urges, you pile of ectoplasm!
 
 **RPretribution** _(11-Nov-18 04:11 PM)_
 
-> I'd insult you but I have no idea what your race is!
+_Garrick circles Danny, looking him up and down._
 
-**ProfessorTree** _(11-Nov-18 04:12 PM)_
-
->
+> I'd insult you, but I have no idea what your race is!
 
 **Zander** _(11-Nov-18 04:12 PM)_
 
-> Emmett is in a state of shock from her change of forms. He didn't really know how to react.
-
-**Enchantingtable2013** _(11-Nov-18 04:12 PM)_
-
-> 'For me, the best way to raise a race is to set an example.'
-
-**Zander** _(11-Nov-18 04:12 PM)_
+_Emmett is in a state of shock from her change of forms. He doesn't really know how to react._
 
 > U-Uh...
 > You're a star!
 
-**RPretribution** _(11-Nov-18 04:12 PM)_
-
-> and then they mate and make squoat god babies
-
 **Enchantingtable2013** _(11-Nov-18 04:13 PM)_
 
-> 'I wanted the Avians and to be respectable.'
+> `Kluex`: For me, the best way to raise a race is to set an example.
+
+_Kluex's glow softens._
+
+> `Kluex`: I wanted the Avians to be respectable.
 
 **Platinum_Pathos** _(11-Nov-18 04:13 PM)_
+
+_Danny pokes a finger through Garrick's chest._
 
 > At least I have a physical body on this plane of existence.
 
 **Brakia** _(11-Nov-18 04:13 PM)_
 
-> `Then you're much better than our god. We are simply a tool in his eyes.`
+_Sanya hugs her knees._
+
+> Then you're much better than our god. We are simply a tool in his eyes.
 
 **Enchantingtable2013** _(11-Nov-18 04:14 PM)_
 
-> 'You can always follow me. Race is no matter to me. Although, you would be the first floran to follow our ways.'
+_Kluex offers her Matieu's hand._
+
+> `Kluex`: You can always follow me. Race is no matter to me. Although, you would be the first floran to follow our ways.
 
 **Mica** _(11-Nov-18 04:14 PM)_
 
-> This is my purest form. Now, have granted my wish that you will find out in due time..
+_Maia pulls back, her small starlit face glowing._
+
+> This is my purest form. Now, I have granted my wish, and you will find out in due time...
 
 **RPretribution** _(11-Nov-18 04:15 PM)_
 
-> Yeah well, I bet you don't have infinite pockets, do you???
+_Garrick crosses his arms smugly._
+
+> Yeah, well, I bet you don't have infinite pockets, do you???
 > Yeah, that's what I thought.
 
 **Platinum_Pathos** _(11-Nov-18 04:15 PM)_
 
-> An infinite stomach is good enough I think.
+_Danny pats his belly smugly._
+
+> An infinite stomach is good enough, I think.
 
 **RPretribution** _(11-Nov-18 04:15 PM)_
+
+_Garrick sinks halfway into the floor to demonstrate._
 
 > I like being partially incorporeal.
 
 **Zander** _(11-Nov-18 04:15 PM)_
 
-> Emmett awkwardly hugs her.
+_Emmett awkwardly hugs her._
 
 **Brakia** _(11-Nov-18 04:15 PM)_
 
-> `I wish i could follow another god. But he's a much bigger part of my life than any other floran.`
+_Sanya stares at her reflection in the pool._
 
-**RPretribution** _(11-Nov-18 04:16 PM)_
-
-> had to leave the vc so i could charge my phone
+> I wish I could follow another god. But he's a much bigger part of my life than any other floran's.
 
 **Mica** _(11-Nov-18 04:16 PM)_
 
-> She hugs him tenderly and kisses his cheek.
+_Maia hugs him tenderly and kisses his cheek._
+
 > I must go now.
 
 **Zander** _(11-Nov-18 04:17 PM)_
 
-> See you soon then?
-> Emmett felt confused.
+_Emmett feels confused._
+
+> See you soon, then?
 
 **Platinum_Pathos** _(11-Nov-18 04:17 PM)_
+
+_Danny smirks at Garrick._
 
 > And how do the girls enjoy your intangible form?
 
 **Mica** _(11-Nov-18 04:17 PM)_
 
+_Maia smiles reassuringly._
+
 > Very soon.
-> she smiled reassuringly
 
 **Zander** _(11-Nov-18 04:18 PM)_
 
-> He smiled softly and felt his cheek.
+_Emmett smiles softly and touches his cheek._
 
 **Brakia** _(11-Nov-18 04:18 PM)_
 
-> `He's... He's fundamental.`
+_Sanya doesn't take Kluex's hand._
+
+> He's... He's fundamental.
 
 **RPretribution** _(11-Nov-18 04:19 PM)_
 
@@ -2054,260 +2202,309 @@ t!choose hammer | taser | marshmallow
 
 **Mica** _(11-Nov-18 04:19 PM)_
 
+_Maia begins to shimmer at the edges._
+
 > Goodbye, Emmett.
 
 **Zander** _(11-Nov-18 04:19 PM)_
+
+_Emmett waves, blinking back tears._
 
 > Have fun on Saturn!
 
 **Platinum_Pathos** _(11-Nov-18 04:20 PM)_
 
+_Danny smirks._
+
 > Because they realized a ghostly form wasn't worthy of you, so they skipped on up to heaven.
 
 **Brakia** _(11-Nov-18 04:20 PM)_
 
-> "You are more than a tool. You know that right?"
+_Dread's voice echoes in Sanya's head, gentler than usual._
+
+> `Dread`: You are more than a tool. You know that, right?
 
 **ProfessorTree** _(11-Nov-18 04:20 PM)_
 
-t!8ball does Chase walk into the room just as Maia is leaving?
+t!8ball Does Chase walk into the room just as Maia is leaving?
 
 **Tatsumaki** _(11-Nov-18 04:20 PM)_
 
-> 🎱 | You may rely on it,
-> ProfessorTree
-> .
+🎱 | You may rely on it, ProfessorTree.
 
 **Brakia** _(11-Nov-18 04:20 PM)_
 
-> `Yeah. I'm a puppet. A body.`
+> Yeah. I'm a puppet. A body.
 
 **ProfessorTree** _(11-Nov-18 04:21 PM)_
 
-> `Hey-oh...`
+_Chase pokes his head through the door._
+
+> Hey-oh...
 
 **RPretribution** _(11-Nov-18 04:21 PM)_
+
+_Garrick crosses his arms._
 
 > That's not how ghosts work. And you don't look like you get much action either.
 
 **ProfessorTree** _(11-Nov-18 04:21 PM)_
 
-> `What's happening to her?`
+_Chase points at the glowing stardust._
+
+> What's happening to her?
 
 **Zander** _(11-Nov-18 04:21 PM)_
 
-> Emmett's cheek felt really hot still.
-> There goes Maia then.
+_Emmett's cheek still feels really hot._
+
+> There goes Maia, then.
 
 **Mica** _(11-Nov-18 04:22 PM)_
 
-> she smiled as a tear streamed down her cheek and disappeared, fading away into trail of stardust.
+_Maia smiles as a tear streams down her cheek, and she fades away into a trail of stardust._
 
 **ProfessorTree** _(11-Nov-18 04:22 PM)_
 
-> `...` > `Is she...dead?`
-
-**RPretribution** _(11-Nov-18 04:23 PM)_
-
-> does that mean i have to find a new toriel for mission failure
+> ...
+> Is she... dead?
 
 **Platinum_Pathos** _(11-Nov-18 04:23 PM)_
 
-> I see I mean nothing to you Maia! Goodbye anyways!
+_Danny calls out after the fading stardust._
 
-**Zander** _(11-Nov-18 04:23 PM)_
-
-> @RPretribution
-> no
-
-**RPretribution** _(11-Nov-18 04:23 PM)_
-
-> okay
+> I see I mean nothing to you, Maia! Goodbye anyways!
 
 **ProfessorTree** _(11-Nov-18 04:24 PM)_
 
-> `How...unfortunate...`
+_Chase bows his head respectfully._
+
+> How... unfortunate...
 
 **Zander** _(11-Nov-18 04:24 PM)_
 
-> @RPretribution
-> Rashidi said you need to battle Danny on Jackbox 5 tonight
+_Emmett turns to Chase._
+
 > I'm sorry I've ignored you all this time.
 
 **RPretribution** _(11-Nov-18 04:24 PM)_
 
-> Garrick rudely barges in. Through the wall.
+_Garrick rudely barges in. Through the wall._
+
 > Hey, what happened?
 
 **Zander** _(11-Nov-18 04:24 PM)_
+
+_Emmett wipes his eyes and clears his throat._
 
 > So you're a scientist, right?
 
 **RPretribution** _(11-Nov-18 04:24 PM)_
 
+_Garrick notices the lingering stardust._
+
 > Oh.
 
 **ProfessorTree** _(11-Nov-18 04:25 PM)_
 
-> `Yes, a Biologist and Engineer.`
+_Chase straightens proudly._
+
+> Yes, a biologist and engineer.
 
 **Zander** _(11-Nov-18 04:26 PM)_
+
+_Emmett raises an eyebrow._
 
 > And you're fascinated with me?
 
 **ProfessorTree** _(11-Nov-18 04:27 PM)_
 
-> `Your race, to be precise. I've been meaning to hold studies on the Squoatians for a couple years.`
+_Chase's eyes light up._
+
+> Your race, to be precise. I've been meaning to hold studies on the Squoatians for a couple GUYs.
 
 **Brakia** _(11-Nov-18 04:27 PM)_
 
-> `Well, too late now.`
-> Sanya is in the doorway.
+_Sanya appears in the doorway._
 
-**Tatsumaki** _(11-Nov-18 04:27 PM)_
-
-> 🆙 |
-> Brakia leveled up!
+> Well, too late now.
 
 **Zander** _(11-Nov-18 04:27 PM)_
 
-> First, it's Squoatlings. Squoatian is our language.
+_Emmett holds up a hoof._
+
+> First, it's squoatlings. Squoatian is our language.
 
 **ProfessorTree** _(11-Nov-18 04:28 PM)_
 
-> `Yes, sorry.`
+_Chase scribbles a correction in his notepad._
+
+> Yes, sorry.
 
 **Brakia** _(11-Nov-18 04:28 PM)_
 
-> `Chase, you know of what happened to the Squoatlings, right?`
+_Sanya steps into the room._
+
+> Chase, you know of what happened to the squoatlings, right?
 
 **Platinum_Pathos** _(11-Nov-18 04:28 PM)_
 
-> In my experience, studies and experiments on beings based on genetics and racial qualities never ends well Emmett.
+_Danny speaks up from the doorway._
+
+> In my experience, studies and experiments on beings based on genetics and racial qualities never end well, Emmett.
 
 **Enchantingtable2013** _(11-Nov-18 04:28 PM)_
 
-> 'Matieu told him'
+_Kluex follows Sanya back inside._
+
+> `Kluex`: Matieu told him.
 
 **Zander** _(11-Nov-18 04:29 PM)_
+
+_Emmett waves Danny off._
 
 > I don't think it'll be that bad, Danny.
 
 **ProfessorTree** _(11-Nov-18 04:29 PM)_
 
-> `Yes, they were killed in the destruction of their planet by Llamanians, right?`
+_Chase lowers his notepad._
+
+> Yes, they were killed in the destruction of their planet by Llamanians, right?
 
 **Platinum_Pathos** _(11-Nov-18 04:29 PM)_
+
+_Danny narrows his eyes at Chase._
 
 > Be careful who you trust.
 
 **Brakia** _(11-Nov-18 04:29 PM)_
 
-> `I see.`
+> I see.
 
 **Zander** _(11-Nov-18 04:31 PM)_
 
 > Yeah, they got us good.
 > Ruined our game of life over a silly game of chess.
-> Emmett saddens.
+
+_Emmett saddens._
 
 **Enchantingtable2013** _(11-Nov-18 04:31 PM)_
 
-> 'Their god is a pompous oaf anyways.'
+> `Kluex`: Their god is a pompous oaf, anyways.
 
 **Brakia** _(11-Nov-18 04:32 PM)_
 
-> Sanya goes to comfort him
+_Sanya goes to comfort him._
 
 **Zander** _(11-Nov-18 04:32 PM)_
+
+_Emmett turns to the possessed Avian._
 
 > By the way, Kluex.
 
 **Enchantingtable2013** _(11-Nov-18 04:32 PM)_
 
-> 'I've talked to them, a very rude entity.'
-> 'Yes?'
+> `Kluex`: I've talked to them. A very rude entity.
+> `Kluex`: Yes?
 
 **Zander** _(11-Nov-18 04:32 PM)_
+
+_Emmett folds his arms._
 
 > Squoat is superficial. He's real, but in a sense that no one can physically speak to him.
 
 **Enchantingtable2013** _(11-Nov-18 04:32 PM)_
 
-> 'Oh, I know.'
+> `Kluex`: Oh, I know.
 
 **Zander** _(11-Nov-18 04:33 PM)_
 
-> Not even some self-proclaimed "god".
+_Emmett stares pointedly at Kluex._
+
+> Not even some self-proclaimed "god."
 
 **Enchantingtable2013** _(11-Nov-18 04:33 PM)_
 
-> 'I met the guy.'
+> `Kluex`: I met the guy.
 
 **Zander** _(11-Nov-18 04:33 PM)_
+
+_Emmett sighs._
 
 > Again, you miss the point.
 
 **Brakia** _(11-Nov-18 04:33 PM)_
 
-> Sanya pulls up a nearby chair and puts a hand on his shoulder.
+_Sanya pulls up a nearby chair and puts a hand on Emmett's shoulder._
 
 **Enchantingtable2013** _(11-Nov-18 04:33 PM)_
 
-> 'Very pleasant, unlike the Lamanian's god.'
+> `Kluex`: Very pleasant, unlike the Llamanians' god.
 
 **Zander** _(11-Nov-18 04:34 PM)_
 
+_Emmett perks up a little._
+
 > So anyhow.
-> Remember that email I got?
+> Remember that notice I got?
 
 **Enchantingtable2013** _(11-Nov-18 04:34 PM)_
 
-> 'Do enlighten me.'
+> `Kluex`: Do enlighten me.
 
 **Zander** _(11-Nov-18 04:35 PM)_
 
-> I got my inheritance from the GU finally.
+_Emmett's ears perk up._
+
+> I got my inheritance from the GU, finally.
 
 **Brakia** _(11-Nov-18 04:35 PM)_
 
-> `Inheritance?`
+> Inheritance?
 
 **Enchantingtable2013** _(11-Nov-18 04:35 PM)_
 
-> 'Was your family wealthy, by chance?'
+> `Kluex`: Was your family wealthy, by chance?
 
 **Zander** _(11-Nov-18 04:36 PM)_
+
+_Emmett shifts uncomfortably._
 
 > Extremely. Over seven digits in Squinks.
 
 **Brakia** _(11-Nov-18 04:36 PM)_
 
-> `Hm. Not bad.`
+_Sanya nods, impressed despite herself._
+
+> Hm. Not bad.
 
 **Enchantingtable2013** _(11-Nov-18 04:36 PM)_
 
-> 'How much does that compare to ducketts?'
+> `Kluex`: How does that compare to Ducketts?
 
 **Zander** _(11-Nov-18 04:36 PM)_
 
 > Though, they translate to five digits in Ducketts.
+
+_Emmett pulls up something on his holopad with a grin._
+
 > So, I just got us some tickets for a vacation.
 
 **Enchantingtable2013** _(11-Nov-18 04:37 PM)_
 
-> 'That's still quite a bit for your planet, I assume.'
-
-> 'Splendid!'
-> 'I'm sure Matieu would enjoy the view.'
+> `Kluex`: That's still quite a bit for your planet, I assume.
+> `Kluex`: Splendid!
+> `Kluex`: I'm sure Matieu would enjoy the view.
 
 **Zander** _(11-Nov-18 04:37 PM)_
+
+_Emmett throws his arms up._
 
 > We're going to U-Vega!
 
 **Brakia** _(11-Nov-18 04:38 PM)_
 
-> `U-Vega?`
+> U-Vega?
 
 **Platinum_Pathos** _(11-Nov-18 04:38 PM)_
 
@@ -2315,35 +2512,29 @@ t!8ball does Chase walk into the room just as Maia is leaving?
 
 **Enchantingtable2013** _(11-Nov-18 04:38 PM)_
 
-> 'Sounds wonderful!'
+> `Kluex`: Sounds wonderful!
 
-(Add FF8ball text here) And so, the crew heads to U-Vega, having a calm trip over there.
+**Tatsumaki** _(11-Nov-18 04:38 PM)_
 
-**Bagelwrecker** _(19-Nov-18 03:38 PM)_
-
-t!8ball Are we at a space station in U-Vega?
-
-**Tatsumaki** _(19-Nov-18 03:38 PM)_
-
-> 🎱 | Cannot predict now,
-> Bagelwrecker
-> .
+🐐 | And so, the crew heads to U-Vega, having a calm trip over there.
 
 **Bagelwrecker** _(19-Nov-18 03:38 PM)_
 
-t!8ball Are we at a space station in U-Vega?
+t!8ball Is the crew at a space station in U-Vega?
 
 **Tatsumaki** _(19-Nov-18 03:38 PM)_
 
-> 🎱 | It is certain,
-> Bagelwrecker
-> .
+🎱 | It is certain, Bagelwrecker.
 
 **Zander** _(19-Nov-18 03:39 PM)_
 
-> So, we're here then.
+_The ship pulls into a fueling bay at the U-Vega space station. Emmett powers down the engines._
+
+> So, we're here, then.
 
 **Bagelwrecker** _(19-Nov-18 03:39 PM)_
+
+_Seth stretches in the copilot's seat._
 
 > Yeah.
 
@@ -2353,78 +2544,77 @@ t!8ball Does Emmett turn in the tickets?
 
 **Tatsumaki** _(19-Nov-18 03:39 PM)_
 
-> 🎱 | It is decidedly so,
-> Zander
-> .
+🎱 | It is decidedly so, Zander.
 
 **Brakia** _(19-Nov-18 03:40 PM)_
 
-> `So, what exactly is this place?`
+_Sanya peers out the viewport at the glittering station._
+
+> So, what exactly is this place?
 
 **Bagelwrecker** _(19-Nov-18 03:40 PM)_
 
-> It's a space station, we need fuel and to restock on supplies.
+> It's a space station. We need fuel and to restock on supplies.
 
 **Deyner** _(19-Nov-18 03:40 PM)_
 
 t!8ball Does Deyner wake up from his nap?
 
-**Tatsumaki** _(19-Nov-18 03:40 PM)_
+**Tatsumaki** _(19-Nov-18 03:41 PM)_
 
-> 🎱 | Ask again later,
-> Deyner
-> .
+🎱 | Don't count on it, Deyner.
 
 **Brakia** _(19-Nov-18 03:41 PM)_
 
-> `I meant U-Vega.`
+_Sanya glares at Seth._
+
+> I meant U-Vega.
 
 **Deyner** _(19-Nov-18 03:41 PM)_
 
-t!8ball Does Deyner wake up from his nap?
-
-**Tatsumaki** _(19-Nov-18 03:41 PM)_
-
-> 🎱 | Don't count on it,
-> Deyner
-> .
-
-**Deyner** _(19-Nov-18 03:41 PM)_
-
-> SNORES
+_In his room, Deyner snores loudly._
 
 **Zander** _(19-Nov-18 03:41 PM)_
+
+_Emmett shrugs._
 
 > It's like a vice municipality.
 
 **Brakia** _(19-Nov-18 03:42 PM)_
 
-> `Ah. A hive of Scum and Villainy.`
+> Ah. A hive of scum and villainy.
 
 **Bagelwrecker** _(19-Nov-18 03:42 PM)_
+
+_Seth grins wide._
 
 > My type of place.
 
 **Zander** _(19-Nov-18 03:42 PM)_
 
+_Emmett rolls his eyes._
+
 > Not really.
 
 **Deyner** _(19-Nov-18 03:42 PM)_
 
-> mumbles in sleep
-> die space man
+_Deyner mumbles in his sleep._
+
+> Die, space man...
 
 **Bagelwrecker** _(19-Nov-18 03:42 PM)_
 
-> If you need me I'll be getting laid.
+> If you need me, I'll be getting laid.
 
 **Zander** _(19-Nov-18 03:43 PM)_
+
+_Emmett taps a sign listing station regulations._
 
 > U-Vega has a reputation for being as clean as possible in its justice, funnily enough.
 
 **Deyner** _(19-Nov-18 03:44 PM)_
 
-> dreams about murdering space pirates that are also playing cards
+_Deyner dreams about murdering space pirates who are also playing cards._
 
 **Brakia** _(19-Nov-18 03:44 PM)_
 
@@ -2432,90 +2622,78 @@ t!8ball Does Sanya look at the gift shop?
 
 **Tatsumaki** _(19-Nov-18 03:44 PM)_
 
-> 🎱 | Very doubtful,
-> Brakia
-> .
+🎱 | Very doubtful, Brakia.
 
 **Zander** _(19-Nov-18 03:44 PM)_
 
-> Well, there's a gift shop I suppose.
+_Emmett gestures vaguely at the station's storefronts, which Sanya ignores._
+
+> Well, there's a gift shop, I suppose.
 > Seth, get your butt over here and fill up the tank.
 
-**Deyner** _(19-Nov-18 03:45 PM)_
-
-> (Where are you guys rn?)
-
 **Bagelwrecker** _(19-Nov-18 03:45 PM)_
 
 t!8ball Does Seth go get laid?
 
 **Tatsumaki** _(19-Nov-18 03:45 PM)_
 
-> 🎱 | Concentrate and ask again,
-> Bagelwrecker
-> .
-
-**Bagelwrecker** _(19-Nov-18 03:45 PM)_
-
-t!8ball Does Seth go get laid?
-
-**Tatsumaki** _(19-Nov-18 03:45 PM)_
-
-> 🎱 | Very doubtful,
-> Bagelwrecker
-> .
+🎱 | Very doubtful, Bagelwrecker.
 
 **Zander** _(19-Nov-18 03:45 PM)_
 
-t!8ball Are we at a space station in U-Vega?
-
-> @Deyner
-
-**Deyner** _(19-Nov-18 03:45 PM)_
-
-> K thx)
-
-**Zander** _(19-Nov-18 03:45 PM)_
+_Emmett crosses his arms._
 
 > Seth, the ship. Its fuel. Now.
 
 **Bagelwrecker** _(19-Nov-18 03:46 PM)_
 
+_Seth slouches deeper into his seat._
+
 > Get someone else to do it.
 
 **Brakia** _(19-Nov-18 03:46 PM)_
 
-> `So, why are we here?`
+_Sanya steps between them._
+
+> So, why are we here?
 
 **Zander** _(19-Nov-18 03:46 PM)_
 
-> Because Seth said he was going to fill the ship tank up.
+_Emmett jabs a hoof at Seth._
+
+> Because Seth said he was going to fill the ship's tank up.
 
 **Bagelwrecker** _(19-Nov-18 03:46 PM)_
 
-> I said we needed fuel and supplies
+> I said we needed fuel and supplies.
 
 **Zander** _(19-Nov-18 03:46 PM)_
 
-> I promised to pay for it, he said he was filling it up.
+> I promised to pay for it; he said he was filling it up.
 
 **Brakia** _(19-Nov-18 03:47 PM)_
 
-> `Again, Seth, I meant why are we at U-Vega.`
+_Sanya pinches the bridge of her nose._
+
+> Again, Seth, I meant why are we at U-Vega.
 
 **Deyner** _(19-Nov-18 03:47 PM)_
 
+_Deyner screams himself awake as a man who looks like an Oompa Loompa stabs him in his dream._
+
 > Gahhh!
-> screams himself awake as he gets stabbed by a man looking like a Oompa Loompa
 
 **Zander** _(19-Nov-18 03:48 PM)_
 
-> Sanya, its a vacation area.
+_Emmett rubs his temples._
+
+> Sanya, it's a vacation area.
 
 **Deyner** _(19-Nov-18 03:48 PM)_
 
-> looks around
-> Ughh shouldn't have gotten drunk
+_Deyner looks around blearily._
+
+> Ughh, shouldn't have gotten drunk.
 
 **Zander** _(19-Nov-18 03:48 PM)_
 
@@ -2523,124 +2701,146 @@ t!8ball Does Seth begrudgingly fill the tank up?
 
 **Tatsumaki** _(19-Nov-18 03:48 PM)_
 
-> 🎱 | Without a doubt,
-> Zander
-> .
+🎱 | Without a doubt, Zander.
+
+**Bagelwrecker** _(19-Nov-18 03:48 PM)_
+
+_Seth grumbles, stomps outside, and jams the fuel nozzle into the ship._
 
 **Deyner** _(19-Nov-18 03:48 PM)_
 
-> stumbles to the kitchen
+_Deyner stumbles to the kitchen._
+
 > Seth!?
-
-**Bagelwrecker** _(19-Nov-18 03:49 PM)_
-
-> (I'm outside)
 
 **Zander** _(19-Nov-18 03:50 PM)_
 
+_Emmett leans out the hatch._
+
 > Sanya, be a dear and wake up anyone in the ship.
-
-**Deyner** _(19-Nov-18 03:50 PM)_
-
-> (my character doesn't know that, he just woke up
 
 **Brakia** _(19-Nov-18 03:50 PM)_
 
-> `Sure.`
-> Sanya walks into the ship.
-> `Hey, wake up!` > `I hope that works.`
+> Sure.
+
+_Sanya walks into the ship._
+
+> Hey, wake up!
+> I hope that works.
 
 **Deyner** _(19-Nov-18 03:51 PM)_
 
-> sits on a stool
-> Hey Sanya!
+_Deyner sits on a stool in the kitchen, waving._
+
+> Hey, Sanya!
 
 **Brakia** _(19-Nov-18 03:52 PM)_
 
-> `Oh. Hey. I think Emmett needs you.`
+_Sanya spots Deyner in the kitchen._
+
+> Oh. Hey. I think Emmett needs you.
 
 **Deyner** _(19-Nov-18 03:52 PM)_
 
-> gets up
-> ok I'll be right out. Do you know where Seth is?
+_Deyner gets up._
+
+> Okay, I'll be right out. Do you know where Seth is?
 
 **Brakia** _(19-Nov-18 03:52 PM)_
 
-> `Fueling.`
+> Fueling.
 
 **Zander** _(19-Nov-18 03:53 PM)_
 
-> (Through the comms)
+_Emmett chimes in through the comms._
+
 > He's out here, filling up the ship.
 
 **Deyner** _(19-Nov-18 03:53 PM)_
 
-> follows Sanya outside
-> Ok!
+_Deyner follows Sanya outside._
+
+> Okay!
 
 **Bagelwrecker** _(19-Nov-18 03:53 PM)_
 
-> We honestly could have had the ship attendee's fuel the ship
+_Seth gestures at the idle station attendants._
+
+> We honestly could have had the ship attendants fuel the ship.
 
 **Zander** _(19-Nov-18 03:53 PM)_
+
+_Emmett's voice crackles over the comms._
 
 > You could stop bickering about it. A promise is a promise.
 
 **Deyner** _(19-Nov-18 03:54 PM)_
 
-> gets outside
-> Hey Emmett, you need something?
+_Deyner gets outside._
+
+> Hey, Emmett, you need something?
 
 **Zander** _(19-Nov-18 03:55 PM)_
 
-> Just waiting here. There's a long ass line outside to U-Vega.
+_Emmett gestures down the concourse._
+
+> Just waiting here. There's a long-ass line outside to U-Vega.
 
 **Deyner** _(19-Nov-18 03:55 PM)_
+
+_Deyner cranes his neck to see the front of the line._
 
 > What do you need?
 
 **Brakia** _(19-Nov-18 03:55 PM)_
 
-> `How long should it take?`
+_Sanya squints at the line snaking out of sight._
+
+> How long should it take?
 
 **Bagelwrecker** _(19-Nov-18 03:56 PM)_
 
-> Emmett can you go grab me a pack of space weed cigarettes?
+_Seth shouts over from the fuel pump._
+
+> Emmett, can you go grab me a pack of space weed cigarettes?
 
 **Zander** _(19-Nov-18 03:57 PM)_
 
 > Fine.
-> t!8ball Does Emmett go grab the cigarettes?
+
+t!8ball Does Emmett go grab the cigarettes?
 
 **Tatsumaki** _(19-Nov-18 03:58 PM)_
 
-> 🎱 | Outlook not so good,
-> Zander
-> .
+🎱 | Outlook not so good, Zander.
 
 **Zander** _(19-Nov-18 03:58 PM)_
+
+_Emmett takes a step, then remembers where he is._
 
 > Actually, I can't.
 > I'm in line.
 
 **Bagelwrecker** _(19-Nov-18 03:58 PM)_
 
-> Oh I forgot.
+> Oh, I forgot.
 
 **Deyner** _(19-Nov-18 03:58 PM)_
 
-> Hey Emmett do you got something you need fixing?
+_Deyner fishes a wrench out of his pocket._
+
+> Hey, Emmett, do you got something you need fixing?
 
 **Zander** _(19-Nov-18 03:58 PM)_
 
-> (Zander says no)
+_Emmett shakes his head._
+
+> No.
 
 **Bagelwrecker** _(19-Nov-18 04:01 PM)_
 
-t!8ball Does Seth see a very pretty woman that give him big boner?
+t!8ball Does Seth see a very pretty woman that gives him a big boner?
 
 **Tatsumaki** _(19-Nov-18 04:01 PM)_
 
-> 🎱 | It is decidedly so,
-> Bagelwrecker
-> .
+🎱 | It is decidedly so, Bagelwrecker.

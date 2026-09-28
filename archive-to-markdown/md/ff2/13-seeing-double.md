@@ -200,7 +200,7 @@ _Asier slouches over._
 _Seth rolls his eyes._
 
 > No, I'm talking about the human dragon thing.
-> With the retarded robot arm...
+> With the stupid robot arm...
 
 **PlasmaPerson** _(19-Aug-18 02:19 PM)_
 
@@ -2153,7 +2153,7 @@ _Emmett, having not realized Seth's shot, waves the flags like a true referee._
 
 _Seth blows his pistols, thinking he took out the robot._
 
-> Get fucked, sleazeball!
+> Get fucked, binger!
 
 **ProfessorTree** _(19-Aug-18 03:32 PM)_
 
@@ -2355,7 +2355,7 @@ _KYL300 manages another shot at Seth, taking advantage of his burns by shooting 
 
 _Seth, frustrated by the dishonorable breaking of Space Rule 35 and by Emmett's cowardice, screams at him, holding his face as he looks back._
 
-> Emmett, go kill the flame sleazeball!
+> Emmett, go kill the flame binger!
 
 **RPretribution** _(19-Aug-18 03:36 PM)_
 
@@ -2539,7 +2539,7 @@ _Seth tries to calm his breathing, digging in his pockets for some pills--benefi
 **Bagelwrecker** _(19-Aug-18 03:41 PM)_
 
 > Only fair!
-> Your little sleazeball behind you decided to interfere, so we might as well!
+> Your little binger behind you decided to interfere, so we might as well!
 
 _Seth looks around the corner, pissed at his opposition's lack of honor._
 
@@ -4769,7 +4769,7 @@ _Seth hands Emmett some grass begrudgingly._
 
 **Bagelwrecker** _(19-Aug-18 05:02 PM)_
 
-> Fuck you too sleazeball, I'll rip your fucking head off!
+> Fuck you too, binger, I'll rip your fucking head off!
 
 **ProfessorTree** _(19-Aug-18 05:02 PM)_
 

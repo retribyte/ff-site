@@ -1196,7 +1196,7 @@ _Iris glares at Seth angrily._
 
 **Bagelwrecker** _(23-Sep-18 04:16 PM)_
 
-> Look what you did, retard!
+> Look what you did, stupidloid!
 
 _Seth flicks Iris._
 

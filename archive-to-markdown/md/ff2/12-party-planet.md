@@ -1518,7 +1518,7 @@ _Sanya looks disgusted._
 
 > I'm not that curiousss.
 
-\*Emmett snaps out of the flower's allure
+_Emmett snaps out of the flower's allure._
 
 **Bagelwrecker** _(18-Aug-18 03:21 PM)_
 
