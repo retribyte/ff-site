@@ -4,18 +4,26 @@ Status of the FF2 transcript-editing work, what's waiting on Trey, and how to
 continue. The style rules themselves live in `md/ff2/EDITORIAL-STYLE-GUIDE.md`.
 Read that first, since this file assumes it.
 
-## ▶ RESUME HERE: FF3 eps 7–8 (written 2026-09-28, end of session)
+## ▶ RESUME HERE: FF3 is fully edited (written 2026-09-29)
 
-FF3 eps 1–6 are edited and installed, and Trey reviewed eps 1–5 as they
-went. All of it is **uncommitted**:
-- `md/ff3/1–6.md`
-- `meta/ff3.json` (Mateo Krovak; `personaTimeline`)
-- `ff3.py` (the "!Nick Prime!" mapping)
+FF3 eps 1–8 are all edited and installed. Eps 1–6 are committed
+(`646d69b`). Eps 7–8 are **uncommitted and awaiting Trey's review**:
+- `md/ff3/7.md`, `md/ff3/8.md`
+- `meta/ff3.json` (episode titles, chosen 2026-09-29; `0-prep` removed from `episodes`)
+- `md/ff3/1.md` (the opening `🐐` now carries the raid aftermath from `0-prep.md`)
 - this file
-- `md/ff2/EDITORIAL-STYLE-GUIDE.md` (the `🐐` row)
 
-Commit when Trey says so (`git -C ff-site`). **Eps 7 (1,992 raw lines)
-and 8 (513) remain.**
+Commit when Trey says so (`git -C ff-site`). The review notes are in the
+"### Ep 7" and "### Ep 8" sections below.
+
+**Still open for Trey:**
+- The importer ignores `persona`.
+- The gay/homo manual pass.
+- Squoatian with no translation.
+- "I'm not black." (ep 5).
+- The ep 6 room-list `🐐`: in ep 7, Emmett tells Theylin "You don't have a
+  room", but the list pairs him with Vargas. It's left as Emmett being
+  wrong.
 
 ### Pipeline, per episode
 
@@ -106,24 +114,9 @@ These add to the "FF3-specific conventions" section further down.
 - **Bounty:** the Richard Jamerez job (75–150k Ducketts) is done. Emmett
   killed Richard aboard the ship with the Maggo-Pistol.
 
-### Eps 7–8 at a glance (raw)
-
-- **Ep 7:** Sean, Zander, Charles, Maxwell, Trey, Michael and Preston,
-  with 2 Brody blocks. Converter tags: Emmett, Seth, Vargas, Mateo,
-  Theylin, Garrick, Volentina. No "Unknown" authors. Volentina is
-  post-change, so there's no persona.
-- **Ep 8:** a short one, with Zander, Brody, Trey, Cooldude (Wemmfort)
-  and Jonas (Chomsky, 4 blocks).
-- **Still open for Trey:**
-  - FF3 has no episode titles.
-  - The importer ignores `persona`.
-  - The gay/homo manual pass.
-  - Squoatian with no translation.
-  - "I'm not black." (ep 5).
-
 ---
 
-## State: FF2 work below is committed (`2492730`); FF3 ep 1 is not
+## State as of the FF2 commit (`2492730`)
 
 | Area | What changed |
 |---|---|
@@ -602,6 +595,145 @@ FF3 gets the same full treatment as FF2 (Tier 1 + Tier 2, guide §5).
 - **Density:** 0.49 (raw 223 actions, now 292). It's a fight episode and
   reads clearly.
 - **Closing `🐐`:** Trey's "Space Rule #92: Don't do drugs, kids."
+
+### `0-prep.md` (Trey's call, 2026-09-29)
+
+- It isn't an episode: it's Zander rolling up the offscreen mothership
+  raid, plus out-of-character room logistics. It's no longer in
+  `meta/ff3.json`, so it won't import. The file stays in the repo as source
+  material, along with Zander's pre-episode synopsis.
+- **Folded into ep 1's opening `🐐`:** the mothership chunk, Seth's broken
+  leg (he takes a pill for it, per Zander, so his walking and limping in
+  ep 1 still hold), Garrick's dented eyeball (heals in a day) and the
+  patch of fur the Llamanians took from Emmett's neck. Emmett's scratch
+  was already there at his wake-up.
+- **Left out:** Seth's magic satchel, Emmett being high and shirtless, and
+  the roster talk. The roster talk says Iris left, but she's aboard in
+  ep 1.
+
+### Ep 7: judgment calls for Trey to review
+
+- **Your answers (2026-09-29):**
+  - The leash stays unrevealed. Your out-of-character "It was jess" was
+    cut, and Emmett's guess ("Either that, or Jess.") is the only hint.
+  - The episode closes on `🐐 | To be continued...` in place of Zander's
+    "extended episode, continues Monday".
+- **New NPC tags:**
+  - `` `Ameno` ``: the Goddess of Death and Seth's wife, who runs the Elf
+    Heaven front desk. Sean voices her in quotes. Seth calls her
+    "Shyanalcaop", and his dialogue keeps it. The wiki's Ameno page lists
+    Shyanalcaop as an alias, and its "3020 GUY… died from suicide"
+    appearance is this scene. I first tagged her `Shyanalcaop`, but Trey
+    flagged it.
+  - `` `Skeleton` ``: Seth's companion on the Soul Train bench.
+- **Seth's death and revival.** A `🐐` line at "Seth awakens in Elf Heaven"
+  cites the curse from the wiki page (he comes back after consensual sex
+  within two weeks of dying, and gets crazier each time). To match it,
+  Ameno's "three-week span" was changed to "two-week".
+- **Vargas's head is his 8-ball.** "Vargas shakes his 8ball / asks his
+  8ball" became him shaking his own head. The "2/3" rerolls became a
+  best-two-of-three, and the answers are narrated ("Yes, bitch.",
+  "Just do it. Yes.").
+- **Invented connective tissue:**
+  - **The Seth Blowup Doll.** Garrick tosses it onto the den floor.
+    - Later, Vargas nukes "Seth's body" at the same time as Garrick moves
+      the real one, and "Does Vargas destroy every piece of matter that is
+      Seth?" comes up N0.
+    - The narration calls Vargas's target "the body" until a `🐐` reveals
+      it was the doll.
+    - Garrick's "Spanish no" on the bed roll leaves Seth on the floor of
+      his room, so "Seth awakens in his bed" became "on the floor of his
+      room".
+  - **Vargas's airlock trips.**
+    - Trip 1: he jumps out himself after Seth's "Neigh" roll, then finds
+      his way back in.
+    - Trip 2: Seth airlocks him, which is the caveat on your "everyone
+      follows Emmett" roll. The "Majority rules!" vote has no votes, so he
+      stays stuck outside.
+    - Emmett's "Fine. I'll get out." gained a beat where he cycles the
+      airlock. Vargas's thanks was moved after it.
+    - Charles's "gets back in the way he did last time" became "tries to".
+  - **Vargas's side job.**
+    - Kept: "kills Darwin Caltin". Cut: "gone for a day" and "is starting
+      his mission" (the ship arrives within about two in-game hours).
+    - After the "Nope" roll and his "didn't kill my target", a beat says
+      whoever he killed wasn't Darwin Caltin. Same wrong-man pattern as ep 6.
+    - Zander's "spends all of his money on plostacian" became a `🐐`.
+  - **American Dad Empire.**
+    - Both Good Morning USA zaps are `🐐` lines, following the FF2 ep 13
+      precedent (the ADE comms array catches its jingle).
+    - The second zap sets up Seth's Rogu morph.
+    - "Is Zarazoga in GU territory? No, but…" gets a `🐐`: Zarazoga-9 is
+      ADE territory, and the border scan turns everyone into American Dad
+      characters. Ep 8's "Please don't turn us into American Dad
+      characters" supports this.
+    - Zander's meta roll "Does what Sean say get revoked…" was cut.
+  - **Seth's absurd diner order from ep 2** is what Garrick piles next to
+    Seth's body. "The size of my dick" became "Seth's dick".
+  - Theylin's 800-pound roll ("No, but…"): he has enough for 850, per
+    Maxwell.
+- **Nipples, not titties.** You said out of character that you and Zander
+  meant nipples, so Emmett's "she doesn't even have titties" became
+  "nipples". Your "Does Sanya have titties? Outlook good" roll is kept, and
+  Brody confirmed she always has. Ep 8 then uses this: Seth's disguise has
+  nipples, and the real Sanya doesn't.
+- **AOOOOGA copypasta:**
+  - Emmett's gets ep 6's normalized wording.
+  - Seth's and Vargas's repeats were condensed to one-line beats.
+  - Charles's pasted Good Morning USA lyrics were cut.
+- **Folded:** the liquid-marble roll became "Person who's before you decides!
+  Maxwell says no." The "does Vargas see through Seth's disguise?" roll
+  became "Michael says no." Michael's "Vargas passes out" was cut, because
+  Vargas keeps talking straight after.
+- **Cut:**
+  - Unicode spam (◘ ° ▒ Æ Çest "Ÿøû`rē Wêłčõmę", B🇷🇷🇷).
+  - Zander's bare `t!choose` / `t!help choose`, and Charles's duplicate
+    "does the ship head towards Zarazoga-9?" roll.
+  - Michael's and Charles's out-of-character lines ("brb", "@Zander",
+    "calling one of my online teachers").
+  - Your "You got a potential kid." and Preston's "Да".
+  - Michael's "yo mamma jeans" roll.
+  - The out-of-character nipples clarification (Brody's "(She always has)",
+    your "We meant nipples"), and the stray FFBot replies after the session.
+- **Reworded:**
+  - Zander's opening "Is the ship setting course to Zarazoga-9? Spanish no"
+    became "already at", since they are en route.
+  - "by that picture" became "by that sight".
+- **Density:** 0.65 (237 actions to 365 quotes). Most of the added beats
+  are Tier 1: comms and location cues across the five interleaved threads.
+
+### Ep 8: judgment calls for Trey to review
+
+- **It continues ep 7's session a week later.** The cold-open `🐐` carries
+  over the state: Seth is still in Sanya's form, the real Sanya is
+  unaccounted for, and Emmett is still leashed. Her reappearance is kept
+  neutral ("back from wherever she's been").
+- **New tag:** `` `Zarazoga Security` ``, for the docking-control voice
+  Zander quoted.
+- **Seth-as-Sanya is voiced by Brody** (Sean was absent). Those quoted
+  lines are tagged `` `Seth` ``, which resolves to Seth Im'Kin'ki.
+- **"You decide. You earned it!"** (Brody's "Does Seth flash Sanya?")
+  gets a `🐐` outcome. The disguise's one wrong detail is that it has
+  nipples, which sets up Zander's "nippled Sanya".
+- **Zander narrating Garrick:** "pulls something out of his pockets" and
+  "turns into a naked molerat for three seconds" became `🐐` lines. The
+  Rubber Chicken's "HONK" is folded into Garrick's action.
+- **Garrick's "toes"** are glossed once as the wispy tendrils at the base
+  of his body, using your own "wispy base" line.
+- **Your answer:** the Chomsky/Mary "brother and sister" exchange was cut
+  with the rest of the post-session chatter.
+- **Also cut:**
+  - "Is Garrick secretly an eldritch god? YAAAAAS", which you retconned.
+  - "Is Sanya top tier in Final Fighter?"
+  - Cooldude's "SANYA PARENTHESIS S PARENTHESIS", "Trey screams in final
+    frontier" and "Sanya's boobies look like this".
+  - The "is chomsky black" roll and its pings, and 8poop.
+- **Left as typed:** Emmett's "potentially Mary's" pastel clothes, and
+  Sanya's "Those are... Iris's." Garrick's small-caps scream is kept, with
+  a framing beat.
+- **Ending:** it ends on Emmett putting on his trunks, and nothing was
+  added (per your choice). There's no Space Rule in the raw.
+- **Density:** 0.70 (53 actions to 76 quotes).
 
 ## Unrelated but open
 
