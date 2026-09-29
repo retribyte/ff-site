@@ -38,7 +38,7 @@ stripped, a full "…" wrap around a quote is dropped (the archive stores
 dialogue as bare prose), and ```fenced blocks``` become plain OTHER lines.
 Messages from a bot author (author.isBot) are always BOT_RESPONSE, split one
 per non-empty content line. Embeds (embeds[]) become EMBED messages, one per
-embed, shaped {title?, description[], footer?} per the site's embed reader.
+embed, shaped {title?, description[], footer?, color?} per the site's embed reader.
 RecipientAdd/RecipientRemove system messages are dropped.
 
 An episode's meta["messageBlacklist"] (optional, list[int]) skips messages by
@@ -417,8 +417,9 @@ VEC_HOSTED_RAVENS_PREFIXES = {"+", "["}
 
 def is_recap_fence(body):
     """The "Last episode..." / "In the ending of the last story..." recap
-    blocks reuse the same ini/diff/md coloring for narration, not dialogue --
-    exclude them from Ravens-member classification."""
+    blocks (and "Attention HORIZONERS" Mission Control transmissions) reuse
+    the same ini/diff/md coloring for narration, not dialogue -- they become
+    EMBEDs, never Ravens lines."""
     stripped = body.strip()
     return (
         stripped.startswith("Last episode")
@@ -706,6 +707,10 @@ def embed_to_json(embed):
     footer = embed.get("footer") or {}
     if footer.get("text"):
         out["footer"] = footer["text"]
+    # Vortox color-codes its output (orange = normal, green = hit/heal,
+    # red = failed roll/miss); kept only alongside real content
+    if out and embed.get("color"):
+        out["color"] = embed["color"]
     return out
 
 
@@ -791,6 +796,20 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names, pers
     for chunk in content_chunks(content) if content else []:
         if chunk[0] == "fence":
             _, lang, body = chunk
+            if not is_bot and is_recap_fence(body):
+                # GM recaps ("Last episode, the [HORIZONERS]...") and Mission
+                # Control transmissions: an EMBED, not loose OTHER lines. The
+                # [BRACKETS] are Discord ini/md highlight markup -- kept
+                # verbatim, with the fence language under "code", so the
+                # site can render the highlights (it shows them literally
+                # until it does).
+                # "code" is always present (possibly "") -- it marks the
+                # embed as a GM code-block post, whatever its language
+                recap = {"description": [l.strip() for l in body.split("\n") if l.strip()], "code": lang}
+                out.append({"player": player, "character": None, "persona": None,
+                            "timestamp": timestamp, "type": "EMBED",
+                            "text": json.dumps(recap, ensure_ascii=False)})
+                continue
             if not is_bot and lang in ("diff", "ini", "md") and not is_recap_fence(body):
                 for line in body.split("\n"):
                     line = line.strip()
@@ -846,10 +865,15 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names, pers
             for msg_type, text, line_character in classified:
                 emit_line(msg_type, text, line_character)
 
+    default_color = (meta.get("defaultEmbedColors") or {}).get(player)
     for embed in msg.get("embeds") or []:
         embed_json = embed_to_json(embed)
         if not embed_json:
             continue
+        # the author's usual embed color lives on their user record (the
+        # reader falls back to it) -- keep only colors that differ from it
+        if default_color and embed_json.get("color", "").lower() == default_color.lower():
+            del embed_json["color"]
         out.append({
             "player": player,
             "character": None,

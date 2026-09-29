@@ -4,17 +4,12 @@ Status of the FF2 transcript-editing work, what's waiting on Trey, and how to
 continue. The style rules themselves live in `md/ff2/EDITORIAL-STYLE-GUIDE.md`.
 Read that first, since this file assumes it.
 
-## ▶ RESUME HERE: FF3 is fully edited (written 2026-09-29)
+## ▶ RESUME HERE: FF4 has started, see `HANDOFF-ff4-editorial.md`
 
-FF3 eps 1–8 are all edited and installed. Eps 1–6 are committed
-(`646d69b`). Eps 7–8 are **uncommitted and awaiting Trey's review**:
-- `md/ff3/7.md`, `md/ff3/8.md`
-- `meta/ff3.json` (episode titles, chosen 2026-09-29; `0-prep` removed from `episodes`)
-- `md/ff3/1.md` (the opening `🐐` now carries the raid aftermath from `0-prep.md`)
-- this file
-
-Commit when Trey says so (`git -C ff-site`). The review notes are in the
-"### Ep 7" and "### Ep 8" sections below.
+FF3 eps 1–8 are all edited and committed (`646d69b`, `8cb9b50`). FF4
+work (new format, tools and conventions) is tracked in
+`HANDOFF-ff4-editorial.md`. The FF3 review notes below remain as
+reference.
 
 **Still open for Trey:**
 - The importer ignores `persona`.
@@ -737,4 +732,4 @@ FF3 gets the same full treatment as FF2 (Tier 1 + Tier 2, guide §5).
 
 ## Unrelated but open
 
-`ff-site/CLAUDE.md` still carries the known bug where `discord-json-to-api.py` misreads the Ravens' (Marv, Sascha, …) lines in FF4. It wasn't touched in this pass.
+The `CLAUDE.md` "Ravens bug" note turned out to be stale and was removed (2026-09-29); see `HANDOFF-ff4-editorial.md`.

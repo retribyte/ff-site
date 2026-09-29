@@ -14,15 +14,22 @@ Reads  ./meta/<season>.json   (season metadata: cast, username map, episodes)
        ./md/<season>/*.md     (or just the files passed on the command line)
 Writes ./api/<season>/<episode_number>-<file_name>.json
 
-Markdown format (produced by ff2.py / ff3.py from Discord exports):
-    **Author** _(24-Jun-18 05:13 PM)_
+Markdown format (produced by ff2.py / ff3.py / ff4-to-md.py from Discord exports):
+    **Author** _(24-Jun-18 05:13 PM)_ [discord id]   (the FF4 id is optional, ignored)
     plain line                  -> OTHER
     @Magic8Ball ... / t!... / 8ball ...  -> COMMAND
     > spoken line               -> QUOTE (attributed to the player's character)
     > `Name`: line  /  > Name: line      -> QUOTE attributed to Name
     _action line_               -> ACTION (same `Name`: override)
-    <embed><description>...</description></embed> -> EMBED (sections as JSON)
-Lines from a bot author are always BOT_RESPONSE. A bare "(edited)" is a
+    > `Vec as Marv`: line        -> QUOTE by Vec, persona Marv (FF4 Ravens hosts)
+    <embed><description>...</description></embed> -> EMBED (sections as JSON;
+                                  <title>/<footer>/<color>/<code> are strings, the rest lists;
+                                  a section may sit on one line: <title>x</title>)
+    ↪ Name: opening words…      -> reply marker    } FF4 metadata from the
+    ⌘ Name used /8ball          -> slash command   } Discord export (see
+    📎 file.png                 -> attachment      } ff4-to-md.py); skipped
+Lines from a bot author are BOT_RESPONSE, except an _action_ line, which is
+GM narration: ACTION with no character. A bare "(edited)" is a
 Discord artifact and is dropped.
 """
 
@@ -43,6 +50,10 @@ except ImportError:
 BLOCK_HEADER = re.compile(r"\*\*(.*?)\*\*\s+[_*]\((.*?)\)[_*]")
 EMBED_OPEN = re.compile(r"^<([a-z]+)>$")
 EMBED_CLOSE = re.compile(r"^</([a-z]+)>$")
+EMBED_INLINE = re.compile(r"^<([a-z]+)>(.*)</\1>$")
+EMBED_STRING_SECTIONS = ("title", "footer", "color", "code")
+MARKER_PREFIXES = ("↪ ", "⌘ ", "📎 ")
+PERSONA_TAG = re.compile(r"^(.+?) as (.+)$")
 BACKTICK_SPEAKER = re.compile(r"^`(.+?)`: (.*)$")
 PLAIN_SPEAKER = re.compile(r"^([A-Z][A-Za-z0-9 .'\-]{0,29}): (.*)$")
 ACTION_LINE = re.compile(r"^[_*](.+)[_*]$")
@@ -60,7 +71,25 @@ NAME_ALIASES = {
     "Seth": "Seth Im'Kin'ki",
     "Chomsky": "Victor Chomsky",
     "Sanya": "Sanya Dreadflower",
+    # FF4 PCs, same shorthand discord-json-to-api.py canonicalizes
+    "Zach": "Zacharias Smith",
+    "Dutch": "Dutch Elkins",
+    "Bellow": "Bellow Brightlight",
+    "Llafay": "Llafay Terrels",
+    "Llawdon": "Llawdon Brandanowitz",
+    "Zion": "Zion Daybreaker",
 }
+
+
+def split_persona(character):
+    """`Vec as Marv` -> ("Vec", "Marv"); anything else -> (character, None)."""
+    match = PERSONA_TAG.match(character or "")
+    return (match.group(1), match.group(2)) if match else (character, None)
+
+
+def embed_json(sections):
+    """Sections dict -> the reader's {title?, description[], footer?} shape."""
+    return {k: " ".join(v) if k in EMBED_STRING_SECTIONS else v for k, v in sections.items()}
 
 
 def load_meta(season):
@@ -106,7 +135,7 @@ def split_blocks(lines):
             if current:
                 blocks.append(current)
             current = {"author": header.group(1), "date": header.group(2), "lines": []}
-        elif line and line != "(edited)":
+        elif line and line != "(edited)" and not line.startswith(MARKER_PREFIXES):
             if current is None:
                 sys.exit(f"Content before the first block header: {line!r}")
             current["lines"].append(line)
@@ -144,7 +173,7 @@ def classify_line(line, character, cast_names):
             return "ACTION", inner.group(2), character
         return "ACTION", action.group(1), character
 
-    if "@Magic" in line or "t!" in line or line.lower().startswith("8ball"):
+    if "@Magic" in line or line.startswith("t!") or line.lower().startswith("8ball"):
         return "COMMAND", line, character
 
     return "OTHER", line, character
@@ -173,7 +202,7 @@ def convert_file(md_file, meta, episode):
             closing = EMBED_CLOSE.match(line)
             if closing:
                 if closing.group(1) == "embed" and embed is not None:
-                    embed_text = json.dumps(embed, ensure_ascii=False)
+                    embed_text = json.dumps(embed_json(embed), ensure_ascii=False)
                     messages.append({
                         "player": player,
                         "character": character,
@@ -193,12 +222,21 @@ def convert_file(md_file, meta, episode):
                     section = opening.group(1)
                     embed[section] = []
                 continue
+            inline = EMBED_INLINE.match(line)
+            if inline and embed is not None:
+                embed[inline.group(1)] = [inline.group(2)]
+                continue
             if embed is not None:
                 if section:
                     embed[section].append(line)
                 continue
 
-            if player in bots:
+            action = ACTION_LINE.match(line) if player in bots else None
+            if action:
+                # GM narration voiced by the bot (FF4: `_The group hears…_`
+                # under **Vortox**) -- an action with no character
+                msg_type, text = "ACTION", action.group(1)
+            elif player in bots:
                 msg_type, text = "BOT_RESPONSE", line
             else:
                 msg_type, text, character = classify_line(line, character, cast_names)
@@ -208,10 +246,13 @@ def convert_file(md_file, meta, episode):
                 msg_type = "OTHER"
             # the whole block carries the current character (the reader
             # regroups consecutive messages by player+character)
+            speaker, persona = split_persona(character)
+            speaker = NAME_ALIASES.get(speaker, speaker)
+            resolved = persona_timeline.resolve(speaker, text) if speaker else None
             messages.append({
                 "player": player,
-                "character": character,
-                "persona": persona_timeline.resolve(character, text) if character else None,
+                "character": speaker,
+                "persona": persona if persona is not None else resolved,
                 "timestamp": timestamp,
                 "type": msg_type,
                 "text": text,
@@ -234,7 +275,9 @@ def find_episode(meta, md_file):
     basename with or without its NN- prefix), or None."""
     base_name = os.path.splitext(os.path.basename(md_file))[0]
     candidates = {base_name, re.sub(r"^\d+-", "", base_name)}
-    return next((ep for ep in meta["episodes"] if ep["file_name"] in candidates), None)
+    slug = lambda s: re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+    return next((ep for ep in meta["episodes"]
+                 if ep["file_name"] in candidates or slug(ep["file_name"]) in {slug(c) for c in candidates}), None)
 
 
 def emit(md_file, meta, season, episode):
@@ -245,6 +288,7 @@ def emit(md_file, meta, season, episode):
 
     payload = convert_file(md_file, meta, episode)
     slug = re.sub(r"^\d+-?", "", episode["file_name"]) or episode["file_name"]
+    slug = re.sub(r"[^a-z0-9]+", "-", slug.lower()).strip("-")  # "Test One-shot" -> "test-one-shot"
     out_file = f"{out_dir}/{episode['episode_number']}-{slug}.json"
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=4, ensure_ascii=False)
