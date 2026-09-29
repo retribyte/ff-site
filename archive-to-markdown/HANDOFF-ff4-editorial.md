@@ -17,7 +17,8 @@ format. Read these first, in order:
 | Episode | State |
 |---|---|
 | 0 (Pilot, "Test One-shot") | Edited by Opus as the template. **Awaiting Trey's review.** Notes are below. |
-| 1–23 | Not started. Can go once Trey approves the Pilot. |
+| 1 ("Episode 1") | Edited by Sonnet 5.5 (started on Trey's go-ahead). **Awaiting Trey's review.** Notes are at the bottom. |
+| 2–23 | Not started. |
 
 Nothing is committed yet. Commit only when Trey says so (`git -C ff-site`).
 
@@ -236,7 +237,7 @@ expects less adding. Tier 1 (guide §5.1) is still required everywhere.
 Tier 2 is light: add a reaction or business beat only where a line would
 otherwise read flat. The Pilot went from 0.37 to 0.49 actions per quote.
 Anything in the 0.45–0.6 range is plausible. It's a sanity check, not a
-target.
+target. Some FF2 episodes get up to the 0.7–0.8 range; use discretion.
 
 **Speaker tags. Only use:**
 - tags that already appear in that episode's raw file;
@@ -267,6 +268,62 @@ the converter baked those mappings in. Check the `characters` line
 **Brody's italic lines in ep 0** are Dread speaking, as in FF3. Make them
 `` `Dread` `` dialogue. From ep 1, Dread and Sanya are one character
 (Sanya Dreadflower), so there's no separate tag.
+
+## Reordering: grouping split thoughts
+
+FF4 players roleplay in bursts, so one thought often arrives as several
+messages with other people's messages, rolls or GM lines wedged between them.
+Half of Trey's hand edits are moves that put a whole thought back together.
+Two tools help; neither edits by itself.
+
+**`editorial/ff4_merge_candidates.py <md>`** only flags. It reports two
+consecutive messages by the same author, within `--window` seconds (default
+30) of each other, with at most `--max-between` other blocks (default 4)
+between them. Exact times come from the Discord ID in the header, since header
+times are only minute-precision. ID-less (editor-added) blocks can't anchor a
+pair but do count as interruptions. Each hit is tagged by what sits in the gap:
+
+- `[bot]`: a Vortox block (8ball, `/dmg`, GM narration) lands mid-thought. The
+  strongest signal, and most of the good moves.
+- `[action]`: another player's `_action_` lands mid-thought.
+- `[talk]`: someone else spoke dialogue in the gap. Usually a real
+  back-and-forth, so it's hidden unless you pass `--all`.
+
+Defaults were chosen by reading ep 0 and ep 1 output at 15–60s. At 30s nearly
+every hit was a genuine split thought. 45–60s mostly adds 8ball-wait gaps, so
+use `--window 45` only for a second, looser sweep.
+
+**`editorial/ff4_move_blocks.py <md> MOVE_ID:AFTER_ID …`** does the move. It
+puts the block with header ID `MOVE_ID` directly after the block with
+`AFTER_ID`, keeping the moved block's header and timestamp, and carries any
+ID-less blocks that directly follow it (an added outcome beat stays with its
+8ball). It prints what it carried; check that. It never touches text.
+
+**Judgment: a hit is a candidate, not an order.** Move when the gap block is
+independent of the thought. Leave it when the gap block is a reply or reaction
+to the first message (Emmett's "Watch the horns" after the doctor pats his head).
+
+- **Usual fix: move the interrupter, not the thought.** Push the 8ball, `/dmg`
+  or side action to *after* the second half:
+  - `OW!` / `/dmg` embed / `GOTDAMMIT!` → the embed goes after `GOTDAMMIT!`
+  - `Where'd they go?` / 8ball / `Hmph. Must've been the wind.` → 8ball goes
+    after the `Hmph`
+  - the doctor's "points it at the kid" / 8ball / "Put this in your mouff…" →
+    the 8ball goes after the doctor's line
+- **Answer follows question:** an 8ball asked about X sits after the line that
+  asks or narrates X. Where two 8balls are stacked and only one belongs, move
+  the other.
+- **A reaction goes after the thing it reacts to:** Bellow's "looks impressed"
+  belongs after Zion's "seems confused", not between Zion's two messages.
+- **Don't reorder replies.** If the gap is spoken dialogue answering the first
+  message, it's a conversation. Leave it.
+- **Timestamps may end up out of order.** That's expected, as in FF2 guide §6.5.
+- **Run it after the text edit and before verify**, on the installed
+  `md/ff4/<N>-<slug>.md` (it's the source of truth once installed), then
+  re-run `ff4_verify.py`. Compare a re-run of the flagger: what's left should be
+  replies you meant to leave.
+- **Applied so far:** 7 moves in ep 0 and 7 in ep 1 (ep 0: 13 → 8 hits; ep 1:
+  9 → 2). Both were re-imported afterwards.
 
 ## Pipeline, per episode
 
@@ -301,6 +358,8 @@ the name is `md/ff4/raw/`'s file name, and `EXPORT` is the episode's
      their voicer.
    - Slur flags are handled per guide §4 (gay/homo insults go on Trey's
      list).
+   - **Then run the merge flagger and apply the moves that fit** (see
+     "Reordering" above), and re-verify.
 6. Add an "### Ep N" review section to this file: judgment calls, kept
    `✂` lines, new NPC tags, cuts worth a second look. Then stop for
    Trey's review before the next episode, or batch them if Trey says so.
@@ -345,7 +404,7 @@ matter (`ff4-to-md.py`, `editorial/*.py`) are in the repo.
 - **Cast** (`meta/ff4.json`):
   - Zander: Emmett (ep 0) → Llafay (1) → Vec (2+, personas above)
   - Trey: Garrick, then Dr. Jorpa (0) → Zion (1+)
-  - Maxwell: Mateo (0) → Edwin (1+)
+  - Maxwell: Mateo (0) → Edmin Kalvanzas (1+)
   - Silas: Dutch
   - Jonas: Chomsky (0) → Bellow (1+)
   - Michael: Kumdome (0) → Llawdon (1+)
@@ -457,3 +516,64 @@ matter (`ff4-to-md.py`, `editorial/*.py`) are in the repo.
     enough"
 - **Density:** 213 actions to 431 quotes (0.49), up from 0.37 in the raw.
   There are 33 added (ID-less) blocks.
+
+## Ep 1: judgment calls for Trey to review
+
+`md/ff4/1-episode-1.md` is installed and verified: 0 unresolved speakers, no
+cut marks, no OTHER lines. `api/ff4/1-episode-1.json` is generated and imported (old direct import deleted). Nothing is committed.
+
+- **Intro fence** (Trey's "The date is 35-7, 3024 GUY…") is rebuilt as a Vortox
+  `<code></code>` embed, keeping the ID. An added Vortox line seats the recruits
+  before Llashii speaks. The "Attention HORIZONERS" transmission was already an
+  embed; I moved it under Vortox and dropped the "_Mission control:_" lead-in.
+- **GM narration converted to Vortox** (IDs kept): the commander's holoprojector
+  and his two-Llamanians entrance (Trey), the empty weapons room and sentries
+  (Zander), the undocking (Zander), the intercom blast, BOOOOM, the Shark Tank
+  clones and "They will return…", "The aquarium is no longer visible", and the
+  "Find out next time, on… Final Frontier 4!" sign-off. Trey's "(Context, if you
+  didn't read Final Pummel…)" became "_The Llamanian Republic is at war with the
+  GU._"
+- **`✂` lines kept** (later lines depend on them):
+  - Llafay's "You know I can crumple you up like a piece of paper right now,
+    Dutch." (Edmin's "Solace Protocol 4" and Dutch's reply answer it)
+  - Llafay's "What are you looking for, bug?" (Bellow's "botany room?" answers it)
+  - Edmin's "Would you reiterate?" and Dutch's "Wh... Where'd it go?"
+  - Dutch's "Y'all heard Cap'n! Kill the fish!" (Trey's "You'll flood the hull!"
+    answers it)
+- **`✂` lines cut, as flagged:** Zion's "turns around to see Llafay glaring" (the
+  "Yes sir" line stays), Dutch's "Whaddaya mean?", Bellow's "You ok, Llafay?",
+  Edmin's "Obscenities do not deter my processes", three joke 8balls (Bellow
+  narrating aloud, Llafay heading to the console, "obliterating the asteroid"),
+  and the Doodorb / french / foop / "why does zion talk like an anime character"
+  fragments.
+- **Cut, not flagged:** the Google-sheet links and Weapon List embed; the three
+  `/info` embeds (Contessa, Flamethrower, Edmin); the "Edmin speaks like Joshua
+  Tomar" / "talks like Chills" / "Cockenballen" / "finger but hole" meme run (and
+  its Nabumba 8ball); "(a Labrador)"; "alot riding on this message"; "I FARDED";
+  "Ending episode!"; "bals"; the "Dutch dies instantly / nerf war / coping"
+  jokes; three of Dutch's nine "Ow"s and two "Agh"s.
+- **Kept though it sounds meta:** Michael's "Does Llafay leak mushrooms?" 8ball
+  (Yes, but in a monotonous tone). It may be lore, so I added no outcome beat.
+  Llafay's "It's a coping mechanism", now framed as Llafay reading Bellow's action
+  aloud (the raw had "(Bellow said the action message above)").
+- **Inventions worth a glance:** Llawdon's failed first lift-off after the "It
+  won't happen" 8ball (the question was reworded to "…get the ship off the ground
+  on his first attempt?"); Llafay lifting Dutch by the scruff; empty space outside
+  the viewport after the "arrive at the exchange center? N" roll; Zion's armor
+  unscratched; Edmin overhearing Llafay from the corridor; the flicker of emotion
+  in Edmin's voice; the Kevin O'Leary voice confirmed as intercom interference;
+  the man loitering in the adjacent sector.
+- **Narration fixes:** "Llafay shuffles the papers" became Llashii (he's the one
+  briefing); Dutch is flung "into" (not "back into") the weapons room.
+- **Name fix (Trey):** the character is Edmin, not Edwin. `meta/ff4.json` now casts Maxwell as "Edmin Kalvanzas" from ep 1.
+- **Tags used:** `Llashii` (Zander's commander NPC, already in raw) and
+  `Kevin O'Leary` (Michael's intercom voice). Llafay's untagged Zander lines are
+  the cast default.
+- **Anachronisms to decide** (left as is): Shark Tank / Kevin O'Leary, Popeye,
+  Looney Tunes, "Applebee's Grill And Bar", "Joshua Tomar" (cut), "Cia-knows-what"
+  (unclear, possibly in-universe).
+- **Slurs:** none. "gay/homo": none.
+- **Density:** 181 actions to 327 quotes (0.55), up from 0.48 in the raw. The ep
+  is talky and the players already gave a lot of business, so I added mostly Tier
+  1 beats.
+

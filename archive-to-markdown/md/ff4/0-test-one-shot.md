@@ -98,6 +98,10 @@ _Emmett raises an eyebrow._
 
 > What are fleas?
 
+**Zander** _(10-May-22 07:50 PM)_ [973748986420805662]
+
+> `Seth`: I'll tell you when you're older.
+
 **Vortox** _(10-May-22 07:50 PM)_ [973748974878068786]
 
 ⌘ Trey used /8ball
@@ -107,10 +111,6 @@ _Emmett raises an eyebrow._
 <description>Nah.</description>
 <footer>Trey asked: "Does Garrick need a check-up?"</footer>
 </embed>
-
-**Zander** _(10-May-22 07:50 PM)_ [973748986420805662]
-
-> `Seth`: I'll tell you when you're older.
 
 **Jonas** _(10-May-22 07:50 PM)_ [973749014417768498]
 
@@ -564,16 +564,6 @@ _Mateo wanders into the lounge, coffee in hand, still in his boxers._
 
 > If only these damn cloakers would work. Shitty ship.
 
-**Vortox** _(10-May-22 08:11 PM)_ [973754088338645002]
-
-⌘ Jonas used /8ball
-
-<embed>
-<title>8ball Response</title>
-<description>Nabumba. (No)</description>
-<footer>Jonas asked: "Are Mateo's underpants heart-patterned?"</footer>
-</embed>
-
 **Vortox** _(10-May-22 08:11 PM)_ [973754115781967942]
 
 ⌘ Michael used /8ball
@@ -589,6 +579,16 @@ _Mateo wanders into the lounge, coffee in hand, still in his boxers._
 _Kumdome slams his fists on the dead cloaking console._
 
 > I WANT A NEW SHIP, GOD DAMMIT!
+
+**Vortox** _(10-May-22 08:11 PM)_ [973754088338645002]
+
+⌘ Jonas used /8ball
+
+<embed>
+<title>8ball Response</title>
+<description>Nabumba. (No)</description>
+<footer>Jonas asked: "Are Mateo's underpants heart-patterned?"</footer>
+</embed>
 
 **Jonas** _(10-May-22 08:11 PM)_ [973754188095967323]
 
@@ -1295,10 +1295,6 @@ _The doctor pulls out some bizarre-looking equipment, with a wand-looking device
 
 > `Receptionist`: Right where it says "sign here."
 
-**Brody** _(10-May-22 08:53 PM)_ [973764823584227359]
-
-_Emmett pees his pants instead._
-
 **Zander** _(10-May-22 08:53 PM)_ [973764835865145364]
 
 _`Receptionist`: The receptionist flashes the book that was right in front of Dutch right in his face._
@@ -1306,6 +1302,10 @@ _`Receptionist`: The receptionist flashes the book that was right in front of Du
 **Silas** _(10-May-22 08:54 PM)_ [973764894459559937]
 
 > Oh, right. Thank ya.
+
+**Brody** _(10-May-22 08:53 PM)_ [973764823584227359]
+
+_Emmett pees his pants instead._
 
 **Zander** _(10-May-22 08:54 PM)_ [973765009568063509]
 
@@ -1957,6 +1957,10 @@ _Mateo points at the window._
 
 _The doctor pulls a strange mechanical object out and points it towards the kid._
 
+**Trey** _(10-May-22 09:16 PM)_ [973770450024947732]
+
+> Put this in your mouff, and say "eeehhh!"
+
 **Vortox** _(10-May-22 09:16 PM)_ [973770439891501116]
 
 ⌘ Jonas used /8ball
@@ -1966,10 +1970,6 @@ _The doctor pulls a strange mechanical object out and points it towards the kid.
 <description>No, but in a monotonous tone.</description>
 <footer>Jonas asked: "Does Chomsky convince Sanya to go investigate the guy outside?"</footer>
 </embed>
-
-**Trey** _(10-May-22 09:16 PM)_ [973770450024947732]
-
-> Put this in your mouff, and say "eeehhh!"
 
 **Maxwell** _(10-May-22 09:16 PM)_ [973770486393737237]
 
@@ -2413,6 +2413,10 @@ The attack hits for `13` damage!
 
 > `Receptionist`: I don't get paid enough for this.
 
+**Zander** _(10-May-22 09:44 PM)_ [973777575543472168]
+
+> Why's that?
+
 **Vortox** _(10-May-22 09:44 PM)_ [973777541137576036]
 
 ⌘ Jonas used /dmg
@@ -2427,10 +2431,6 @@ The attack hits for `7` damage!
 </description>
 <color>#50C878</color>
 </embed>
-
-**Zander** _(10-May-22 09:44 PM)_ [973777575543472168]
-
-> Why's that?
 
 **Silas** _(10-May-22 09:44 PM)_ [973777599480340480]
 
@@ -2532,13 +2532,13 @@ _Dutch gets a hold of his gun._
 
 _The doctor runs down the hallway into the lobby, laser guns blazing randomly._
 
-**Zander** _(10-May-22 09:46 PM)_ [973778138360324156]
-
-_Emmett's eyes turn into hearts cartoonishly for half a second, and he continues to sniff._
-
 **Trey** _(10-May-22 09:46 PM)_ [973778167393308672]
 
 > GEETT OOOUUUUTT!!!
+
+**Zander** _(10-May-22 09:46 PM)_ [973778138360324156]
+
+_Emmett's eyes turn into hearts cartoonishly for half a second, and he continues to sniff._
 
 **Vortox** _(10-May-22 09:46 PM)_ [973778179045068841]
 
@@ -2950,13 +2950,13 @@ _`Receptionist`: The receptionist is engulfed by cum._
 
 _Emmett jumps off Sanya, with some petals sticking out of his mouth._
 
-**Silas** _(10-May-22 09:59 PM)_ [973781469002608680]
-
-_Dutch, lost in thought, ponders his options._
-
 **Zander** _(10-May-22 10:00 PM)_ [973781502217289728]
 
 > Kay.
+
+**Silas** _(10-May-22 09:59 PM)_ [973781469002608680]
+
+_Dutch, lost in thought, ponders his options._
 
 **Vortox** _(10-May-22 10:00 PM)_ [973781524925251665]
 
