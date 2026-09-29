@@ -870,8 +870,9 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names, pers
         embed_json = embed_to_json(embed)
         if not embed_json:
             continue
-        # the author's usual embed color lives on their user record (the
-        # reader falls back to it) -- keep only colors that differ from it
+        # the bot's everyday embed color (Vortox's orange, #FFA500) is left
+        # out -- the reader uses the bot's user color instead (Vortox is
+        # merged into FF 8 Ball, purple); only meaningful colors are kept
         if default_color and embed_json.get("color", "").lower() == default_color.lower():
             del embed_json["color"]
         out.append({

@@ -9,12 +9,13 @@
         "Michael": "Michael",
         "Sean": "Sean",
         "Brody": "Brody",
-        "Hunt520": "Hunt520"
+        "Hunt520": "Hunt520",
+        "Vortox": "FF 8 Ball"
     },
     "bots": [
-        "Vortox"
+        "FF 8 Ball"
     ],
-    "defaultEmbedColors": {"Vortox": "#FFA500"},
+    "defaultEmbedColors": {"FF 8 Ball": "#FFA500"},
     "cast": {
         "Zander": {
             "0": "Emmett Tawfeek",

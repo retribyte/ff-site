@@ -57,16 +57,28 @@ _Action._
 <title>8ball Response</title>                               title/footer are strings; one-line sections allowed
 <description>Da.</description>
 <footer>Brody asked: "Does Sanya wake up?"</footer>
-<color>#50C878</color>                                      only when it differs from Vortox's default orange: green hit/heal, red failed/miss
+<color>#50C878</color>                                      only when it isn't Vortox's everyday orange: green hit/heal, red failed/miss
 </embed>
 ```
 
 Embed `color` lives inside the EMBED message's JSON text. The reader draws
-it as the embed's left stripe. **Vortox's usual orange (`#FFA500`) isn't
-written into the markdown.** It's Vortox's own user color in the DB
-(`User.color`), which the reader falls back to. `meta/ff4.json` →
-`defaultEmbedColors` tells the converter to omit it. Only colors that
-differ are kept, such as green hits and red misses. Keep those verbatim.
+it as the embed's left stripe. Only colors that carry meaning are kept,
+such as green hits and red misses. Keep those verbatim.
+
+**Vortox is merged into FF 8 Ball** (Trey, 2026-09-29). It's the same bot
+under FF2's name, and the DB has a single user for both. Headers still
+say **Vortox**, as Discord showed it, and `meta/ff4.json` maps "Vortox" →
+"FF 8 Ball" at import. On the site FF4's bot shows as "FF 8 Ball" in
+FF 8 Ball's purple (`#ce78ff`; `#6e4694` in light mode).
+- **On record: Vortox's own color was orange, `#FFA500`.** Every
+  ordinary Vortox embed (8ball answers, rolls, turn notices) was orange
+  in Discord.
+- The converter leaves that orange out of the markdown
+  (`meta/ff4.json` → `defaultEmbedColors`), so those embeds take the
+  bot's purple.
+- To bring the orange back, delete `defaultEmbedColors` and regenerate
+  the raw files. Embeds would then carry `<color>#FFA500</color>` again,
+  and the edited episodes would need the same lines restored.
 
 - **Header IDs anchor text to the export.** A block that keeps an ID
   holds text derived from that message, even if it's edited, converted

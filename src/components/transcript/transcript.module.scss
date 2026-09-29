@@ -179,7 +179,7 @@
 .embed {
     background: color-mix(in srgb, var(--char) 10%, var(--surface-2));
     // Discord's embed color if the embed has its own; otherwise the speaker's
-    // (Vortox's user color is its default embed orange)
+    // (for the bot, its user color: FF 8 Ball's purple)
     border-left: var(--px) solid var(--embed-color, var(--char));
     padding: 0.5rem 0.8rem;
     display: flex;

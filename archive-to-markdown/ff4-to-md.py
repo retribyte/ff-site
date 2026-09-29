@@ -84,6 +84,12 @@ def header_time(iso):
     return datetime.fromisoformat(iso).strftime("%d-%b-%y %I:%M %p")
 
 
+def discord_name(author):
+    """The name Discord showed. Block headers keep it as it appeared (e.g.
+    "Vortox"); md-to-api.py maps it to a DB user through meta usernames."""
+    return author.get("nickname") or author.get("name") or "Unknown"
+
+
 def display_name(author, usernames):
     display = author.get("nickname") or author.get("name") or "Unknown"
     return usernames.get(display, display)
@@ -135,7 +141,7 @@ def entries(export, meta, episode):
         if msg.get("type") == "Reply" and ref:
             target = by_id.get(ref)
             if target:
-                who = display_name(target.get("author") or {}, usernames)
+                who = discord_name(target.get("author") or {})
                 markers.append(f"↪ {who}: {first_text(target)}")
             else:
                 markers.append("↪ (message outside this export)")
@@ -146,7 +152,7 @@ def entries(export, meta, episode):
         attachments = [f"📎 {a.get('fileName')}" for a in msg.get("attachments") or []]
         if not out and not attachments:
             continue
-        author = display_name(msg.get("author") or {}, usernames)
+        author = discord_name(msg.get("author") or {})
         lines = []
         for item in out:
             message_no += 1
@@ -202,7 +208,7 @@ def render(export, meta, episode, prep=False):
     blocks = []  # [author, header_ts, last_dt, default_char, paragraphs, tagged]
 
     def new_block(author, ts, msg_id):
-        default = d2a.cast_character(meta, author, number)
+        default = d2a.cast_character(meta, meta.get("usernames", {}).get(author, author), number)
         blocks.append({"author": author, "ts": ts, "id": msg_id, "default": default,
                        "paras": [], "current": default, "persona": None})
         return blocks[-1]
@@ -229,7 +235,9 @@ def render(export, meta, episode, prep=False):
                     # a GM's recap/transmission is GM narration: it moves under
                     # the bot, keeping the message ID (in a player's block it
                     # would import as that player's character talking)
-                    gm = new_block(meta["bots"][0], ts, entry["id"])
+                    bot = meta["bots"][0]
+                    bot_header = next((k for k, v in meta.get("usernames", {}).items() if v == bot), bot)
+                    gm = new_block(bot_header, ts, entry["id"])
                     gm["paras"].append([cut + body[0]] + body[1:])
                     block = new_block(entry["author"], ts, entry["id"])
                     paras = block["paras"]
