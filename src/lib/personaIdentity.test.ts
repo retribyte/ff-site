@@ -13,6 +13,17 @@ describe('resolvePersonaIdentity', () => {
         });
     });
 
+    it("uses a characterless player's own color (the Vortox bot)", () => {
+        const bot = { name: 'Vortox', icon: null, color: '#FFA500' };
+        expect(resolvePersonaIdentity(null, null, bot).color).toBe('#FFA500');
+    });
+
+    it("doesn't give an uncolored character the voicing player's color", () => {
+        const npc = { name: 'Receptionist', color: null, image: null };
+        const colored = { ...player, color: '#00ff00' };
+        expect(resolvePersonaIdentity(null, npc, colored).color).toBeNull();
+    });
+
     it('falls through to "Unknown" when nothing at all is known', () => {
         expect(resolvePersonaIdentity(null, null, null).speaker).toBe('Unknown');
     });

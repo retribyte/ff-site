@@ -2,7 +2,9 @@
 // is nullable, and a name-less persona (a look-only override — new avatar
 // and/or color, same name) has no name opinion and falls through to the
 // character's canonical name. Every field (name, color, avatar) falls
-// through independently: `persona ?? character ?? player`.
+// through independently: `persona ?? character ?? player` -- except that a
+// player's color only applies to characterless blocks (the Vortox bot), so
+// an uncolored NPC doesn't inherit the color of whoever voices it.
 
 interface PersonaLike {
     name: string | null;
@@ -19,6 +21,7 @@ interface CharacterLike {
 interface PlayerLike {
     name: string;
     icon: string | null;
+    color?: string | null;
 }
 
 export interface PersonaIdentity {
@@ -39,7 +42,7 @@ export function resolvePersonaIdentity(
 ): PersonaIdentity {
     return {
         speaker: persona?.name ?? character?.name ?? player?.name ?? 'Unknown',
-        color: persona?.color ?? character?.color ?? null,
+        color: persona?.color ?? character?.color ?? (character ? null : player?.color ?? null),
         avatarSrc: persona?.image ?? character?.image ?? player?.icon ?? null,
     };
 }

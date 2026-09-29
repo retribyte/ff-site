@@ -1,9 +1,17 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useTheme } from '@/components/theme/ThemeProvider';
 
-function hexToRgb(hex: string): [number, number, number] {
-    return [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
+/**
+ * The outline color as the browser resolves it on `el` -- works for a hex
+ * value and for a theme token like `var(--text-muted)` alike.
+ */
+function resolvedRgb(el: HTMLElement, color: string): [number, number, number] {
+    el.style.color = color;
+    const match = getComputedStyle(el).color.match(/\d+(\.\d+)?/g);
+    const [r, g, b] = (match ?? ['0', '0', '0']).map(Number);
+    return [r, g, b];
 }
 
 /**
@@ -21,6 +29,8 @@ interface Props {
 
 export default function PixelAvatar({ src, name, color, size = 48 }: Props) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    // theme tokens resolve differently per mode, so redraw the outline on a switch
+    const { colorMode } = useTheme();
     // Track which src failed so a src change resets automatically
     const [failedSrc, setFailedSrc] = useState<string | null>(null);
     const failed = failedSrc !== null && failedSrc === src;
@@ -45,7 +55,7 @@ export default function PixelAvatar({ src, name, color, size = 48 }: Props) {
 
             const imageData = ctx.getImageData(0, 0, w, h);
             const data = imageData.data;
-            const [r, g, b] = hexToRgb(color);
+            const [r, g, b] = resolvedRgb(canvas, color);
 
             const alphaAt = (x: number, y: number) =>
                 x < 0 || y < 0 || x >= w || y >= h ? 0 : data[(y * w + x) * 4 + 3];
@@ -70,7 +80,7 @@ export default function PixelAvatar({ src, name, color, size = 48 }: Props) {
             ctx.putImageData(imageData, 0, 0);
         };
         image.onerror = () => setFailedSrc(src);
-    }, [src, color]);
+    }, [src, color, colorMode]);
 
     if (!src || failed) {
         return (

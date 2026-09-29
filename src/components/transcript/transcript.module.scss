@@ -178,7 +178,9 @@
 
 .embed {
     background: color-mix(in srgb, var(--char) 10%, var(--surface-2));
-    border-left: var(--px) solid color-mix(in srgb, var(--char) 60%, var(--border-loud));
+    // Discord's embed color if the embed has its own; otherwise the speaker's
+    // (Vortox's user color is its default embed orange)
+    border-left: var(--px) solid var(--embed-color, var(--char));
     padding: 0.5rem 0.8rem;
     display: flex;
     flex-direction: column;
@@ -189,6 +191,16 @@
         overflow-wrap: anywhere;
         white-space: pre-wrap;
     }
+}
+
+// A Discord code-block post (GM recap): monospace, as it appeared in play
+.embedCode p {
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+}
+
+.codeMark {
+    color: var(--code-highlight);
 }
 
 .embedTitle {

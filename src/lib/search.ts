@@ -7,9 +7,15 @@ export interface Embed {
     title?: string;
     description?: string[];
     footer?: string;
+    // Discord's sidebar color (Vortox: orange normal, green hit/heal, red miss)
+    color?: string;
+    // Set when the embed was a Discord code-block post (a GM recap): the fence
+    // language ('ini', 'md', or '' for a plain fence). In ini/md, [bracketed]
+    // runs were Discord's highlight markup.
+    code?: string;
 }
 
-// An EMBED message's `text` is a JSON string ({title?, description[], footer?}).
+// An EMBED message's `text` is a JSON string ({title?, description[], footer?, color?, code?}).
 export function parseEmbed(text: string): Embed | null {
     try {
         const parsed = JSON.parse(text);

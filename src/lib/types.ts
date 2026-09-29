@@ -14,6 +14,8 @@ export interface PublicUser {
     username: string;
     role: UserRole;
     icon: string | null;
+    // dark-mode display color for characterless messages (e.g. the Vortox bot)
+    color?: string | null;
     bio: string | null;
 }
 
