@@ -19,7 +19,7 @@ m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 meta = m.load_meta('ff4')
 number = int(sys.argv[1])
 ep = next(e for e in meta['episodes'] if e['episode_number'] == number)
-name = f"{number}-{re.sub(r'[^a-z0-9]+', '-', ep['file_name'].lower()).strip('-')}.md"
+name = f"{number}-{re.sub(r'[^a-z0-9]+', '-', re.sub(r"['’]", '', ep['title'].lower())).strip('-')}.md"
 path = sys.argv[2] if len(sys.argv) > 2 else f'md/ff4/{name}'
 raw_path = f'md/ff4/raw/{name}'
 msgs = m.convert_file(path, meta, ep)['messages']
@@ -118,6 +118,8 @@ for mid, items in raw_e.items():
                 print('EMBED CHANGED', mid, key, repr(e.get(key))[:50], '->', repr(g.get(key))[:50])
         if 'footer' in e:
             asker = re.match(r'^(.*?) asked: "', g.get('footer', ''))
+            if g.get('footer', '').startswith('The choices were: '):
+                continue  # /choose has no asker; footer stays verbatim
             if not asker or asker.group(1) not in players:
                 print('EMBED FOOTER', mid, repr(g.get('footer'))[:70])
         if cmd != gcmd:

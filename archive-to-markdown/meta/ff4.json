@@ -56,6 +56,7 @@
     "personaTimeline": {
         "Vec": [
             { "from_episode": 2, "persona": "Fungus" },
+            { "from_episode": 4, "persona": "Drowned Llamanian", "anchor_contains": "Fungo takes some time to get adjusted" },
             { "from_episode": 5, "persona": "Fursean", "anchor_contains": "Fursean scratches his head" },
             { "from_episode": 5, "persona": "Fungus", "anchor_contains": "Fursean falls apart" },
             { "from_episode": 11, "persona": null },

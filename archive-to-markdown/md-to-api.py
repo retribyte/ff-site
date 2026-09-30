@@ -48,6 +48,7 @@ except ImportError:
     pass
 
 BLOCK_HEADER = re.compile(r"\*\*(.*?)\*\*\s+[_*]\((.*?)\)[_*]")
+EMBED_SPEAKER = re.compile(r"^`([^`]+)`:$")
 EMBED_OPEN = re.compile(r"^<([a-z]+)>$")
 EMBED_CLOSE = re.compile(r"^</([a-z]+)>$")
 EMBED_INLINE = re.compile(r"^<([a-z]+)>(.*)</\1>$")
@@ -198,20 +199,27 @@ def convert_file(md_file, meta, episode):
 
         embed = None       # sections dict while inside <embed>…</embed>
         section = None     # current section name inside an embed
+        embed_speaker = None  # a lone `Name`: line names the next embed's author
         for line in block["lines"]:
+            if embed is None:
+                lone = EMBED_SPEAKER.match(line)
+                if lone:
+                    embed_speaker = lone.group(1)
+                    continue
             closing = EMBED_CLOSE.match(line)
             if closing:
                 if closing.group(1) == "embed" and embed is not None:
                     embed_text = json.dumps(embed_json(embed), ensure_ascii=False)
                     messages.append({
                         "player": player,
-                        "character": character,
-                        "persona": persona_timeline.resolve(character, embed_text),
+                        "character": embed_speaker or character,
+                        "persona": None if embed_speaker else persona_timeline.resolve(character, embed_text),
                         "timestamp": timestamp,
                         "type": "EMBED",
                         "text": embed_text,
                     })
                     embed = None
+                    embed_speaker = None
                 section = None
                 continue
             opening = EMBED_OPEN.match(line)
@@ -275,9 +283,11 @@ def find_episode(meta, md_file):
     basename with or without its NN- prefix), or None."""
     base_name = os.path.splitext(os.path.basename(md_file))[0]
     candidates = {base_name, re.sub(r"^\d+-", "", base_name)}
-    slug = lambda s: re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+    slug = lambda s: re.sub(r"[^a-z0-9]+", "-", re.sub(r"['’]", "", s.lower())).strip("-")
+    wanted = {slug(c) for c in candidates}
     return next((ep for ep in meta["episodes"]
-                 if ep["file_name"] in candidates or slug(ep["file_name"]) in {slug(c) for c in candidates}), None)
+                 if ep["file_name"] in candidates or slug(ep["file_name"]) in wanted
+                 or (ep.get("title") and slug(ep["title"]) in wanted)), None)
 
 
 def emit(md_file, meta, season, episode):

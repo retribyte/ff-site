@@ -73,11 +73,11 @@ ADMIN_EMBED = re.compile(
 
 
 def slug(text):
-    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    return re.sub(r"[^a-z0-9]+", "-", re.sub(r"['’]", "", text.lower())).strip("-")
 
 
 def md_name(episode):
-    return f"{episode['episode_number']}-{slug(episode['file_name'])}.md"
+    return f"{episode['episode_number']}-{slug(episode['title'])}.md"
 
 
 def header_time(iso):
