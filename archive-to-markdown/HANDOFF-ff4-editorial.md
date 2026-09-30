@@ -280,7 +280,14 @@ the converter baked those mappings in. Check the `characters` line
 `ff4_verify.py` prints.
 
 **Personas.**
-- Vec's timeline personas (Fungus, Fursean, Argonian) are applied by
+- Persona facts live in `meta/ff4.json` (and `` `Vec as X` `` tags), never in
+  the DB. Fungus is the parasite's name until Silas names it in ep 2 ("I'm
+  naming it Fungo."); from the next Vec line on it is Fungo. Suchan is a Vec
+  persona (Zander's `Vec as Suchan` tags in eps 3-4), not a character.
+- Llafay never appears alive: every Llafay line (ep 1, early ep 2) is Vec wearing
+  the corpse. `md-to-api.py` folds `Llafay`/`Llafay Terrels` into Vec with
+  persona `Llafay Terres` (`CHARACTER_AS_PERSONA`), so no Llafay character row exists.
+- Vec's timeline personas (Fungus, Fungo, Drowned Llamanian, Fursean, Argonian) are applied by
   `meta/ff4.json` → `personaTimeline`, matched on anchor text:
   - "Fungo takes some time to get adjusted" (ep 4: Vec takes the Llamanian
     corpse body, persona `Drowned Llamanian`, until ep 5's Fursean)
@@ -429,8 +436,10 @@ the name is `md/ff4/raw/`'s file name, and `EXPORT` is the episode's
    - **After install, `md/ff4/<N>-<slug>.md` is the source of truth.**
      Trey edits it directly, so don't reassemble over it.
 
-After import, `python3 editorial/ff4_set_personas.py N` sets Vec's persona rows
-(the importer ignores `persona`; `messages` is keyed by `messageNo`, not `id`).
+Import with `python3 api-import.py --replace --create-missing api/ff4/N-*.json`.
+It stamps Vec's personas from the JSON and creates missing NPC characters and
+personas, so nothing is set by SQL afterwards. (`editorial/ff4_set_personas.py`
+is gone: it stamped by hard-coded ids and broke on every reseed.)
 
 Import: `python3 md-to-api.py ff4 md/ff4/<N>-<slug>.md` writes
 `api/ff4/<N>-<file_name>.json` for the `/import` page. The DB is

@@ -35,8 +35,13 @@ reply (`↪`), slash-command (`⌘`) and attachment (`📎`) marker lines, and
    already titled in the meta file. Output lands in `api/<season>/`
    (gitignored).
 
-3. **upload** — log in as an admin on the site and feed the JSON to
-   `/import`. It resolves player/character names against the database (with
+3. **upload** — either the CLI, `python3 api-import.py [--replace]
+   [--create-missing] api/ff4/[0-6]-*.json` (stdlib only; stamps each
+   message's `persona`, and with `--create-missing` also creates the users,
+   characters and personas the JSON names, so a fresh dev DB needs no
+   hand-patching; `--dry-run` first; see its docstring), or log in as an admin
+   on the site and feed the JSON to `/import` (which ignores `persona` and
+   creates nothing). It resolves player/character names against the database (with
    manual mapping for anything unknown), creates the season/episode if
    needed, and bulk-posts the messages.
 

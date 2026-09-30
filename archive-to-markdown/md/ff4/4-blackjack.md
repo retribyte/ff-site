@@ -31,7 +31,7 @@ _Because no one is willing to do anything, the Suchan decides to cause some havo
 
 **Zander** _(14-Jun-22 05:37 PM)_ [986399031490125824]
 
-_Well, this is a problem._
+_`Vec as Suchan`: Well, this is a problem._
 
 **Silas** _(14-Jun-22 05:37 PM)_ [986399050557456414]
 
@@ -39,11 +39,11 @@ _Dutch yawns._
 
 **Zander** _(14-Jun-22 05:37 PM)_ [986399066290257920]
 
-> Get off.
+> `Vec as Suchan`: Get off.
 
 **Zander** _(14-Jun-22 05:37 PM)_ [986399078881587202]
 
-> Now.
+> `Vec as Suchan`: Now.
 
 **Silas** _(14-Jun-22 05:37 PM)_ [986399095818162227]
 
@@ -55,7 +55,7 @@ _Dutch yawns._
 
 **Zander** _(14-Jun-22 05:37 PM)_ [986399115904688128]
 
-> I won't hesitate to nearly kill you. Again.
+> `Vec as Suchan`: I won't hesitate to nearly kill you. Again.
 
 **Silas** _(14-Jun-22 05:38 PM)_ [986399160653721680]
 
@@ -75,7 +75,7 @@ _Zion is moping upstairs, staring out the window at the lifeless ocean._
 
 **Zander** _(14-Jun-22 05:38 PM)_ [986399221911535667]
 
-> Why is everyone in the engine room, damn it.
+> `Vec as Suchan`: Why is everyone in the engine room, damn it.
 
 **Silas** _(14-Jun-22 05:38 PM)_ [986399283823640648]
 
@@ -91,7 +91,7 @@ _Dutch stumbles to roll off, and falls to the ground._
 
 **Zander** _(14-Jun-22 05:38 PM)_ [986399360495550464]
 
-_The Suchan leaves for the cockpit._
+_`Vec as Suchan`: The Suchan leaves for the cockpit._
 
 **Vortox** _(14-Jun-22 05:38 PM)_ [986399381769043968]
 
@@ -417,7 +417,7 @@ Bellow now has `(17/25)` hp.
 
 _Fungo presses a button, causing the intercom to blare._
 
-> Get out of my head, pest!
+> `Vec as Suchan`: Get out of my head, pest!
 
 **Vortox** _(14-Jun-22 05:55 PM)_ [986403570960183328]
 
@@ -457,7 +457,7 @@ _Suddenly a figure approaches, sword raised._
 
 **Zander** _(14-Jun-22 05:57 PM)_ [986403992340946995]
 
-> GET OUT GET OUT GET OUT!
+> `Vec as Suchan`: GET OUT GET OUT GET OUT!
 
 **Vortox** _(14-Jun-22 05:57 PM)_ [986404046627807283]
 
@@ -821,7 +821,7 @@ Enemy_c now has `(-2/25)` hp.
 
 **Zander** _(14-Jun-22 06:09 PM)_ [986407096222363689]
 
-> God, someone help! IT'S EATING ME!
+> `Vec as Suchan`: God, someone help! IT'S EATING ME!
 
 **Trey** _(14-Jun-22 06:09 PM)_ [986407184470536202]
 

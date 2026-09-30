@@ -56,11 +56,10 @@
     "personaTimeline": {
         "Vec": [
             { "from_episode": 2, "persona": "Fungus" },
-            { "from_episode": 3, "persona": "Suchan" },
-            { "from_episode": 4, "persona": "Fungus", "anchor_contains": "Fungo bursts out of the Suchan's back" },
+            { "from_episode": 2, "persona": "Fungo", "anchor_contains": "Out of remorse, Fungo pushes Dutch out of the room." },
             { "from_episode": 4, "persona": "Drowned Llamanian", "anchor_contains": "Fungo takes some time to get adjusted" },
             { "from_episode": 5, "persona": "Fursean", "anchor_contains": "Fursean scratches his head" },
-            { "from_episode": 5, "persona": "Fungus", "anchor_contains": "Fursean falls apart" },
+            { "from_episode": 5, "persona": "Fungo", "anchor_contains": "Fursean falls apart" },
             { "from_episode": 11, "persona": null },
             { "from_episode": 17, "persona": "Argonian", "anchor_contains": "An Argonian in a parka appears" },
             { "from_episode": 18, "persona": null, "anchor_contains": "husks as Vec pops out of him" },

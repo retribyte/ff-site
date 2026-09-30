@@ -81,7 +81,22 @@ NAME_ALIASES = {
     "Llafay": "Llafay Terrels",
     "Llawdon": "Llawdon Brandanowitz",
     "Zion": "Zion Daybreaker",
+    # FF2 short forms (Matthias: a t!8ball line in ep 15; Bail: ep 5)
+    "Matthias": "Matthias Lewkey",
+    "Bail": "Bail Starlight",
 }
+
+
+# Characters that only ever exist as a persona of another: Llafay (FF4) never
+# appears alive -- every line credited to him is Vec wearing his corpse.
+CHARACTER_AS_PERSONA = {"Llafay Terrels": ("Vec", "Llafay Terres")}
+
+
+def fold_persona(speaker, persona):
+    """Re-point a persona-only character at its host: ("Llafay Terrels", None) -> ("Vec", "Llafay Terres")."""
+    if persona is None and speaker in CHARACTER_AS_PERSONA:
+        return CHARACTER_AS_PERSONA[speaker]
+    return speaker, persona
 
 
 def split_persona(character):
@@ -206,19 +221,26 @@ def convert_file(md_file, meta, episode):
             if embed is None:
                 lone = EMBED_SPEAKER.match(line)
                 if lone:
-                    embed_speaker = lone.group(1)
+                    embed_speaker = NAME_ALIASES.get(lone.group(1), lone.group(1))
                     continue
             closing = EMBED_CLOSE.match(line)
             if closing:
                 if closing.group(1) == "embed" and embed is not None:
                     embed_text = json.dumps(embed_json(embed), ensure_ascii=False)
-                    e_speaker, e_persona = split_persona(embed_speaker or character)
-                    e_speaker = NAME_ALIASES.get(e_speaker, e_speaker)
+                    if embed_speaker:
+                        e_speaker, e_persona = split_persona(embed_speaker)
+                        e_speaker = NAME_ALIASES.get(e_speaker, e_speaker)
+                        e_speaker, e_persona = fold_persona(e_speaker, e_persona)
+                    else:
+                        e_speaker, e_persona = split_persona(character)
+                        e_speaker = NAME_ALIASES.get(e_speaker, e_speaker)
+                        e_speaker, e_persona = fold_persona(e_speaker, e_persona)
+                        if e_persona is None:
+                            e_persona = persona_timeline.resolve(e_speaker, embed_text)
                     messages.append({
                         "player": player,
                         "character": e_speaker,
-                        "persona": e_persona if e_persona is not None else (
-                            None if embed_speaker else persona_timeline.resolve(e_speaker, embed_text)),
+                        "persona": e_persona,
                         "timestamp": timestamp,
                         "type": "EMBED",
                         "text": embed_text,
@@ -265,6 +287,8 @@ def convert_file(md_file, meta, episode):
                 # out-of-character chatter: no character (block state is kept
                 # in `character` for the lines that follow)
                 speaker = persona = None
+            else:
+                speaker, persona = fold_persona(speaker, persona)
             resolved = persona_timeline.resolve(speaker, text) if speaker else None
             messages.append({
                 "player": player,

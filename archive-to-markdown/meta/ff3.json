@@ -14,12 +14,13 @@
         "Michael": "Michael",
         "ScootyDooty": "Preston",
         "Hunter": "Hunter",
-        "Tatsu": "FFBot",
+        "Tatsu": "FF 8 Ball",
         "Æsir": "Charles",
-        "FF 8Ball": "FFBot"
+        "FF 8Ball": "FF 8 Ball",
+        "FFBot": "FF 8 Ball"
     },
     "bots": [
-        "FFBot"
+        "FF 8 Ball"
     ],
     "cast": {
         "Zander": {
