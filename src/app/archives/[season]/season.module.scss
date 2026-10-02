@@ -21,48 +21,17 @@
     @include m.glow-heading(var(--season, var(--accent)));
 }
 
-// Short stories filed under this campaign (Story.season)
-.stories {
-    margin: 1.5rem 0 2rem;
-}
+// Bottom pointer to this campaign's section on /stories (cf. the archives page's VM pointer)
+.pointer {
+    margin: 2rem 0 0;
+    text-align: center;
 
-.storiesHeading {
-    font-size: 1.1rem;
-    margin: 0 0 0.75rem;
-}
+    a {
+        color: var(--season);
+        text-decoration: none;
 
-.storyList {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-    gap: 0.75rem;
-}
-
-.storyLink {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    height: 100%;
-    padding: 0.75rem 0.9rem;
-    border: 1px solid color-mix(in srgb, var(--story) 45%, transparent);
-    border-left: 3px solid var(--story);
-    border-radius: 6px;
-    text-decoration: none;
-    color: inherit;
-    transition: background 0.15s;
-
-    &:hover {
-        background: color-mix(in srgb, var(--story) 10%, transparent);
+        &:hover {
+            color: var(--link-hover);
+        }
     }
-}
-
-.storyTitle {
-    font-weight: 600;
-}
-
-.storyBlurb {
-    font-size: 0.85rem;
-    opacity: 0.75;
 }

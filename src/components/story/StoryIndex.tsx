@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import IndexScan from '@/components/IndexScan';
 import DeleteStoryButton from './DeleteStoryButton';
+import { storyGroupId } from '@/lib/stories';
 import styles from './storyIndex.module.scss';
 
 export interface IndexStory {
@@ -58,7 +59,7 @@ export default function StoryIndex({ stories }: { stories: IndexStory[] }) {
             )}
 
             {groups.map((group) => (
-                <section key={group.label ?? '_'}>
+                <section key={group.label ?? '_'} id={group.label ? storyGroupId(group.label) : undefined}>
                     {group.label && <h2 className={styles.groupHeading}>{group.label}</h2>}
                     <ul className={styles.shelf}>
                         {group.stories.map((s) => (

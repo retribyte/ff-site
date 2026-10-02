@@ -165,6 +165,14 @@ export function storyColors(story: {
     return { primary: 'var(--accent)', secondary: 'var(--accent-soft)' };
 }
 
+/** Anchor id for a /stories shelf section, e.g. "Final Frontier 3" → "final-frontier-3". */
+export function storyGroupId(label: string): string {
+    return label
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+}
+
 /** "2-the-signal" for /stories/foo/2-the-signal; resolved by number prefix. */
 export function chapterSlug(chapter: Pick<StoryChapter, 'chapter_no' | 'title'>): string {
     if (!chapter.title) return `${chapter.chapter_no}`;
