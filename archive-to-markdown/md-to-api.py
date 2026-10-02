@@ -72,6 +72,8 @@ NAME_ALIASES = {
     "Seth": "Seth Im'Kin'ki",
     "Chomsky": "Victor Chomsky",
     "Sanya": "Sanya Dreadflower",
+    "Mateo": "Mateo Krovak",
+    "Joker": "The Joker",
     # FF4 PCs, same shorthand discord-json-to-api.py canonicalizes
     "Zach": "Zacharias Smith",
     "Dutch": "Dutch Elkins",

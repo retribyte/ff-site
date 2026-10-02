@@ -149,6 +149,8 @@ NAME_ALIASES = {
     "Llawdon": "Llawdon Brandanowitz",
     "Zion": "Zion Daybreaker",
     "Sanya": "Sanya Dreadflower",
+    "Mateo": "Mateo Krovak",
+    "Joker": "The Joker",
     # "Fungus" (ep2-10) is Vec's pre-self-naming identity, tracked as a
     # persona now (meta/ff4.json's personaTimeline), not a cast default --
     # cast.Zander already resolves straight to "Vec" from ep2 on. This entry
