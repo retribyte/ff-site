@@ -1,8 +1,9 @@
 ---
 slug: chomskys_journal_audio_logs
 title: Chomsky's Journal & Audio Logs
-blurb: Victor Chomsky's private journal and audio logs from aboard the pirate ship.
+blurb: Victor Chomsky's private journal and audio logs from aboard the pirate ship, as a stranded arsonist with a secret agenda studies the crew he has joined.
 author: Archivist
+season: FF2
 format: prose
 ---
 

@@ -1,8 +1,9 @@
 ---
 slug: airlocked
 title: Airlocked!
-blurb: Emmett has had enough of Seth.
+blurb: Emmett finally confronts Seth about the junk stashed in the ship's navigation system, and Seth answers with the airlock. What follows leaves him adrift, armed and facing the Llamanians.
 author: Archivist
+season: FF2
 format: prose
 ---
 
@@ -194,7 +195,7 @@ When Emmett awoke, he was stereotypically bound to a chair. His head was poundin
 
 Emmett waited for Josephine to get out of the restroom an hour later. They had agreed upon a plan to get him out of there: deception. Emmett would put himself into her armor and make his way to the escape pods. Josephine, on the other hand, would go on a different route. It was the best strategy they got on short notice.
 
-"[What's taking her so long? She's just changing clothes,]{Emmett Tawfeek}" Emmett mumbled to himself. He went up next to the door and knocked on it.
+"[What's taking her so long? She's just changing clothes]{Emmett Tawfeek}," Emmett mumbled to himself. He went up next to the door and knocked on it.
 
 "[Just a second!]{Josephine}" She sounded like she was stressed from her speech. Rather than to provoke anything, The Kid backtracked and whistled a soft tune to himself. Soon, the female Squoatling was out.
 
@@ -210,7 +211,7 @@ Emmett waited for Josephine to get out of the restroom an hour later. They had a
 
 "[I got it.]{Emmett Tawfeek}" He then slipped right into her armor and fitted the helmet on.
 
-"[Sheesh, this stinks,]{Emmett Tawfeek}" Emmett grumbled.
+"[Sheesh, this stinks]{Emmett Tawfeek}," Emmett grumbled.
 
 "[Yeah, I know. The Llamas stink too...I mean by odor, that is.]{Josephine}" Tawfeek tilted his head at this comment.
 
@@ -358,11 +359,11 @@ Emmett ripped the hole wider, feeling embarrassed about his position. When he fe
 
 "[Your doll is very personalized, you know that? Makes me a little upset to bleed on it.]{Josephine}" Josephine chuckled softly to herself.
 
-"[I was born into a rich family on Vortox,]{Emmett Tawfeek}" Emmett responded.
+"[I was born into a rich family on Vortox]{Emmett Tawfeek}," Emmett responded.
 
 "[Aristocracy? Oooh. Very nice. Always thought I would make it in the world with a rich man.]{Josephine}" Josephine was clearly joking to lighten up the mood. She smiled over to her partner to show him that it was going to be alright.
 
-"[Always thought I would find myself a strong woman,]{Emmett Tawfeek}" Emmett played along.
+"[Always thought I would find myself a strong woman]{Emmett Tawfeek}," Emmett played along.
 
 The pair of them rested together on the floor of the zooming pod. Neither of them particularly knew where they were landing. Neither of them really cared. It was just the current moment that mattered. For the first time in GUYs did either of them find another one of their kind.
 
@@ -422,7 +423,7 @@ After what felt like an hour, Emmett heard his front door open. It must have bee
 
 "[Remember that guy I was talking about a week ago?]{Emmett Tawfeek}" Emmett got out a skillet and a pack of assorted vegetables.
 
-"[You've talked a lot in the last week,]{Josephine}" Josephine mused.
+"[You've talked a lot in the last week]{Josephine}," Josephine mused.
 
 "[Hey!]{Emmett Tawfeek}"
 

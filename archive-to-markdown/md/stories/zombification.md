@@ -1,8 +1,9 @@
 ---
 slug: zombification
 title: Zombification
-blurb: A young Squemfet's first trip off-planet with his father.
+blurb: Twelve-year-old Squemfet gets a temporary permit to leave Vortox-56 and follows his author father to a foggy burial ground on Vortox-35.
 author: Archivist
+season: FF2
 format: prose
 ---
 
@@ -32,7 +33,7 @@ A two-hour trip to the Travel Sector by Hypercarriage later, the small goat leap
 
 "[You see, squon, the reason why I brought you here was to show you my inspiration. My oyster. My demi-Squoat.]{Emmett's Father}" The kid's father was ecstatic about being here, but Squemfet was not as pleased.
 
-"[It's kind-of empty, isn't it,]{Emmett Tawfeek}" he inquired.
+"[It's kind-of empty, isn't it]{Emmett Tawfeek}," he inquired.
 
 "[Past that cloud barrier is our destination.]{Emmett's Father}" The parent meant the wall of smog that protected them from the suspense and possible horror contained within. Squemfet swallowed hard. He did not feel right being here.
 

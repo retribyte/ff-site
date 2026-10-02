@@ -1,8 +1,9 @@
 ---
 slug: the_interviews
 title: The Interviews
-blurb: Non-canon. Daerthlorn's news crews discover their newest residents: Emmett and Josephine.
+blurb: Non-canon. Emmett and Josephine, perhaps the last two Squoatlings, are hounded across Daerthlorn by news crews whose questions get more personal every time.
 author: Archivist
+season: FF2
 format: prose
 ---
 
@@ -54,11 +55,11 @@ After Channel Five broadcasted the short interview, the other crews were infuria
 
 "[Hey Josephine. We just--]{Channel Six Anchor}"
 
-"[Wanted to ask a few questions? Sure, I'm definitely in an available condition to direct my attention to you,]{Josephine}" Josephine stammered. She was a little pissed that they would screw over their house for their avarice.
+"[Wanted to ask a few questions? Sure, I'm definitely in an available condition to direct my attention to you]{Josephine}," Josephine stammered. She was a little pissed that they would screw over their house for their avarice.
 
 "[Remember Josephine, 4th law. States that news channels can invade privacy.]{Channel Six Anchor}"
 
-"[The laws here are stupid,]{Josephine}" she muttered to herself.
+"[The laws here are stupid]{Josephine}," she muttered to herself.
 
 "[First question, so, are you and Emmett a couple?]{Channel Six Anchor}" Josephine rolled her eyes to the side, a bit out of embarrassment.
 
@@ -102,7 +103,7 @@ Channel Eleven was the last of the news crews to forcibly interview the two Squo
 
 "[Just a few questions.]{Channel Eleven Reporter}"
 
-"[Shoot,]{Josephine}" Josephine quickly mouthed.
+"[Shoot]{Josephine}," Josephine quickly mouthed.
 
 "[Do you two have a healthy relationship?]{Channel Eleven Reporter}" Refusing to speak any unnecessary information, Emmett tiredly nodded.
 

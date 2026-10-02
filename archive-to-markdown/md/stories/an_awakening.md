@@ -1,8 +1,9 @@
 ---
 slug: an_awakening
 title: An Awakening
-blurb: Matieu and the Righteous Few.
+blurb: Matieu, one of the Righteous Few descended from Kluex, watches helplessly as Kluex takes the wheel of his body, and starts plotting to turn that power to his own ends.
 author: Archivist
+season: FF2
 format: prose
 ---
 

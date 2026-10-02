@@ -1,8 +1,9 @@
 ---
 slug: a_beginning
 title: A Beginning
-blurb: Sanya meets Dread.
+blurb: Sanya wakes from a nightmare of her slaughtered crew and a monstrous hunter, then asks KYL300 for a name for the emotion that followed her out of the dream.
 author: Archivist
+season: FF2
 format: prose
 ---
 
