@@ -77,7 +77,7 @@ _While they're distracted, the Suchan corpse starts to twitch._
 
 **Zander** _(07-Jun-22 08:10 PM)_ [983900822670823434]
 
-> `Suchan`: Mmm-muh head...
+> Mmm-muh head...
 
 **Sean** _(07-Jun-22 08:10 PM)_
 
@@ -125,9 +125,9 @@ _Edmin sees two men atop the factory, and two men coming in from the sides._
 
 **Zander** _(07-Jun-22 08:13 PM)_ [983901536956592178]
 
-_`Suchan`: The corpse mutters, muffled._
+_The corpse mutters, muffled._
 
-> `Suchan`: Shut up, elf.
+> Shut up, elf.
 
 **Sean** _(07-Jun-22 08:13 PM)_ [983901561090637935]
 
@@ -379,7 +379,7 @@ _Raven B's attack misses Morra, grazing Morra's gorgeous hair._
 
 **Zander** _(07-Jun-22 08:26 PM)_ [983904832744194109]
 
-_`Suchan`: The corpse just sits there, annoyed._
+_The corpse just sits there, annoyed._
 
 **Sean** _(07-Jun-22 08:27 PM)_ [983905004157030430]
 
@@ -441,9 +441,9 @@ _Seth narrates himself in gross detail._
 
 **Zander** _(07-Jun-22 08:28 PM)_ [983905412640284722]
 
-_`Suchan`: The Suchan lifts its head and gets up._
+_The Suchan lifts its head and gets up._
 
-> `Suchan`: Enough. Get away from me.
+> Enough. Get away from me.
 
 **Silas** _(07-Jun-22 08:28 PM)_ [983905417233072148]
 
@@ -451,9 +451,9 @@ _`Suchan`: The Suchan lifts its head and gets up._
 
 **Zander** _(07-Jun-22 08:29 PM)_ [983905617267793940]
 
-_`Suchan`: The Suchan slaps Seth._
+_The Suchan slaps Seth._
 
-> `Suchan`: Get out of this stupidity.
+> Get out of this stupidity.
 
 **Sean** _(07-Jun-22 08:30 PM)_ [983905709223723018]
 
@@ -465,11 +465,11 @@ _Seth gets up from the corpse._
 
 **Zander** _(07-Jun-22 08:30 PM)_ [983905900416868402]
 
-_`Suchan`: The Suchan moves away, holding his head._
+_The Suchan moves away, holding his head._
 
 **Zander** _(07-Jun-22 08:30 PM)_ [983905929227542588]
 
-> `Suchan`: What the fuck happened?
+> What the fuck happened?
 
 **Brody** _(07-Jun-22 08:31 PM)_ [983906176687308850]
 
@@ -807,7 +807,7 @@ _Bellow begins preparing for a heal..._
 
 **Zander** _(07-Jun-22 08:44 PM)_
 
-_`Suchan`: The Suchan pulls a rocket-propelled pocket knife out of his clothes._
+_The Suchan pulls a rocket-propelled pocket knife out of his clothes._
 
 **Brody** _(07-Jun-22 08:44 PM)_ [983909332448063498]
 
@@ -815,7 +815,7 @@ _`Suchan`: The Suchan pulls a rocket-propelled pocket knife out of his clothes._
 
 **Zander** _(07-Jun-22 08:44 PM)_ [983909403273072640]
 
-> `Suchan`: I uh, I'm warning you!
+> I uh, I'm warning you!
 
 **Sean** _(07-Jun-22 08:44 PM)_ [983909413184208957]
 
@@ -823,11 +823,11 @@ _`Suchan`: The Suchan pulls a rocket-propelled pocket knife out of his clothes._
 
 **Zander** _(07-Jun-22 08:44 PM)_ [983909422029996092]
 
-> `Suchan`: Get away!
+> Get away!
 
 **Zander** _(07-Jun-22 08:44 PM)_ [983909439348285460]
 
-> `Suchan`: I'll use this!
+> I'll use this!
 
 **Sean** _(07-Jun-22 08:44 PM)_ [983909467324289044]
 
@@ -900,7 +900,7 @@ _If anyone is paying attention, the front door eases open, and one of the Ravens
 
 **Zander** _(07-Jun-22 08:47 PM)_ [983909996758716498]
 
-> `Suchan`: I know how to use this!
+> I know how to use this!
 
 **Brody** _(07-Jun-22 08:47 PM)_ [983910025238020137]
 
@@ -933,7 +933,7 @@ Edmin now has `(26/35)` hp.
 
 **Zander** _(07-Jun-22 08:47 PM)_ [983910159095046166]
 
-> `Suchan`: That's disgusting!
+> That's disgusting!
 
 **Maxwell** _(07-Jun-22 08:47 PM)_ [983910168733556806]
 
@@ -985,9 +985,9 @@ _Seth starts screaming as his face turns red and his member starts to glow a bri
 
 **Zander** _(07-Jun-22 08:49 PM)_ [983910526784532532]
 
-_`Suchan`: The Suchan walks towards Seth and promptly attempts to get around him._
+_The Suchan walks towards Seth and promptly attempts to get around him._
 
-> `Suchan`: Yeah, okay, buddy.
+> Yeah, okay, buddy.
 
 **Silas** _(07-Jun-22 08:49 PM)_ [983910599538901002]
 
@@ -1048,7 +1048,7 @@ Enemy_a now has `(-2/20)` hp.
 
 **Zander** _(07-Jun-22 08:52 PM)_ [983911456871440394]
 
-> `Suchan`: Can you guys get him away from me? I have to get back to work.
+> Can you guys get him away from me? I have to get back to work.
 
 **Jonas** _(07-Jun-22 08:53 PM)_ [983911610353582112]
 
@@ -1077,7 +1077,7 @@ Zion now has `(15/35)` hp.
 
 **Zander** _(07-Jun-22 08:54 PM)_ [983911748748849233]
 
-_`Suchan`: The Suchan walks towards the door of the KYL factory and opens it, promptly walking in, ignoring Seth._
+_The Suchan walks towards the door of the KYL factory and opens it, promptly walking in, ignoring Seth._
 
 **Trey** _(07-Jun-22 08:54 PM)_ [983911763739303988]
 
@@ -1089,7 +1089,7 @@ _`Suchan`: The Suchan walks towards the door of the KYL factory and opens it, pr
 
 **Zander** _(07-Jun-22 08:54 PM)_ [983911788804464700]
 
-> `Suchan`: You guys can follow for the tour, I presume.
+> You guys can follow for the tour, I presume.
 
 **Silas** _(07-Jun-22 08:54 PM)_ [983911826611900488]
 
@@ -1157,7 +1157,7 @@ _Seth gets out of all his clothes, wearing only a diaper, and starts acting like
 
 **Zander** _(07-Jun-22 08:55 PM)_ [983912171740200991]
 
-> `Suchan`: I'm not going to be holding the door for much longer...
+> I'm not going to be holding the door for much longer...
 
 **Brody** _(07-Jun-22 08:55 PM)_ [983912178484666418]
 
@@ -1201,7 +1201,7 @@ _Morra decides the best course of action is to enter the factory, regardless of 
 
 **Zander** _(07-Jun-22 08:58 PM)_ [983912791608016926]
 
-_`Suchan`: The Suchan is growing impatient._
+_The Suchan is growing impatient._
 
 **Sean** _(07-Jun-22 08:58 PM)_ [983912795286433812]
 
@@ -1213,7 +1213,7 @@ _`Suchan`: The Suchan is growing impatient._
 
 **Zander** _(07-Jun-22 08:58 PM)_ [983912836176703528]
 
-> `Suchan`: Get in already, fuck.
+> Get in already, fuck.
 
 **Vortox** _(07-Jun-22 08:58 PM)_ [983912838227705917]
 
@@ -1237,7 +1237,7 @@ _The factory inside is a big sweatshop filled with empty conveyer belts. There a
 
 **Zander** _(07-Jun-22 08:59 PM)_ [983913088237588530]
 
-> `Suchan`: They're workers.
+> They're workers.
 
 **Zander** _(07-Jun-22 08:59 PM)_ [983913155606487040]
 
@@ -1265,7 +1265,7 @@ _She is three inches tall and has no nose._
 
 **Zander** _(07-Jun-22 08:59 PM)_ [983913214012190781]
 
-> `Suchan`: IT'S FINE, EVERYONE, THEY'RE JUST HERE FOR THE TOUR.
+> IT'S FINE, EVERYONE, THEY'RE JUST HERE FOR THE TOUR.
 
 **Sean** _(07-Jun-22 09:00 PM)_ [983913277669138483]
 
@@ -1397,7 +1397,7 @@ _Seth leans over and speaks in Zion's ear._
 
 **Zander** _(07-Jun-22 09:03 PM)_ [983914178463039518]
 
-_`Suchan`: The walking corpse starts up the conveyors, unaware of the workers' predicament. He starts working, opening boxes of KYL parts._
+_The walking corpse starts up the conveyors, unaware of the workers' predicament. He starts working, opening boxes of KYL parts._
 
 **Sean** _(07-Jun-22 09:03 PM)_ [983914207214985238]
 
@@ -1509,7 +1509,7 @@ _Seth stares into the eyes of the hostages._
 
 **Zander** _(07-Jun-22 09:07 PM)_ [983915144016973835]
 
-> `Suchan`: Shut up, garbage can. I'm busy. Need to get 10,000 units before shift closes.
+> Shut up, garbage can. I'm busy. Need to get 10,000 units before shift closes.
 
 **Sean** _(07-Jun-22 09:07 PM)_ [983915199427919933]
 
@@ -1517,7 +1517,7 @@ _He is one millimeter apart from them._
 
 **Zander** _(07-Jun-22 09:07 PM)_ [983915246999732224]
 
-> `Suchan`: I'm the only one who does anything in this establishment.
+> I'm the only one who does anything in this establishment.
 
 **Vortox** _(07-Jun-22 09:08 PM)_ [983915357804822558]
 
@@ -1605,7 +1605,7 @@ _They are each towering, covered in what looks like thick mech-style suits made 
 
 **Zander** _(07-Jun-22 09:11 PM)_ [983916243671208026]
 
-> `Suchan`: Out of the way, bozo.
+> Out of the way, bozo.
 
 **Maxwell** _(07-Jun-22 09:11 PM)_ [983916264424636466]
 
@@ -1635,7 +1635,7 @@ _They are each towering, covered in what looks like thick mech-style suits made 
 
 **Zander** _(07-Jun-22 09:13 PM)_ [983916526681874442]
 
-> `Suchan`: I need to get to the legs. You're acting rude.
+> I need to get to the legs. You're acting rude.
 
 **Trey** _(07-Jun-22 09:13 PM)_ [983916549872160848]
 
@@ -1691,7 +1691,7 @@ _Bellow visibly tenses up, hearing the mystery men talk about the crew._
 
 _In Emmett's background, a voice calls out._
 
-> `Squi`: Squem, language!
+> `Squina`: Squem, language!
 
 **Brody** _(07-Jun-22 09:15 PM)_ [983917139977191454]
 
@@ -1765,7 +1765,7 @@ _`Marv`: The armored man in green stomps over towards the stairs._
 
 **Zander** _(07-Jun-22 09:18 PM)_ [983917791201595392]
 
-> `Suchan`: You need to get out of here. Boss wouldn't like it.
+> You need to get out of here. Boss wouldn't like it.
 
 **Sean** _(07-Jun-22 09:18 PM)_ [983917849607286814]
 
@@ -1837,7 +1837,7 @@ _`Marv`: The green Raven stands at the stairs, seeing the crew mumbling about do
 
 **Zander** _(07-Jun-22 09:19 PM)_ [983918271881445396]
 
-> `Suchan`: CAN SOMEONE GET THIS GUY OUT OF HERE? BOSS ISN'T GOING TO BE HAPPY.
+> CAN SOMEONE GET THIS GUY OUT OF HERE? BOSS ISN'T GOING TO BE HAPPY.
 
 **Brody** _(07-Jun-22 09:20 PM)_ [983918308833239050]
 
@@ -1907,7 +1907,7 @@ _Zion hurries towards the door._
 
 **Zander** _(07-Jun-22 09:22 PM)_ [983918903702978660]
 
-> `Suchan`: BOSS, THIS DUDE IS IN THE WAY. CAN'T WORK.
+> BOSS, THIS DUDE IS IN THE WAY. CAN'T WORK.
 
 **Trey** _(07-Jun-22 09:22 PM)_ [983918907138146305]
 
@@ -1945,7 +1945,7 @@ _The conveyor belt in question, to no one but the Suchan's knowledge, leads into
 
 **Zander** _(07-Jun-22 09:24 PM)_ [983919454918422558]
 
-_`Suchan`: The Suchan tries to push the 32,748,927,348,902-ton robot out of the way, to no avail._
+_The Suchan tries to push the 32,748,927,348,902-ton robot out of the way, to no avail._
 
 **Trey** _(07-Jun-22 09:24 PM)_ [983919523444961334]
 
@@ -1967,7 +1967,7 @@ _Seth puts the hostages onto the conveyor belt and wraps a cum-and-piss rag arou
 
 **Zander** _(07-Jun-22 09:25 PM)_ [983919620287266826]
 
-> `Suchan`: WHAT THE FUCK ARE YOU DOING, CUMLORD?
+> WHAT THE FUCK ARE YOU DOING, CUMLORD?
 
 **Trey** _(07-Jun-22 09:25 PM)_ [983919658237308988]
 
@@ -2060,7 +2060,7 @@ _Zion turns around to notice Dutch. He's almost at the door, however._
 
 **Zander** _(07-Jun-22 09:28 PM)_ [983920395080048700]
 
-_`Suchan`: Noticing the combat, the Suchan knows the jig is up. He aims the rocket-propelled pocket knife at the crowd and runs off to Seth's ship._
+_Noticing the combat, the Suchan knows the jig is up. He aims the rocket-propelled pocket knife at the crowd and runs off to Seth's ship._
 
 **Maxwell** _(07-Jun-22 09:28 PM)_ [983920505671274546]
 
@@ -2151,7 +2151,7 @@ _`Marv`: Marv turns to the rest of the crowd._
 
 **Zander** _(07-Jun-22 09:32 PM)_ [983921465751666798]
 
-_`Suchan`: The Suchan leans on the ship's side, feeling his pounding head._
+_The Suchan leans on the ship's side, feeling his pounding head._
 
 **Sean** _(07-Jun-22 09:32 PM)_ [983921507929563207]
 
@@ -2163,7 +2163,7 @@ _Instead, everyone jumps through the giant, gaping hole Edmin made._
 
 **Zander** _(07-Jun-22 09:32 PM)_ [983921557804040222]
 
-> `Suchan`: Shit.
+> Shit.
 
 **Sean** _(07-Jun-22 09:33 PM)_ [983921633049841734]
 
@@ -2211,7 +2211,7 @@ _The weapon has so many modifications that the Suchan can barely understand it._
 
 **Zander** _(07-Jun-22 09:35 PM)_ [983922263533441044]
 
-> `Suchan`: What the hell is this thing?
+> What the hell is this thing?
 
 **Sean** _(07-Jun-22 09:35 PM)_ [983922263751557170]
 
@@ -2313,7 +2313,7 @@ _Seth points at black smoke emanating from the factory's pipes._
 
 **Zander** _(07-Jun-22 09:39 PM)_ [983923318098886676]
 
-_`Suchan`: The Suchan digs into Seth's pile of porn mags, finding..._
+_The Suchan digs into Seth's pile of porn mags, finding..._
 
 **Sean** _(07-Jun-22 09:40 PM)_ [983923321039110194]
 
@@ -2364,7 +2364,7 @@ _Seth pulls out his Deagle._
 
 ↪ Zander: The suchan digs into Seth's pile of porn mag, finding....
 
-_`Suchan`: ... a body. He promptly starts to-_
+_... a body. He promptly starts to-_
 
 **Brody** _(07-Jun-22 09:41 PM)_ [983923731808264192]
 
@@ -2376,11 +2376,11 @@ _Zion opens his holodeck and checks the levels inside the ship._
 
 **Zander** _(07-Jun-22 09:41 PM)_ [983923764381249546]
 
-> `Suchan`: Cumlord, get away.
+> Cumlord, get away.
 
 **Zander** _(07-Jun-22 09:41 PM)_ [983923796467666944]
 
-> `Suchan`: You don't know who you're dealing with.
+> You don't know who you're dealing with.
 
 **Sean** _(07-Jun-22 09:41 PM)_ [983923804424265748]
 

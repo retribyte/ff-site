@@ -2246,7 +2246,7 @@ _Zion looks at Seth. He begins to put the pieces together._
 
 **Sean** _(05-Jul-22 07:56 PM)_ [994044086942187630]
 
-> Los it is not, fuck boi.
+> Los, it is not 'Fuck', fuck boi.
 
 **Zander** _(05-Jul-22 07:56 PM)_ [994044125995352124]
 
@@ -2363,15 +2363,15 @@ _Zach is also curious, but doesn't ask._
 
 > Um...Alright.
 
-**Sean** _(05-Jul-22 08:02 PM)_ [994045533838647356]
-
-> I'm gonna kill you today. You know that? You're gonna die.
-
 **Zander** _(05-Jul-22 08:02 PM)_ [994045633763754026]
 
 > `Los`: Seth, call your son.
 
-**Sean** _(05-Jul-22 08:02 PM)_ [994045641640656976]
+**Sean** _(05-Jul-22 08:02 PM)_ [994045533838647356]
+
+_Seth whips out his communicator and dials Emmett, who immediately answers._
+
+> I'm gonna kill you today. You know that? You're gonna die.
 
 _Seth hangs up the phone._
 
@@ -2792,13 +2792,13 @@ _`Los`: Los takes out a set of old, embarrassing costumes from back when Dutch w
 
 > ...where'd you get these?
 
-**Zander** _(05-Jul-22 08:25 PM)_ [994051426005303366]
-
-> `Los`: Next, Morra.
-
 **Silas** _(05-Jul-22 08:25 PM)_ [994051440190427156]
 
 > I ain't talked to my momma since I were a boy, where are you getting this from?
+
+**Zander** _(05-Jul-22 08:25 PM)_ [994051426005303366]
+
+> `Los`: Next, Morra.
 
 **Zander** _(05-Jul-22 08:25 PM)_ [994051468808171651]
 
@@ -2838,6 +2838,10 @@ _`Los`: Los takes out a little worship doll in Seth's image, a polished metal mo
 
 _Seth takes the condoms, and Miny Seth crawls inside one._
 
+**Sean** _(05-Jul-22 08:30 PM)_ [994052766802640896]
+
+> Thanks, I'll love it forever.
+
 **Zander** _(05-Jul-22 08:29 PM)_ [994052477072715866]
 
 > `Los`: Anyhow, Edmin, got you something.
@@ -2857,10 +2861,6 @@ _Seth takes the condoms, and Miny Seth crawls inside one._
 **Zander** _(05-Jul-22 08:30 PM)_ [994052755645796462]
 
 > `Los`: Don't know who gave this to us, but it's a lot of golden stuff.
-
-**Sean** _(05-Jul-22 08:30 PM)_ [994052766802640896]
-
-> Thanks, I'll love it forever.
 
 **Trey** _(05-Jul-22 08:31 PM)_ [994052868111867976]
 
@@ -2906,6 +2906,10 @@ _The crew's ships are pulled up off the ground and into a GU space station by a 
 
 > Oh no.
 
+**Silas** _(05-Jul-22 08:36 PM)_ [994054180727705610]
+
+> Is that our SHIPS?!
+
 **Trey** _(05-Jul-22 08:36 PM)_ [994054087106637946]
 
 > Uh... Los?
@@ -2914,17 +2918,9 @@ _The crew's ships are pulled up off the ground and into a GU space station by a 
 
 > `Los`: What?
 
-**Silas** _(05-Jul-22 08:36 PM)_ [994054180727705610]
-
-> Is that our SHIPS?!
-
 **Zander** _(05-Jul-22 08:36 PM)_ [994054217780174858]
 
 _`Los`: Los turns around._
-
-**Sean** _(05-Jul-22 08:36 PM)_ [994054242878902322]
-
-> My porno collection!
 
 **Zander** _(05-Jul-22 08:36 PM)_ [994054265612021862]
 
@@ -2933,6 +2929,10 @@ _`Los`: Los turns around._
 **Zander** _(05-Jul-22 08:37 PM)_ [994054348864770159]
 
 _`Los`: Los runs out of the building and calls Mission Control frantically._
+
+**Sean** _(05-Jul-22 08:36 PM)_ [994054242878902322]
+
+> My porno collection!
 
 **Jonas** _(05-Jul-22 08:37 PM)_ [994054339712790588]
 

@@ -3,7 +3,7 @@
 
 The /import page ignores the payload `persona` field. This zips Vec's messages
 in api/ff4/N-*.json against the DB rows (ordered by messageNo) and sets
-personaId. Persona ids: Fungo 8, Fursean 9, Drowned Llamanian 13 (check
+personaId. Persona ids: Fungo 8, Fursean 9, Drowned Llamanian 13, Suchan 14 (check
 `select id,name from personas`). Vec's character id is 1961.
 """
 import glob, json, subprocess, sys
@@ -17,7 +17,7 @@ psql = ['docker', 'exec', '-i', 'ff-server-db-1', 'psql', '-U', 'vortox', '-d', 
 q = f'select "messageNo" from messages where "episodeTitle"=\'{title}\' and "characterId"=1961 order by "messageNo"'
 rows = subprocess.run(psql + ['-c', q], capture_output=True, text=True).stdout.split()
 assert len(rows) == len(per), (len(rows), len(per))
-pid = {'Drowned Llamanian': 13, 'Fursean': 9, 'Fungus': 8, 'Fungo': 8}
+pid = {'Suchan': 14, 'Drowned Llamanian': 13, 'Fursean': 9, 'Fungus': 8, 'Fungo': 8}
 by = {}
 for r, p in zip(rows, per):
     if p:
