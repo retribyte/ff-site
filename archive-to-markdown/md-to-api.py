@@ -258,6 +258,10 @@ def convert_file(md_file, meta, episode):
             # regroups consecutive messages by player+character)
             speaker, persona = split_persona(character)
             speaker = NAME_ALIASES.get(speaker, speaker)
+            if msg_type == "OTHER":
+                # out-of-character chatter: no character (block state is kept
+                # in `character` for the lines that follow)
+                speaker = persona = None
             resolved = persona_timeline.resolve(speaker, text) if speaker else None
             messages.append({
                 "player": player,

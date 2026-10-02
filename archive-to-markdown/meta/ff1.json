@@ -1,0 +1,113 @@
+{
+    "seasonTitle": "FF1",
+    "usernames": {
+        "Zander": "Zander",
+        "Bagelwrecker": "Sean",
+        "Enchantingtable2013": "Maxwell",
+        "Master JRM": "Josh",
+        "Brakia": "Brody",
+        "Mica": "Mica",
+        "ProfessorTree": "Silas",
+        "WatchfulDrake": "Bill",
+        "Platinum_Pathos": "Rashidi",
+        "Zvirym Vallaheim": "Zvirym Vallaheim",
+        "Junnn": "Junnn",
+        "Magic 8 Bot": "FF 8 Ball",
+        "Magic8Ball": "FF 8 Ball",
+        "pbot": "FF 8 Ball",
+        "RPBot": "FF 8 Ball"
+    },
+    "bots": [
+        "FF 8 Ball"
+    ],
+    "cast": {
+        "Zander": {
+            "3": "Grass Stalker"
+        },
+        "Sean": {
+            "3": "Seth Im'Kin'ki"
+        },
+        "Maxwell": {
+            "3": "Matthias"
+        },
+        "Josh": {
+            "3": "Jacob"
+        },
+        "Mica": {
+            "3": "Venus"
+        },
+        "Brody": {
+            "3": "Serpile"
+        },
+        "Zvirym Vallaheim": {
+            "6": "Meth"
+        },
+        "Junnn": {
+            "10": "Heck"
+        }
+    },
+    "personaTimeline": {
+        "Grass Stalker": [
+            {
+                "from_episode": 3,
+                "persona": "Emmett"
+            }
+        ],
+        "Serpile": [
+            {
+                "from_episode": 3,
+                "persona": "Kabajhu"
+            }
+        ]
+    },
+    "episodes": [
+        {
+            "title": "Episode 3",
+            "file_name": "3",
+            "episode_number": 3,
+            "short_desc": "Seth and Matthias are on Seth's home planet; the crew scrambles toward the ship."
+        },
+        {
+            "title": "Episode 4",
+            "file_name": "4",
+            "episode_number": 4,
+            "short_desc": "The crew debates a trip to repair Seth's translator and fights over weapons."
+        },
+        {
+            "title": "Episode 5",
+            "file_name": "5",
+            "episode_number": 5,
+            "short_desc": "The crew escapes in cryo pods while Emmett is cut off; Emmett's backstory is posted."
+        },
+        {
+            "title": "Episode 6",
+            "file_name": "6",
+            "episode_number": 6,
+            "short_desc": "The crew is held in a prison under a warden."
+        },
+        {
+            "title": "Episode 7",
+            "file_name": "7",
+            "episode_number": 7,
+            "short_desc": "Jacob returns from his long journey; Belly Button Dog follows him."
+        },
+        {
+            "title": "Episode 8",
+            "file_name": "8",
+            "episode_number": 8,
+            "short_desc": "Venus joins and wakes up in the prison; the crew leaves their cells."
+        },
+        {
+            "title": "Episode 9",
+            "file_name": "9",
+            "episode_number": 9,
+            "short_desc": "Kaba and the gang search for Emmett's ship."
+        },
+        {
+            "title": "Episode 10",
+            "file_name": "10",
+            "episode_number": 10,
+            "short_desc": "Seth and Emmett face a galaxy that identifies everyone by face."
+        }
+    ]
+}
