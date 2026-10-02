@@ -6,3 +6,4 @@ api/
 api-baseline/
 json/
 json-legacy/
+.editorial-analysis/
