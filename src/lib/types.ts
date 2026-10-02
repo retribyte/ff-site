@@ -62,6 +62,7 @@ export interface Season {
     title: string;
     slug: string;
     episodes?: Episode[];
+    stories?: Pick<Story, 'slug' | 'title' | 'blurb' | 'themeColor' | 'themeColor2'>[];
 }
 
 export interface Episode {
@@ -117,6 +118,8 @@ export interface Story {
     themeColor: string | null;
     themeColor2: string | null;
     format: StoryFormat;
+    seasonTitle?: string | null;
+    season?: Pick<Season, 'title' | 'slug'> | null;
     author?: PublicUser;
     chapters?: StoryChapter[];
 }

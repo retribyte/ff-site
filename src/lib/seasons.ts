@@ -13,6 +13,9 @@ const KNOWN_SLUGS: Record<string, string> = {
     FF2: 'ff2',
     FF3: 'ff3',
     FF4: 'ff4',
+    FF5: 'ff5',
+    // Matches the wiki's campaign key (Character infobox `season`), not slugify()
+    'T&L': 't&l',
 };
 
 const DISPLAY_NAMES: Record<string, string> = {
@@ -20,6 +23,8 @@ const DISPLAY_NAMES: Record<string, string> = {
     ff2: 'Final Frontier 2',
     ff3: 'Final Frontier 3',
     ff4: 'Final Frontier 4',
+    ff5: 'Final Frontier 5',
+    't&l': 'Truth & Lies',
 };
 
 // Season slugs with dedicated color tokens in _tokens.scss ("ff2" → --ff2/--ff2-2)
@@ -50,7 +55,16 @@ export function seasonSlug(title: string): string {
 
 /** Matches on the server-provided slug first; falls back to legacy hyphenated bookmarks. */
 export function findSeasonBySlug(seasons: Season[], slug: string): Season | undefined {
-    return seasons.find((s) => s.slug === slug) ?? seasons.find((s) => legacySeasonSlug(s.title) === slug);
+    // Route params arrive still percent-encoded ("t%26l" for the T&L campaign)
+    let decoded = slug;
+    try {
+        decoded = decodeURIComponent(slug);
+    } catch {
+        // malformed escape — match on the raw segment
+    }
+    return (
+        seasons.find((s) => s.slug === decoded) ?? seasons.find((s) => legacySeasonSlug(s.title) === decoded)
+    );
 }
 
 export function seasonDisplayName(title: string): string {

@@ -41,6 +41,7 @@ interface ImportPayload {
         publishedDate?: string;
         themeColor?: string;
         themeColor2?: string;
+        season?: string;
         format?: string;
     };
     author?: string | null;
@@ -235,6 +236,7 @@ export default function StoryImporter() {
                     publishedDate: payload.story.publishedDate ?? undefined,
                     themeColor: payload.story.themeColor ?? undefined,
                     themeColor2: payload.story.themeColor2 ?? undefined,
+                    season: payload.story.season ?? undefined,
                     format: payload.story.format ?? undefined,
                     authorId: authorId ? parseInt(authorId) : undefined,
                 }),

@@ -1,3 +1,4 @@
+import { seasonColors } from './seasons';
 import { apiRaw } from './api';
 import type { SpeakerInfo } from './transcript';
 import type { Character, StoryChapter, StoryFormat, StoryLine, StoryLineType, StoryQuote, StorySegment } from './types';
@@ -151,6 +152,7 @@ export function storyColors(story: {
     slug: string;
     themeColor: string | null;
     themeColor2: string | null;
+    season?: { title: string } | null;
 }): { primary: string; secondary: string } {
     if (THEMED_SLUGS.has(story.slug)) {
         return { primary: `var(--${story.slug})`, secondary: `var(--${story.slug}-2)` };
@@ -158,6 +160,8 @@ export function storyColors(story: {
     if (story.themeColor) {
         return { primary: story.themeColor, secondary: story.themeColor2 ?? story.themeColor };
     }
+    // No colors of its own — wear its campaign's (falls back to the accent too)
+    if (story.season) return seasonColors(story.season.title);
     return { primary: 'var(--accent)', secondary: 'var(--accent-soft)' };
 }
 

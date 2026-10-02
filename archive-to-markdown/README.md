@@ -180,8 +180,11 @@ story, its chapters, and bulk lines directly. Uploading aborts if the slug
 already exists (delete the story via the API to re-upload a revision).
 
 Story metadata lives in the manuscript's frontmatter (`slug` and `title`
-required; `blurb`, `author`, `published`, `themeColor`, `themeColor2`, `format`
-optional — `format` defaults to `script`). Body format:
+required; `blurb`, `author`, `published`, `season`, `themeColor`, `themeColor2`,
+`format` optional — `format` defaults to `script`). `season` is the campaign the
+story belongs to, by season title or slug (`FF3`, `T&L`); it must
+already exist, and the story wears that season's colors unless `themeColor` is
+set. Body format:
 
 ````
 # Chapter 1: The Signal             "# Chapter N[: Title]" starts a chapter;

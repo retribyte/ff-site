@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
 import type { Character, Season } from '@/lib/types';
 import { findSeasonBySlug, seasonColors, seasonDisplayName } from '@/lib/seasons';
+import { storyColors } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
 import EpisodeList from '@/components/archives/EpisodeList';
 import PersonaStampPanel from '@/components/transcript/PersonaStampPanel';
@@ -55,6 +56,7 @@ export default async function SeasonPage({ params }: Props) {
         .sort((a, b) => a.name.localeCompare(b.name));
 
     const episodes = [...(season.episodes ?? [])].sort((a, b) => a.episode_no - b.episode_no);
+    const stories = season.stories ?? [];
     const colors = seasonColors(season.title);
     const style = {
         '--season': colors.primary,
@@ -80,23 +82,52 @@ export default async function SeasonPage({ params }: Props) {
             <header className={styles.header}>
                 <h1 className={styles.title}>{seasonDisplayName(season.title)}</h1>
                 <p className='pixel-label'>
-                    {episodes.length} episode{episodes.length === 1 ? '' : 's'}
+                    {episodes.length > 0 && <>{episodes.length} episode{episodes.length === 1 ? '' : 's'}</>}
+                    {episodes.length > 0 && stories.length > 0 && <> · </>}
+                    {stories.length > 0 && <>{stories.length} stor{stories.length === 1 ? 'y' : 'ies'}</>}
                     {dateRange && <> · recorded {dateRange}</>}
                 </p>
             </header>
 
-            <PersonaStampPanel scope='season' scopeTitle={season.title} characters={characterOptions} />
+            {episodes.length > 0 && (
+                <PersonaStampPanel scope='season' scopeTitle={season.title} characters={characterOptions} />
+            )}
 
-            <EpisodeList
-                seasonSlug={season.slug}
-                episodes={episodes.map((e) => ({
-                    episode_no: e.episode_no,
-                    title: e.title,
-                    summary: e.summary,
-                    playedDate: e.playedDate,
-                    slug: e.slug,
-                }))}
-            />
+            {stories.length > 0 && (
+                <section className={styles.stories}>
+                    <h2 className={styles.storiesHeading}>Stories</h2>
+                    <ul className={styles.storyList}>
+                        {stories.map((s) => {
+                            const c = storyColors({ ...s, season });
+                            return (
+                                <li key={s.slug}>
+                                    <Link
+                                        href={`/stories/${s.slug}`}
+                                        className={styles.storyLink}
+                                        style={{ '--story': c.primary } as React.CSSProperties}
+                                    >
+                                        <span className={styles.storyTitle}>{s.title}</span>
+                                        {s.blurb && <span className={styles.storyBlurb}>{s.blurb}</span>}
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </section>
+            )}
+
+            {episodes.length > 0 && (
+                <EpisodeList
+                    seasonSlug={season.slug}
+                    episodes={episodes.map((e) => ({
+                        episode_no: e.episode_no,
+                        title: e.title,
+                        summary: e.summary,
+                        playedDate: e.playedDate,
+                        slug: e.slug,
+                    }))}
+                />
+            )}
         </main>
     );
 }

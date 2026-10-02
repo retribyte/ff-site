@@ -15,6 +15,8 @@ Markdown format (see README, "Stories"):
     author: Trey                       optional username, resolved at upload
     published: 2026-07-04              optional ISO date
     themeColor: '#e8b23b'              optional (+ themeColor2)
+    season: FF3                        optional season title or slug (campaign);
+                                       its colors apply when themeColor is unset
     format: prose                      optional, 'script' (default) or 'prose'
     ---
 
@@ -287,7 +289,7 @@ def convert(md_path):
         story["blurb"] = meta["blurb"]
     if meta.get("published"):
         story["publishedDate"] = meta["published"]
-    for key in ("themeColor", "themeColor2"):
+    for key in ("themeColor", "themeColor2", "season"):
         if meta.get(key):
             story[key] = meta[key]
     fmt = (meta.get("format") or "script").strip().lower()
