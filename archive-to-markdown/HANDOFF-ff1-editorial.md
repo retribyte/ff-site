@@ -64,8 +64,8 @@ out-of-character, because FF1 players typed IC speech in `backticks`:
 | Master JRM → Josh | Jacob | |
 | Brakia → Brody | Serpile, persona **Kabajhu** | Only appears in ep 9 (wiki spells it "Kabaju"). |
 | Mica | Venus | Half human/half robot; joins ep 8. |
-| Zvirym Vallaheim | Meth | Ep 6 only; a chaos player ("Bezaziel, Shadow of God"). |
-| Junnn | Heck | Ep 10; "zombie". |
+| Zvirym Vallaheim → player **Thinh** | Meth | Ep 6 only; a chaos player ("Bezaziel, Shadow of God"). |
+| Junnn → player **Jun** | Heck | Ep 10; "zombie". |
 | ProfessorTree→Silas, WatchfulDrake→Bill, Platinum_Pathos→Rashidi | (none) | Cameo accounts. If they voice something in-world, tag it. |
 | Magic8Ball / Magic 8 Bot / pbot (→ "FF 8 Ball") | the 8-ball bot (the table's randomizer) | Not a person. The archive's narrator voice (`🐐 \|` lines, see below) is filed under a `**Magic8Ball**` block purely by house convention. |
 
