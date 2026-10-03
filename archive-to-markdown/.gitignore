@@ -7,3 +7,8 @@ api-baseline/
 json/
 json-legacy/
 .editorial-analysis/
+
+# FF1: raw baseline (unedited, kept out of history) and the Discord HTML export
+md/ff1/raw/
+md/ff1/ff1.md
+final-frontier-1.html

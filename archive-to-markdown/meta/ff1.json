@@ -56,58 +56,58 @@
         "Serpile": [
             {
                 "from_episode": 3,
-                "persona": "Kabajhu"
+                "persona": "Kabaju"
             }
         ]
     },
     "episodes": [
         {
-            "title": "Episode 3",
+            "title": "Honeymoon Over",
             "file_name": "3",
             "episode_number": 3,
-            "short_desc": "Seth and Matthias are on Seth's home planet; the crew scrambles toward the ship."
+            "short_desc": "Seth stuffs his bride in a bag, turns into a marble, rockets off his homeplanet, and gets flung back onto the ship, where a wet bed, a drink swap and a very familiar AI await."
         },
         {
-            "title": "Episode 4",
+            "title": "Nudist Massacre",
             "file_name": "4",
             "episode_number": 4,
-            "short_desc": "The crew debates a trip to repair Seth's translator and fights over weapons."
+            "short_desc": "Matthias wakes from a two-month coma, Seth fishes a translator out of his wife, and the crew drifts up to a hole-ridden space yacht beside an asteroid of bitten, dead women, where Emmett recognizes the Grasshoppers' handiwork and Matthias finds a laser rifle."
         },
         {
-            "title": "Episode 5",
+            "title": "Freeze Day",
             "file_name": "5",
             "episode_number": 5,
-            "short_desc": "The crew escapes in cryo pods while Emmett is cut off; Emmett's backstory is posted."
+            "short_desc": "Seth's taunting brings a Grasshopper down on the crew, forcing Emmett to leave Seth and Matthias in cryo while a long time skip drops them in a crate on a far-future planet, where they loot, steal a ship, and reach a space station."
         },
         {
-            "title": "Episode 6",
+            "title": "Buzzkill",
             "file_name": "6",
             "episode_number": 6,
-            "short_desc": "The crew is held in a prison under a warden."
+            "short_desc": "Seth and Matthias kidnap a drow elf named Meth on the space station, crash their ship into a hive on the bee planet, and wind up in a transparent-walled prison where Meth falls in love with the warden and a golden wasp arrives."
         },
         {
-            "title": "Episode 7",
+            "title": "Belly Button Dog",
             "file_name": "7",
             "episode_number": 7,
-            "short_desc": "Jacob returns from his long journey; Belly Button Dog follows him."
+            "short_desc": "Jacob returns from a long journey with immortality and a returned dog, and Seth uses his last wormhole use to pull him into the prison cell."
         },
         {
-            "title": "Episode 8",
+            "title": "Prison Break, Sort Of",
             "file_name": "8",
             "episode_number": 8,
-            "short_desc": "Venus joins and wakes up in the prison; the crew leaves their cells."
+            "short_desc": "Venus wakes up in the prison, the guards confirm that Grand Emmett has been dead for sixty years, and Seth simply bends the bars and walks out as they wave goodbye."
         },
         {
-            "title": "Episode 9",
+            "title": "Park Q",
             "file_name": "9",
             "episode_number": 9,
-            "short_desc": "Kaba and the gang search for Emmett's ship."
+            "short_desc": "Matthias wakes up in a cell while Seth tracks down Emmett's old ship through an Argonian clerk named Kaba, who looks it up by the ID number 1."
         },
         {
-            "title": "Episode 10",
+            "title": "Stranger Danger",
             "file_name": "10",
             "episode_number": 10,
-            "short_desc": "Seth and Emmett face a galaxy that identifies everyone by face."
+            "short_desc": "Two hundred years after the freeze, Seth reaches Emmett's ship, empties his gun at a stranger, and refuses to believe the golden wasp in front of him is really his dead friend."
         }
     ]
 }

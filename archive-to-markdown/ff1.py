@@ -1,11 +1,12 @@
-"""FF1 export (DiscordChatExporter, old HTML layout) -> md/ff1/ff1.md
+"""FF1 export (DiscordChatExporter, old HTML layout) -> md/ff1/raw/ (frozen baseline;
+the edited episodes live in md/ff1/N.md and must not be regenerated)
 
 Same layout as FF2's export (chatlog__message-group / chatlog__content), so
 this is ff2.py with a few differences: inline code spans (`Name`: speaker
 overrides) and <i>/<b> are preserved, bot embeds are normalized, and the
 input/output paths are CLI args.
 
-    python3 ff1.py [final-frontier-1.html] [md/ff1/ff1.md]
+    python3 ff1.py [final-frontier-1.html] [md/ff1/raw/ff1.md]
 """
 import re
 import sys
@@ -174,7 +175,7 @@ def episode_for(ts):
 
 if __name__ == "__main__":
     src = sys.argv[1] if len(sys.argv) > 1 else "final-frontier-1.html"
-    dst = sys.argv[2] if len(sys.argv) > 2 else "md/ff1/ff1.md"
+    dst = sys.argv[2] if len(sys.argv) > 2 else "md/ff1/raw/ff1.md"
     msgs = extract(open(src, encoding="utf-8").read())
     with open(dst, "w", encoding="utf-8") as f:
         for m in msgs:
