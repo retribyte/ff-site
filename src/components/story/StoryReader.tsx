@@ -16,6 +16,17 @@ import styles from './story.module.scss';
 // speaking, TRANSCRIPT is an in-universe recording fragment, BREAK is a
 // scene break.
 
+// Voices with no linked character (an ambiguous "?", a ship's computer) aren't
+// anyone with a color of their own, so they read in neutral grey.
+function voiceColor(
+    characterId: number | null,
+    name: string,
+    character: { color?: string | null } | null,
+    colorMode: ColorMode,
+): string {
+    return characterId === null ? 'var(--text-muted)' : characterColor(name, character?.color ?? null, colorMode);
+}
+
 // A colored dialogue fragment — a segment span inside narration, or a whole
 // prose-format dialogue line. Links to the character page when one is linked.
 function DialogueRun({
@@ -37,7 +48,7 @@ function DialogueRun({
 }) {
     const character = characterId !== null ? characters[characterId] : null;
     const name = character?.name ?? speaker ?? '?';
-    const color = characterColor(name, character?.color ?? null, colorMode);
+    const color = voiceColor(characterId, name, character, colorMode);
     const style = { '--char': color } as React.CSSProperties;
     const inner = <Highlighted text={text} query={query} />;
     return characterId !== null ? (
@@ -122,7 +133,7 @@ const Line = memo(function Line({
         case 'DIALOGUE': {
             const character = line.characterId !== null ? characters[line.characterId] : null;
             const name = character?.name ?? line.speaker ?? '?';
-            const color = characterColor(name, character?.color ?? null, colorMode);
+            const color = voiceColor(line.characterId, name, character, colorMode);
             // Novel-style: colored prose, no "Name:" prefix — speaker read from
             // color + tooltip + the voice legend.
             if (format === 'PROSE') {
@@ -251,7 +262,7 @@ export default function StoryReader({ data, canDelete = false }: { data: StoryDa
                 <ul className={styles.legend} aria-label='Voices in this chapter'>
                     {voices.map((voice) => {
                         const character = voice.characterId !== null ? data.characters[voice.characterId] : null;
-                        const color = characterColor(voice.name, character?.color ?? null, colorMode);
+                        const color = voiceColor(voice.characterId, voice.name, character, colorMode);
                         const style = { '--char': color } as React.CSSProperties;
                         return (
                             <li key={voice.name}>
