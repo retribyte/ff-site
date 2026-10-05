@@ -40,6 +40,16 @@ export function resolvePersonaIdentity(
     character: CharacterLike | null,
     player: PlayerLike | null
 ): PersonaIdentity {
+    // A standalone persona (a persona with no character) is a one-off NPC voice:
+    // it must not borrow the voicing player's color or avatar (the GM's), only
+    // its own, so an uncolored one reads neutral.
+    if (persona && !character) {
+        return {
+            speaker: persona.name ?? player?.name ?? 'Unknown',
+            color: persona.color,
+            avatarSrc: persona.image,
+        };
+    }
     return {
         speaker: persona?.name ?? character?.name ?? player?.name ?? 'Unknown',
         color: persona?.color ?? character?.color ?? (character ? null : player?.color ?? null),

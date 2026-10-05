@@ -41,7 +41,7 @@ interface PersonaOption {
     id: number;
     name: string | null;
     label: string | null;
-    characterId: number;
+    characterId: number | null;
 }
 
 type Phase =
@@ -117,7 +117,7 @@ export default function EpisodeImporter() {
         ff<{ id: number; name: string }[]>('/characters')
             .then((data) => setCharacters(data.map((c) => ({ id: c.id, name: c.name }))))
             .catch(() => setCharacters([]));
-        ff<{ id: number; name: string | null; label: string | null; characterId: number }[]>('/personas')
+        ff<{ id: number; name: string | null; label: string | null; characterId: number | null }[]>('/personas')
             .then((data) =>
                 setPersonas(data.map((p) => ({ id: p.id, name: p.name, label: p.label, characterId: p.characterId })))
             )
@@ -411,7 +411,9 @@ export default function EpisodeImporter() {
                                             ))}
                                             {personas.map((p) => (
                                                 <option key={`persona:${p.id}`} value={`persona:${p.id}`}>
-                                                    {charNameById.get(p.characterId) ?? '?'} (as {p.name ?? p.label})
+                                                    {p.characterId === null
+                                                        ? `${p.name ?? p.label} (standalone)`
+                                                        : `${charNameById.get(p.characterId) ?? '?'} (as ${p.name ?? p.label})`}
                                                 </option>
                                             ))}
                                         </select>

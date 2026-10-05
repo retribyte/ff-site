@@ -129,8 +129,14 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
     // A player speaking as themselves (no character, no persona, no color of
     // their own -- table talk, bare commands) reads in one neutral grey;
     // a bot keeps its user color (FF 8 Ball's purple, which FF4's Vortox is merged into)
+    // A standalone persona (one-off NPC, no character) with no color of its own
+    // reads grey too — it doesn't borrow the voicing player's color.
+    const isStandalonePersona = !!persona && !character;
     const isPlayerVoice = !character && !persona && !rawColor;
-    const color = isPlayerVoice ? 'var(--text-muted)' : characterColor(speaker, rawColor, colorMode);
+    const color =
+        isPlayerVoice || (isStandalonePersona && !rawColor)
+            ? 'var(--text-muted)'
+            : characterColor(speaker, rawColor, colorMode);
 
     const isTarget =
         targetNo !== null && block.messages.some((m) => m.no === targetNo);
@@ -162,7 +168,7 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
                     ) : (
                         <span className={styles.speaker}>{speaker}</span>
                     )}
-                    {character && player && speaker !== player.name && (
+                    {(character || isStandalonePersona) && player && speaker !== player.name && (
                         <span className={styles.playedBy}>{player.name}</span>
                     )}
                     {block.timestamp && (

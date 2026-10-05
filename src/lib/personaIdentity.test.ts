@@ -24,6 +24,25 @@ describe('resolvePersonaIdentity', () => {
         expect(resolvePersonaIdentity(null, npc, colored).color).toBeNull();
     });
 
+    it("a standalone persona (no character) doesn't borrow the player's color or avatar", () => {
+        const raven = { name: 'Raven A', color: null, image: null };
+        const gm = { name: 'Vortox', icon: 'vortox.png', color: '#FFA500' };
+        expect(resolvePersonaIdentity(raven, null, gm)).toEqual({
+            speaker: 'Raven A',
+            color: null,
+            avatarSrc: null,
+        });
+    });
+
+    it("a standalone persona keeps its own color and image", () => {
+        const raven = { name: 'Raven A', color: '#222222', image: 'raven.png' };
+        expect(resolvePersonaIdentity(raven, null, player)).toEqual({
+            speaker: 'Raven A',
+            color: '#222222',
+            avatarSrc: 'raven.png',
+        });
+    });
+
     it('falls through to "Unknown" when nothing at all is known', () => {
         expect(resolvePersonaIdentity(null, null, null).speaker).toBe('Unknown');
     });

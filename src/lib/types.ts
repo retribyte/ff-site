@@ -38,6 +38,8 @@ export interface Character {
 // look-only persona (new avatar/color, same name) has no name opinion.
 // `label` is the admin-facing handle for distinguishing name-less personas
 // in editing UI; it's never rendered in transcripts.
+// `characterId` is null for a standalone persona: a named voice with no
+// Character behind it (a one-off NPC), always named.
 export interface Persona {
     id: number;
     name: string | null;
@@ -45,7 +47,7 @@ export interface Persona {
     slug: string | null;
     image: string | null;
     color: string | null;
-    characterId: number;
+    characterId: number | null;
 }
 
 export interface Species {
