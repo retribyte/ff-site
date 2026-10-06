@@ -17,7 +17,7 @@ title = d['episode']['title'].replace("'", "''")
 psql = ['docker', 'exec', '-i', 'ff-server-db-1', 'psql', '-U', 'vortox', '-d', 'final-frontier', '-At']
 CHARS = {'Vec': 1961, 'Buzzcut': 1709}
 pid = {('Vec', 'Suchan'): 14, ('Vec', 'Llafay Terrels'): 7, ('Vec', 'Drowned Llamanian'): 13, ('Vec', 'Fursean'): 9, ('Vec', 'Fungus'): 8,
-       ('Vec', 'Fungo'): 8, ('Vec', 'Marv'): 10, ('Vec', 'Sascha'): 11, ('Buzzcut', 'Bee Emmett'): 12}
+       ('Vec', 'Fungo'): 8, ('Vec', 'Marv'): 10, ('Vec', 'Sascha'): 11, ('Vec', 'John Smith IV'): 25, ('Vec', 'Argonian'): 26, ('Buzzcut', 'Bee Emmett'): 12}
 by = {}
 for ch, cid in CHARS.items():
     per = [m.get('persona') for m in d['messages'] if m.get('character') == ch]

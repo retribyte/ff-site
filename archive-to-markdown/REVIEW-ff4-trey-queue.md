@@ -174,6 +174,28 @@ Trey here - additionally, please change all instances of `…` to `...` across t
 - [ ] 178888 Seth's "it had some gay ass name" (a slur-style flag per guide §4) left for your call.
 - [ ] Merge flagger: moved 24 blocks (30s and 45s sweeps). Left on purpose (about 20 hits): reactions and replies, e.g. Zion's "walks into the Dildus"/"Zach follows", Dutch's angry beat, Zion's "so hungry" run, Seth's captain's log/Morra writing, Seth's PA/Zion knocks, Chilzor "Uh.." exchange. OK?
 
+## Ep 16 (Crashlanded)
+
+- [ ] Export is `Episode 14` (api file `16-episode-14.json`; an older `16_crashlanded.json` was already in `api/ff4/`, untouched). Fine as filed?
+- [ ] `Vec as John Smith IV` (new persona row 25, mapped in `ff4_set_personas.py`): 367969, 862539 and 269568 after Vec hops into his mouth (289577). Right? Vec's lines while inside Dutch (195165 pants, 582270 slips out) stay plain `Vec` (no Dutch-controlled lines). OK?
+- [ ] Buzzcut: tagged 422535, 993128, 351447 (Zander's untagged actions) and added the subject to 620232. 936576 "A box is flipped over Buzzcut" is Vortox (Buzzcut is the object); 762538 (Trey: "since Emmett would do that, Buzzcut also shoots out") became a Vortox action "Buzzcut also shoots out of the ship." Right?
+- [ ] GM lines tagged to PCs/NPCs under the typist's header: `Dutch` 959356, 623780, 904818, 933042; `Bellow` 051147, 755676; `Shadow the Hedgehog` 960863, 856248, 747348, 145310, 864676, 073226; `Sonichu` 135189, 697567, 776455, 979901, 715014, 943805, 697354, 204200, 810890; `Sonic` 094063, 013314, 675418, 892426, 206265; `Knuckles` 389642; `Big` 192370, 402709; `LCM` 076958; `John` 666325, 929745; `Seth` 605834. Any that should be Vortox?
+- [ ] 959356 Trey's bare "Dutch hits his butt really hard" (outcome of the "No. In fact, the opposite happens." 8ball) became `_`Dutch`: Dutch hits his butt really hard._`; Jonas's "it put a crack in it" cut. OK?
+- [ ] Vortox GM beats (scope beyond one character): 463528, 753216, 378612, 125776, 423262, 302194, 988703, 936768, 997988, 577691, 159230, 948223, 376720, 643183 (Brody's "chucklefucks raise arms", moved off Morra), 738064, 681010, 298954, 248883, 315627, 316463, 096764, 673927, 679144/016169/645372, 289439/788544, 472360, 914458/941003/759636, 088775, 505882, 205696, 597279, 512926, 411392, plus Space Rules #3903 (867550) and #723 (151740). OK?
+- [ ] 8ball questions reworded: 440852 (Dutch floating), 872756 (humanity -> the galaxy), 769538 (telekinesis on Bellow, not Dutch), 126933, 934053, 618728 and capitalization fixes. Fine?
+- [ ] 8ball/command cuts: Rick and Mortus, the sprinkler-piss, "Morra finger", "60 minutes of telekinesis", Bellow's pants (Ask the DM), Brody's "Liquid", Zach slitting Big's throat, Dutch writhing, Bellow's breakdance confusion, Bellow grabbing Seth, "niddy griddy", "Bellow still breakdances", "Vec takes over John Smith IV", plus all `/combat start/stop`, `/reset`, `/weapon add`, `/list weapons` embeds. Right?
+- [ ] Fake flavor cut: Seth's schwifty/sniff/"yum yum pee", second pee puddle, ballsack with a face and the lasso, Gangnam Style, firing a pistol, second shoe throw, Vec as a suppository in Dutch's intestine, Seth x Morra smut spam, "Morra marvels at Bellow's new plot relevance" (310358 trimmed to "Bellow comes back."), the Hunter/John "favorite child" joke. Second look?
+- [ ] Kept gags the fiction reacts to: Seth's first poop and pee, Vec making Dutch float/hard, Seth's balls dropping, Seth peeing in Shadow's hole (turns Shadow into Sonichu), the "unclit" knife bit with the 2 damage. Keep, or cut as banter?
+- [ ] Unclear lines: 294481 "Morra floats up with Zio..." reworded to "Zion", and 379284/913394 (Morra "realizes the mistake... leaves Zio in the snow") cut; 512926 "Bellow can see Hercules" left as typed. Right?
+- [ ] "Black" lines kept: Seth's "He's cool, look, he's black." (831849, about Shadow) and Sonic's "Disgusting black creature." (449376). Keep both?
+- [ ] Anachronisms left: Sonic/Knuckles/Big/Shadow/Sonichu/Silver/Magichan/"Chrisdom", Kodak Black ("Classical Earthling hip hop artist"), Family Guy, Among Us ("Crewmates, am I right?"), "Super Sonic", "middle school", "fanny pack", "I voted" button, "rising politician on Earth". Replace any?
+- [ ] 841940 Seth's "retard" -> `stupidloid`. OK?
+- [ ] Kept `✂` lines (later lines depend, or the fiction reacts): 985050, 703932, 414250, 034940, 696896, 075349, 633603, 981820, 583943, 192514, 345038, 731984, 341264, 879765, 596586, 945596, 415178, 651228, 324816, 841044, 792400, 219048, 429351, 936576, 042381, 636274, 700938, 206720, 340240, 382807, 690738, 319838, 488754, 625916, 542154, 722267, 837064, 732363, 893993, 507462, 464096, 815720, 095508, 558289, 088371, 598986, 740466, 027058, 810890, 124402. Any to cut after all?
+- [ ] Cut attachments (images I can't see): 269501 Jonas `garrick_y.png` (08:48 PM), 013525 Zander `unknown.png` (09:44), 755654 Jonas `unknown.png` (09:02). Restore any?
+- [ ] Seth voicing an 8ball (`8ball`: No., 364314 and 797320) kept as the existing `8ball` character. Fine?
+- [ ] Tags: `NPC` (raw `NPC#3`), `LCM` (Llamanian Council Member; rename?), `Ship`; `Shadow`/`Shadow the Hedgehog` unified; `JSIV` -> `John Smith IV`. OK?
+- [ ] Merge flagger: moved 21 blocks (30s and 45s sweeps). Left on purpose (about 15 hits): reactions and replies, e.g. Seth's "Turbulence"/tablet throw after the shake, Zander's cartoon reaction to Seth's balls, Vec interrupting Zion's "But here we a-", the capsule opening between Morra's lines, Bellow's "What the-" after the ice cracks. OK?
+
 ## Cross-episode: inherited ("sticky") speaker tags
 
 The importer applies a `` `Name`: `` tag to every later line in the same block. An advisor audit found
@@ -183,3 +205,48 @@ these are the borderline ones:
 - ✅ Applied: Ep 12 …4042931 "271 Goblins immediately pounce on him..." now sits in its own ID-less Vortox block (07:05 PM), so it no longer inherits `Enforcer 1`.
 - [ ] Ep 12 …3065728: "She's cut off by the sound of the ship rocketing through the police…" Inherits `ADE Enforcer`. Vortox?
 - [ ] Ep 12 …5156817: "He is interrupted by a shotgun blast to the back of the head." Inherits `SRE Officer 3`. Vortox?
+
+## Ep 17 (Don't Weld Yourself)
+- [ ] New persona `Vec as Argonian` created (DB id 26, added to `ff4_set_personas.py`); all 109 Vec lines in the episode use it. Right?
+- [ ] GM attributions to Vortox: 691679 (Buzzcut frozen / Seth firewood), 015775 (Sean's "It begins to hail."), 644282 (Zander's "Icicles fall onto Seth."), 619206 (Space Rule #78). Right?
+- [ ] Cut 8balls with no outcome or gag answer: 544144, 355290, 794563, 227304, 248392, 644098, 477909, 473631, 995284, 896064, 609990, 913291, 453332, 713252, 162164, 962311 (+ caveat chain), 415835 (+ western showdown chain). Right?
+- [ ] 350812 reworded to "Is Zach eavesdropping yet?" so "Very doubtful" fits Zach falling in later. Right?
+- [ ] Kept gag 385735 (`Bellow`: "Haven't had a proper weiner-sucking in a moment!"), since Llashii reacts. Keep?
+- [ ] Kept `✂` lines 143841, 202941, 363368, 120542, 305290, 577937, 393802, 854346 because later lines depend on them. Right?
+- [ ] Cut unwrapped bits: 769088 ("I love black uole"), 337202 (heat love), 178876/890304 (line leader/Huzzah), 820816, 438598, 093460, 052540. Right?
+- [ ] Cut attachments: 526278 (unknown.png), 147418 (brody_susie.mp3). Right?
+- [ ] Unclear rewrites: 252810 ("Vec scours the medbay for real cigarettes"), 962460 ("not as many bandages"), 916094 (cut "Bellow wakes up"), 416916 (ring beat). Right?
+- [ ] Anachronisms left as typed: "Jesus" (802315, 671750, 149397), "Thank god" (669952). Swap to in-universe wording?
+- [ ] "midget" (489024, about Morra) and "cripples" (924432) left as typed. Swap?
+- [ ] 14 merge hits left (e.g. hail outcome before "Oh fuck!" 311/323, Morra crippled reactions 822-838, "Albeit messily" 1856). Right to leave?
+- [ ] New NPC tags `Paramedic` and `Hanzi`. Right?
+
+## Ep 18 (Mutiny)
+- [ ] Persona: all Vec lines stay `as Argonian` (125), even after Vec pops out of the Argonian (block 415484) and as tiny Vec. Fix the later ones to plain Vec? Right?
+- [ ] 8ball 414659 keeps "Yes, and forever again for the rest of the episode." verbatim; the Zander/Trey "forever" clarifications (971241, 645982) were cut. OK?
+- [ ] Zander's "Llashii over intercoms" tag was changed to `Llashii`, plus an added action "Llashii's voice crackles over the intercom." (before 799067). Keep?
+- [ ] 130708 Trey's bare "Pushes Bellow, is distracted" became `_Zach pushes Bellow away, distracted._` tagged Zach. Right?
+- [ ] 799067 Trey's question "is Hanzi scrambling about...?" became a Vortox action "Hanzi is scrambling about with papers all over the walls." Right?
+- [ ] 745842 "Morra's communicator rings. It's you know who. Is it the time to answer?" became `Morra`-tagged "Morra's communicator rings." Right?
+- [ ] "gay" insult lines cut (981264 Seth, 311420 "ur gay"). OK to cut?
+- [ ] Slur swaps: "STUPID HAIRLESS APEX" -> "USELESS HAIRLESS APEX" (599890, 399794); Seth's "retard" -> "stupidloid" (918258). Right?
+- [ ] 8ball 309130 (Seth flies to the lab, "Yes!") has no outcome shown. Keep or cut?
+- [ ] Cut 223454 "The number 35 splatters on the wall nearby." (unclear Zander line) and 070121 "IT'S LIKE EPISODE 11." OK?
+- [ ] Cut 586526 Trey's `Morra`: "M-I-C-K-E-Y!" (Mickey Mouse gag). OK?
+- [ ] 544316 Silas image `e4z00oci2br91.jpg` (09:13 PM) was unviewable and cut. Anything lost?
+- [ ] Merged split Dutch/Vec lines (538237, 226432, 710066, 851274, 877012, 944041). OK?
+- [ ] Kept 8ball "Only if Dutch would do it." (437649) and cut "Only if Bellow would do it." (810812, no outcome). OK?
+
+## Ep 19 (Rumble Baby)
+- [ ] Vec keeps persona `Argonian` (105 lines) through the end, including after Vec pops out of the Argonian (049266, last scene), per the timeline. Right?
+- [ ] 8 attribution calls: Vortox for the Ravens' attacks (922876, 961286, 096828, 563058, 169438, 945455, 348979, 572767, 159296) and dwarf rulings (353823 "The dwarves shrink over time...", 972245 "They exist for an hour and swarm Seth."); Seth for 222164/504852 (anaphrodisiac, taser); Odran for 868456 "Odran flies out into space!". Right?
+- [ ] Seth's/Zander's dwarf narration tagged `Dwarves`/`Dwarf` (289874, 297138, 237888, 396800, 619964, 917104) as new NPC characters. Keep?
+- [ ] Brody's italic voice was converted to `Sanya` dialogue (908234 "You squander my gift so easily?...", 238963 "The only reason you need is Vengeance..."). Right that this is Sanya/Dread?
+- [ ] Kept the Seth ball-growth/shrink and cum-blast launch of Odran (662954, 507201, 818236) because the crew reacts; cut the nude-camera chain with Emmett (885677, 293278, 669830...) and the piss chain (420436). Keep this split?
+- [ ] Kept "STAR VECIUM!!!"/"ORAAAAA!" (873375, JoJo) and Dutch's "Mein Kampf ... Juice" (528818). Swap?
+- [ ] Cut attachments 837834 (Trey, `morra.mp3`, 09:51 PM) and 558036 (Jonas, `the_xeno.png`, 10:52 PM). Right?
+- [ ] 936361 (Jonas "bellow was referring to zach") cut as OOC, leaving Vec's "We are not friends." (183066) unclear. Add a clarifying line?
+- [ ] Bare 011152 became Zion's action "Instead, Zion goes back upstairs to see Hanzi." (Hanzi 8ball). Right?
+- [ ] Rewrites: 174568 ("I don't... care... Didn't... ask."), 090620 ("Code Scarlet and Code Dwarf? What a..."), 641034 (halberd "from his asshole" dropped). OK?
+- [ ] Odran's sudden "Oh shit!" (355852, Trey, untagged so Zion) may be Odran. Right as Zion?
+- [ ] Kept /combat start and stop embeds (837565, 379562) and the Dutch heal/reset/damage trio (478565, 522130, 781214). Keep?

@@ -103,7 +103,7 @@ unless you read it differently — happy to move them if you disagree.
 ## Correctly excluded (false positives from the keyword search)
 
 - **Tawfeek Residence**, all 9 hits — this episode is about the *real*
-  Emmett Tawfeek (Zander's own PC's father), nothing to do with Buzzcut.
+  Emmett Tawfeek, nothing to do with Buzzcut.
   Already attributed correctly (mostly Vec-as-narrator, one `Emmett
   Tawfeek` QUOTE).
 - **Sir, This Is A Chilzor's #419** ("Dutch could probably make out Seth

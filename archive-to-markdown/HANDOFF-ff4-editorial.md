@@ -1,7 +1,8 @@
 # Handoff: FF4 editorial pass (started 2026-09-29)
 
 FF4 gets the same editorial treatment as FF2 and FF3, in a different
-format. Read these first, in order:
+format. **Episode-editing subagents: read `editorial/FF4-AGENT-BRIEF.md` instead of
+this list** (see "Resume here"). The advisor session reads these first, in order:
 
 1. `md/ff2/EDITORIAL-STYLE-GUIDE.md`. The house rules. Everything there
    applies unless this file overrides it.
@@ -26,7 +27,11 @@ format. Read these first, in order:
 | 13 ("Tawfeek Residence", export `Side Episode 1`) | Edited by Sonnet 5.5, imported (221 messages); re-imported after review rulings 2026-10-05. **Awaiting Trey's review.** Notes: "Ep 13" section. |
 | 14 ("Lights Out", export `Side Episode 2`) | Edited by Sonnet 5.5, imported (258 messages); re-imported after review rulings 2026-10-05. **Awaiting Trey's review.** Notes: "Ep 14" section. |
 | 15 ("Sir, This Is A Chilzor's", export `Episode 13`) | Edited by Sonnet 5.5, imported (752 messages); re-imported after review rulings 2026-10-05. **Awaiting Trey's review.** Notes: "Ep 15" section. |
-| 16–23 | Not started. |
+| 16 ("Crashlanded", export `Episode 14`) | Edited by Sonnet 5.5, imported (793 messages). **Awaiting Trey's review.** Notes: "Ep 16" section. |
+| 17 ("Don't Weld Yourself", export `Episode 15`) | Edited by Sonnet 5.5, imported (496 messages). **Awaiting Trey's review.** Notes: "Ep 17" section. |
+| 18 ("Mutiny", export `Episode 16`) | Edited by Sonnet 5.5, imported (1045 messages). **Awaiting Trey's review.** Notes: "Ep 18" section. |
+| 19 ("Rumble Baby", export `Episode 17`) | Edited by Sonnet 5.5, imported (957 messages). **Awaiting Trey's review.** Notes: "Ep 19" section. |
+| 20–23 | Not started. |
 
 Nothing is committed yet. Commit only when Trey says so (`git -C ff-site`).
 
@@ -944,11 +949,26 @@ for the Llamanian weapons, and the Fungo-spore blackjack game.
 
 ## Resume here (session handoff)
 
-State: eps 0-6 are edited, imported and committed (Trey hand-tuned them; never
-regenerate over them). Ep 7 and ep 8 ("Don't Be a Shitty Dad") are edited, verified, imported
-and await Trey's review; nothing from them is committed. Ep 9 ("Are You Not Entertained?!") is also edited, verified, imported
-and awaits review. Ep 10 ("High Roll on D100") is also edited, verified, imported and awaits review. Ep 11 ("Wrong Answer") is also edited, verified, imported and awaits review. Ep 12 ("Goblinators") is also edited, verified, imported and awaits review. **Ep 13+ note: Zander's clone PC is `Buzzcut` (character 1709), no persona after ep 12's reveal; never tag `Bee Emmett` (distinct FF2 character 1700); tag his untagged third-person actions per REVIEW-buzzcut-identity.md (eps 12-17); `ff4_set_personas.py N` handles Buzzcut too.** **Ep 13 ("Tawfeek Residence") is done and awaits review (see its section). **Ep 14 ("Lights Out") is done and awaits review (see its section). **Ep 15 ("Sir, This Is A Chilzor's") is done and awaits review (see its section). Next: ep 16 ("Crashlanded"; check `meta/ff4.json` `file_name` for its export name, and always prep with `--prep` to `.editorial-analysis/`).** Conventions added in ep 15: tags are sticky for the rest of a block in `md-to-api.py`, so put NPC-tagged lines and the PC's own untagged lines in separate blocks (`ins ID Player` makes an ID-less block); a tagged action under a bot (Vortox) header is ignored by the importer, so GM beats go untagged there.** (Older note: ep 13 ("Tawfeek Residence", `md/ff4/raw/13-tawfeek-residence.md` exists; prep from the Discord export `...Episode 13 [...].json`; ep 13 opens at the Tawfeek family's door where Morra wormholed Seth at the end of ep 12). Follow the pipeline above. Import through the API, not Playwright
-(see the memory file `ff4-editing-and-import-workflow`).
+State (2026-10-05, end of session): eps 0-6 are edited, imported and committed
+(Trey hand-tuned them; never regenerate over them). Eps 7-19 are edited, verified
+and imported, and await Trey's review; Trey's first-round rulings on eps 7-15 are
+applied (see the ✅ lines in `REVIEW-ff4-trey-queue.md`). Nothing from eps 7-19 is
+committed. **Next: ep 20.** Eps 20-23 are not started.
+
+**How to run the next episode (token-lean workflow, Trey 2026-10-05):** the main
+session is only the advisor, and one Sonnet subagent edits one new episode, then
+stops. The agent reads ONLY `editorial/FF4-AGENT-BRIEF.md` (it replaces this file
+and the style guide), greps `meta/ff4.json` for the episode's title, file_name,
+export number and personaTimeline, and greps the previous episode's section here
+for continuity. It reads parts only with `editorial/ff4_view.py --short`, verifies
+with `editorial/ff4_verify.py N --brief`, and appends its notes to this file and to
+`REVIEW-ff4-trey-queue.md`. That is about 115-180k tokens per episode, against 248k
+before. Review-ruling passes over already-edited episodes may batch several
+episodes per agent. Before any re-import, check the episode's commentaries.
+
+**Open across episodes:** Vec keeps the `Argonian` persona after popping out of
+the body (ep 18 and ep 19's 049266; the queue asks Trey). The DB persona row 7 is
+spelled `Llafay Terres` (Trey hasn't said whether to rename it).
 
 **Rules learned since the Pilot** (also in the Claude memory files):
 - **Unwrapped player text is OOC by default** (Trey, 2026-10-05). In-character
@@ -973,11 +993,11 @@ and awaits review. Ep 10 ("High Roll on D100") is also edited, verified, importe
   make `ff4_move_blocks.py` assert; rename one temporarily.
 - **Sean and Brody** debuted in ep 2; **Hunt520** in ep 3.
 
-**Import** (steps and gotchas in the memory file `ff4-editing-and-import-workflow`):
-delete the old episode (check commentaries first), create missing NPC characters
-as the voicing player, drive `/import` with Playwright, map "Edmin Kalvanzas" →
-`Edmin`, then set the Fungo persona by SQL (the importer ignores `persona`) and
-set any missing avatars.
+**Import:** `python3 md-to-api.py ff4 md/ff4/N-slug.md`, then
+`python3 editorial/ff4_import.py api/ff4/N-<file>.json` (it deletes and recreates
+the episode, so check commentaries first), then `python3 editorial/ff4_set_personas.py N`.
+A new `Vec as <Host>` persona needs a `personas` row plus a `pid` entry in
+`ff4_set_personas.py`; check for an existing row first.
 
 **Open questions for Trey:** the fake-flavor list in ep 3's notes; NPC tag names
 (`Suchan`, `Raven A`–`D`, `Squi`, `Llao Khug`); avatars for Edmin, Llawdon, Vec;
@@ -1441,6 +1461,26 @@ Emmett and Seth by accident.
 - **Morra they/them** scanned: no he/him on Morra.
 - Flagged items are in `REVIEW-ff4-trey-queue.md`, "Ep 15".
 
+## Ep 16: judgment calls for Trey to review
+
+`md/ff4/16-crashlanded.md` is installed and verified (0 unresolved, no cut marks, 0 OTHER, no EMBED CHANGED, punct pass clean, merge flagger swept at 30s and 45s). Imported via `ff4_import.py` (0 commentaries; 793 messages: 266 ACTION, 471 QUOTE, 54 EMBED, 2 BOT_RESPONSE; no UNMATCHED characters). DB counts: Seth 110, Zion 108, Bellow 105, Zach 89, Sonichu 62, Morra 57, Sonic 30, Vec 28, Dutch 26, Shadow the Hedgehog 18, Buzzcut 16, John 15, Jack Madison 10, Big 7, Knuckles 5, John Smith IV 3, 8ball 2, LCM 2, Ship 1, NPC 1, Vortox/none 98. Persona: `Vec as John Smith IV` x3 (new persona row id 25, mapped in `ff4_set_personas.py`). No new characters were needed: every NPC tag already existed from the older direct import. Nothing committed. Episode: the stranded ship coasts toward an ice planet and crashes (Seth's gags, Vec torments Dutch); a Sonic-themed Raven mercenary band (Sonic, Knuckles, Big, Shadow the Hedgehog who is really Sonichu) threatens Bellow's family and demands Victor Chomsky; the crew falls into a sinkhole into a Raven base; Zach's father John Smith wakes from cryosleep and is kidnapped with Zach.
+
+- **Prep/export:** the export is `Episode 14` (`api/ff4/16-episode-14.json`; an older `16_crashlanded.json` was already there, untouched). `md/ff4/raw/16-crashlanded.md` untouched.
+- **Buzzcut:** untagged Zander actions tagged `Buzzcut`: 422535 (browsing the Holonet), 993128 (starts to lift off the floor), 351447 (sleeping on Seth's shoulder); 620232 (breakdance, already tagged) got its subject added. 936576 "A box is flipped over Buzzcut" is Vortox (Buzzcut is the object). 762538 is Vortox "Buzzcut also shoots out of the ship" (replaces Trey's bare "since Emmett would do that, Buzzcut also shoots out").
+- **Vec as host:** 367969, 862539 (quotes) and 269568 (flashing action) are `Vec as John Smith IV` after 289577 "Vec hops into his gaping maw" (that line stays plain Vec). **Second look?** Vec slipping into Dutch's pants and out of his body (the 'pants' line 195165 and 582270) is left as plain `Vec`, no Dutch-controlled lines exist.
+- **GM attribution to PCs/NPCs (under the typist's header):** `Dutch` 959356 (Trey: "Dutch hits his butt really hard", the 8ball's "opposite happens" outcome, turned from bare text into a tagged action), 623780, 904818, 933042 (Zander); `Bellow` 051147, 755676 (Zander); `Shadow the Hedgehog` 960863, 856248, 747348, 145310, 864676, 073226; `Sonichu` 135189, 697567, 776455, 979901, 715014, 943805, 697354, 204200, 810890; `Sonic` 094063, 013314, 675418, 892426, 206265; `Knuckles` 389642; `Big` 192370, 402709; `LCM` 076958; `John` 666325, 929745 (split into John lines plus an ID-less Zach block); `Seth` 605834 (spits up John Smith IV); `Buzzcut` as above.
+- **Vortox (scope beyond one character):** 463528, 753216 (ship shakes, dives), 378612, 125776 (crash), 423262, 302194 (second crash), 936576, 988703 (Shadow arrives), 936768 (planet), 997988, 577691, 159230 (Sonic's group), 948223 (hole fills with piss), 376720 (council member splashes Seth), 643183 (Brody's "chucklefucks raise arms", retyped under Vortox), 738064 (magnetic field), 681010, 298954 (the ship's sentient crash), 248883, 315627 (the Sonics fly, then are transported), 316463 (hologram), 096764 (two remotes), 673927 (ice cracks), 679144/016169/645372 (POOMPH, bottom, dark), 289439/788544 (scaffolding), 472360, 914458/941003/759636 (Vec hits Zion, SFX), 088775, 505882, 205696 (base, cryosleep), 597279, 512926 (Sonichu runs off with Zach and John), 411392 (Sonic encapsulated in a casket), and Space Rules #3903 (867550) and #723 (151740), plain Vortox.
+- **8ball questions reworded** (capitalization and typos unless noted): 440852 (Dutch floating, "for the good of humanity" dropped), 872756 ("humanity" -> "the galaxy"), 769538 ("Does Morra telekinesis Dutch" -> "use telekinesis on Bellow"), 126933 ("not telekenisis" dropped), 934053, 618728 (Shadow), 432174, 601492, 620190, 708722, 284457. Cut 8balls (no outcome or gag): Rick and Mortus, Seth-sprinkler piss, Morra finger, Sean's "60 minutes of telekinesis", Bellow's pants, Brody's "Liquid", Zach slits Big's throat, Dutch writhes, Bellow breakdance confusion, Bellow grabs Seth, Morra "niddy griddy", Bellow still breakdances, Vec takes over John Smith IV.
+- **Fake flavor / noise cut:** Seth's schwifty/sniff/"yum yum pee", second pee puddle and "cleanup on aisle seth", ballsack-with-a-face chain and ballsack lasso, Gangnam Style, pistol firing, second shoe throw, the repeated Seth "WEEEE" lines; Vec becoming a suppository and going into Dutch's intestine; "Morra sex" and sex/smut/"Seth x Morra" spam; Brody's "somewhere in the Universe... shudder" and Morra "marvels at Bellow's new plot relevance"; "Hunter is John's favorite child" and Jonas/Trey "@Trey / loveu" chat; SUS/AMONG US spam; Jonas "Morra finger" bit; all OOC replies to italic actions ("south park episode", "mario when he step in lava", "flowey", "phillip").
+- **Kept gags the fiction reacts to:** Seth's first poop/pee (Buzzcut ignores it, Brody reacts), Vec making Dutch float/hard (Zach, Morra and Bellow react), Seth's balls dropping (Zander reacts), Seth peeing in Shadow's hole (it creates Sonichu and the whole fight), the "unclit" knife bit (Seth takes 2 damage), Zach's Jack Madison texts (Dutch and Bellow react).
+- **Cut attachments (images I can't see):** 269501 Jonas `garrick_y.png` (08:48 PM), 013525 Zander `unknown.png` (09:44), 755654 Jonas `unknown.png` (09:02, with Brody's "HES GONNA LAY AN EGG" reply).
+- **Reworded/unclear (second look?):** 294481 "Morra floats up with Zio..." became "with Zion in their arms" and Brody's "realizes the mistake and grabs Zion instead / leaves Zio in the snow" (379284, 913394) is cut as unclear; 512926 "Bellow can see Hercules" is left as typed (unclear); 206265 "family guy death pose" left (anachronism); 697354 political button now reads "I voted!"; 310358 "Bellow comes back in order to retain plot relevance" -> "Bellow comes back."; 451240 Morra's winter-attire joke trimmed; 016000 Zach's meta "(he is in the dark about the mission)" folded into "...whatever that is?"; Seth's `8ball` tag (Seth voicing an 8ball, 364314, 797320) kept as the existing `8ball` character.
+- **Tag choices:** `NPC` (raw `NPC#3`, Brody), `LCM` (raw tag, Llamanian Council Member; rename?), `Ship` (raw), `Shadow`/`Shadow the Hedgehog` unified, `JSIV` -> `John Smith IV`, `Sonic`/`Knuckles`/`Big`/`Sonichu` as in the raw (Trey voices Knuckles/Big in a few lines).
+- **Moves:** 21 (30s and 45s sweeps). Left on purpose (about 15 hits): reactions/replies such as Seth's "Turbulence" line after the ship shakes, Zander's cartoon-balls reaction, Zach's "no idea" reaction to Morra, Shadow's rabbit-hole description, Sonichu/Bellow/Dutch exchange, Seth's "Wanna see?" with Trey's freeze reaction, Zion's aim/roll/miss, Vec interrupting Zion's "But here we a-", capsule opening between Morra's "Come, let's-" and "Oh.", Bellow's "What the-" after the ice cracks, the net tossed between John's "You!" and Zach's drop.
+- **Morra they/them** scanned: no he/him on Morra (remaining hits refer to Bellow, Dutch, Sonic).
+- **Slur/anachronism flags (left):** `retard` (841940) -> `stupidloid`; "gay"-type insults none. Earth IP all left as typed: Sonic/Shadow/Knuckles/Big/Sonichu/Silver/Magichan/Chris-Chan ("Chrisdom"), Kodak Black, Family Guy, Among Us ("Crewmates, am I right?"), "Super Sonic", "Tails/Sonic" (cut), "Gangnam Style" (cut), "Kirby" gif (cut), "middle school", "fanny pack", "political button / I voted", "GU council", "Earth" (John Smith "rising politician on Earth"). Seth's "He's cool, look, he's black." and Sonic's "Disgusting black creature." are kept (Black is a canon species/colour, per the settled rule); say if either reads as a racial joke.
+- Flagged items are in `REVIEW-ff4-trey-queue.md`, "Ep 16".
+
 ## Open issue for another agent: transcript reader grouping (flagged by Trey)
 
 `groupIntoBlocks` in `src/components/transcript/TranscriptReader.tsx` (~line 23-45)
@@ -1453,3 +1493,56 @@ player" above), which is why the FF4 md moves lines between players' blocks.
 The fix belongs in the reader (and the "played by" label needs a rule for mixed
 players). Once it's fixed, the editorial moves become optional; don't undo existing
 ones without Trey's say-so.
+
+## Ep 17: judgment calls for Trey to review
+Export `Episode 15` (`Final Frontier 4 Episode 15 [1032098966273261578].json`). Raw 588 messages in, 496 imported (189 ACTION, 281 QUOTE, 25 EMBED, 1 BOT_RESPONSE). Edited by Sonnet 5.5; md `md/ff4/17-dont-weld-yourself.md`, `api/ff4/17-episode-15.json`. The crew is rescued from the ice planet by Llashii's ship, Vec welds Morra's cracks, and Hanzi is introduced.
+- New persona: `Vec as Argonian` (personas id 26, slug `vec_argonian`, character 1961) created in the DB and added to `pid` in `ff4_set_personas.py`; all 109 Vec lines are persona Argonian (timeline anchor, matches raw). `ff4_set_personas.py 17` applied.
+- Buzzcut: only in a Vortox scene-setting beat (object, frozen), no Buzzcut-tagged lines.
+- GM attributions (to Vortox): 691679 ("Buzzcut is frozen; Seth has been trying to collect firewood..."), 015775 (Sean's "It begins to hail."), 644282 (Zander's "Icicles fall onto Seth."), 619206 (Space Rule #78).
+- Vortox beats: the four above; recap embed 043049 stays an embed.
+- Reworded 8balls: 714076 (comma, "huge, like a David and Goliath"), 350812 ("Is Zach eavesdropping yet?" so it fits Zach falling in), 796372 (stray quote), 813066, 510430, 747082 ("in their time of trouble"), 121098 (typo), 660394, 229769, 522822, 147712, 310282. Cut 8balls (no outcome or gag): 544144 (✂), 355290, 794563, 227304, 248392, 644098, 477909, 473631, 995284 (incomplete "Does Bellow"), 896064, 609990, 913291, 453332 (✂), 713252, 162164, 962311 and its caveat chain (542588, 898458, 041472, 712174), 415835 and its showdown chain (330034, 223838, 087278, 648222).
+- Fake flavor cut: Seth spin/dance/gangnam/weee/haha spam, "fartnite", "nightcore", "Finger hole" x5, "Saul Goodman is the name of the Argonian", "Jack's alias is Huckleberry Finn", "warm wamr heat heat love love", "I love black uole" (769088), Bellow nuts squeeze (820756), `Dutch` "stop stuttering little dumb head" (761940), Morra "Huzzah!"/Zion "Morra, you're the line leader!" (890304, 178876; unwrapped), "yes/no" spam in part 5, Trey's "Bellow's ears cute", "Zach's end has been irreparably damaged..." (820816), "Dutch's dad to ask for permission..." (438598).
+- Kept gags (fiction reacts): 385735 (`Bellow`: "Haven't had a proper weiner-sucking in a moment!", Llashii reacts in 386590), Seth's dildo throne (272598, 305290: later "crying for his throne").
+- Kept `✂`: 143841 (plasma cutter handed over), 202941 (Bellow help request, answered by 804053), 363368 (Morra's cracks glow dimmer), 120542 (Vec realizes Seth missing), 305290, 577937 (paramedic fake cigarette), 393802 (guards restrain the Argonian), 854346 (Llashii's mission setup).
+- Cut attachments: 526278 (Sean, unknown.png, 08:18), 147418 (Trey, brody_susie.mp3, 08:58).
+- Unclear rewrites: 252810 ("_Vec scours._" -> "_Vec scours the medbay for real cigarettes._"), 962460 ("but as many" -> "but not as many"), 594468 (Zion in awe), 727609 ("safe than sorry" -> "better safe than sorry"), 416916 (ring beat, cut "You idiots"), 916094 cut (Trey's "Bellow wakes up"), 073532 (added "Zion" subject).
+- New NPC tags: `Paramedic` (3 lines; `Parametic` typo fixed), `Hanzi` (2), plus existing `Llashii`, `Jack Madison`.
+- Anachronism flags: "Jesus" (802315 "Jesus, man"; 671750 "Jesus you're freezing"; 149397 "IN SPACE JESUS!"), "Thank god" (669952), "Shovel Knight" cut with its message; suggest swaps if wanted. "midget" (489024, kept) and "cripples" (924432) may deserve swaps.
+- Slurs: none. "Yo mama says yes" 8balls cut.
+- Merge moves (30s and 45s): 150->154, 158->162, 8ball 170->180, 237->241, 8ball 271->281, 413->417, 441->445, 8ball 551->565, 615->619, 758->762, Vec-stops/Zion-fire after Morra blabber (876, 880 after 884), 976->980, 1076->1080, 1216->1220, 1228->1232, 8ball 1687->1697. Left hits (14): hail/icicles outcome (the "Oh fuck!" reacts to it); Zion/Bellow actions around oxygen tank and sword toss (chronological); cutter handoff then eyeballs; Morra crippled reactions (822/830, answered in sequence); Zion mothership landing (948); Llashii/Zach nod reply (1184); Jonas protest after Llashii's shove (1814); "Albeit messily" (1856); Vec flip (1864).
+- Morra scan: fixed he/him/his on Morra (878, 685, 603-ish text, unwelds, 344031, 242432, 270899, 814441, 771133 footer). Final grep clean. Duplicate IDs 078652 and 240704 (split Hunt520 messages) were renamed temporarily for moves and restored.
+
+## Ep 18: judgment calls for Trey to review
+Export `Episode 16` (`Final Frontier 4 Episode 16 [1037175111280754760].json`), "Mutiny". Raw 319 actions / 782 quotes; imported 1045 messages (294 ACTION, 711 QUOTE, 39 EMBED, 1 BOT_RESPONSE). Summary: Llashii briefs the crew, Seth is kept captain with Zion as co-captain, Vec bursts out of the Argonian body, infects Dutch and Bellow, is cornered in the airlock, and the crew splits over killing Vec vs hearing Zach out; Bellow and Morra resign, Zion throws Zach down, Dutch knocks him out, and Vec escapes and draws Zion on the walls.
+- **Buzzcut / Vec-as-host:** no Buzzcut in this episode. All 125 Vec messages carry persona `Argonian` (id 26) by the timeline, including after Vec pops out of the Argonian (block 415484) and as tiny Vec: unchanged, flagged in the queue.
+- **GM attributions (ID last 6, whom):** 851335 Seth; 940736, 293032, 254763 Llashii (+ ins before 799003 for the intercom, tag fixed from `Llashii over intercoms`); 157786, 994708, 336272 Hanzi; 489971 Morra; 891970, 181179, 908280 Dutch; 779893 Zion; 745842 Morra (comm rings, OOC aside cut); 836038 Vec (Trey typed); 130708 Zach (Trey typed the 8ball outcome).
+- **Vortox beats:** 653500, 825704, 081189, 672724, 843770, 042960, 495134 ("The bag pops."), 957298, 799067 (Hanzi scrambling, from Trey's reply), 144646, 289832 (Space Rule #39).
+- **Reworded 8ball questions:** 843742 (dropped the "poopy farty song" reason), 372618, 610906, 523332, 434158; the rest punctuation/caps only.
+- **Cut 8balls:** Llashii overrides Seth's controls (494643), Zion tackles Dutch, Vec hardens (N Word. (No)), poopy-farty block, Zach gains Vec as a Stand, "where is she"/(850) number x2, sanyas balls, Seth elven stripper; coin flips x2.
+- **Fake flavor cut:** Zach twists off finger, Dutch reeks of garlic, Seth finishes dance/Knight dance, Dutch steps on Zion's back, eating Vec/Morra chews fungus, Seth cums hands free, Seth pees his pants, RDM/FAILRP spam, Mickey Mouse, Dutch "Edmin" spam, Rick and Morty music, "Episode 11" asides, "Seth leaves" etc.
+- **Kept gags / fiction reacts:** holographic woman (037417, Seth turns her off); 995570 Zion squats; 757588 Dutch "splooge" jab; 960262 Morra vacuum in mouth; 902225 tiny Vec smudge.
+- **Cut attachments:** 544316 Silas `e4z00oci2br91.jpg` (09:13 PM); links only: 741373, 854312, 497023, 346496, 909500, 026996, 632970, 126246, 724550.
+- **Kept `✂`:** 702396, 995570, 908840, 825990, 225970, 525891, 102794, 117185, 902225, 502016, 199006, 587281, 127700, 960262.
+- **Slur/anachronism flags:** "STUPID HAIRLESS APEX" -> "USELESS" (599890, 399794); "retard" -> "stupidloid" (918258); "gay" lines cut (981264, 311420); "Stand" (JoJo, cut), Mickey Mouse (cut), Rick and Morty (cut).
+- **Unclear rewrites:** Merged split lines: Dutch "SUCK ME... IN... ME!" (538237), "CAPTAINS, KILL IT!" (226432), Dutch "KILL IT, FOR FUCK'S SAKE!" (710066), Vec "SHUT UP, DUTCH!" (851274), Vec "ALL I THINK OF IS EAT." (877012); 8ball "forever again" kept verbatim, Zander/Trey clarifications cut.
+- **Merge moves:** 8balls moved after the second half: 032612, 778920, 040818, 783519, 042960 (GM block), 437649, 478963, 442857, 828034, and 346452 (Morra smells) before 874134. Leftover hits (interleaved parallel actions/entrances, or stale timestamp on moved 8ball): #1-6, 12-15, 18-20, 24-34, 36-40 of the 30s sweep, and 45s hits #16/#21/#23/#35.
+- **Morra scan:** clean (Bellow's "Morra can do, where they open up space" fixed).
+- Duplicate IDs 268722 and 856710 are split blocks of one message each (importer fine).
+
+## Ep 19: judgment calls for Trey to review
+Export `Episode 17` (`Final Frontier 4 Episode 17 [1042259442768556042].json`), "Rumble Baby". Raw 315 actions / 625 quotes; imported 957 messages (276 ACTION, 593 QUOTE, 86 EMBED, 2 BOT_RESPONSE). Md `md/ff4/19-rumble-baby.md`, `api/ff4/19-episode-17.json`. Summary: the crew guards Zach in the brig while Seth plots to reach Elf Heaven through a black hole and Vec (still in the Argonian) hides in the engine room; Seth's summoned dwarves are airlocked, then the Ravens' Odran ambushes the hangar and the crew beats him back, Seth launching him into space.
+- **Buzzcut / Vec-as-host:** no Buzzcut. All 105 Vec messages persona `Argonian` (id 26) by the timeline, including after Vec pops out of the Argonian at the end (049266): unchanged, same open question as ep 18.
+- **GM attributions:** to Vortox: 046534 (engine room haze), 758528, 022298, 119986, 135726 (ambient HV/jingle/lights/brig), 353823, 972245 (dwarf rulings), 738748, 007228 (thud, ship shakes), 922876, 961286, 096828, 563058, 169438, 945455, 348979, 572767 (Ravens' attacks), 159296 (magnet-gun merc crushed), 754866 (SPLAT), Space Rules 080063, 381376. To Seth: 302407, 434911 (Seth hears Emmett's line/cabin), 222164, 504852 (Anaphrodisiac, taser). To Bellow: 669706. To Morra: 220271, 913223. To Hanzi: 147079 (+ ID-less Zion line). To Odran: 222186, 995318, 898442, 270170, 868456. To Dutch: 763270. To Dwarf/Dwarves (Seth/Zander typed): 917104, 289874, 297138, 237888, 396800, 619964, 499856 chant, plus ID-less dwarf block after 397520. To Emmett: 849124.
+- **Brody's italic Sanya/Dread voice** (453604, 333840, 908234, 238963, 674496, 704334, 163345, 634536, 040973) converted to `Sanya` dialogue; Hunt520's italic quoted replies (337980, 608154, 873375) converted to Zach dialogue/actions.
+- **Reworded 8ball questions:** 018113 ("Is the HV really loud?"), 672628 ("Sanya" -> "Does Sanya speak to Zach?"), 793640, 661584 (quote marks removed), 893308 (Odron -> Odran); the rest case/punctuation only.
+- **Cut 8balls:** 038613 (toilets, "Bro, your action didn't make it"), 656914, 827146 (+ its /roll 506081), 514699, 409296 ("sussy"), 688660 (lube gag, + /roll 954644), 733126 (Emmett's and Sanya's balls).
+- **Cut combat/commands:** /list x2, /character edit/info, /weapon edit x2, /combat turn x2, failed d0 /dmg rolls (329716, 051951, 762835, 481822), bare slash text 590272. Kept /combat start and stop embeds (837565, 379562); kept the Dutch heal/reset/damage trio (478565, 522130, 781214) so HP lines stay consistent.
+- **Fake flavor cut:** Seth strips/shits on the captain's chair (694772, 146164, 643036, 101921), nude-camera call chain (885677, 293278, 669830, 974336, 123358, 093972, 566170, 372049), Dutch kissing Morra/Zach (536833, 004254, 378280, 408530, 770463), Cappy/Mario hat gag (155264, 923493, 224966), Morra "10" sign (692275), Zion "Femur breaker"/"Morrioh", Trey dance spam (344892 etc.), Bellow Tums, hi-fives (801016, 940998), Vec doll-smiting (022164), Seth piss/apology chain (420436, 093087, 056232, 091723), "haha penis" (316344), spore-balls gag (934796), "rumble as one" balls (917588, 953448, 993940, 010468), Vec "Ow my dreadballs" reply (489892), keyboard smash (299163 etc.), "ow" spam trimmed to 2.
+- **Kept gags (fiction reacts):** Dutch's Defenestration Protocol (765170...), Dutch's "SCHMOOVING" dance (Zach replies), Seth's shrivelled/growing balls and the cum-blast that launches Odran (662954, 507201, 818236; Zion/Zach/Bellow/Morra react), Vec spores in Zion's mouth (525224), Seth "sex-dungeon" threat (645002), "STAR VECIUM"/"ORAAAAA" (873375).
+- **Cut attachments:** 837834 (Trey, `morra.mp3`, 09:51 PM), 558036 (Jonas, `the_xeno.png`, 10:52 PM). Link-only/gif: 236235, 364005, 782622, 316264, 836945, 470692, 658910, 051961, 647316, 575804, 085491, 980800, 088852, 070963, 450516, 119179, 073866, 105370, 245103, 979476, 484594, 556352, 433814.
+- **Unclear rewrites:** 011152 (bare "Instead, Zion goes back upstairs to see Hanzi" -> Zion action), 976468 (Zach "..... "I understand" / stops typing" -> "... I understand."), 353823/972245 (bare Zander dwarf rulings -> Vortox actions), 090620 ("Scarlett" -> "Scarlet", "what a" -> "What a..."), 174568 ("don't care didn't ask" -> "I don't... care... Didn't... ask."), 510918 ("still naked" dropped), 641034 (halberd "from his asshole" dropped), 957726 ("to make him look more heroic in the scene" dropped), 461962 ("mukbang" -> "meal"), 398228 (Bellow's `*...*` sword actions -> `_..._`), 137970 and 088926 (action moved before dialogue), 861984 (hi-fives action cut), 936361 (Jonas's OOC "bellow was referring to zach" cut, which leaves Vec's "We are not friends." ambiguous).
+- **New NPC tags:** `Odran` (character 1869, ~34 lines), `Dwarf` (1744, 4), `Dwarves` (1745, 10); existing `Emmett` (Emmett Tawfeek), `Hanzi`, `Sanya`, `GU News reporter`. Cut `Merc` (358401).
+- **Kept `✂`:** 092265 (Zion's stare falters), 603304, 724659, 283786, 932436, 679306, 203590, 612800, 896632, 995594, 834910, 523187, 220359, 459314, 220271, 289641, 915511, 075836, 316288. 
+- **Anachronism/slur flags:** "Mein Kampf" and "Juice" (528818, Dutch), "footloose" (870), "STAR VECIUM"/"ORAAAAA" (JoJo, 873375), "tldr"/"don't care didn't ask" (174568 kept), "sussy" 8ball cut, "Mario", "Cappy" cut, "Tums" cut, "Bruh" (932831 reworded), "mukbang" swapped. Slurs: none. Insults left: "Dingaloid" (339497), "Zachaloid", "slimeskin".
+- **Merge moves (30s and 45s):** 8balls moved after the line they follow (048967, 993094, 034331 stays after Seth's pair, 573938, 568991, 911038, 863775) plus about 30 action moves (Bellow/Zach reactions, Seth line runs, dwarf scene, Zion/Vec). Leftover hits (11 at 45s): Zion split by Zach's reply (133); Bellow whisper and Zach's head shake (286); Bellow night-vision reaction (776); Vec breaker/Zach "facing away" (814); Bellow looks around/Vec walks up (1122); Emmett line vs Bellow hood (1138); Seth cursed/dwarf side actions (2143); Morra/Zion "I see it" narration (2552); Dutch leap/fall/"Ow." x2 (3779, 3929); Zach "Agreed"/Bellow dash reply (4441).
+- **Morra scan:** clean (no he/him on Morra).

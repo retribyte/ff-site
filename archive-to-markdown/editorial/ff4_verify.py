@@ -10,9 +10,22 @@ new DB Character), surviving OTHER lines (each a deliberate keep), the action/qu
 (timeline anchors match on text, so rewording an anchor line silently moves
 a persona switch), lint, slur flags, IDs that no longer exist in the raw
 export (a mangled header), and raw lines with no fuzzy match in the edit
-(each must be a deliberate cut or rewrite)."""
+(each must be a deliberate cut or rewrite).
+
+--brief: only problems and counts. Empty sections are omitted; UNMATCHED RAW,
+CUT EMBED, moved-from and converted-to-embed lines are counted with the first 3
+examples. Always prints types, characters, personas and the action/quote ratio."""
 import collections, difflib, glob, importlib.util, json, os, re, sys
 sys.path.insert(0, os.getcwd())
+
+# --brief: print only problem sections and counts (see summary at the bottom).
+BRIEF = '--brief' in sys.argv
+if BRIEF:
+    sys.argv.remove('--brief')
+    LOG = []
+    _print = print
+    def print(*a, **k):
+        LOG.append(' '.join(str(x) for x in a))
 
 spec = importlib.util.spec_from_file_location('m2a', 'md-to-api.py')
 m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
@@ -127,3 +140,29 @@ for mid, items in raw_e.items():
 for mid, items in ed_e.items():
     if mid and mid not in raw_e:
         print('  converted to embed (check intended)', mid)
+
+if BRIEF:
+    GROUPS = [('UNMATCHED RAW', '  UNMATCHED RAW'), ('CUT EMBED', '  CUT EMBED'),
+              ('moved from', '  moved from'), ('converted to embed', '  converted to embed')]
+    EMPTY = ('CUT MARKS LEFT []', 'unresolved []', 'OTHER (review: kept on purpose?) []')
+    INFO = ('types', 'characters', 'personas', 'actions ', 'GM narration')
+    grouped = {k: [] for k, _ in GROUPS}
+    shown, problems = [], 0
+    for l in LOG:
+        for k, pre in GROUPS:
+            if l.startswith(pre):
+                grouped[k].append(l.strip()); break
+        else:
+            if l in EMPTY:
+                continue
+            shown.append(l)
+            if not l.startswith(INFO):
+                problems += 1
+    for l in shown:
+        _print(l if len(l) < 400 else l[:400] + ' ...')
+    for k, items in grouped.items():
+        if items:
+            _print(f'{k}: {len(items)}')
+            for x in items[:3]:
+                _print('   ', x[:140])
+    _print('PROBLEMS: %d lines + %s' % (problems, ', '.join(f'{len(v)} {k}' for k, v in grouped.items() if v) or 'no groups'))
