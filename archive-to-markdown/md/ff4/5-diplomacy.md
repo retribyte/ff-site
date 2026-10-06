@@ -5,7 +5,7 @@
 Last episode, the [HORIZONERS] marked their fourth day stranded on the ocean planet, [BARBONA]. After moping around for a while, the crew was ambushed by an angry tribe of Torrid, with a silent human named Zach accompanying them. After a quite annoying battle with no synergy whatsoever, the hangar was flooded, and Dutch was, of course, knocked out.
 Soon enough, the crew received a call from [MISSION CONTROL]. Apparently, the site they’d sailed to was the location of the crashed Llamanian ship! However, before they could search, they were attacked by a giant hand made of Torrid. The crew narrowly escaped by flying high above the sea.
 Using the newly-received radio frequencies, Morra, the fungus, and Zach went underwater to search for the weapon schematics. Eventually, they discovered two cannons and a data storage device, and Zion tractor-beamed them back up. While no one was looking, the fungus jumped back down to look for a new host, and Morra scrambled to retrieve him, beaming a soaked, rotten, fungus-controlled Llamanian back up. Meanwhile, the others played Blackjack on the ship.
-Now, the crew is finally back on course. There are no new orders yet, but surely they will come soon…
+Now, the crew is finally back on course. There are no new orders yet, but surely they will come soon...
 </description>
 <code>ini</code>
 </embed>
@@ -952,7 +952,7 @@ _Morra puts on their finest suit, tailor-fitted to th- oh, Zion meant a space su
 
 **Michael** _(28-Jun-22 06:44 PM)_ [991489250652606626]
 
-↪ Brody: Morra puts on their finest suit, tailor fitted to th- oh you…
+↪ Brody: Morra puts on their finest suit, tailor fitted to th- oh you...
 
 > Seems everyone likes speaking to themselves...
 
@@ -1510,7 +1510,7 @@ _Zion shouts to the group._
 
 **Hunt520** _(28-Jun-22 07:03 PM)_ [991493983475879956]
 
-↪ Brody: How has your time with the crew been! I know my first days w…
+↪ Brody: How has your time with the crew been! I know my first days w...
 
 _Zach thinks about it..._
 
@@ -1596,7 +1596,7 @@ _Miny Seth says in a country accent._
 
 **Hunt520** _(28-Jun-22 07:06 PM)_ [991494761225662594]
 
-↪ Brody: Confused? What about? Could it be the crew dichotomy? or the…
+↪ Brody: Confused? What about? Could it be the crew dichotomy? or the...
 
 _Zach interrupts._
 
@@ -1708,7 +1708,7 @@ _Zion speaks into his comms._
 
 **Brody** _(28-Jun-22 07:10 PM)_ [991495742302728302]
 
-↪ Trey: MORRA. Give me some info on the Moldak. Do you know anything…
+↪ Trey: MORRA. Give me some info on the Moldak. Do you know anything...
 
 > I'm so glad you asked, friend! You see, Moldak has a confederation with a royal high council. they're known for their snobbish attitude to the natives, due to a feeling of royal superiority. They're also know for being very stubborn, only really listening to themselves. They push laws that, to my knowledge, focus on their own personal gain more than the wishes of their people. I met a ruler not to long ago, about 30 GUYs or so. I believe his son took his council seat.
 
@@ -1774,13 +1774,13 @@ _BOOM!_
 
 **Brody** _(28-Jun-22 07:12 PM)_ [991496362262802552]
 
-↪ Hunt520: interrupts "No, it's just... aren't you guys going to turn m…
+↪ Hunt520: interrupts "No, it's just... aren't you guys going to turn m...
 
 > Kidnapped? I suppose so. But it doesn't appear to be for nefarious reasons. Similar to our dear Fungorb, I believe you're a surprise adoption, so to speak.
 
 **Hunt520** _(28-Jun-22 07:12 PM)_ [991496411671699539]
 
-↪ Silas: Dutch butts in, sated by the cool air. Buddy, you work for u…
+↪ Silas: Dutch butts in, sated by the cool air. Buddy, you work for u...
 
 _Zach knows this response, so he just shrugs and moves on._
 
@@ -1800,7 +1800,7 @@ _The church and buildings near them collapse, and some people are hurt. No one d
 
 **Hunt520** _(28-Jun-22 07:13 PM)_ [991496599664611480]
 
-↪ Brody: Kidnapped? I suppose so. But it doesn't appear to be for nef…
+↪ Brody: Kidnapped? I suppose so. But it doesn't appear to be for nef...
 
 _Zach never heard this response, but he still shrugs._
 
@@ -1862,7 +1862,7 @@ _He huddles everyone right inside the lobby._
 
 **Hunt520** _(28-Jun-22 07:15 PM)_ [991497196551807037]
 
-↪ Trey: He huddles everyone right inside the lobby.  Okay everyone,…
+↪ Trey: He huddles everyone right inside the lobby.  Okay everyone,...
 
 _Zach gives a thumbs up._
 
@@ -2162,7 +2162,7 @@ _Ring ring, ring ring._
 
 **Hunt520** _(28-Jun-22 07:31 PM)_ [991501094901514260]
 
-↪ Trey: Remember guys, keep it cool and be respectful, otherwise we…
+↪ Trey: Remember guys, keep it cool and be respectful, otherwise we...
 
 > I think we made a bad impression already sir.
 
@@ -2226,7 +2226,7 @@ _Dutch puffs out his chest so much that he starts to lean backward while he walk
 
 **Hunt520** _(28-Jun-22 07:34 PM)_ [991501823888347167]
 
-↪ Trey: Let's approach, in that case. Everyone pretend like you're a…
+↪ Trey: Let's approach, in that case. Everyone pretend like you're a...
 
 > Kinda hard when half my face is hidden sir...
 
@@ -2379,7 +2379,7 @@ _Megah Seth takes his pants off, going fully commando._
 
 **Trey** _(28-Jun-22 07:40 PM)_ [991503320248234084]
 
-↪ Silas: In a perfect British accent Good day, sirs, my name is Baron…
+↪ Silas: In a perfect British accent Good day, sirs, my name is Baron...
 
 > `Neljis Boplily`: HMPH. This council is now in session, by authority of the High Klumkloren of Ceumi, yours truly, Neljis Boplily. State your purpose here, vermin.
 
@@ -2972,7 +2972,7 @@ _Bellow turns the corner just in time to see Dutch stuff something in his pocket
 
 **Hunt520** _(28-Jun-22 08:10 PM)_ [991510950442192998]
 
-↪ Jonas: Bellow hurries after Dutch, because something always goes wr…
+↪ Jonas: Bellow hurries after Dutch, because something always goes wr...
 
 _Zach follows Bellow, because he wants out of this situation._
 

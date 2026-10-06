@@ -3,9 +3,9 @@
 <embed>
 <description>
 Last episode, the recruits of Operation [EVENT HORIZON] gathered for the first time and were briefed on their mission. With a strange captain and an inimical pilot, the crew had an uneasy start to their adventure. After a bizarre few hours on the departing flight, involving massive turbulence and a surprise aquarium, the team landed on a space station in sector N-15.
-The crew has been there for a few hours, winding down, loosening up, and getting to know each other. Meanwhile, it seems Captain Llafay and Edmin have had some disagreement. I wonder where it will lead…?
+The crew has been there for a few hours, winding down, loosening up, and getting to know each other. Meanwhile, it seems Captain Llafay and Edmin have had some disagreement. I wonder where it will lead...?
 [MISSION CONTROL] has only given the crew coordinates for now, so it seems a follow-up task will be coming soon. In the meantime, there’s always the weekly salary to burn away, or perhaps even use on useful things. Fortunately, this [SPACE STATION] doesn’t seem to be in GU space, so the [LLAMANIAN TICKETS] will likely be an acceptable currency.
-All in all, the directive was very vague… What—or who—could the crew possibly need to find here?
+All in all, the directive was very vague... What—or who—could the crew possibly need to find here?
 </description>
 <code>ini</code>
 </embed>
@@ -15,11 +15,11 @@ All in all, the directive was very vague… What—or who—could the crew possi
 _The crew's hanging about the station. Captain Llafay is still at the ship, and no one has seen Llawdon for a while._
 
 **Trey** _(31-May-22 06:05 PM)_
-_`Llafay`: Llafay's voice blares over the crew's comms._
+_`Vec as Llafay Terrels`: Llafay's voice blares over the crew's comms._
 
 **Trey** _(31-May-22 06:05 PM)_ [981332541963395102]
 
-> `Llafay`: EDMIN KALVANZAS, REPORT TO THE SHIP IMMEDIATELY.
+> `Vec as Llafay Terrels`: EDMIN KALVANZAS, REPORT TO THE SHIP IMMEDIATELY.
 
 **Vortox** _(31-May-22 06:05 PM)_ [981332701493735504]
 
@@ -41,11 +41,11 @@ _Seth squints at the one-eyed stranger next to him._
 
 **Trey** _(31-May-22 06:07 PM)_ [981333202167812136]
 
-> `Llafay`: We've gotten a new order from mission control. There's two people on this station you all need to track down.
+> `Vec as Llafay Terrels`: We've gotten a new order from mission control. There's two people on this station you all need to track down.
 
 **Trey** _(31-May-22 06:07 PM)_ [981333224850612267]
 
-> `Llafay`: Recruits, I guess.
+> `Vec as Llafay Terrels`: Recruits, I guess.
 
 **Maxwell** _(31-May-22 06:08 PM)_ [981333301283397682]
 
@@ -69,7 +69,7 @@ _Seth taps the nametag that has his full name on it._
 
 **Trey** _(31-May-22 06:09 PM)_ [981333581190279208]
 
-> `Llafay`: Don't know. But that's your problem.
+> `Vec as Llafay Terrels`: Don't know. But that's your problem.
 
 **Sean** _(31-May-22 06:09 PM)_ [981333660827545630]
 
@@ -81,14 +81,14 @@ _Seth taps the nametag that has his full name on it._
 
 **Trey** _(31-May-22 06:10 PM)_ [981333816352309328]
 
-> `Llafay`: Keyword is "kraken", for some reason. Ask around if anyone recognizes that.
+> `Vec as Llafay Terrels`: Keyword is "kraken", for some reason. Ask around if anyone recognizes that.
 
 **Maxwell** _(31-May-22 06:10 PM)_ [981333879807938601]
 
 > Kraken.
 
 **Trey** _(31-May-22 06:10 PM)_ [981333890054631494]
-_`Llafay`: Llafay leaves the hull, leaving Edmin alone._
+_`Vec as Llafay Terrels`: Llafay leaves the hull, leaving Edmin alone._
 
 **Jonas** _(31-May-22 06:10 PM)_ [981333903673544734]
 
@@ -349,11 +349,11 @@ _Bellow and Zion look at the entrance area, seeing the massive crowd of people l
 > Ah.
 
 **Zander** _(31-May-22 06:20 PM)_ [981336480226082876]
-_`Llafay`: Llafay slumps over the bed he was resting upon, falling to the ground once again._
+_`Vec as Llafay Terrels`: Llafay slumps over the bed he was resting upon, falling to the ground once again._
 
 **Zander** _(31-May-22 06:21 PM)_ [981336550388420631]
 
-> `Llafay`: Need to write... note...
+> `Vec as Llafay Terrels`: Need to write... note...
 
 **Sean** _(31-May-22 06:20 PM)_ [981336504712462348]
 
@@ -450,7 +450,7 @@ _Zion, at the top of his lungs:_
 
 **Zander** _(31-May-22 06:24 PM)_ [981337453216534538]
 
-> `Llafay`: Damnit. Not enough time...
+> `Vec as Llafay Terrels`: Damnit. Not enough time...
 
 **Jonas** _(31-May-22 06:24 PM)_ [981337518249222194]
 
@@ -745,7 +745,7 @@ _Morra shakes the hands of their new crewmates, nodding._
 > Wait, Seth...?
 
 **Zander** _(31-May-22 06:35 PM)_ [981340204134711337]
-_`Llafay`: Llafay finishes writing the note and drags himself to the armory, grabbing an LR-grade blaster._
+_`Vec as Llafay Terrels`: Llafay finishes writing the note and drags himself to the armory, grabbing an LR-grade blaster._
 
 **Vortox** _(31-May-22 06:35 PM)_ [981340278239674409]
 
@@ -910,7 +910,7 @@ _Edmin pulls Dutch to his feet in a violently fast motion._
 </embed>
 
 **Zander** _(31-May-22 06:39 PM)_
-_`Llafay`: Llafay presses the blaster to his head and pulls the trigger._
+_`Vec as Llafay Terrels`: Llafay presses the blaster to his head and pulls the trigger._
 
 **Maxwell** _(31-May-22 06:39 PM)_ [981341299108093982]
 
@@ -982,7 +982,7 @@ _Dutch rubs his head._
 
 **Brody** _(31-May-22 06:41 PM)_ [981341791854919680]
 
-↪ Trey: That's very interesting. So your limbs are disconnected? Mag…
+↪ Trey: That's very interesting. So your limbs are disconnected? Mag...
 
 > Oh, apologies! Yes, it's a specific energy field my body releases. It allows my body parts to float independently of each other, but remain in a sort of "system," still functioning together.
 
@@ -1250,7 +1250,7 @@ _Zion, stunned, picks up the note on top of Llafay's body._
 
 **Zander** _(31-May-22 06:51 PM)_ [981344166506287124]
 
-`Llafay`:
+`Vec as Llafay Terrels`:
 <embed>
 <description>
 Zion,

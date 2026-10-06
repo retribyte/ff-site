@@ -212,10 +212,13 @@ def convert_file(md_file, meta, episode):
             if closing:
                 if closing.group(1) == "embed" and embed is not None:
                     embed_text = json.dumps(embed_json(embed), ensure_ascii=False)
+                    e_speaker, e_persona = split_persona(embed_speaker or character)
+                    e_speaker = NAME_ALIASES.get(e_speaker, e_speaker)
                     messages.append({
                         "player": player,
-                        "character": embed_speaker or character,
-                        "persona": None if embed_speaker else persona_timeline.resolve(character, embed_text),
+                        "character": e_speaker,
+                        "persona": e_persona if e_persona is not None else (
+                            None if embed_speaker else persona_timeline.resolve(e_speaker, embed_text)),
                         "timestamp": timestamp,
                         "type": "EMBED",
                         "text": embed_text,

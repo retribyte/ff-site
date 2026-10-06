@@ -2433,7 +2433,7 @@ _`Emmett`: Emmett hangs up._
 
 **Hunt520** _(05-Jul-22 08:05 PM)_ [994046358354927686]
 
-↪ Zander: Los: "But one day a tyrant from our species decided to kill…
+↪ Zander: Los: "But one day a tyrant from our species decided to kill...
 
 _Zach flinches at this information... but realizes they're not talking about who he was thinking about._
 
@@ -2616,7 +2616,7 @@ _Seth is immediately zapped._
 
 **Hunt520** _(05-Jul-22 08:12 PM)_ [994048285344018502]
 
-↪ Zander: Los: "Now with the hyperdrive, you guys are getting sent int…
+↪ Zander: Los: "Now with the hyperdrive, you guys are getting sent int...
 
 > And why are we going there?
 

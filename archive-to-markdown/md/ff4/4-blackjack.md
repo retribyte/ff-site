@@ -6,7 +6,7 @@ Last episode, the [HORIZONERS] had their first violent encounter. After breaking
 After their escapade, the [HORIZONERS] traveled to the other side of the [ARTIFICIAL MOON], needing to repair the ship. Bellow went shopping and operated on Dutch’s injuries. Zion and Edmin looked for repairs, meeting with a Llamanian agent who gave them their next task. All the while, Seth, Morra, and the strange fungus hung out alone.
 Later, once everyone had finished their business, the crew regrouped back at their newly-repaired ship. With the new coordinates sent in, they took off towards their new destination—[BARBONA], the ocean planet.
 The travel took a long time, and with the nonstop action tiring the crew out, everyone soon went to sleep. The autopilot landed the ship safely in the water, and it’s now floating perfectly on the planet’s ocean.
-It’s been a few days since the crew first touched down. With their ship not great for sailing, all they can do is roam around the empty oceans… but maybe today will be different! As a matter of fact, it looks like everyone’s waking up now…
+It’s been a few days since the crew first touched down. With their ship not great for sailing, all they can do is roam around the empty oceans... but maybe today will be different! As a matter of fact, it looks like everyone’s waking up now...
 </description>
 <code>ini</code>
 </embed>
@@ -2425,7 +2425,7 @@ _Zion gives Zach a hard look, and Zach shifts uneasily._
 
 **Hunt520** _(14-Jun-22 07:17 PM)_ [986424293267222528]
 
-↪ Trey: Loudspeaker: Go ahead Morra. I'm watching you from up here.…
+↪ Trey: Loudspeaker: Go ahead Morra. I'm watching you from up here....
 
 > I mostly am a fighter... but in terms of fetch quests I can be very thorough in searching.
 

@@ -2,10 +2,10 @@
 
 <embed>
 <description>
-Last episode, the [HORIZONERS] gathered at a space station to mingle and set out on their first task—retrieve two strange recruits, [SETH], a vulgar elf, and [MORRA], a curious golem. Boarding the ship, the group was shocked to discover that their [CAPTAIN] was dead! While Zion grieved over his supposed suicide, the others followed a trail all the way to… a small fungus?
+Last episode, the [HORIZONERS] gathered at a space station to mingle and set out on their first task—retrieve two strange recruits, [SETH], a vulgar elf, and [MORRA], a curious golem. Boarding the ship, the group was shocked to discover that their [CAPTAIN] was dead! While Zion grieved over his supposed suicide, the others followed a trail all the way to... a small fungus?
 With Dutch suddenly falling ill, Morra enamored by the fungal specimen, and Zion angered by their loss, the crew took off towards their assigned coordinates. Upon reaching orbit, they picked up a disoriented Seth on the planet below, and flew off towards its moon, their real destination.
 They found the artificial moon—the [KYL TRADE CENTER]—pillaged and littered with corpses. An unfamiliar ship was parked nearby, and before the crew knew it, they were being shot at! Where could this lead?
-Doesn’t seem like this enemy will relent… but who could the mysterious assailants be?
+Doesn’t seem like this enemy will relent... but who could the mysterious assailants be?
 </description>
 <code>ini</code>
 </embed>
@@ -1599,7 +1599,7 @@ _Slowly, Bellow points two of his pistols at the closest target, ready to strike
 
 **Vortox** _(07-Jun-22 09:11 PM)_ [983916227900608592]
 
-_The trio tries to get a good look at the figures…_
+_The trio tries to get a good look at the figures..._
 
 _They are each towering, covered in what looks like thick mech-style suits made of metal. Like the Space Marines from 40k, yeah._
 
@@ -2906,7 +2906,7 @@ _Zion listens attentively._
 
 **Jonas** _(07-Jun-22 10:05 PM)_ [983929842661748757]
 
-↪ Hunt520: Of course! What did your friend break if you don't mind me a…
+↪ Hunt520: Of course! What did your friend break if you don't mind me a...
 
 > Um... A rib.
 
@@ -2962,7 +2962,7 @@ _The elf raises an eyebrow._
 
 **Hunt520** _(07-Jun-22 10:08 PM)_ [983930514664734750]
 
-↪ Jonas: I just don't want him to be in pain...But yes, we are in a s…
+↪ Jonas: I just don't want him to be in pain...But yes, we are in a s...
 
 > Fair enough. I would help out friends as well. Now, how much are you willing to pay?
 
@@ -2998,7 +2998,7 @@ _People are walking in and out of the convenience store, a few glaring over at t
 
 **Hunt520** _(07-Jun-22 10:13 PM)_ [983931709298970664]
 
-↪ Jonas: Umm...I've got 100 tickets for myself. (About 100 bucks from…
+↪ Jonas: Umm...I've got 100 tickets for myself. (About 100 bucks from...
 
 _The elf looks at the tickets._
 

@@ -40,7 +40,12 @@ def parse(text):
 
 
 def find(blocks, key):
+    nth = None
+    if '#' in key:
+        key, _, n = key.partition('#'); nth = int(n)
     hits = [i for i, b in enumerate(blocks) if b['id'] and b['id'].endswith(key)]
+    if nth is not None and len(hits) >= nth:
+        return hits[nth - 1]   # KEY#2 = second block carrying that ID (duplicate-ID quirk)
     if len(hits) != 1:
         sys.exit(f'ID {key}: {len(hits)} matches')
     return hits[0]
