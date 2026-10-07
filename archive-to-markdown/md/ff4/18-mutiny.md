@@ -1206,6 +1206,10 @@ _Vec backs up._
 <footer>Jonas asked: "Does Bellow snore?"</footer>
 </embed>
 
+**Sean** _(01-Nov-22 09:12 PM)_ [1037187513095311420]
+
+> You're gay.
+
 **Hunt520** _(01-Nov-22 09:13 PM)_ [1037187556078518353]
 
 ↪ Trey: Zion hunches over, shielding Bellow.
@@ -1803,7 +1807,7 @@ _Bellow rubs the bruise on his face._
 
 **Silas** _(01-Nov-22 09:47 PM)_ [1037196186756599890]
 
-> We picked up that USELESS HAIRLESS APEX from a RANDOM OCEAN PLANET. HE'S DISPOSABLE. We HAVE to make a sacrifice.
+> We picked up that STUPID HAIRLESS APEX from a RANDOM OCEAN PLANET. HE'S DISPOSABLE. We HAVE to make a sacrifice.
 
 **Zander** _(01-Nov-22 09:47 PM)_ [1037196237599932486]
 
@@ -1865,7 +1869,7 @@ _Zion turns to Dutch._
 
 _Morra positions themself between Dutch and Zion._
 
-> That "Useless Hairless Apex" is just as disposable as any of us. He's a member of our crew, and it isn't worth losing him over an issue you have with Vec.
+> That "Stupid Hairless Apex" is just as disposable as any of us. He's a member of our crew, and it isn't worth losing him over an issue you have with Vec.
 
 **Zander** _(01-Nov-22 09:49 PM)_ [1037196717642231818]
 
@@ -3575,6 +3579,10 @@ _Zion turns to Zach._
 
 > They HIRED us to get it, Bellow! You applied—Dutch applied—to this team, to come and retrieve the artifact, that's our job! That's the ONLY THING we're here for, we're here on behalf of the Republic!
 
+**Sean** _(01-Nov-22 10:48 PM)_ [1037211647669981264]
+
+> Gay.
+
 **Jonas** _(01-Nov-22 10:48 PM)_ [1037211647984537600]
 
 ↪ Trey: Of course our mission is to help win the war! Why the hell e…
@@ -3860,7 +3868,7 @@ _Seth puts his communicator back up to his ear._
 
 > `Emmett`: Stay safe, man.
 
-**Sean** _(01-Nov-22 10:57 PM)_ 
+**Sean** _(01-Nov-22 10:57 PM)_
 
 _Seth hangs up the phone._
 
@@ -4018,7 +4026,7 @@ _Zion gets up in Zach's face and jams his pointer finger against his chest._
 <footer>Trey asked: "Does Zion pick up Zach by the front of the hood?"</footer>
 </embed>
 
-**Trey** _(01-Nov-22 11:04 PM)_ 
+**Trey** _(01-Nov-22 11:04 PM)_
 
 _Zion grabs Zach by the front of his hoodie and lifts him up._
 

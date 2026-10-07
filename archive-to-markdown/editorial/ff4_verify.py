@@ -133,6 +133,8 @@ for mid, items in raw_e.items():
             asker = re.match(r'^(.*?) asked: "', g.get('footer', ''))
             if g.get('footer', '').startswith('The choices were: '):
                 continue  # /choose has no asker; footer stays verbatim
+            if g.get('footer') == e.get('footer') and ' asked: "' not in e['footer']:
+                continue  # non-8ball footer (combat, /flip, /choose) kept verbatim
             if not asker or asker.group(1) not in players:
                 print('EMBED FOOTER', mid, repr(g.get('footer'))[:70])
         if cmd != gcmd:

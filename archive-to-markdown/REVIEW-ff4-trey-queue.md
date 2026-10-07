@@ -222,14 +222,14 @@ these are the borderline ones:
 - [ ] New NPC tags `Paramedic` and `Hanzi`. Right?
 
 ## Ep 18 (Mutiny)
-- [ ] Persona: all Vec lines stay `as Argonian` (125), even after Vec pops out of the Argonian (block 415484) and as tiny Vec. Fix the later ones to plain Vec? Right?
+- ✅ (Trey, ep 21 ruling "no host, just Vec": Argonian now ends at "husks as Vec pops out of him", 16 of 126 lines; re-imported) Persona: all Vec lines stay `as Argonian` (125), even after Vec pops out of the Argonian (block 415484) and as tiny Vec. Fix the later ones to plain Vec? Right?
 - [ ] 8ball 414659 keeps "Yes, and forever again for the rest of the episode." verbatim; the Zander/Trey "forever" clarifications (971241, 645982) were cut. OK?
 - [ ] Zander's "Llashii over intercoms" tag was changed to `Llashii`, plus an added action "Llashii's voice crackles over the intercom." (before 799067). Keep?
 - [ ] 130708 Trey's bare "Pushes Bellow, is distracted" became `_Zach pushes Bellow away, distracted._` tagged Zach. Right?
 - [ ] 799067 Trey's question "is Hanzi scrambling about...?" became a Vortox action "Hanzi is scrambling about with papers all over the walls." Right?
 - [ ] 745842 "Morra's communicator rings. It's you know who. Is it the time to answer?" became `Morra`-tagged "Morra's communicator rings." Right?
-- [ ] "gay" insult lines cut (981264 Seth, 311420 "ur gay"). OK to cut?
-- [ ] Slur swaps: "STUPID HAIRLESS APEX" -> "USELESS HAIRLESS APEX" (599890, 399794); Seth's "retard" -> "stupidloid" (918258). Right?
+- [x] "gay" insult lines cut (981264 Seth, 311420 "ur gay"). OK to cut? - do not cut ✅ Applied: Restored both as Seth dialogue ("You're gay.", "Gay.").
+- [x] Slur swaps: "STUPID HAIRLESS APEX" -> "USELESS HAIRLESS APEX" (599890, 399794); Seth's "retard" -> "stupidloid" (918258). Right? - STUPID IS NOT A SLUR ✅ Applied: Reverted to "STUPID HAIRLESS APEX" / "Stupid Hairless Apex"; "stupidloid" for "retard" kept.
 - [ ] 8ball 309130 (Seth flies to the lab, "Yes!") has no outcome shown. Keep or cut?
 - [ ] Cut 223454 "The number 35 splatters on the wall nearby." (unclear Zander line) and 070121 "IT'S LIKE EPISODE 11." OK?
 - [ ] Cut 586526 Trey's `Morra`: "M-I-C-K-E-Y!" (Mickey Mouse gag). OK?
@@ -238,7 +238,7 @@ these are the borderline ones:
 - [ ] Kept 8ball "Only if Dutch would do it." (437649) and cut "Only if Bellow would do it." (810812, no outcome). OK?
 
 ## Ep 19 (Rumble Baby)
-- [ ] Vec keeps persona `Argonian` (105 lines) through the end, including after Vec pops out of the Argonian (049266, last scene), per the timeline. Right?
+- ✅ (same ruling: Argonian from the top of ep 19 until 049266; the pop-out line and after are plain Vec, 103 of 105; re-imported) Vec keeps persona `Argonian` (105 lines) through the end, including after Vec pops out of the Argonian (049266, last scene), per the timeline. Right?
 - [ ] 8 attribution calls: Vortox for the Ravens' attacks (922876, 961286, 096828, 563058, 169438, 945455, 348979, 572767, 159296) and dwarf rulings (353823 "The dwarves shrink over time...", 972245 "They exist for an hour and swarm Seth."); Seth for 222164/504852 (anaphrodisiac, taser); Odran for 868456 "Odran flies out into space!". Right?
 - [ ] Seth's/Zander's dwarf narration tagged `Dwarves`/`Dwarf` (289874, 297138, 237888, 396800, 619964, 917104) as new NPC characters. Keep?
 - [ ] Brody's italic voice was converted to `Sanya` dialogue (908234 "You squander my gift so easily?...", 238963 "The only reason you need is Vengeance..."). Right that this is Sanya/Dread?
@@ -249,4 +249,68 @@ these are the borderline ones:
 - [ ] Bare 011152 became Zion's action "Instead, Zion goes back upstairs to see Hanzi." (Hanzi 8ball). Right?
 - [ ] Rewrites: 174568 ("I don't... care... Didn't... ask."), 090620 ("Code Scarlet and Code Dwarf? What a..."), 641034 (halberd "from his asshole" dropped). OK?
 - [ ] Odran's sudden "Oh shit!" (355852, Trey, untagged so Zion) may be Odran. Right as Zion?
-- [ ] Kept /combat start and stop embeds (837565, 379562) and the Dutch heal/reset/damage trio (478565, 522130, 781214). Keep?
+- [x] Kept /combat start and stop embeds (837565, 379562) and the Dutch heal/reset/damage trio (478565, 522130, 781214). Keep? - no, cut ✅ Applied: Cut all five embeds; Dutch's HP now reads 1/25, then 21/25.
+
+## Ep 20 (Event Horizon)
+- ✅ (same ruling: the mercenary is not a host; all ep 20 Vec lines plain Vec; re-imported) Vec is a mercenary-body host in the first half (212242-682447) but carries persona `Argonian` by the timeline (11 msgs); same open question as eps 18-19. Should those be `Vec as Mercenary` or no persona?
+- [ ] Sean's ambient black-hole/Elf Heaven narration (251648, 679978, 180925, 774002, 922760, 328458, 473044, 034438), Trey's 752296/388073 and 016276 (Morra's body dents the ceiling), and Seth's "Space Rule #591" (853598) were moved to Vortox as GM narration. Right?
+- [ ] Emmett-tagged Zander actions (e.g. 314070 "Emmett takes a second to pick up", 183421, 814110, 596564, 224050, 345438, 782800, 487380, 923324, 310174, 550603, 392218) now `Emmett`; 985321 (snotball on Seth's poster) tagged `Seth`; 662568 (Morra's body barreling) tagged `Morra`; 772244 (Hunt520's bare blaster-jammed 8ball outcome) tagged `Bellow`. Right?
+- [ ] 363752 (bare Zander "Roll to see if Pauline goes off accidentally") became Vortox "Dutch must roll to see whether Pauline goes off accidentally." Right?
+- [ ] Added a Silas action after 561099: "Dutch catches Zach by surprise and pins him to the ground." (wrestling 8ball outcome, answer "Only if Garrick would do it."). Keep?
+- [ ] Cut 8balls: 937562, 230111, 708315, 755250, 559455 ("No moment.", Zion sets up comms anyway), 380806. Right?
+- [ ] 946186 8ball reworded to "Is Bellow filled with determination?" (dropped the saving-progress joke); outcome 772244 kept. OK?
+- [ ] Kept gags where the fiction reacts: Seth shower turd (Dutch), muscles jiggle (Bellow), snotball, Griddy/breakdance, 500 wine bottles (561439), Dutch kissing Pauline + beheaded mercenary (674129), Morra duplicating, Seth's ball-lump (510313). Keep?
+- [x] Cut gags: cam-site/holo-tv (265034, 915841), Dutch jumping jacks/"Mario World" (542015 action, 563354, 373948), Zion "thirteen inch" (675989), cute-or-sexy meter (983454, 638541), belches (560094, 375579), "cum monster", Peter Griffin (235394), "Deecol deecol" (694538, unclear who/why). Right? - Don't cut 265034, 915841. ✅ Applied: Restored 265034 (Seth hops onto a cam site) and 915841 ("Oh yeah, shake it, you four-legged toad.").
+- [ ] Attachments cut: 652167 FcYCEbFacAMsNcl.png (Trey 09:38), 438258 image.png (Trey 10:18), 521054 Dutch-Drawing-Head.png (Silas 10:54), 559262 922.png (Trey 10:55), 465532 image.png (Jonas 11:34), 525979 Goat_couple.webp (Zander 11:40), 439194 tumblr jpg (Zander 11:44), 943976 Tails.webp (Zander 11:44). Any matter?
+- [ ] 788658 (Dutch "Verinian Ale is 37% Alcohol Content") and 911120 (Zander "Similar to Squis") cut as OOC; the Ale's strength could matter. Right?
+- [ ] Rewrites: 278366 (Bellow "moves over to the cockpit"), 493979 ("Bellow and Zach go to another room"), 308008 ("Zion and Morra recommune with Dutch"), 204975 (Dutch punches Zion's shoulder), 1868-area "Zion puts his hand on Morra's shoulder, or whatever passes for one", 926592 chant kept as "Lorem ipsum dolor sit amet" x2. OK?
+- [ ] Kept `✂`: 887740, 854835, 551744, 560154, 302742, 902376, 040473, 066980, 997998, 823238, 543242, 845172, 478730, 915038, 761247, 223560, 321627, 314631, 360479, 582303, 177320, 091392, 000976, 743390, 638906, 969021, 167169, 224883, 227954, 035785, 989877, 065499, 459142, 359872, 769035, 598750, 605160, 460490. Fine?
+- [ ] Anachronisms: "Hannah Montana poster" (985321), "SPONGEBOB" (729903), "Griddy" (047390), "USB slot" (047741), "sussy" (434816, swapped to "shifty"), the "Palestinians" joke (278420) and "Earthican" geopolitics, "America" (603338), Dutch's "final frontier 4" / "the first 3 final frontiers" meta (597737, 181140). Swap any?
+- [ ] 8ball answer "Yigga." (256667) kept verbatim; "pussies" (076260) left. OK?
+- [ ] Leftover merge hits at 45s left as split: 53, 649, 874/886, 1411 (slap causes "Ow."), 1513, 1587, 3157, 3998, 4338. Fine?
+
+## Ep 21 (Welcome To Elf Heaven)
+- [ ] NPC naming: new characters `Fuglestein`, `Slumdweller`, `Suburban Elf`, `Elf Guard`, `Squoatling`, `Winged Dwarf` (created as Zander, Unclassified). Right?
+- [ ] Frechelsi (old woman covered in elf ears, 189002 scene) and the advisor who greets Sethkinki (227530 onward, "Frechelsi, where is the rival...") are tagged as one NPC, and the ex-wife is `Goddess of Death`. Right, or is the wife Frechelsi?
+- [ ] 984670 (Trey, "Morra's body disappears right in front of Zach's eyes") rewritten to "disappears from wherever it was" as Vortox, since Zach is not in the episode. Right?
+- [ ] 856922 (Brody "I always thought you were lying about yourself...") kept despite `✂` because "But no." reacts to it. Keep?
+- ✅ Restored: /flip embed 739274 (heads) after the "Flip a coin to find out" 8ball (advisor; the verifier was over-strict).
+- [x] 760829 8ball reworded from "blast the FUCK outta these goblins" to "finally snap at the goblins". Right? - completely unnecessary ✅ Applied: question restored to "Does Morra blast the FUCK outta these goblins?"; brief now says not to tone down profanity.
+- [ ] Anachronisms: "experience orbs in Minecraft" (712455), "90's power rangers" (972517), "WOULD YOU KINDLY" (316672), "gigachad" (890906). Swaps?
+- [x] "stupid" swapped to "dumb" (491631, 250896) per slur rule. Right? - stupid is not a slur, wtf? ✅ Applied: both reverted to "stupid"; brief now says stupid/dumb are not slurs.
+- [ ] Kept crude gags (handjob "good deed" 017951, cum-flood kill 950501/199110, air-humping 695902/671228/150154). Keep?
+- [x] Vec speaks no lines this ep and has no persona; still no answer on whether Vec is Argonian or a mercenary host (eps 18-20). Open? - no host, just Vec ✅ Applied to eps 18-20 via meta personaTimeline (see those items).
+
+## Ep 22 (Usurper)
+- [ ] 363146: Trey's bare "Yes, but they have to use Morra's phone" became a Vortox beat ("Someone on the ship knows Emmett's number, but they have to use Morra's phone."); 675380 likewise ("Zach gains a newfound confidence, and he loves the elf ears."). Right?
+- [ ] Zander lines tagged to NPCs: Giant (980836, 324862, 850792, 209642, 388060, 727016, 820958, 545118; Trey's 593235, 488410, 811797), Emmett and Squorchy phone beats (228072, 931264, 276414, 486814), Messenger (429299; Trey's 470898, 467520, 639373, 441158), Seth (517796 "I DID IT!"), Zach (013432 "fake fake ears jingle"). Right?
+- [ ] Vortox beats from Trey/Zander: 168597 "Poof!", 814766 (Zach pink, spectre), 919814 (ground shakes), 509131, 004486, 328272, 369273, 472114. Right?
+- [ ] 8balls cut as gags: 116005 (eyelids), 399111 (brap loud), 937473 (monocle). Right?
+- [ ] 162802: 8ball "It's opposite day! No." while the ground shakes; kept verbatim, played as yes. Keep?
+- [ ] Added Zion beat after 630278: "Zion picks up Zach and plants him in front of Dutch." Keep?
+- [ ] Kept `✂` 319320 (Zion "No, Seth was more prepared than that...") and 515974 (Zach "I swear to God... start stabbing"). Keep?
+- [ ] Cut "Elf Bible 2 / Super-Quran" jokes (478643, 227675, 161490) and "dee nu" (389009), "pingor" (617429). Right?
+- [x] Anachronisms: "Jesus Captain!" (484289, suggest "Gods, Captain!"), "like a Mii" (488410, suggest "like a puppet"). Swap? - change to Gods, puppet ✅ Applied: 484289 -> "Gods, Captain!"; 488410 -> "like a puppet".
+- [ ] Zander's bare "Klek'li'more" (606003) cut; intercom 886046 gives the city name. Right?
+- [ ] Vec is absent all episode (no persona/timeline lines). Anything to add?
+
+## Ep 23 (Finale)
+- [ ] Vec is in an unnamed Llamanian body from 8ball 362826 on; Zion names it "Commander Llorpus" (871228, 913769 "Llorpus begins to emit spores", 037332 "Llorpus's right shoulder"). I left Vec with no persona (tagged `Vec` only on 037332). Should Llorpus be a `Vec as Llorpus` persona instead?
+- [ ] GM attributions: Trey's bare "Zach's arm is sliced clean off!" (906152) and Seth/desert-eagle lines (206848, 747920) tagged to Zach/Seth; Zander's "6,000 ships" ruling (726578) retyped as a Seth action; Zander's Dutch outcomes 247838, 286491; Ravens Leader / Enemy A-D action lines tagged to those NPCs (e.g. 535946, 465705, 420574, 435648, 946930). Right?
+- [ ] Hunt520/Jonas lines retagged as NPCs: Jack Madison 705995 ("Is he alive?"), Chomsky 911134, 959592, 016765, 050527, 355412. Right?
+- [ ] Vortox beats converted from Trey/Zander narration: 011921, 422622, 035146, 612992/096084 (helmet reveal), 882344 (timeskip), 337793, and Space Rules 321280, 867648, 794955, 023636, 640360 plus "Vec Rule #2" 081916 as Vortox plain text. Keep?
+- [ ] New NPC characters created: Trenchcoat Kids (532584, 628850), Enemy A, Enemy B, Enemy C (Enemy D existed). Right?
+- [ ] 8ball questions reworded: "duplicate?" -> "Does Morra duplicate?" (030282, 406706, 769778), 528896 (dropped "if dms allow it"), plus case/punctuation fixes on 953075, 683260, 275009, 288704, 846790, 928616, 565490, 239912, 554792. Keep?
+- [ ] Cut 8balls with no outcome or only a gag: 711346, 182633, 882536, 731516, 500864, 199252, 261895, 585980, 756352, 042047, 825938, 547496. Right?
+- [ ] Cut mechanics embeds: /quote 095573, /episode mode 971216 and 031017, /list 973136, /weapon add 416832, d50 /roll 597185, initiative /rolls (774053, 820928, 440468, 946961, 491058), missed plasma cannon 125032. Right?
+- [ ] Kept /flip 910602 (Trey, Tails) though its question message is missing, and kept 8ball 138823 + /choose 356264 ("arm") as foreshadowing for Zach's arm (906152). Keep?
+- [ ] Kept joke-answer 8balls verbatim: 895154 (phone number, played as Jack calling), 237969 (Chris Chan bible), 528896 (garbled "(No)"), 989436 ("Y Word."). Keep?
+- [x] Fake flavor cut: Family Guy / GU Bank (991548, 870602), fart gag (303391, 939935, 367474, 009610), Dutch-petting pile-on (740938, 509097, 161472, 901993, 314249, 818570), twerking (745790), fortnite dance (671642), armpit tickle (750250), Cleaveland Brown (458320), "Private Llachii asleep" (552020), plus the list in the handoff. Right? - leave petting dutch, if it was responded to by all players ✅ Applied: Every player joins the petting, so the scene is restored (818570, 740938, 509097, 161472, 901993, 314249; Morra's two halves grouped).
+- [ ] Kept gags: elevator buttons, trench-coat kids, Vec melting/tooth throwing, Morrachu medallion (054730; kept ✂ 925810, 912970), XP orbs (463060), anime pose (917801). Keep?
+- [ ] Cut attachments: 281971 (`dutch.png`), 510132 (`AD.png`), 970984 (`image.png`), 722506 (`image.png`), 600542 (`there_he_goes.webm`), 447932 (`lla_mothership.png`), plus links 350568, 936125, 163669, 098616, 725821, 495390, 097961, 837333, 659468, 089876, 105010, 375474. Right?
+- [ ] Unclear rewrites: 722232 (Bellow "do the funny" -> takes the controls), 038046 ("the fingle" -> "Vec"), 980928 (bare "QUADRUPLE CANNON POWER RANGER ATTACK!" -> Vec dialogue), 302963 ("Oh thank God"), Zach's silent-mind lines to Sanya (657990, 971281, 234580, 803516, 291840, 359360, 606131), 516246 ("That was a mistake"). Right?
+- [ ] Kept `✂` lines (full list in the handoff), notably 528465 (Zach "what the hell was that?"), 011921 (pod travels back), 825760 (Llashii "You're cleared"), 726578, 154792, 763113, 612992. Keep?
+- [ ] Anachronisms: "Chris Chan bible" (237969), "Prepare for Trouble! And make it Double!" (101952, suggest "Brace for impact! And make it double!"), "HOLY SPACE SHUTTLE BATMAN" (310854), "POWER RANGER" (980928), "gigachad chin" (596168), "Morrachu"/"Arcane" (054730), "Ludicrous Speed" (903239). Swap?
+- [ ] Insults left as typed: "DUTCHALOID" (454471), "pussy bitch redsuit" (347678), "stupid ass" (312292), "Shitaloid" (900746). Leave?
+- [ ] Leftover merge hits at 45s left on purpose (reply chains and cause-then-effect dmg/roll sequences; list in the handoff), including 8ball 406706's outcome being Vec's mist (346079). Right?
+- ✅ (advisor) 4691 `Sethkinki`: "Heard you needed some help!" keeps the raw tag, so it imports as the separate DB character `Sethkinki`, while ep 22 tags the same God-of-Death Seth as `Seth`. Retag to `Seth`, or keep it separate? Trey: Seth gets a `Sethkinki` persona for every message after he is named in ep 21. Applied: persona row 27, timeline anchor "Seth's chin has become more gigachad" (ep 21, 365407), 4691 retagged `Seth`; eps 21-23 re-imported (17/3/39 messages).

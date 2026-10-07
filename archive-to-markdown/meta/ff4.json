@@ -63,7 +63,12 @@
             { "from_episode": 5, "persona": "Fungus", "anchor_contains": "Fursean falls apart" },
             { "from_episode": 11, "persona": null },
             { "from_episode": 17, "persona": "Argonian", "anchor_contains": "An Argonian in a parka appears" },
-            { "from_episode": 20, "persona": null, "anchor_contains": "fell back, slamming into the side of the sofa" }
+            { "from_episode": 18, "persona": null, "anchor_contains": "husks as Vec pops out of him" },
+            { "from_episode": 19, "persona": "Argonian" },
+            { "from_episode": 19, "persona": null, "anchor_contains": "Vec pops out of the argonian and throws the body" }
+        ],
+        "Seth Im'Kin'ki": [
+            { "from_episode": 21, "persona": "Sethkinki", "anchor_contains": "Seth's chin has become more gigachad" }
         ]
     },
     "episodes": [

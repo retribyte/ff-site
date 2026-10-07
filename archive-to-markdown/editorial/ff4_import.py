@@ -23,7 +23,7 @@ print('delete',call('/episodes/'+urllib.parse.quote(title),'DELETE',tok=tok))
 users={u['username']:u['id'] for u in call('/users',tok=tok)['data']}
 chars={c['name']:c['id'] for c in call('/characters?limit=5000',tok=tok)['data']} if True else {}
 print(len(chars))
-ALIAS = {'Squi': 'Squina', 'Edmin Kalvanzas': 'Edmin'}
+ALIAS = {'Squi': 'Squina', 'Edmin Kalvanzas': 'Edmin', 'GU News': 'GU News reporter'}
 alias=ALIAS
 print('ep',call('/episodes','POST',{'title':title,'seasonTitle':d['seasonTitle'],'episode_no':d['episode']['episode_no'],'playedDate':d['episode']['playedDate']},tok))
 rows=[]

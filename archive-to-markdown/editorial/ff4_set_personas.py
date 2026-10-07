@@ -15,9 +15,10 @@ path = glob.glob(f'api/ff4/{n}-*.json')[0]
 d = json.load(open(path))
 title = d['episode']['title'].replace("'", "''")
 psql = ['docker', 'exec', '-i', 'ff-server-db-1', 'psql', '-U', 'vortox', '-d', 'final-frontier', '-At']
-CHARS = {'Vec': 1961, 'Buzzcut': 1709}
+CHARS = {'Vec': 1961, 'Buzzcut': 1709, "Seth Im'Kin'ki": 1920}
 pid = {('Vec', 'Suchan'): 14, ('Vec', 'Llafay Terrels'): 7, ('Vec', 'Drowned Llamanian'): 13, ('Vec', 'Fursean'): 9, ('Vec', 'Fungus'): 8,
-       ('Vec', 'Fungo'): 8, ('Vec', 'Marv'): 10, ('Vec', 'Sascha'): 11, ('Vec', 'John Smith IV'): 25, ('Vec', 'Argonian'): 26, ('Buzzcut', 'Bee Emmett'): 12}
+       ('Vec', 'Fungo'): 8, ('Vec', 'Marv'): 10, ('Vec', 'Sascha'): 11, ('Vec', 'John Smith IV'): 25, ('Vec', 'Argonian'): 26, ('Buzzcut', 'Bee Emmett'): 12,
+       ("Seth Im'Kin'ki", 'Sethkinki'): 27}
 by = {}
 for ch, cid in CHARS.items():
     per = [m.get('persona') for m in d['messages'] if m.get('character') == ch]

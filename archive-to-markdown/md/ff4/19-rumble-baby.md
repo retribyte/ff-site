@@ -2665,16 +2665,6 @@ _Seth grabs his pistol._
 
 > I assure you, this will not go well.
 
-**Vortox** _(15-Nov-22 10:11 PM)_ [1042290732242837565]
-
-⌘ Sean used /combat start
-
-<embed>
-<title>Starting Combat</title>
-<description>Seth started combat!</description>
-<footer>Sean ⚔ initiated a combat sequence.</footer>
-</embed>
-
 **Hunt520** _(15-Nov-22 10:11 PM)_ [1042290782700326922]
 
 > God damn it...
@@ -3585,51 +3575,6 @@ Odran has `(279/300)` hp.
 **Jonas** _(15-Nov-22 11:14 PM)_ [1042306588825894952]
 
 > What happened before can wait! Right know we're fighting a common enemy!
-
-**Vortox** _(15-Nov-22 11:14 PM)_ [1042306733164478565]
-
-⌘ Zander used /dmg roll
-
-<embed>
-<title>Healing Dutch</title>
-<description>
-Rolling `-20`...
-Dutch is healed for `20` damage!
-Dutch takes `-20` damage.
-Dutch has `(29/25)` hp.
-</description>
-<footer>Zander (Vec) healed Dutch.</footer>
-<color>#50C878</color>
-</embed>
-
-**Vortox** _(15-Nov-22 11:15 PM)_ [1042306777611522130]
-
-⌘ Trey used /reset
-
-<embed>
-<title>Resetting Dutch</title>
-<description>
-Dutch was reset!
-Dutch now has `(25/25)` hp.
-</description>
-<footer>Trey (Zion) 🎱 reset Dutch.</footer>
-</embed>
-
-**Vortox** _(15-Nov-22 11:15 PM)_ [1042306841922781214]
-
-⌘ Zander used /dmg roll
-
-<embed>
-<title>Damaging Dutch</title>
-<description>
-Rolling `5`...
-The roll hits for `5` damage!
-Dutch takes `5` damage.
-Dutch has `(20/25)` hp.
-</description>
-<footer>Zander (Vec) damaged Dutch.</footer>
-<color>#50C878</color>
-</embed>
 
 **Vortox** _(15-Nov-22 11:16 PM)_ [1042307075943964702]
 
@@ -4589,13 +4534,3 @@ Space Rule #5753: Once a fungi, always a fun guy.
 **Vortox** _(16-Nov-22 12:00 AM)_ [1042318129713381376]
 
 Space Rule #919: Don't ignore the rumble, baby.
-
-**Vortox** _(16-Nov-22 12:01 AM)_ [1042318371544379562]
-
-⌘ Zander used /combat stop
-
-<embed>
-<title>Stopping Combat</title>
-<description>Stopped the combat sequence.</description>
-<footer>Zander (Vec) stopped the current combat sequence</footer>
-</embed>
