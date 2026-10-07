@@ -2817,7 +2817,7 @@ _Seth and Emmett high-five and grip each other's hands._
 
 **PlasmaPerson** _(19-Aug-18 03:53 PM)_
 
-_Chomsky drops his weapon in pure shock at Emmett's powerful weapon actually hitting its intended target._
+_`Chomsky`: Chomsky drops his weapon in pure shock at Emmett's powerful weapon actually hitting its intended target._
 
 > `Chomsky`: Kyle, get back!
 
