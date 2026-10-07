@@ -43,6 +43,14 @@ _`Seth`: Seth sounds like a goblin, his least favorite species from his planet._
 <footer>Brody (Morra) wanted a choice.</footer>
 </embed>
 
+**Brody** _(13-Dec-22 03:27 PM)_ [1052336061818347541]
+
+_A second head appears on Seth's back._
+
+**Brody** _(13-Dec-22 03:28 PM)_ [1052336162443907072]
+
+> Oh, delightful.
+
 **Sean** _(13-Dec-22 03:26 PM)_ [1052335823493804103]
 
 _Seth places his toe in his ear and hops around like a fish._
@@ -60,14 +68,6 @@ _Seth places his toe in his ear and hops around like a fish._
 <description>Es-yay.</description>
 <footer>Sean asked: "Does the party arrive at a slum in Elf Heaven?"</footer>
 </embed>
-
-**Brody** _(13-Dec-22 03:27 PM)_ [1052336061818347541]
-
-_A second head appears on Seth's back._
-
-**Brody** _(13-Dec-22 03:28 PM)_ [1052336162443907072]
-
-> Oh, delightful.
 
 **Zander** _(13-Dec-22 03:28 PM)_ [1052336250901758002]
 
@@ -319,6 +319,10 @@ _More people start to surround Seth, having noticed Fuglestein's freedom. They a
 _Seth pulls out a giant scary mask and screams at Vec._
 > Booga booga booga!
 
+**Zander** _(13-Dec-22 03:46 PM)_ [1052340662621712414]
+
+_Vec drops the plywood and jumps from the mask._
+
 **Zander** _(13-Dec-22 03:45 PM)_ [1052340520766156821]
 
 > `Slumdweller`: FREE US, GREAT ONE!
@@ -330,10 +334,6 @@ _Seth pulls out a giant scary mask and screams at Vec._
 **Sean** _(13-Dec-22 03:46 PM)_ [1052340666241404960]
 
 > 1 good deed to get cleansed.
-
-**Zander** _(13-Dec-22 03:46 PM)_ [1052340662621712414]
-
-_Vec drops the plywood and jumps from the mask._
 
 **Vortox** _(13-Dec-22 03:46 PM)_ [1052340750131679272]
 
@@ -507,6 +507,10 @@ _Vec grabs the elevator, and holds it in place to save Seth. Begrudgingly, of co
 
 > Pardon me, would you happen to be the Elven Deity of the Dead?
 
+**Sean** _(13-Dec-22 03:55 PM)_ [1052343034521600100]
+
+> That's her, my bitch of an ex-wife.
+
 **Sean** _(13-Dec-22 03:55 PM)_ [1052342919790612520]
 
 _Seth pulls out his gun and blasts a hole into the elevator, the orbs scatter._
@@ -518,10 +522,6 @@ _KAPOW!_
 **Vortox** _(13-Dec-22 03:55 PM)_ [1052343026414010438]
 
 _The crowd gasps loudly at the sight of the desert eagle._
-
-**Sean** _(13-Dec-22 03:55 PM)_ [1052343034521600100]
-
-> That's her, my bitch of an ex-wife.
 
 **Zander** _(13-Dec-22 03:55 PM)_ [1052343109683523664]
 
@@ -815,6 +815,20 @@ _Vec turns around, bringing Morra's head away from the object in question uninte
 
 _Morra attempts to wormhole... their own body back to them!_
 
+**Zander** _(13-Dec-22 04:16 PM)_ [1052348395362201701]
+
+↪ Brody: Morra attempts to wormhole... their own body back to them!
+
+_`Morra`: The retrieval is successful! However, it slingshots into the wormhole due to a reverse vacuum effect from the black hole. So Morra's head is slammed into._
+
+**Brody** _(13-Dec-22 04:17 PM)_ [1052348461862891520]
+
+> Ow.
+
+**Vortox** _(13-Dec-22 04:17 PM)_ [1052348509807984670]
+
+_Morra's body disappears from wherever it was._
+
 **Vortox** _(13-Dec-22 04:15 PM)_ [1052347988657315881]
 
 ⌘ Sean used /8ball
@@ -846,20 +860,6 @@ _Seth climbs the ladder and gets over the gate._
 **Brody** _(13-Dec-22 04:16 PM)_ [1052348390844923925]
 
 > Now, let's see what that item is.
-
-**Zander** _(13-Dec-22 04:16 PM)_ [1052348395362201701]
-
-↪ Brody: Morra attempts to wormhole... their own body back to them!
-
-_`Morra`: The retrieval is successful! However, it slingshots into the wormhole due to a reverse vacuum effect from the black hole. So Morra's head is slammed into._
-
-**Brody** _(13-Dec-22 04:17 PM)_ [1052348461862891520]
-
-> Ow.
-
-**Vortox** _(13-Dec-22 04:17 PM)_ [1052348509807984670]
-
-_Morra's body disappears from wherever it was._
 
 **Zander** _(13-Dec-22 04:17 PM)_ [1052348515533205505]
 
@@ -910,6 +910,10 @@ _Vec jumps into the pod._
 
 > Is that a hot dog?
 
+**Zander** _(13-Dec-22 04:20 PM)_ [1052349413252677673]
+
+_Vec grabs the hot dog in a bottle and shakes it madly._
+
 **Sean** _(13-Dec-22 04:20 PM)_ [1052349320545980437]
 
 _Seth cocks his gun._
@@ -921,10 +925,6 @@ _Seth cocks his gun._
 **Sean** _(13-Dec-22 04:21 PM)_ [1052349488297148476]
 
 _Seth walks up to the door, the elves block the doors with their halberds._
-
-**Zander** _(13-Dec-22 04:20 PM)_ [1052349413252677673]
-
-_Vec grabs the hot dog in a bottle and shakes it madly._
 
 **Vortox** _(13-Dec-22 04:21 PM)_ [1052349454495256616]
 
@@ -1090,6 +1090,12 @@ _`Goblin`: A grotesque goblin man appears from the depths of the forest and scre
 
 > `Goblin`: AAHAHYHAHAHAHAHAHAHYJAGGHJHAAHA!
 
+**Zander** _(13-Dec-22 04:31 PM)_ [1052352195519062108]
+
+↪ Zander: "AAHAHYHAHAHAHAHAHAHYJAGGHJHAAHA"
+
+_`Goblin`: The goblin has elf ears. Maybe they're fake?_
+
 **Brody** _(13-Dec-22 04:30 PM)_ [1052351791116849203]
 
 > Aha! It looks like- What the hell is it now.
@@ -1115,12 +1121,6 @@ _`Elf Guard`: The guard awakes in his bed_
 **Zander** _(13-Dec-22 04:31 PM)_ [1052352089705172993]
 
 _`Elf Guard`: The other guard runs at Seth with a ferocity._
-
-**Zander** _(13-Dec-22 04:31 PM)_ [1052352195519062108]
-
-↪ Zander: "AAHAHYHAHAHAHAHAHAHYJAGGHJHAAHA"
-
-_`Goblin`: The goblin has elf ears. Maybe they're fake?_
 
 **Zander** _(13-Dec-22 04:34 PM)_ [1052352847381008465]
 
@@ -1184,6 +1184,12 @@ _`Seth`: Seth instead, by accident, shoots the other guard in the elf testicle._
 
 > Fuck.
 
+**Zander** _(13-Dec-22 04:39 PM)_ [1052354080560918578]
+
+↪ Brody: Fuck.
+
+_Vec accidentally slices some connectors._
+
 **Zander** _(13-Dec-22 04:37 PM)_ [1052353565533937695]
 
 _`Elf Guard`: The other guard falls over in elf pain._
@@ -1195,12 +1201,6 @@ _Seth points at the other guard and laughs._
 **Sean** _(13-Dec-22 04:38 PM)_ [1052353749550633070]
 
 _Seth pushes the doors open and enters._
-
-**Zander** _(13-Dec-22 04:39 PM)_ [1052354080560918578]
-
-↪ Brody: Fuck.
-
-_Vec accidentally slices some connectors._
 
 **Zander** _(13-Dec-22 04:40 PM)_ [1052354347767447592]
 
@@ -1553,6 +1553,16 @@ _`Elf Guard`: Guards start to surround the crater where the pod was._
 
 _Seth opens the door to the Room of Death._
 
+**Vortox** _(13-Dec-22 05:01 PM)_ [1052359559823503410]
+
+_Inside, his ex-wife is laying atop a couch, adorned in black metal and skulls. The room seems to be made of bones and a queen-sized bed rests atop a bedframe of golden skulls and ribs._
+
+**Zander** _(13-Dec-22 05:02 PM)_ [1052359900090601594]
+
+↪ Sean: Inside, his ex-wife is laying atop a couch, adorned in black…
+
+> `Goddess of Death`: Ah, my valiant Cockmaster. How goes the pillage?
+
 **Brody** _(13-Dec-22 05:00 PM)_ [1052359308412727296]
 
 > Now, all we have to do is flip the starting coordinates into the Destination coordinates, and we'll be back in no time.
@@ -1560,10 +1570,6 @@ _Seth opens the door to the Room of Death._
 **Zander** _(13-Dec-22 05:01 PM)_ [1052359550214361170]
 
 _Vec presses a button. One that has to do with weaponry._
-
-**Vortox** _(13-Dec-22 05:01 PM)_ [1052359559823503410]
-
-_Inside, his ex-wife is laying atop a couch, adorned in black metal and skulls. The room seems to be made of bones and a queen-sized bed rests atop a bedframe of golden skulls and ribs._
 
 **Brody** _(13-Dec-22 05:01 PM)_ [1052359597098274836]
 
@@ -1578,12 +1584,6 @@ _Inside, his ex-wife is laying atop a couch, adorned in black metal and skulls. 
 <description>Most likely.</description>
 <footer>Zander asked: "Does Morra get access to the pod's arsenal?"</footer>
 </embed>
-
-**Zander** _(13-Dec-22 05:02 PM)_ [1052359900090601594]
-
-↪ Sean: Inside, his ex-wife is laying atop a couch, adorned in black…
-
-> `Goddess of Death`: Ah, my valiant Cockmaster. How goes the pillage?
 
 **Sean** _(13-Dec-22 05:02 PM)_ [1052359973046333540]
 

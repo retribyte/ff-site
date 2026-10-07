@@ -36,6 +36,12 @@ _Zach is peeling off the fake elf ears._
 
 > That elf is gonna pay when he gets back here...
 
+**Hunt520** _(13-Dec-22 08:48 PM)_ [1052416655810121738]
+
+↪ Jonas: That elf is gonna pay when he gets back here...
+
+> Trust me, I want to kill him, too.
+
 **Vortox** _(13-Dec-22 08:47 PM)_ [1052416449551011921]
 
 _The pod Morra and Vec are in travels back out the blackhole..._
@@ -61,12 +67,6 @@ _The pod Morra and Vec are in travels back out the blackhole..._
 **Silas** _(13-Dec-22 08:48 PM)_ [1052416642103115807]
 
 > LOOK!
-
-**Hunt520** _(13-Dec-22 08:48 PM)_ [1052416655810121738]
-
-↪ Jonas: That elf is gonna pay when he gets back here...
-
-> Trust me, I want to kill him, too.
 
 **Trey** _(13-Dec-22 08:48 PM)_ [1052416716040310854]
 
@@ -111,16 +111,6 @@ _Bellow takes the controls and starts guiding the pod in._
 **Trey** _(13-Dec-22 08:49 PM)_ [1052417088330924072]
 
 > Please, please, please, please, please.
-
-**Vortox** _(13-Dec-22 08:50 PM)_ [1052417275208138823]
-
-⌘ Hunt520 used /8ball
-
-<embed>
-<title>8ball Response</title>
-<description>Only if Morra would do it.</description>
-<footer>Hunt520 asked: "Will Zach lose a limb?"</footer>
-</embed>
 
 **Vortox** _(13-Dec-22 08:50 PM)_ [1052417285861683260]
 
@@ -202,6 +192,10 @@ _Vec slaps Zion and leaves the pod._
 
 > WHAT were you thinking!! You could've been killed Morra!
 
+**Brody** _(13-Dec-22 08:53 PM)_ [1052418033370542190]
+
+_Morra cranks open the pod door, revealing the artifact in hand!_
+
 **Jonas** _(13-Dec-22 08:53 PM)_ [1052418079155568680]
 
 > Woah...is that really it?
@@ -210,17 +204,19 @@ _Vec slaps Zion and leaves the pod._
 
 > It looks...kind of gross, actually...
 
-**Brody** _(13-Dec-22 08:53 PM)_ [1052418033370542190]
+**Brody** _(13-Dec-22 08:53 PM)_ [1052418131659858000]
 
-_Morra cranks open the pod door, revealing the artifact in hand!_
+> I believe so!
 
 **Zander** _(13-Dec-22 08:53 PM)_ [1052418124248518727]
 
 _Vec spins in a circle in front of Zach._
 
-**Brody** _(13-Dec-22 08:53 PM)_ [1052418131659858000]
+**Hunt520** _(13-Dec-22 08:54 PM)_ [1052418200857497681]
 
-> I believe so!
+↪ Zander: Vec spins in a circle in front of Zach.
+
+> Good to see you again too!
 
 **Trey** _(13-Dec-22 08:53 PM)_ [1052418132800712735]
 
@@ -233,12 +229,6 @@ _Vec spins in a circle in front of Zach._
 **Silas** _(13-Dec-22 08:54 PM)_ [1052418168016097310]
 
 > THE ARTIFACT IS REAL!!
-
-**Hunt520** _(13-Dec-22 08:54 PM)_ [1052418200857497681]
-
-↪ Zander: Vec spins in a circle in front of Zach.
-
-> Good to see you again too!
 
 **Brody** _(13-Dec-22 08:54 PM)_ [1052418227910737950]
 
@@ -272,6 +262,10 @@ _Zion embraces Morra while, mostly, looking at the artifact._
 
 _Zach also embraces Morra._
 
+**Brody** _(13-Dec-22 08:56 PM)_ [1052418788454314076]
+
+_Morra returns the hugs, a smile wide on their face._
+
 **Trey** _(13-Dec-22 08:55 PM)_ [1052418626646442044]
 
 _Then puts Morra down._
@@ -297,10 +291,6 @@ _Zion changes his tone._
 **Trey** _(13-Dec-22 08:56 PM)_ [1052418775019946084]
 
 _`Dutch`: Dutch wishes... nothing happens._
-
-**Brody** _(13-Dec-22 08:56 PM)_ [1052418788454314076]
-
-_Morra returns the hugs, a smile wide on their face._
 
 **Jonas** _(13-Dec-22 08:56 PM)_ [1052418797639847997]
 
@@ -826,6 +816,26 @@ _Morra gives a relaxed sigh and a smile, happy to be back._
 
 > All in all, are we cleared to return to the mothership? Is there another course of action we should take?
 
+**Zander** _(13-Dec-22 09:56 PM)_ [1052433862090825760]
+
+↪ Trey: All in all, are we cleared to return to the mothership? Is t…
+
+> `Llashii`: You're cleared. Return as soon as possible.
+
+**Trey** _(13-Dec-22 09:56 PM)_ [1052433924971835464]
+
+_Zion turns aside to Dutch._
+
+> Start it up for me, I'll be there in a second.
+
+**Trey** _(13-Dec-22 09:57 PM)_ [1052434184376963202]
+
+> Yes sir.
+
+**Trey** _(13-Dec-22 09:57 PM)_ [1052434235325169705]
+
+_Zion hangs up the phone._
+
 **Silas** _(13-Dec-22 09:27 PM)_ [1052426607106728016]
 
 > Zion, I cain't figure out how to pilot this damn thing, let's MOOOOOOVE.
@@ -848,26 +858,6 @@ _Morra gives a relaxed sigh and a smile, happy to be back._
 
 > SEATBELTS, EVERYONE!
 
-**Zander** _(13-Dec-22 09:56 PM)_ [1052433862090825760]
-
-↪ Trey: All in all, are we cleared to return to the mothership? Is t…
-
-> `Llashii`: You're cleared. Return as soon as possible.
-
-**Trey** _(13-Dec-22 09:56 PM)_ [1052433924971835464]
-
-_Zion turns aside to Dutch._
-
-> Start it up for me, I'll be there in a second.
-
-**Trey** _(13-Dec-22 09:57 PM)_ [1052434184376963202]
-
-> Yes sir.
-
-**Trey** _(13-Dec-22 09:57 PM)_ [1052434235325169705]
-
-_Zion hangs up the phone._
-
 **Jonas** _(13-Dec-22 09:57 PM)_ [1052434247417352232]
 
 _Bellow straps himself in, ready for hyperspace!_
@@ -879,16 +869,6 @@ _Zach straps in._
 **Trey** _(13-Dec-22 09:58 PM)_ [1052434374110490694]
 
 _Zion strolls over to the cockpit with a pep in his step, takes a brief breather, and switches on the FTL drive._
-
-**Vortox** _(13-Dec-22 09:57 PM)_ [1052434212210356264]
-
-⌘ Hunt520 used /choose
-
-<embed>
-<title>arm</title>
-<description>The list of options: hand, arm, elbow down, foot, calf down, whole leg</description>
-<footer>Hunt520 (Zach) wanted a choice.</footer>
-</embed>
 
 **Silas** _(13-Dec-22 09:58 PM)_ [1052434409648824361]
 
@@ -1090,6 +1070,10 @@ _The mothership is clean, pristine, and not-so-comfy. However, Zion seems to be 
 
 > You seem excited...
 
+**Trey** _(13-Dec-22 10:16 PM)_ [1052438865572532274]
+
+> Spent a couple GUYs here after getting comfortable in space. To be honest, it's basically my home.
+
 **Vortox** _(13-Dec-22 10:15 PM)_ [1052438593672593448]
 
 _Various Llamanians and other species walk about, some in groups and some alone._
@@ -1109,10 +1093,6 @@ _The crew passes by some old posters of Llamanian propaganda with Emmett's sexy 
 **Silas** _(13-Dec-22 10:15 PM)_ [1052438766125600788]
 
 _Dutch strolls jollily._
-
-**Trey** _(13-Dec-22 10:16 PM)_ [1052438865572532274]
-
-> Spent a couple GUYs here after getting comfortable in space. To be honest, it's basically my home.
 
 **Hunt520** _(13-Dec-22 10:16 PM)_ [1052438882634960926]
 
@@ -1168,6 +1148,36 @@ _`Bellow`: Bellow is shocked and depressed._
 
 > Should I stay on the ship?
 
+**Brody** _(13-Dec-22 10:21 PM)_ [1052440112111288370]
+
+↪ Hunt520: Should I stay on the ship?
+
+> Come now, you're a part of us now, official or not.
+
+**Hunt520** _(13-Dec-22 10:22 PM)_ [1052440377279402035]
+
+↪ Brody: Come now, you're a part of us now, official or not.
+
+> But I was never officially accepted.... and even though I could care less.... I wouldn't be surprised if someone thinks I'm a spy for the GU...
+
+**Hunt520** _(13-Dec-22 10:23 PM)_ [1052440799243141203]
+
+> I still don't think I'm supposed to be here...
+
+**Brody** _(13-Dec-22 10:24 PM)_ [1052441042034622517]
+
+↪ Hunt520: But I was never officially accepted.... and even though I co…
+
+> If you were a spy, my friend, you would have given up when we locked you in the airlock. Or the brig. Or when you caught my body. I promise you, you have someone on your side, for as long as you need.
+
+**Hunt520** _(13-Dec-22 10:25 PM)_ [1052441217364922440]
+
+↪ Brody: If you were a spy, my friend, you would have given up when w…
+
+_Zach smirks._
+
+> Thanks....
+
 **Jonas** _(13-Dec-22 10:19 PM)_ [1052439698888462366]
 
 > I guess i'm gonna look around for...idk, a gift shop or something.
@@ -1179,6 +1189,10 @@ _`Bellow`: Bellow is shocked and depressed._
 **Jonas** _(13-Dec-22 10:20 PM)_ [1052439859484172318]
 
 > You said I can't come though...
+
+**Trey** _(13-Dec-22 10:20 PM)_ [1052440041290473534]
+
+> Of course you can come, Bellow, you were accepted on the mission weren't you?
 
 **Vortox** _(13-Dec-22 10:20 PM)_ [1052439896964481064]
 
@@ -1214,10 +1228,6 @@ _Vec waves back._
 
 _Zach feels awkward..._
 
-**Trey** _(13-Dec-22 10:20 PM)_ [1052440041290473534]
-
-> Of course you can come, Bellow, you were accepted on the mission weren't you?
-
 **Trey** _(13-Dec-22 10:21 PM)_ [1052440094977556480]
 
 _Zion thinks for a moment._
@@ -1228,21 +1238,9 @@ _Zion thinks for a moment._
 
 > Oh, yes of course...
 
-**Brody** _(13-Dec-22 10:21 PM)_ [1052440112111288370]
-
-↪ Hunt520: Should I stay on the ship?
-
-> Come now, you're a part of us now, official or not.
-
 **Jonas** _(13-Dec-22 10:21 PM)_ [1052440131124088923]
 
 > Alright, lets do it then.
-
-**Hunt520** _(13-Dec-22 10:22 PM)_ [1052440377279402035]
-
-↪ Brody: Come now, you're a part of us now, official or not.
-
-> But I was never officially accepted.... and even though I could care less.... I wouldn't be surprised if someone thinks I'm a spy for the GU...
 
 **Trey** _(13-Dec-22 10:22 PM)_ [1052440420250030080]
 
@@ -1258,10 +1256,6 @@ _Zion starts walking towards the elevators._
 
 _The elevators are here._
 
-**Hunt520** _(13-Dec-22 10:23 PM)_ [1052440799243141203]
-
-> I still don't think I'm supposed to be here...
-
 **Trey** _(13-Dec-22 10:24 PM)_ [1052440873675280384]
 
 _Zion pushes a button and they enter._
@@ -1269,12 +1263,6 @@ _Zion pushes a button and they enter._
 **Zander** _(13-Dec-22 10:24 PM)_ [1052440951194386492]
 
 _Vec gets squished in the door._
-
-**Brody** _(13-Dec-22 10:24 PM)_ [1052441042034622517]
-
-↪ Hunt520: But I was never officially accepted.... and even though I co…
-
-> If you were a spy, my friend, you would have given up when we locked you in the airlock. Or the brig. Or when you caught my body. I promise you, you have someone on your side, for as long as you need.
 
 **Hunt520** _(13-Dec-22 10:24 PM)_ [1052441047294283877]
 
@@ -1307,14 +1295,6 @@ _Zion tries to grab Vec...!_
 **Vortox** _(13-Dec-22 10:25 PM)_ [1052441195198038046]
 
 _Through their combined efforts, they retrieve Vec successfully._
-
-**Hunt520** _(13-Dec-22 10:25 PM)_ [1052441217364922440]
-
-↪ Brody: If you were a spy, my friend, you would have given up when w…
-
-_Zach smirks._
-
-> Thanks....
 
 **Trey** _(13-Dec-22 10:26 PM)_ [1052441328266514522]
 
@@ -1484,17 +1464,17 @@ _Zion knocks on Morra's head. Knock on... rock!_
 <footer>Zander asked: "Does a suspicious man enter the elevator from one of the floors?"</footer>
 </embed>
 
-**Silas** _(13-Dec-22 10:34 PM)_ [1052443444959793194]
-
-> Howdy.
-
 **Silas** _(13-Dec-22 10:34 PM)_ [1052443482402344960]
 
-> Alright morra it's your turn let's move.
+> Alright Morra it's your turn let's move.
 
 **Vortox** _(13-Dec-22 10:34 PM)_ [1052443489125810186]
 
 _A man in a trench coat enters the elevator. He's stumbling around._
+
+**Silas** _(13-Dec-22 10:34 PM)_ [1052443444959793194]
+
+> Howdy.
 
 **Vortox** _(13-Dec-22 10:34 PM)_ [1052443528564834314]
 
@@ -1525,6 +1505,10 @@ _Even though people can't see it, Zach is trying to not make eye contact._
 <footer>Brody (Morra) wanted a choice.</footer>
 </embed>
 
+**Vortox** _(13-Dec-22 10:37 PM)_ [1052444294084055111]
+
+_Right when they get to the right floor, the man stumbles over and falls, revealing three kids._
+
 **Trey** _(13-Dec-22 10:37 PM)_ [1052444210504142858]
 
 _Zion grabs Dutch and ejects him out of the elevator._
@@ -1532,10 +1516,6 @@ _Zion grabs Dutch and ejects him out of the elevator._
 **Hunt520** _(13-Dec-22 10:37 PM)_ [1052444216875302963]
 
 > Oh, thank God.
-
-**Vortox** _(13-Dec-22 10:37 PM)_ [1052444294084055111]
-
-_Right when they get to the right floor, the man stumbles over and falls, revealing three kids._
 
 **Silas** _(13-Dec-22 10:37 PM)_ [1052444320436867112]
 
@@ -1585,10 +1565,6 @@ _Zach just walks past the kids._
 
 > Well, get down so he can run off.
 
-**Silas** _(13-Dec-22 10:40 PM)_ [1052444930301231196]
-
-> Howdy, Commander!
-
 **Jonas** _(13-Dec-22 10:40 PM)_ [1052444935783194624]
 
 _Bellow lowers down a bit so that the kid can drop and run._
@@ -1596,6 +1572,10 @@ _Bellow lowers down a bit so that the kid can drop and run._
 **Vortox** _(13-Dec-22 10:40 PM)_ [1052445049339781150]
 
 _The elevator opens to the commander's office, with him standing straight ahead._
+
+**Silas** _(13-Dec-22 10:40 PM)_ [1052444930301231196]
+
+> Howdy, Commander!
 
 **Vortox** _(13-Dec-22 10:42 PM)_ [1052445418514030652]
 
@@ -1639,6 +1619,10 @@ _Zach shakes his head frantically._
 
 > Commander. It's good to be back.
 
+**Trey** _(13-Dec-22 10:48 PM)_ [1052447025725194300]
+
+> `Llashii`: Horizoners. It's good to welcome you all back here.
+
 **Vortox** _(13-Dec-22 10:47 PM)_ [1052446753275785286]
 
 _The opposing wall is all glass, and the crew can see the death ship pass by._
@@ -1654,10 +1638,6 @@ _The opposing wall is all glass, and the crew can see the death ship pass by._
 **Sean** _(13-Dec-22 10:48 PM)_ [1052446932846510080]
 
 _Seth calls Zion on the comms._
-
-**Trey** _(13-Dec-22 10:48 PM)_ [1052447025725194300]
-
-> `Llashii`: Horizoners. It's good to welcome you all back here.
 
 **Trey** _(13-Dec-22 10:48 PM)_ [1052447074114867290]
 
@@ -1756,6 +1736,14 @@ _`Seth`: Sethkinki does not speak to people who speak in run on sentences._
 _Zion speaks away from the comms._
 > Commander, is Seth... here? With us?
 
+**Trey** _(13-Dec-22 10:54 PM)_ [1052448482549583933]
+
+> `Llashii`: Sethkinki's ship just docked, as you can clearly see.
+
+**Trey** _(13-Dec-22 10:54 PM)_ [1052448522663907359]
+
+> `Llashii`: He will convene with us shortly, I'm sure.
+
 **Sean** _(13-Dec-22 10:52 PM)_ [1052448093808889876]
 
 > Hmm. Are you not confident in the chosen god of war?
@@ -1771,14 +1759,6 @@ _Zion speaks away from the comms._
 **Zander** _(13-Dec-22 10:54 PM)_ [1052448475343761418]
 
 > `Frechelsi`: We rely on morale. If they die too many times, they're likely to give up, my lord.
-
-**Trey** _(13-Dec-22 10:54 PM)_ [1052448482549583933]
-
-> `Llashii`: Sethkinki's ship just docked, as you can clearly see.
-
-**Trey** _(13-Dec-22 10:54 PM)_ [1052448522663907359]
-
-> `Llashii`: He will convene with us shortly, I'm sure.
 
 **Sean** _(13-Dec-22 10:54 PM)_ [1052448524794613821]
 
@@ -1950,9 +1930,21 @@ _Bellow is starting to reconsider this whole "not giving away the artifact" thin
 
 > Only the non-vital work?
 
+**Zander** _(13-Dec-22 11:01 PM)_ [1052450189362876437]
+
+↪ Brody: OnlyThe non-vital work?
+
+> `Llashii`: Vital referring to confidential.
+
 **Silas** _(13-Dec-22 11:01 PM)_ [1052450117422153769]
 
 > Y'all are gonna get a Wizard of Oz type baloney but I get my fiscal reward.
+
+**Jonas** _(13-Dec-22 11:01 PM)_ [1052450355755110400]
+
+↪ Silas: Y'all are gonna get a wizard of oz type baloney but I get my…
+
+> Mere money only gets you so far in life, Dutch! With a genius mind and a great invention, people will throw money at you.
 
 **Zander** _(13-Dec-22 11:01 PM)_ [1052450121603891250]
 
@@ -1966,31 +1958,19 @@ _Bellow is starting to reconsider this whole "not giving away the artifact" thin
 
 > With that kind of database....hmm...
 
-**Zander** _(13-Dec-22 11:01 PM)_ [1052450189362876437]
-
-↪ Brody: OnlyThe non-vital work?
-
-> `Llashii`: Vital referring to confidential.
-
-**Sean** _(13-Dec-22 11:01 PM)_ [1052450236414562364]
-
-> Driving isn't gonna cut it.
-
-**Jonas** _(13-Dec-22 11:01 PM)_ [1052450355755110400]
-
-↪ Silas: Y'all are gonna get a wizard of oz type baloney but I get my…
-
-> Mere money only gets you so far in life, Dutch! With a genius mind and a great invention, people will throw money at you.
-
-**Silas** _(13-Dec-22 11:02 PM)_ [1052450423245639760]
-
-> Yeah but with money you don't need people to throw money at you.
-
 **Zander** _(13-Dec-22 11:02 PM)_ [1052450424071925781]
 
 ↪ Jonas: With that kind of database....hmm...
 
 > `Llashii`: Your planet will be under LR protection as well, so no more bomb threats without consequences.
+
+**Sean** _(13-Dec-22 11:01 PM)_ [1052450236414562364]
+
+> Driving isn't gonna cut it.
+
+**Silas** _(13-Dec-22 11:02 PM)_ [1052450423245639760]
+
+> Yeah but with money you don't need people to throw money at you.
 
 **Silas** _(13-Dec-22 11:02 PM)_ [1052450438370312292]
 
@@ -2426,6 +2406,12 @@ _Zach hangs up the phone._
 _Zach speaks silently in his mind._
 > So... what now, God?
 
+**Brody** _(13-Dec-22 11:27 PM)_ [1052456751225647164]
+
+↪ Hunt520: In his mind. ("So... what now God?")
+
+> `Sanya`: First, you may call me Dread. Second, just consider me an onlooker. Nothing more... for now.
+
 **Silas** _(13-Dec-22 11:26 PM)_ [1052456568169447434]
 
 > What do we do?
@@ -2449,12 +2435,6 @@ _Vec writes on the floor._
 <description>Hmm... yea.</description>
 <footer>Trey asked: "does Zion fear that something is coming?"</footer>
 </embed>
-
-**Brody** _(13-Dec-22 11:27 PM)_ [1052456751225647164]
-
-↪ Hunt520: In his mind. ("So... what now God?")
-
-> `Sanya`: First, you may call me Dread. Second, just consider me an onlooker. Nothing more... for now.
 
 **Trey** _(13-Dec-22 11:27 PM)_ [1052456755495452725]
 
@@ -2662,16 +2642,6 @@ _...takes the crew to the ship!_
 **Sean** _(13-Dec-22 11:37 PM)_ [1052459391456124979]
 
 _Seth's ship initiates combat with a couple of the attacking ships._
-
-**Vortox** _(13-Dec-22 11:38 PM)_ [1052459553503064094]
-
-⌘ Hunt520 used /choose
-
-<embed>
-<title>blade slice</title>
-<description>The list of options: cannon fire, blade slice, tear off |</description>
-<footer>Hunt520 (Zach) 🎱 wanted a choice.</footer>
-</embed>
 
 **Zander** _(13-Dec-22 11:38 PM)_ [1052459622973321246]
 
@@ -3352,6 +3322,10 @@ Morra has `(19/40)` hp.
 <color>#50C878</color>
 </embed>
 
+**Zander** _(14-Dec-22 12:29 AM)_ [1052472437876465705]
+
+_`Enemy A`: Enemy A slices into Morra, but Morra put on some stronger rock armor!_
+
 **Jonas** _(14-Dec-22 12:29 AM)_ [1052472412182167582]
 
 > Vec, take care of Morra! I've got Dutch.
@@ -3359,10 +3333,6 @@ Morra has `(19/40)` hp.
 **Brody** _(14-Dec-22 12:29 AM)_ [1052472419014672385]
 
 > This is starting to get annoying.
-
-**Zander** _(14-Dec-22 12:29 AM)_ [1052472437876465705]
-
-_`Enemy A`: Enemy A slices into Morra, but Morra put on some stronger rock armor!_
 
 **Vortox** _(14-Dec-22 12:30 AM)_ [1052472563823030282]
 
@@ -3488,13 +3458,13 @@ Enemy_a has `(-6/30)` hp.
 <color>#50C878</color>
 </embed>
 
-**Zander** _(14-Dec-22 12:37 AM)_ [1052474358888669244]
-
-> Now that's a blaster!
-
 **Trey** _(14-Dec-22 12:37 AM)_ [1052474370997620746]
 
 _Zion aims Llafay's plasma blaster directly at Enemy A's head and fires._
+
+**Zander** _(14-Dec-22 12:37 AM)_ [1052474358888669244]
+
+> Now that's a blaster!
 
 **Vortox** _(14-Dec-22 12:37 AM)_ [1052474513817874483]
 
@@ -3716,6 +3686,16 @@ Enemy_c has `(8/30)` hp.
 <color>#50C878</color>
 </embed>
 
+**Trey** _(14-Dec-22 12:51 AM)_ [1052477926123245569]
+
+_With another expert maneuver, Zion slices through Enemy C, leaving a big gash._
+
+**Brody** _(14-Dec-22 12:52 AM)_ [1052478241757208616]
+
+↪ Trey: With another expert maneuver, Zion slices through Enemy C, l…
+
+> `Sanya`: Very nice, very nice. It's almost like I'm watching myself, in the old days.
+
 **Jonas** _(14-Dec-22 12:51 AM)_ [1052477902211522590]
 
 _`Chomsky`: Chomsky is on his way!_
@@ -3732,19 +3712,9 @@ _`Chomsky`: Chomsky is on his way!_
 
 > `Sanya`: Speaking of which...
 
-**Trey** _(14-Dec-22 12:51 AM)_ [1052477926123245569]
-
-_With another expert maneuver, Zion slices through Enemy C, leaving a big gash._
-
 **Hunt520** _(14-Dec-22 12:52 AM)_ [1052478054208905246]
 
 _`Jack Madison`: Jack is struggling a bit... he's given up on trying to shoot the ships down, as a few managed to board the ship he's in... he's currently in a firing match with a few other mercs_
-
-**Brody** _(14-Dec-22 12:52 AM)_ [1052478241757208616]
-
-↪ Trey: With another expert maneuver, Zion slices through Enemy C, l…
-
-> `Sanya`: Very nice, very nice. It's almost like I'm watching myself, in the old days.
 
 **Brody** _(14-Dec-22 12:54 AM)_ [1052478562227204096]
 
@@ -3766,6 +3736,10 @@ Ravens Leader has `(603/750)` hp.
 <footer>Zander (Vec) damaged Ravens Leader.</footer>
 <color>#50C878</color>
 </embed>
+
+**Trey** _(14-Dec-22 12:54 AM)_ [1052478757232980051]
+
+_`Ravens Leader`: The blast pushes the Ravens leader back slightly, but he stands his ground, giving an ominous pose._
 
 **Hunt520** _(14-Dec-22 12:54 AM)_ [1052478685531353158]
 
@@ -3792,10 +3766,6 @@ Dutch has `16`/`25` hp.
 </description>
 <footer>Zander (Vec) caused the round to end.</footer>
 </embed>
-
-**Trey** _(14-Dec-22 12:54 AM)_ [1052478757232980051]
-
-_`Ravens Leader`: The blast pushes the Ravens leader back slightly, but he stands his ground, giving an ominous pose._
 
 **Vortox** _(14-Dec-22 12:55 AM)_ [1052478922312384615]
 
@@ -4074,6 +4044,18 @@ _`Emmett`: Emmett starts to get a headache and wakes up. He's sweating._
 
 > `Emmett`: Dread's right behind me, isn't he?
 
+**Brody** _(14-Dec-22 01:11 AM)_ [1052482911036784672]
+
+↪ Zander: Emmett: "Dread's right behind me, isn't he?"
+
+> `Sanya`: Howdy, Emmett. Figured I'd pop in and check on you.
+
+**Zander** _(14-Dec-22 01:11 AM)_ [1052483045829120011]
+
+> `Emmett`: Uh... hullo, Sanya...
+
+_Emmett leaves the bedroom._
+
 **Vortox** _(14-Dec-22 01:09 AM)_ [1052482561672237086]
 
 ⌘ Trey used /dmg weapon
@@ -4125,12 +4107,6 @@ _The plasma cannon appears to be out of commission for a turn..._
 
 > `Chomsky`: Nice shot, little man!
 
-**Brody** _(14-Dec-22 01:11 AM)_ [1052482911036784672]
-
-↪ Zander: Emmett: "Dread's right behind me, isn't he?"
-
-> `Sanya`: Howdy, Emmett. Figured I'd pop in and check on you.
-
 **Trey** _(14-Dec-22 01:11 AM)_ [1052482926811557898]
 
 > SHINING TITANS! We should've pulled this thing out sooner!
@@ -4138,12 +4114,6 @@ _The plasma cannon appears to be out of commission for a turn..._
 **Hunt520** _(14-Dec-22 01:11 AM)_ [1052482995732357180]
 
 > Well it looks like it needs to charge again!
-
-**Zander** _(14-Dec-22 01:11 AM)_ [1052483045829120011]
-
-> `Emmett`: Uh... hullo, Sanya...
-
-_Emmett leaves the bedroom._
 
 **Vortox** _(14-Dec-22 01:12 AM)_ [1052483300071063572]
 
@@ -4399,6 +4369,12 @@ Ravens Leader has `(415/750)` hp.
 <color>#50C878</color>
 </embed>
 
+**Jonas** _(14-Dec-22 01:24 AM)_ [1052486252433252393]
+
+> `Chomsky`: Too bad I can't immolate your face directly, but a good ol' grenade never hurt...not me, anyway.
+
+_Chomsky smirks confidently again._
+
 **Vortox** _(14-Dec-22 01:22 AM)_ [1052485683215872042]
 
 ⌘ Trey used /dmg weapon
@@ -4413,6 +4389,14 @@ Ravens Leader has `(403/750)` hp.
 <footer>Trey (Zion) damaged Ravens Leader.</footer>
 <color>#50C878</color>
 </embed>
+
+**Jonas** _(14-Dec-22 01:22 AM)_ [1052485769517858827]
+
+_Bellow grunts, and recoils from his quadpistols._
+
+**Jonas** _(14-Dec-22 01:22 AM)_ [1052485836668665886]
+
+_But the 4 quick shots land perfectly!_
 
 **Vortox** _(14-Dec-22 01:22 AM)_ [1052485758855946260]
 
@@ -4429,14 +4413,6 @@ Ravens Leader has `(395/750)` hp.
 <footer>Silas (Dutch) damaged Ravens Leader.</footer>
 <color>#50C878</color>
 </embed>
-
-**Jonas** _(14-Dec-22 01:22 AM)_ [1052485769517858827]
-
-_Bellow grunts, and recoils from his quadpistols._
-
-**Jonas** _(14-Dec-22 01:22 AM)_ [1052485836668665886]
-
-_But the 4 quick shots land perfectly!_
 
 **Vortox** _(14-Dec-22 01:23 AM)_ [1052486013462777908]
 
@@ -4467,12 +4443,6 @@ Ravens Leader has `(362/750)` hp.
 <footer>Zander (Vec) damaged Ravens Leader.</footer>
 <color>#50C878</color>
 </embed>
-
-**Jonas** _(14-Dec-22 01:24 AM)_ [1052486252433252393]
-
-> `Chomsky`: Too bad I can't immolate your face directly, but a good ol' grenade never hurt...not me, anyway.
-
-_Chomsky smirks confidently again._
 
 **Vortox** _(14-Dec-22 01:25 AM)_ [1052486523532103752]
 
@@ -4925,6 +4895,36 @@ Chomsky has `(-10/30)` hp.
 
 _`Chomsky`: Chomsky lets out a last chuckle, and falls over._
 
+**Vortox** _(13-Dec-22 08:50 PM)_ [1052417275208138823]
+
+⌘ Hunt520 used /8ball
+
+<embed>
+<title>8ball Response</title>
+<description>Only if Morra would do it.</description>
+<footer>Hunt520 asked: "Will Zach lose a limb?"</footer>
+</embed>
+
+**Vortox** _(13-Dec-22 09:57 PM)_ [1052434212210356264]
+
+⌘ Hunt520 used /choose
+
+<embed>
+<title>arm</title>
+<description>The list of options: hand, arm, elbow down, foot, calf down, whole leg</description>
+<footer>Hunt520 (Zach) wanted a choice.</footer>
+</embed>
+
+**Vortox** _(13-Dec-22 11:38 PM)_ [1052459553503064094]
+
+⌘ Hunt520 used /choose
+
+<embed>
+<title>blade slice</title>
+<description>The list of options: cannon fire, blade slice, tear off |</description>
+<footer>Hunt520 (Zach) 🎱 wanted a choice.</footer>
+</embed>
+
 **Vortox** _(14-Dec-22 01:46 AM)_ [1052491732547276802]
 
 ⌘ Trey used /dmg weapon
@@ -4940,15 +4940,15 @@ Zach has `(6/20)` hp.
 <color>#50C878</color>
 </embed>
 
-**Silas** _(14-Dec-22 01:46 AM)_ [1052491834166874122]
-
-> Man, once I get outta here...I'm spending so much fucking money...on high tech...medical gear...
-
 **Trey** _(14-Dec-22 01:46 AM)_ [1052491841506906152]
 
 _`Zach`: Zach's arm is sliced clean off!_
 
 _`Zach`: Blood spills everywhere!_
+
+**Silas** _(14-Dec-22 01:46 AM)_ [1052491834166874122]
+
+> Man, once I get outta here...I'm spending so much fucking money...on high tech...medical gear...
 
 **Jonas** _(14-Dec-22 01:47 AM)_ [1052491906036289596]
 
@@ -5031,6 +5031,14 @@ _`Chomsky`: Chomsky is still chuckling to himself, bleary and delirious._
 
 _`Ravens Leader`: The Ravens leader begins beating mercilessly at Chomsky._
 
+**Brody** _(14-Dec-22 01:50 AM)_ [1052492820134502440]
+
+> `Sanya`: Behind you...
+
+**Brody** _(14-Dec-22 01:51 AM)_ [1052493027618345020]
+
+_`Sanya`: And with two quick pierces, a spear finds its way into the Ravens Leader's back!_
+
 **Vortox** _(14-Dec-22 01:50 AM)_ [1052492766732636261]
 
 ⌘ Brody used /dmg weapon
@@ -5050,14 +5058,6 @@ Ravens Leader has `(94/750)` hp.
 **Trey** _(14-Dec-22 01:50 AM)_ [1052492906709135390]
 
 > `Ravens Leader`: Ggh...
-
-**Brody** _(14-Dec-22 01:50 AM)_ [1052492820134502440]
-
-> `Sanya`: Behind you...
-
-**Brody** _(14-Dec-22 01:51 AM)_ [1052493027618345020]
-
-_`Sanya`: And with two quick pierces, a spear finds its way into the Ravens Leader's back!_
 
 **Trey** _(14-Dec-22 01:52 AM)_ [1052493155762704404]
 
@@ -5163,6 +5163,10 @@ _Bellow turns to Chomsky._
 
 > I need...
 
+**Silas** _(14-Dec-22 01:55 AM)_ [1052493998922665994]
+
+> I need to end YOU!
+
 **Trey** _(14-Dec-22 01:55 AM)_ [1052493906689937498]
 
 _`Ravens Leader`: The Ravens leader stands his ground and slides back._
@@ -5174,10 +5178,6 @@ _`Ravens Leader`: The Ravens leader stands his ground and slides back._
 **Zander** _(14-Dec-22 01:55 AM)_ [1052493988097179690]
 
 > You are interfering with these people's fate. Their purpose is to die in battle.
-
-**Silas** _(14-Dec-22 01:55 AM)_ [1052493998922665994]
-
-> I need to end YOU!
 
 **Silas** _(14-Dec-22 01:55 AM)_ [1052494091079921665]
 
@@ -5312,6 +5312,10 @@ _Zach's breathing is... not good... but he's breathing!_
 <footer>Zander asked: "Does Vec prepare to crush the Raven into a meat cube?"</footer>
 </embed>
 
+**Zander** _(14-Dec-22 02:07 AM)_ [1052496978879197265]
+
+_Vec turns the avian into a meat cube._
+
 **Brody** _(14-Dec-22 01:59 AM)_ [1052495106739032165]
 
 > `Sanya`: Very nice, Angel!
@@ -5320,6 +5324,36 @@ _Zach's breathing is... not good... but he's breathing!_
 
 > Forgive me for this...
 _Bellow pulls out his pistols and attempts to cauterize the wound by shooting next to it, using the heat from the blast._
+
+**Vortox** _(14-Dec-22 02:05 AM)_ [1052496649127219230]
+
+⌘ Jonas used /choose
+
+<embed>
+<title>Bellow can't build the resolve to shoot, even if he's not directly shooting his friend</title>
+<description>The list of options: Bellow successfully cauterizes the wound, It's not perfect, but it slows the bleeding, Bellow can't build the resolve to shoot, even if he's not directly shooting his friend</description>
+<footer>Jonas (Bellow) wanted a choice.</footer>
+</embed>
+
+**Jonas** _(14-Dec-22 02:06 AM)_ [1052496691946848308]
+
+> I..I can't do it...
+
+**Hunt520** _(14-Dec-22 02:06 AM)_ [1052496793381912617]
+
+↪ Jonas: I..I can't do it...
+
+_Zach weakly grabs Bellow's hand, and smiles weakly._
+
+**Jonas** _(14-Dec-22 02:06 AM)_ [1052496878052311061]
+
+> Don't look at me like that...
+
+**Hunt520** _(14-Dec-22 02:07 AM)_ [1052496943600906241]
+
+↪ Jonas: Don't look at me like that...
+
+> It's.... o.... k....
 
 **Trey** _(14-Dec-22 02:00 AM)_ [1052495181712199720]
 
@@ -5406,20 +5440,6 @@ _Bellow is too busy worrying over Zach to notice._
 
 > `Ravens Leader`: Like the phoenix, we will rise from the ashes. It is only a matter of time.
 
-**Vortox** _(14-Dec-22 02:05 AM)_ [1052496649127219230]
-
-⌘ Jonas used /choose
-
-<embed>
-<title>Bellow can't build the resolve to shoot, even if he's not directly shooting his friend</title>
-<description>The list of options: Bellow successfully cauterizes the wound, It's not perfect, but it slows the bleeding, Bellow can't build the resolve to shoot, even if he's not directly shooting his friend</description>
-<footer>Jonas (Bellow) wanted a choice.</footer>
-</embed>
-
-**Jonas** _(14-Dec-22 02:06 AM)_ [1052496691946848308]
-
-> I..I can't do it...
-
 **Silas** _(14-Dec-22 02:06 AM)_ [1052496709596483615]
 
 > Shitty last words.
@@ -5427,12 +5447,6 @@ _Bellow is too busy worrying over Zach to notice._
 **Silas** _(14-Dec-22 02:06 AM)_ [1052496768169955390]
 
 _Dutch blows the avian skull into pieces._
-
-**Hunt520** _(14-Dec-22 02:06 AM)_ [1052496793381912617]
-
-↪ Jonas: I..I can't do it...
-
-_Zach weakly grabs Bellow's hand, and smiles weakly._
 
 **Vortox** _(14-Dec-22 02:06 AM)_ [1052496810997989436]
 
@@ -5459,20 +5473,6 @@ _Blood splatters everywhere. It's disgusting._
 **Brody** _(14-Dec-22 02:06 AM)_ [1052496940702650388]
 
 > `Sanya`: Good shit.
-
-**Jonas** _(14-Dec-22 02:06 AM)_ [1052496878052311061]
-
-> Don't look at me like that...
-
-**Hunt520** _(14-Dec-22 02:07 AM)_ [1052496943600906241]
-
-↪ Jonas: Don't look at me like that...
-
-> It's.... o.... k....
-
-**Zander** _(14-Dec-22 02:07 AM)_ [1052496978879197265]
-
-_Vec turns the avian into a meat cube._
 
 **Jonas** _(14-Dec-22 02:07 AM)_ [1052496982880551002]
 
@@ -5552,6 +5552,10 @@ _Zach screams._
 
 _Zion realizes that was a mistake._
 
+**Brody** _(14-Dec-22 02:12 AM)_ [1052498195286081586]
+
+_`Sanya`: The new wound holds not blood, or any signs of flesh. Just... clean. unnatural._
+
 **Jonas** _(14-Dec-22 02:11 AM)_ [1052498122858840134]
 
 _`Chomsky`: Chomsky finally turns around to see Zach._
@@ -5564,13 +5568,15 @@ _`Chomsky`: Chomsky finally turns around to see Zach._
 
 > `Chomsky`: You know, I have a flamethrower. I could've cauterized that.
 
-**Brody** _(14-Dec-22 02:12 AM)_ [1052498195286081586]
-
-_`Sanya`: The new wound holds not blood, or any signs of flesh. Just... clean. unnatural._
-
 **Silas** _(14-Dec-22 02:12 AM)_ [1052498263091200051]
 
 > Hey, Chomsky...just like old times, eh? heh heh...
+
+**Jonas** _(14-Dec-22 02:13 AM)_ [1052498595171016765]
+
+↪ Silas: Hey, Chomsky...just like old times, eh? heh heh...
+
+> `Chomsky`: Please don't mention that day. I tried to burn it from my memory long ago.
 
 **Zander** _(14-Dec-22 02:12 AM)_ [1052498227217309696]
 
@@ -5583,6 +5589,16 @@ _Vec drops the plasma cannon and heads over to Zion._
 **Zander** _(14-Dec-22 02:12 AM)_ [1052498353524580412]
 
 > You were sitting there frozen.
+
+**Trey** _(14-Dec-22 02:13 AM)_ [1052498568117747732]
+
+_Zion glares up at Vec's Llamanian body._
+
+> I appreciate it, but... not the biggest issue right now.
+
+**Trey** _(14-Dec-22 02:13 AM)_ [1052498583393406986]
+
+_Zion pats him on the shoulder._
 
 **Brody** _(14-Dec-22 02:12 AM)_ [1052498298210111538]
 
@@ -5607,22 +5623,6 @@ _Morra is staring DIRECTLY at the new wound._
 **Hunt520** _(14-Dec-22 02:13 AM)_ [1052498465541869621]
 
 _Zach also has his hood on._
-
-**Trey** _(14-Dec-22 02:13 AM)_ [1052498568117747732]
-
-_Zion glares up at Vec's Llamanian body._
-
-> I appreciate it, but... not the biggest issue right now.
-
-**Trey** _(14-Dec-22 02:13 AM)_ [1052498583393406986]
-
-_Zion pats him on the shoulder._
-
-**Jonas** _(14-Dec-22 02:13 AM)_ [1052498595171016765]
-
-↪ Silas: Hey, Chomsky...just like old times, eh? heh heh...
-
-> `Chomsky`: Please don't mention that day. I tried to burn it from my memory long ago.
 
 **Brody** _(14-Dec-22 02:14 AM)_ [1052498689668694016]
 
@@ -5754,6 +5754,12 @@ _Vec moves over to Zach and frowns._
 
 > You're missing an arm, bud.
 
+**Hunt520** _(14-Dec-22 02:18 AM)_ [1052499800651739136]
+
+↪ Zander: "You're missing an arm, bud."
+
+_Zach's too tired to be snarky right now..._
+
 **Brody** _(14-Dec-22 02:17 AM)_ [1052499638483173417]
 
 _`Sanya`: And with that, Sanya disappears, but not before leaving a gift..._
@@ -5769,12 +5775,6 @@ _Zion places Dutch down and goes to see Zach._
 **Jonas** _(14-Dec-22 02:18 AM)_ [1052499732569784360]
 
 > Oh thank Dread and God and Death and whoever else! You're alive!
-
-**Hunt520** _(14-Dec-22 02:18 AM)_ [1052499800651739136]
-
-↪ Zander: "You're missing an arm, bud."
-
-_Zach's too tired to be snarky right now..._
 
 **Hunt520** _(14-Dec-22 02:18 AM)_ [1052499861246849104]
 
@@ -5878,6 +5878,12 @@ _He carries him more gently than usual._
 
 > `Chomsky`: Well, I should get back to my fleet. Great work all, you've done the galaxy a great service today.
 
+**Trey** _(14-Dec-22 02:22 AM)_ [1052500868483788900]
+
+_Zion salutes at Chomsky._
+
+> Godspeed, Chomsky.
+
 **Brody** _(14-Dec-22 02:22 AM)_ [1052500708185886741]
 
 _Morra lifts Dutch up, helping him along._
@@ -5893,12 +5899,6 @@ _Vec makes it through the doors._
 **Hunt520** _(14-Dec-22 02:22 AM)_ [1052500861424783412]
 
 _`Jack Madison`: Jack is following the commander_
-
-**Trey** _(14-Dec-22 02:22 AM)_ [1052500868483788900]
-
-_Zion salutes at Chomsky._
-
-> Godspeed, Chomsky.
 
 **Brody** _(14-Dec-22 02:22 AM)_ [1052500937261985822]
 
@@ -6007,6 +6007,10 @@ _Vec throws another tooth at Bellow._
 
 > Ow.
 
+**Silas** _(14-Dec-22 02:28 AM)_ [1052502324251213845]
+
+_The tooth bounces off Bellow and hits Dutch._
+
 **Silas** _(14-Dec-22 02:28 AM)_ [1052502257339469884]
 
 > Ow.
@@ -6016,10 +6020,6 @@ _Vec throws another tooth at Bellow._
 > I'm glad to truly understand friendship.
 
 _Morra gazes with a smile._
-
-**Silas** _(14-Dec-22 02:28 AM)_ [1052502324251213845]
-
-_The tooth bounces off Bellow and hits Dutch._
 
 **Trey** _(14-Dec-22 02:29 AM)_ [1052502671283732520]
 

@@ -50,13 +50,13 @@ _Seth gets up from his chair and heads for the bathroom._
 
 _Seth struts down the hall._
 
-**Sean** _(06-Dec-22 09:32 PM)_ [1049891059041312828]
-
-_Passing by Zion._
-
 **Jonas** _(06-Dec-22 09:32 PM)_ [1049891004418887740]
 
 _Bellow is sitting in the common room, scribbling in his notebook._
+
+**Sean** _(06-Dec-22 09:32 PM)_ [1049891059041312828]
+
+_Passing by Zion._
 
 **Sean** _(06-Dec-22 09:32 PM)_ [1049891073595547709]
 
@@ -182,6 +182,10 @@ _Zion continues to roll his dolly into the common area._
 
 > Morra, I don't mean to ruin your fun, but I don't care.
 
+**Brody** _(06-Dec-22 09:35 PM)_ [1049891918408077383]
+
+> ... I'll try to hide my wounds, Captain.
+
 **Zander** _(06-Dec-22 09:35 PM)_ [1049891825957212242]
 
 _A mercenary enters the common area, slumping back on the couch. He emanates a familiar, vile mist._
@@ -201,10 +205,6 @@ _Zach walks through the ship, but then stops when he sees Bellow drawing._
 **Sean** _(06-Dec-22 09:35 PM)_ [1049891903124029451]
 
 _Seth stares at Dutch._
-
-**Brody** _(06-Dec-22 09:35 PM)_ [1049891918408077383]
-
-> ... I'll try to hide my wounds, Captain.
 
 **Silas** _(06-Dec-22 09:35 PM)_ [1049891935885729903]
 
@@ -378,6 +378,12 @@ _Notices that Dutch is just wearing a towel._
 
 _Vec gets up from the sofa and begins to slowly trek to the engine room._
 
+**Hunt520** _(06-Dec-22 09:39 PM)_ [1049892872687730789]
+
+↪ Zander: "Just tell me when something important's happening..." Vec g…
+
+> Ok...
+
 **Silas** _(06-Dec-22 09:38 PM)_ [1049892748423069796]
 
 > Temporarily. Seth barged into my shower and took a liddle doodie.
@@ -393,12 +399,6 @@ _Vec gets up from the sofa and begins to slowly trek to the engine room._
 **Sean** _(06-Dec-22 09:39 PM)_ [1049892823547265034]
 
 _Seth sits on the couch and activates his holo-tv. He hops onto a cam site._
-
-**Hunt520** _(06-Dec-22 09:39 PM)_ [1049892872687730789]
-
-↪ Zander: "Just tell me when something important's happening..." Vec g…
-
-> Ok...
 
 **Sean** _(06-Dec-22 09:39 PM)_ [1049892892874915841]
 
@@ -427,10 +427,6 @@ _The mercenary looks back at Dutch, digs into his eyesocket, and detaches his ey
 **Jonas** _(06-Dec-22 09:41 PM)_ [1049893273310871562]
 
 > Start rapping.
-
-**Trey** _(06-Dec-22 09:41 PM)_ [1049893295884607548]
-
-> `Morra`: I thlammed my pebble in the car door.
 
 **Sean** _(06-Dec-22 09:41 PM)_ [1049893387832135680]
 
@@ -574,6 +570,12 @@ _Dutch moves his hand 2 inches to his right._
 
 > The ship is too large to go in-and-out of the black hole safely without sustaining any damage.
 
+**Hunt520** _(06-Dec-22 09:48 PM)_ [1049895149758578728]
+
+↪ Trey: The ship is too large to go in-and-out of the black hole saf…
+
+> Ok?
+
 **Silas** _(06-Dec-22 09:48 PM)_ [1049895038676639825]
 
 > I am kneeling and all, nobody would notice.
@@ -589,12 +591,6 @@ _Dutch moves his hand 2 inches to his right._
 **Silas** _(06-Dec-22 09:48 PM)_ [1049895144826085396]
 
 > Maybe Vecaloid can help?
-
-**Hunt520** _(06-Dec-22 09:48 PM)_ [1049895149758578728]
-
-↪ Trey: The ship is too large to go in-and-out of the black hole saf…
-
-> Ok?
 
 **Hunt520** _(06-Dec-22 09:48 PM)_ [1049895249184563260]
 
@@ -614,6 +610,12 @@ _Dutch moves his hand 2 inches to his right._
 
 > I could lift him, should you desire.
 
+**Jonas** _(06-Dec-22 09:49 PM)_ [1049895423910879243]
+
+↪ Brody: I could lift him, should you desire.
+
+> Actually yeah, can you put Dutch on your shoulders?
+
 **Jonas** _(06-Dec-22 09:49 PM)_ [1049895347364823131]
 
 > We can put aside our differences for art.
@@ -629,12 +631,6 @@ _Dutch moves his hand 2 inches to his right._
 **Sean** _(06-Dec-22 09:49 PM)_ [1049895423160107019]
 
 > NOT IT!
-
-**Jonas** _(06-Dec-22 09:49 PM)_ [1049895423910879243]
-
-↪ Brody: I could lift him, should you desire.
-
-> Actually yeah, can you put Dutch on your shoulders?
 
 **Hunt520** _(06-Dec-22 09:49 PM)_ [1049895431338999848]
 
@@ -857,6 +853,10 @@ _Morra un-duplicates._
 
 > Oh well, you guys can unpose now.
 
+**Hunt520** _(06-Dec-22 10:00 PM)_ [1049898076841717882]
+
+_Zach's phone vibrates, it's from Jack! He happily opens his phone then immediately puts it back in his pocket and pulls his hood down further to hide his blush._
+
 **Silas** _(06-Dec-22 09:59 PM)_ [1049897990250311711]
 
 _Dutch sees the photo pop up._
@@ -875,13 +875,11 @@ _Seth sneezes a huge snotball out of his nose, it lands on the wall._
 
 > WHY IS IT SO SMALL??? AND... BARE??
 
-**Hunt520** _(06-Dec-22 10:00 PM)_ [1049898076841717882]
+**Hunt520** _(06-Dec-22 10:00 PM)_ [1049898228151234631]
 
-_Zach's phone vibrates, it's from Jack! He happily opens his phone then immediately puts it back in his pocket and pulls his hood down further to hide his blush._
+↪ Silas: Dutch sees the photo pop up. WHAT THE FUCK IS WRONG WITH YOU…
 
-**Trey** _(06-Dec-22 10:00 PM)_ [1049898108168982610]
-
-> Well, Seth, if you're sure you wanna do that, you're welcome to.
+_Zach flips him off._
 
 **Zander** _(06-Dec-22 10:00 PM)_ [1049898116846985321]
 
@@ -891,15 +889,13 @@ _`Seth`: The snotball lands directly on Seth's Hannah Montana poster._
 
 _Seth rushes over and grabs the snotball._
 
+**Trey** _(06-Dec-22 10:00 PM)_ [1049898108168982610]
+
+> Well, Seth, if you're sure you wanna do that, you're welcome to.
+
 **Trey** _(06-Dec-22 10:00 PM)_ [1049898164053868565]
 
 > I've coordinated everyone else's roles for this mission.
-
-**Hunt520** _(06-Dec-22 10:00 PM)_ [1049898228151234631]
-
-↪ Silas: Dutch sees the photo pop up. WHAT THE FUCK IS WRONG WITH YOU…
-
-_Zach flips him off._
 
 **Trey** _(06-Dec-22 10:01 PM)_ [1049898309885640765]
 
@@ -929,6 +925,12 @@ _Morra duplicates... again._
 **Silas** _(06-Dec-22 10:01 PM)_ [1049898523061125193]
 
 > Bellow, am I good to stop posing?
+
+**Jonas** _(06-Dec-22 10:04 PM)_ [1049899094585393152]
+
+↪ Silas: Bellow, am I good to stop posing?
+
+> Yes, I said that a while ago.
 
 **Zander** _(06-Dec-22 10:02 PM)_ [1049898649607471164]
 
@@ -979,12 +981,6 @@ _Zion coughs._
 
 > PUT ON SOME CLOTHES ALREADY!
 
-**Jonas** _(06-Dec-22 10:04 PM)_ [1049899094585393152]
-
-↪ Silas: Bellow, am I good to stop posing?
-
-> Yes, I said that a while ago.
-
 **Silas** _(06-Dec-22 10:04 PM)_ [1049899144669577318]
 
 > SHUT THE FUCK UP THE CAPTAIN IS TALKING!
@@ -1027,10 +1023,6 @@ _Seth slips a small ice cube into Dutch's towel._
 
 _Zion begins to pace._
 
-**Trey** _(06-Dec-22 10:06 PM)_ [1049899568713711656]
-
-> So, of course, we'll need someone to pilot and stabilize the ship.
-
 **Silas** _(06-Dec-22 10:06 PM)_ [1049899589232242699]
 
 > And also my dick is cold.
@@ -1040,6 +1032,10 @@ _Zion begins to pace._
 ↪ Silas: and also my dick is cold
 
 > Again, clothes.
+
+**Trey** _(06-Dec-22 10:06 PM)_ [1049899568713711656]
+
+> So, of course, we'll need someone to pilot and stabilize the ship.
 
 **Trey** _(06-Dec-22 10:06 PM)_ [1049899669502820434]
 
@@ -1082,10 +1078,6 @@ _`Emmett`: Emmett takes a second to pick up, but inevitably does._
 
 > It's go time.
 
-**Trey** _(06-Dec-22 10:07 PM)_ [1049900054716104744]
-
-> Now... Bellow, do you consider yourself as having steady hands?
-
 **Sean** _(06-Dec-22 10:08 PM)_ [1049900070104997998]
 
 > My wife dies tonight Emmett!
@@ -1096,6 +1088,12 @@ _`Emmett`: Emmett takes a second to pick up, but inevitably does._
 
 _Dutch drops the towel, exposing himself. He strolls away to grab his clothes._
 
+**Brody** _(06-Dec-22 10:09 PM)_ [1049900374821191730]
+
+↪ Silas: Sweet. I'll be back in a minute, then. Dutch drops the towel…
+
+> Dutch, please.
+
 **Sean** _(06-Dec-22 10:08 PM)_ [1049900110483566683]
 
 > Well ex-wife.
@@ -1103,6 +1101,10 @@ _Dutch drops the towel, exposing himself. He strolls away to grab his clothes._
 **Zander** _(06-Dec-22 10:08 PM)_ [1049900119522295890]
 
 > `Emmett`: It's like, after midnight, man.
+
+**Trey** _(06-Dec-22 10:07 PM)_ [1049900054716104744]
+
+> Now... Bellow, do you consider yourself as having steady hands?
 
 **Jonas** _(06-Dec-22 10:08 PM)_ [1049900122131152966]
 
@@ -1132,12 +1134,6 @@ _Dutch drops the towel, exposing himself. He strolls away to grab his clothes._
 
 > Stay quiet for now.
 
-**Brody** _(06-Dec-22 10:09 PM)_ [1049900374821191730]
-
-↪ Silas: Sweet. I'll be back in a minute, then. Dutch drops the towel…
-
-> Dutch, please.
-
 **Sean** _(06-Dec-22 10:09 PM)_ [1049900394530213908]
 
 _Seth deafens the commwatch._
@@ -1162,7 +1158,13 @@ _Bellow was not looking, as he was responding to the captain._
 
 **Trey** _(06-Dec-22 10:09 PM)_ [1049900553532088321]
 
-> I'm assigning you to control of the tractor beam.
+> Bellow, I'm assigning you to control of the tractor beam.
+
+**Jonas** _(06-Dec-22 10:11 PM)_ [1049900873582649375]
+
+↪ Trey: I'm assigning you to control of the tractor beam.
+
+> Yes, Captain... I won't let you down.
 
 **Trey** _(06-Dec-22 10:10 PM)_ [1049900590110605362]
 
@@ -1185,12 +1187,6 @@ _Seth points over at the pod._
 **Trey** _(06-Dec-22 10:10 PM)_ [1049900788647989289]
 
 > That's fine. You'll need to take time to ensure your orbital speed is correct, anyways.
-
-**Jonas** _(06-Dec-22 10:11 PM)_ [1049900873582649375]
-
-↪ Trey: I'm assigning you to control of the tractor beam.
-
-> Yes, Captain... I won't let you down.
 
 **Vortox** _(06-Dec-22 10:11 PM)_ [1049900922706341968]
 
@@ -1292,13 +1288,13 @@ _Dutch elbows Zach and chuckles._
 
 _Seth inserts the alternate control-drive into a USB slot._
 
-**Trey** _(06-Dec-22 10:16 PM)_ [1049902143223627796]
-
-> ...Vec? How's that body treating you?
-
 **Sean** _(06-Dec-22 10:16 PM)_ [1049902214396792894]
 
 > This is a nice pod!
+
+**Trey** _(06-Dec-22 10:16 PM)_ [1049902143223627796]
+
+> ...Vec? How's that body treating you?
 
 **Zander** _(06-Dec-22 10:16 PM)_ [1049902273565835285]
 
@@ -1328,7 +1324,7 @@ _Dutch must roll to see whether Pauline goes off accidentally._
 
 ↪ Silas: I don't need no woman, I've got my soulmate right here. Dutc…
 
-> You know... there used to be a law back in America where marrying a gun was legal...
+> You know... there used to be a law back on Earth where marrying a gun was legal...
 
 **Sean** _(06-Dec-22 10:18 PM)_ [1049902585408147506]
 
@@ -1344,6 +1340,10 @@ _Seth gets out of the pod._
 <footer>Silas asked: "Does Dutch accidentally fire Pauline, obliterating the drunken head of the mercenary?"</footer>
 </embed>
 
+**Zander** _(06-Dec-22 10:19 PM)_ [1049902997955682447]
+
+_The mercenary fell back, slamming into the side of the sofa._
+
 **Trey** _(06-Dec-22 10:19 PM)_ [1049902943576543242]
 
 _Zion sighs._
@@ -1357,10 +1357,6 @@ _Zion sighs._
 **Brody** _(06-Dec-22 10:19 PM)_ [1049902993014788096]
 
 > Oh dear.
-
-**Zander** _(06-Dec-22 10:19 PM)_ [1049902997955682447]
-
-_The mercenary fell back, slamming into the side of the sofa._
 
 **Sean** _(06-Dec-22 10:19 PM)_ [1049903007573233716]
 
@@ -1442,6 +1438,10 @@ _Bellow gets slapped from seemingly nothing._
 
 > Zach, in case of any emergencies, I want you watching our backs. This will be an intensive mission, so if anything goes awry, it's absolutely imperative that we have someone to fix it.
 
+**Trey** _(06-Dec-22 10:24 PM)_ [1049904288027123775]
+
+> Never know when the Ravens will rear their ugly heads again...
+
 **Zander** _(06-Dec-22 10:24 PM)_ [1049904205705519134]
 
 _Vec left the mercenary body and the room itself, moving to the airlock._
@@ -1451,10 +1451,6 @@ _Vec left the mercenary body and the room itself, moving to the airlock._
 ↪ Trey: Zach, in case of any emergencies, I want you watching our ba…
 
 > Absolutely!
-
-**Trey** _(06-Dec-22 10:24 PM)_ [1049904288027123775]
-
-> Never know when the Ravens will rear their ugly heads again...
 
 **Hunt520** _(06-Dec-22 10:24 PM)_ [1049904335783481344]
 
@@ -1482,13 +1478,13 @@ _Zion says this with an air of pride in his voice._
 
 > I agree Deedee.
 
-**Sean** _(06-Dec-22 10:26 PM)_ [1049904833882247168]
-
-_Seth smiles at Zion._
-
 **Trey** _(06-Dec-22 10:26 PM)_ [1049904837652910080]
 
 > You have my word.
+
+**Sean** _(06-Dec-22 10:26 PM)_ [1049904833882247168]
+
+_Seth smiles at Zion._
 
 **Sean** _(06-Dec-22 10:27 PM)_ [1049904856057532496]
 
@@ -1574,6 +1570,18 @@ _He slips into his room and turns his comms back on._
 
 > Then we can complete the quest to kill my ex.
 
+**Zander** _(06-Dec-22 10:31 PM)_ [1049906052440797254]
+
+> `Emmett`: Yeah...
+
+**Brody** _(06-Dec-22 10:32 PM)_ [1049906121646813184]
+
+> Pardon?
+
+**Brody** _(06-Dec-22 10:32 PM)_ [1049906153691283487]
+
+> What was that voice?
+
 **Jonas** _(06-Dec-22 10:31 PM)_ [1049905979598319616]
 
 > I still don't fully agree with this mission, but... I would gladly be here to support you guys nonetheless.
@@ -1588,21 +1596,9 @@ _He slips into his room and turns his comms back on._
 
 > Uh, sure...
 
-**Zander** _(06-Dec-22 10:31 PM)_ [1049906052440797254]
-
-> `Emmett`: Yeah...
-
-**Brody** _(06-Dec-22 10:32 PM)_ [1049906121646813184]
-
-> Pardon?
-
 **Jonas** _(06-Dec-22 10:32 PM)_ [1049906147651493979]
 
 _Bellow and Zach go to another room._
-
-**Brody** _(06-Dec-22 10:32 PM)_ [1049906153691283487]
-
-> What was that voice?
 
 **Trey** _(06-Dec-22 10:32 PM)_ [1049906154819559506]
 
@@ -1670,11 +1666,49 @@ _Dutch barges into the room with Zachaloidius and Bellow._
 
 > HEY NOODLE SQUAD, WE'RE HERE!
 
+**Hunt520** _(06-Dec-22 10:36 PM)_ [1049907138551619684]
+
+↪ Silas: Dutch barges into the room with Zachaloidius and Bellow. HEY…
+
+_Again, Dutch can't see it, but Zach is glaring at him._
+
 **Jonas** _(06-Dec-22 10:36 PM)_ [1049907120478363688]
 
 > Hello... Dutch...
 
 _Bellow pinches his nose area in annoyance._
+
+**Hunt520** _(06-Dec-22 10:37 PM)_ [1049907462863593532]
+
+↪ Jonas: Hello...Dutch... Bellow pinches his nose area in annoyance
+
+> Anyway, that's all... Oh! before I forget...
+
+_Zach pulls his ring off._
+
+> Since I will be on defense... there's a high likely hood that I might die... so... keep this safe. And... give it to Jack when you see him... if you do...
+
+**Jonas** _(06-Dec-22 10:39 PM)_ [1049907901759754291]
+
+↪ Hunt520: Anyway, that's all... Oh! before I forget... Zach pulls his…
+
+> Nonesense. As long as I'm your medic, you won't die... Plus, I get a funny feeling some divine presence has protected us from death so far...
+
+**Hunt520** _(06-Dec-22 10:39 PM)_ [1049908080017690704]
+
+↪ Jonas: Nonesense. As long as I'm your medic, you won't die...Plus,…
+
+_Zach smiles and pulls his hood off._
+
+> I guess...
+
+_He puts his ring back on._
+
+> Now then... let's get to it... right?
+
+**Jonas** _(06-Dec-22 10:40 PM)_ [1049908135478956062]
+
+> Let's get it done!
 
 **Sean** _(06-Dec-22 10:36 PM)_ [1049907126908223560]
 
@@ -1688,25 +1722,9 @@ _Bellow pinches his nose area in annoyance._
 
 _Zion is nice and shiny._
 
-**Hunt520** _(06-Dec-22 10:36 PM)_ [1049907138551619684]
-
-↪ Silas: Dutch barges into the room with Zachaloidius and Bellow. HEY…
-
-_Again, Dutch can't see it, but Zach is glaring at him._
-
 **Brody** _(06-Dec-22 10:37 PM)_ [1049907419637100574]
 
 _Morra dons their best attire. More akin to a suit, but with elements of a skirt here and there._
-
-**Hunt520** _(06-Dec-22 10:37 PM)_ [1049907462863593532]
-
-↪ Jonas: Hello...Dutch... Bellow pinches his nose area in annoyance
-
-> Anyway, that's all... Oh! before I forget...
-
-_Zach pulls his ring off._
-
-> Since I will be on defense... there's a high likely hood that I might die... so... keep this safe. And... give it to Jack when you see him... if you do...
 
 **Sean** _(06-Dec-22 10:37 PM)_ [1049907531935387708]
 
@@ -1758,12 +1776,6 @@ _Zion puts down his tool._
 
 > My wife is gonna die.
 
-**Jonas** _(06-Dec-22 10:39 PM)_ [1049907901759754291]
-
-↪ Hunt520: Anyway, that's all... Oh! before I forget... Zach pulls his…
-
-> Nonesense. As long as I'm your medic, you won't die... Plus, I get a funny feeling some divine presence has protected us from death so far...
-
 **Sean** _(06-Dec-22 10:39 PM)_ [1049907903781417011]
 
 > Dude I can't let this opportunity to slip away.
@@ -1784,22 +1796,6 @@ _`Emmett`: Emmett sounds a bit annoyed._
 **Brody** _(06-Dec-22 10:39 PM)_ [1049908078889422919]
 
 > As such, I wanted to thank you for your leadership, and even, dare I say, friendship during this mission.
-
-**Hunt520** _(06-Dec-22 10:39 PM)_ [1049908080017690704]
-
-↪ Jonas: Nonesense. As long as I'm your medic, you won't die...Plus,…
-
-_Zach smiles and pulls his hood off._
-
-> I guess...
-
-_He puts his ring back on._
-
-> Now then... let's get to it... right?
-
-**Jonas** _(06-Dec-22 10:40 PM)_ [1049908135478956062]
-
-> Let's get it done!
 
 **Zander** _(06-Dec-22 10:40 PM)_ [1049908151945810001]
 
@@ -1871,6 +1867,12 @@ _Dutch hands out the ale to each crewmember, interrupting them._
 
 > Gather 'round, dear crewmates! Well, I guess y'all're already a step ahead of me, ain't ya?
 
+**Hunt520** _(06-Dec-22 10:43 PM)_ [1049908942052007946]
+
+↪ Silas: Dutch hands out the ale to each crewmember, interrupting the…
+
+> I don't drink Dutch...
+
 **Trey** _(06-Dec-22 10:42 PM)_ [1049908756554723408]
 
 _Zion puts his hand on Morra's shoulder, or whatever passes for one._
@@ -1887,6 +1889,12 @@ _Zion puts his hand on Morra's shoulder, or whatever passes for one._
 
 > `Emmett`: Seth, I don't know what happens in a black hole. There's no certainty you're coming back.
 
+**Sean** _(06-Dec-22 10:43 PM)_ [1049909113661956126]
+
+↪ Zander: Emmett: "Seth, I don't know what happens in a black hole. Th…
+
+> When have I never come back?
+
 **Vortox** _(06-Dec-22 10:43 PM)_ [1049908933696946186]
 
 ⌘ Jonas used /8ball
@@ -1897,11 +1905,9 @@ _Zion puts his hand on Morra's shoulder, or whatever passes for one._
 <footer>Jonas asked: "Is Bellow filled with determination?"</footer>
 </embed>
 
-**Hunt520** _(06-Dec-22 10:43 PM)_ [1049908942052007946]
+**Hunt520** _(06-Dec-22 10:44 PM)_ [1049909342062772244]
 
-↪ Silas: Dutch hands out the ale to each crewmember, interrupting the…
-
-> I don't drink Dutch...
+_`Bellow`: Bellow is filled with determination, but determination only gets you so far, and one of his blasters is now jammed._
 
 **Silas** _(06-Dec-22 10:43 PM)_ [1049909035446579210]
 
@@ -1911,11 +1917,11 @@ _Zion puts his hand on Morra's shoulder, or whatever passes for one._
 
 > `Emmett`: I need you to grab the artifact first, and then launch it out. That's where the LR comes in. They'll catch the artifact if we do this just right.
 
-**Sean** _(06-Dec-22 10:43 PM)_ [1049909113661956126]
+**Sean** _(06-Dec-22 10:44 PM)_ [1049909343623065600]
 
-↪ Zander: Emmett: "Seth, I don't know what happens in a black hole. Th…
+↪ Zander: Emmett: "I need you to grab the artifact first, and then lau…
 
-> When have I never come back?
+> You know what will happen when I fall into that black hole after I jettison the artifact? The ship will leave me as a lost cause.
 
 **Brody** _(06-Dec-22 10:44 PM)_ [1049909240296386600]
 
@@ -1932,16 +1938,6 @@ _Morra lays a hand on Zion's shoulder, and nods with a hint of a smile... if the
 _Zion hears the announcement and smirks._
 
 > Let's kick some black-hole ass, shall we?
-
-**Hunt520** _(06-Dec-22 10:44 PM)_ [1049909342062772244]
-
-_`Bellow`: Bellow is filled with determination, but determination only gets you so far, and one of his blasters is now jammed._
-
-**Sean** _(06-Dec-22 10:44 PM)_ [1049909343623065600]
-
-↪ Zander: Emmett: "I need you to grab the artifact first, and then lau…
-
-> You know what will happen when I fall into that black hole after I jettison the artifact? The ship will leave me as a lost cause.
 
 **Sean** _(06-Dec-22 10:45 PM)_ [1049909419837751296]
 
@@ -2031,6 +2027,36 @@ _Dutch downs the entire mug in a single gulp._
 
 > Oh! Zach, I'm glad to get to speak to you before it all goes down.
 
+**Hunt520** _(06-Dec-22 10:47 PM)_ [1049910114368360479]
+
+↪ Brody: Oh! Zach, I'm glad to get to speak to you before it all goes…
+
+> First I would like to say thanks for being there for me... and... it was entertaining to be your friend... now... how much do you know of Weddings?
+
+**Brody** _(06-Dec-22 10:49 PM)_ [1049910453209419807]
+
+↪ Hunt520: First I would like to say thanks for being there for me... a…
+
+> It was a pleasure to call you a friend, Zach. And I was lucky enough to attend a few Human-style weddings! Why do you ask?
+
+**Hunt520** _(06-Dec-22 10:49 PM)_ [1049910588131774494]
+
+↪ Brody: It was a pleasure to call you a friend, Zach. And I was luck…
+
+> How would you like to... officiate Jack and I's wedding? When the time comes of course!
+
+**Brody** _(06-Dec-22 10:51 PM)_ [1049911023064334387]
+
+↪ Hunt520: How would you like to... officiate Jack and I's wedding? Whe…
+
+> I would be Honored to.
+
+**Hunt520** _(06-Dec-22 10:51 PM)_ [1049911065259036782]
+
+↪ Brody: I would be Honored to.
+
+> Thanks!
+
 **Trey** _(06-Dec-22 10:47 PM)_ [1049909912194515017]
 
 _He lifts up his helmet and takes a sip._
@@ -2054,12 +2080,6 @@ _He lifts up his helmet and takes a sip._
 **Sean** _(06-Dec-22 10:47 PM)_ [1049910112300568646]
 
 > Duh.
-
-**Hunt520** _(06-Dec-22 10:47 PM)_ [1049910114368360479]
-
-↪ Brody: Oh! Zach, I'm glad to get to speak to you before it all goes…
-
-> First I would like to say thanks for being there for me... and... it was entertaining to be your friend... now... how much do you know of Weddings?
 
 **Sean** _(06-Dec-22 10:48 PM)_ [1049910141492928542]
 
@@ -2115,12 +2135,6 @@ _Zion drinks the whole glass without stopping._
 
 > It's unique.
 
-**Brody** _(06-Dec-22 10:49 PM)_ [1049910453209419807]
-
-↪ Hunt520: First I would like to say thanks for being there for me... a…
-
-> It was a pleasure to call you a friend, Zach. And I was lucky enough to attend a few Human-style weddings! Why do you ask?
-
 **Sean** _(06-Dec-22 10:49 PM)_ [1049910523124252763]
 
 _Seth opens the pod and stumbles out over the pile of 500 wine bottles._
@@ -2132,12 +2146,6 @@ _Seth opens the pod and stumbles out over the pile of 500 wine bottles._
 **Sean** _(06-Dec-22 10:49 PM)_ [1049910560575209482]
 
 _Seth deafens his watch._
-
-**Hunt520** _(06-Dec-22 10:49 PM)_ [1049910588131774494]
-
-↪ Brody: It was a pleasure to call you a friend, Zach. And I was luck…
-
-> How would you like to... officiate Jack and I's wedding? When the time comes of course!
 
 **Sean** _(06-Dec-22 10:50 PM)_ [1049910673695580160]
 
@@ -2163,23 +2171,11 @@ _Seth crushes the bottle with his head._
 
 _Dutch clinks his empty glass against Seth's._
 
-**Brody** _(06-Dec-22 10:51 PM)_ [1049911023064334387]
-
-↪ Hunt520: How would you like to... officiate Jack and I's wedding? Whe…
-
-> I would be Honored to.
-
 **Jonas** _(06-Dec-22 10:51 PM)_ [1049911024406499388]
 
 ↪ Hunt520: Zach remembers so he shouts across the room Hey Bellow!!!
 
 > What?
-
-**Hunt520** _(06-Dec-22 10:51 PM)_ [1049911065259036782]
-
-↪ Brody: I would be Honored to.
-
-> Thanks!
 
 **Sean** _(06-Dec-22 10:52 PM)_ [1049911171416871043]
 
@@ -2255,7 +2251,7 @@ _Dutch pats Seth on the back._
 
 ↪ Silas: You'll be fine, bud! Dutch pats Seth on the back.
 
-> If I fall in, its your fault.
+> If I fall in, it's your fault.
 
 **Zander** _(06-Dec-22 10:55 PM)_ [1049911999120814110]
 
@@ -2569,7 +2565,7 @@ _Dutch high fives the outstretched hand that was clearly meant to be a handshake
 
 **Sean** _(06-Dec-22 11:11 PM)_ [1049915913610215494]
 
-> Because its none of your business.
+> Because it's none of your business.
 
 **Silas** _(06-Dec-22 11:11 PM)_ [1049916072058429491]
 
@@ -3168,6 +3164,12 @@ _Vec was listening in to their conversation._
 
 > I'm sure he would.
 
+**Sean** _(06-Dec-22 11:33 PM)_ [1049921624620679168]
+
+↪ Sean: I could, but I'm better than that.
+
+_Seth hangs up._
+
 **Hunt520** _(06-Dec-22 11:33 PM)_ [1049921460006817822]
 
 _Zach moves to stand in front of the airlock, Oblivion off his back, he will do his best to keep any unwanted guests out._
@@ -3181,12 +3183,6 @@ _Zion presses a button on the cockpit and brings up a screen in front of Dutch, 
 ↪ Trey: Zion presses a button on the cockpit and brings up a screen…
 
 > I'm gonna perform checks.
-
-**Sean** _(06-Dec-22 11:33 PM)_ [1049921624620679168]
-
-↪ Sean: I could, but I'm better than that.
-
-_Seth hangs up._
 
 **Silas** _(06-Dec-22 11:33 PM)_ [1049921633198030908]
 
@@ -3446,6 +3442,10 @@ _The pod begins to approach the artifact._
 
 _Physics are weird within the black hole, and incomprehensible lights and objects are flying by Seth's pod at unbelievable speeds._
 
+**Vortox** _(06-Dec-22 11:43 PM)_ [1049924199881388073]
+
+_The duo might start seeing things._
+
 **Silas** _(06-Dec-22 11:43 PM)_ [1049924137881178123]
 
 > Not now, Morra, this is important.
@@ -3453,10 +3453,6 @@ _Physics are weird within the black hole, and incomprehensible lights and object
 **Silas** _(06-Dec-22 11:44 PM)_ [1049924283557748806]
 
 > Alright, Seth, you're in contact range. Initiate the retrieval process.
-
-**Vortox** _(06-Dec-22 11:43 PM)_ [1049924199881388073]
-
-_The duo might start seeing things._
 
 **Sean** _(06-Dec-22 11:44 PM)_ [1049924290620964874]
 
@@ -3582,9 +3578,23 @@ _`Emmett`: Emmett rotates the pod, slowly to maintain accuracy._
 
 > `Emmett`: Just a second...
 
+**Vortox** _(06-Dec-22 11:49 PM)_ [1049925678381924393]
+
+⌘ Zander used /8ball
+
+<embed>
+<title>8ball Response</title>
+<description>Unequivocally yes.</description>
+<footer>Zander asked: "Does Emmett get the roll, yaw, and pitch correctly?"</footer>
+</embed>
+
 **Trey** _(06-Dec-22 11:49 PM)_ [1049925502107914271]
 
 > I'd prayed to gods I hadn't believed in for years. Glad this actually worked out.
+
+**Brody** _(06-Dec-22 11:50 PM)_ [1049925786574000170]
+
+> I'm sure they appreciated your prayer, captain!
 
 **Silas** _(06-Dec-22 11:49 PM)_ [1049925520646733824]
 
@@ -3606,16 +3616,6 @@ _Seth pops the pill he had in his pocket._
 
 _Zion punches Morra's shoulder playfully, before noticing Dutch._
 
-**Vortox** _(06-Dec-22 11:49 PM)_ [1049925678381924393]
-
-⌘ Zander used /8ball
-
-<embed>
-<title>8ball Response</title>
-<description>Unequivocally yes.</description>
-<footer>Zander asked: "Does Emmett get the roll, yaw, and pitch correctly?"</footer>
-</embed>
-
 **Sean** _(06-Dec-22 11:49 PM)_ [1049925680122564608]
 
 _The comms remain silent._
@@ -3635,10 +3635,6 @@ _The comms remain silent._
 **Sean** _(06-Dec-22 11:50 PM)_ [1049925771445149716]
 
 _Seth jettisons the wine bottle out of the garbage._
-
-**Brody** _(06-Dec-22 11:50 PM)_ [1049925786574000170]
-
-> I'm sure they appreciated your prayer, captain!
 
 **Sean** _(06-Dec-22 11:50 PM)_ [1049925814810066974]
 
@@ -3881,10 +3877,6 @@ _Vec is looking outside of the pod._
 
 _Dutch is fighting the controls._
 
-**Vortox** _(06-Dec-22 11:57 PM)_ [1049927564271034438]
-
-_On the wine bottle is a signed note._
-
 **Hunt520** _(06-Dec-22 11:57 PM)_ [1049927585523572806]
 
 ↪ Silas: What? What did he send us?
@@ -3895,13 +3887,17 @@ _On the wine bottle is a signed note._
 
 _Morra floats their hand out towards the pod, yet the dilation of time makes it... difficult._
 
-**Sean** _(06-Dec-22 11:57 PM)_ [1049927620067872808]
-
-> Sorry! -Seth.
-
 **Silas** _(06-Dec-22 11:57 PM)_ [1049927641328779274]
 
 > Oh, how perfect. Is there a note or anything???
+
+**Vortox** _(06-Dec-22 11:57 PM)_ [1049927564271034438]
+
+_On the wine bottle is a signed note._
+
+**Sean** _(06-Dec-22 11:57 PM)_ [1049927620067872808]
+
+> Sorry! -Seth.
 
 **Silas** _(06-Dec-22 11:57 PM)_ [1049927725713989632]
 
@@ -4169,6 +4165,12 @@ _Seth exits the pod, nearly tripping over Morra's head._
 
 > I don't know.
 
+**Hunt520** _(07-Dec-22 12:06 AM)_ [1049929884912336916]
+
+↪ Silas: I don't know.
+
+> Now I know how Vec feels when he wants to kill you...
+
 **Sean** _(07-Dec-22 12:06 AM)_ [1049929756168171600]
 
 ↪ Brody: I came after you! You were unresponsive, and we had no idea…
@@ -4186,12 +4188,6 @@ _The body Vec was inside decomposed immediately, withering away._
 **Brody** _(07-Dec-22 12:06 AM)_ [1049929859964620852]
 
 > What happened? And where... where are we?
-
-**Hunt520** _(07-Dec-22 12:06 AM)_ [1049929884912336916]
-
-↪ Silas: I don't know.
-
-> Now I know how Vec feels when he wants to kill you...
 
 **Sean** _(07-Dec-22 12:06 AM)_ [1049929930143711252]
 

@@ -388,13 +388,13 @@ _Zion motions for his display to return._
 
 > Just our luck.
 
-**Zander** _(13-Dec-22 06:45 PM)_ [1052385722415452282]
-
-> `Squorchy`: Yeah, yeah, been there, done that. Try to be more romantic, fluffy cheeks.
-
 **Trey** _(13-Dec-22 06:45 PM)_ [1052385748445319169]
 
 _Zion detaches his holodeck from his forearm and throws it across the room._
+
+**Zander** _(13-Dec-22 06:45 PM)_ [1052385722415452282]
+
+> `Squorchy`: Yeah, yeah, been there, done that. Try to be more romantic, fluffy cheeks.
 
 **Zander** _(13-Dec-22 06:45 PM)_ [1052385765608403066]
 
@@ -446,6 +446,10 @@ _`Emmett`: Emmett audibly sighs._
 
 > Tell Emmett I'll personally pay him a visit and kick his fluffy cheeks if he doesn't help us.
 
+**Silas** _(13-Dec-22 06:47 PM)_ [1052386365158994002]
+
+> Hey, Zion says he'll personally pay you a visit an' kick your fluffy cheeks if you don't help us. Just so yer aware.
+
 **Zander** _(13-Dec-22 06:46 PM)_ [1052386175521931264]
 
 _`Squorchy`: Squorchy gives him an audible kiss._
@@ -455,10 +459,6 @@ _`Squorchy`: Squorchy gives him an audible kiss._
 **Zander** _(13-Dec-22 06:47 PM)_ [1052386316320514078]
 
 > `Emmett`: I uh... May have assisted in him getting into the black hole.
-
-**Silas** _(13-Dec-22 06:47 PM)_ [1052386365158994002]
-
-> Hey, Zion says he'll personally pay you a visit an' kick your fluffy cheeks if you don't help us. Just so yer aware.
 
 **Silas** _(13-Dec-22 06:47 PM)_ [1052386379625152512]
 
@@ -534,13 +534,13 @@ _`Emmett`: Emmett sits down in his chair._
 
 > Fine.
 
-**Silas** _(13-Dec-22 06:51 PM)_ [1052387217248616560]
-
-> Hey, I'm a great pilot. Now, why in the hell did you help him KILL HIMSELF and DESTROY THE ARTIFACT?
-
 **Hunt520** _(13-Dec-22 06:51 PM)_ [1052387225448480848]
 
 _Zach walks over to Morra's body and begins a pat down._
+
+**Silas** _(13-Dec-22 06:51 PM)_ [1052387217248616560]
+
+> Hey, I'm a great pilot. Now, why in the hell did you help him KILL HIMSELF and DESTROY THE ARTIFACT?
 
 **Silas** _(13-Dec-22 06:51 PM)_ [1052387364695183370]
 
@@ -556,6 +556,10 @@ _Zach walks over to Morra's body and begins a pat down._
 <footer>Trey asked: "Does Zion try to take the phone from Dutch?"</footer>
 </embed>
 
+**Silas** _(13-Dec-22 06:52 PM)_ [1052387639912829039]
+
+> Hey, ah am on the phone right now.
+
 **Jonas** _(13-Dec-22 06:51 PM)_ [1052387378754502716]
 
 > They can't be dead, not yet...
@@ -568,19 +572,11 @@ _Zach walks over to Morra's body and begins a pat down._
 
 > `Emmett`: I made him promise he would eject the artifact through the garbage chute before he entered. I got Llashii to set up a capture device.
 
-**Trey** _(13-Dec-22 06:52 PM)_ [1052387609986486384]
-
-_Dutch is so short that Zion can't even reach his hands._
-
 **Hunt520** _(13-Dec-22 06:52 PM)_ [1052387634242134128]
 
 ↪ Jonas: I'm pretty sure Seth can't die anyway.
 
 > He can't unfortunately... and to be honest, I want to be the one to stab him when he can...
-
-**Silas** _(13-Dec-22 06:52 PM)_ [1052387639912829039]
-
-> Hey, ah am on the phone right now.
 
 **Silas** _(13-Dec-22 06:53 PM)_ [1052387742971080734]
 
@@ -618,6 +614,10 @@ _Dutch is so short that Zion can't even reach his hands._
 
 _Poof!_
 
+**Hunt520** _(13-Dec-22 06:54 PM)_ [1052388136140947467]
+
+_Zach blinks._
+
 **Jonas** _(13-Dec-22 06:54 PM)_ [1052388079161319544]
 
 > Oh.
@@ -625,10 +625,6 @@ _Poof!_
 **Silas** _(13-Dec-22 06:54 PM)_ [1052388099449163786]
 
 > Ope, Morra's body just vanished.
-
-**Hunt520** _(13-Dec-22 06:54 PM)_ [1052388136140947467]
-
-_Zach blinks._
 
 **Silas** _(13-Dec-22 06:54 PM)_ [1052388152565825637]
 
@@ -724,6 +720,10 @@ _Zion stomps over to the cockpit._
 
 > Should be there in a couple minutes. We're not as far as I thought.
 
+**Trey** _(13-Dec-22 06:59 PM)_ [1052389444503736331]
+
+> I had to take a bit of a backroad. Well, back-track, I suppose.
+
 **Zander** _(13-Dec-22 06:59 PM)_ [1052389311418486814]
 
 ↪ Jonas: 
@@ -745,10 +745,6 @@ _`Emmett`: Emmett sighs and gets upset._
 > Toodles.
 
 _Dutch hangs up._
-
-**Trey** _(13-Dec-22 06:59 PM)_ [1052389444503736331]
-
-> I had to take a bit of a backroad. Well, back-track, I suppose.
 
 **Zander** _(13-Dec-22 07:00 PM)_ [1052389632228208751]
 
@@ -790,13 +786,13 @@ _Zach frowns... but complies, he takes it off, the constellation of Taurus shini
 
 > Remember Moldarr? I can pretend to be an ambassador again!
 
-**Trey** _(13-Dec-22 07:03 PM)_ [1052390333733937244]
-
-> Here's a better idea.
-
 **Jonas** _(13-Dec-22 07:03 PM)_ [1052390349366108160]
 
 > That might work.
+
+**Trey** _(13-Dec-22 07:03 PM)_ [1052390333733937244]
+
+> Here's a better idea.
 
 **Trey** _(13-Dec-22 07:03 PM)_ [1052390381729361991]
 
@@ -976,6 +972,10 @@ _Zach is considering committing seppuku right now._
 
 _16 hours pass as the ship is accepted through customs._
 
+**Vortox** _(13-Dec-22 07:15 PM)_ [1052393360184328272]
+
+_It so happens that the customs officers noticed Zach's fake fake elf ears and replaced them with the official honorary elf ears._
+
 **Vortox** _(13-Dec-22 07:12 PM)_ [1052392703142404226]
 
 _The crew exits the ship, bored to tears._
@@ -1019,10 +1019,6 @@ _`Zach`: Zach's fake fake ears, now real fake elf ears, jingle._
 **Trey** _(13-Dec-22 07:15 PM)_ [1052393423690268743]
 
 > We'll follow him as his posse... er, how about disciples?
-
-**Vortox** _(13-Dec-22 07:15 PM)_ [1052393360184328272]
-
-_It so happens that the customs officers noticed Zach's fake fake elf ears and replaced them with the official honorary elf ears._
 
 **Hunt520** _(13-Dec-22 07:15 PM)_ [1052393453771833424]
 
@@ -1388,6 +1384,14 @@ _Zach places his hand on the Giant's finger._
 
 > Nice to meet you!
 
+**Zander** _(13-Dec-22 07:43 PM)_ [1052400308451545118]
+
+↪ Hunt520: Oh! Zach places his hand on the Giant's finger Nice to meet…
+
+> `Giant`: I'M GLAD SOMEONE RESPONDED TO ME. IT IS NICE TO MEET YOU TOO, PUNY ELFMAN. I WILL BE ON MY WAY.
+
+_`Giant`: The giant leaves the establishment, causing some people to be stepped on and doorways to be broken through. Soldiers armed with huge nets trail after him, yelling obscenities._
+
 **Trey** _(13-Dec-22 07:41 PM)_ [1052399925163470898]
 
 _`Messenger`: The messenger fiddles with some objects, looking frantic._
@@ -1424,14 +1428,6 @@ _Zach walks back in._
 
 _Dutch gets up in the messenger's face._
 
-**Zander** _(13-Dec-22 07:43 PM)_ [1052400308451545118]
-
-↪ Hunt520: Oh! Zach places his hand on the Giant's finger Nice to meet…
-
-> `Giant`: I'M GLAD SOMEONE RESPONDED TO ME. IT IS NICE TO MEET YOU TOO, PUNY ELFMAN. I WILL BE ON MY WAY.
-
-_`Giant`: The giant leaves the establishment, causing some people to be stepped on and doorways to be broken through. Soldiers armed with huge nets trail after him, yelling obscenities._
-
 **Silas** _(13-Dec-22 07:43 PM)_ [1052400330593280120]
 
 > I don't believe you.
@@ -1450,7 +1446,7 @@ _By instinct, Zach reaches for Oblivion._
 
 **Jonas** _(13-Dec-22 07:44 PM)_ [1052400644163653674]
 
-_Bellow does a little dance for 0.00054 picoseconds, then starts to panic too._
+_Bellow starts to panic too._
 
 **Silas** _(13-Dec-22 07:44 PM)_ [1052400675344097350]
 
@@ -1462,7 +1458,7 @@ _The tremors stop. Every door in the monastery shuts immediately, but not before
 
 **Jonas** _(13-Dec-22 07:44 PM)_ [1052400745653223564]
 
-> Von Shambassador, isnt this going a little far?
+> Von Shambassador, isn't this going a little far?
 
 **Trey** _(13-Dec-22 07:44 PM)_ [1052400767916593235]
 
@@ -1476,13 +1472,31 @@ _`Giant`: And starts moving him around like a puppet._
 
 > Not at all! We're simply getting ready to meet our-
 
-**Zander** _(13-Dec-22 07:45 PM)_ [1052400833125429299]
-
-_`Messenger`: A separate messenger, looking more regal than the last, rushes out of the building. Followed by another. And then another. One reaches the crew._
-
 **Silas** _(13-Dec-22 07:45 PM)_ [1052400869531975700]
 
 > JOLLY BAD SHOW! PUT ME DOWN THIS INSTANT!
+
+**Vortox** _(13-Dec-22 07:46 PM)_ [1052401258989883442]
+
+⌘ Hunt520 used /8ball
+
+<embed>
+<title>8ball Response</title>
+<description>You only live once... so, yeah.</description>
+<footer>Hunt520 asked: "Does the giant put Dutch down this instant?"</footer>
+</embed>
+
+**Trey** _(13-Dec-22 07:46 PM)_ [1052401236948811797]
+
+_`Giant`: The giant places Dutch down in Bellow's arms._
+
+**Silas** _(13-Dec-22 07:46 PM)_ [1052401258058747974]
+
+> Thank you.
+
+**Zander** _(13-Dec-22 07:45 PM)_ [1052400833125429299]
+
+_`Messenger`: A separate messenger, looking more regal than the last, rushes out of the building. Followed by another. And then another. One reaches the crew._
 
 **Zander** _(13-Dec-22 07:45 PM)_ [1052400885835251712]
 
@@ -1500,24 +1514,6 @@ _He starts to pant, exhausted._
 
 > -God of Death wishes you... all... no ill will.
 
-**Silas** _(13-Dec-22 07:46 PM)_ [1052401258058747974]
-
-> Thank you.
-
-**Vortox** _(13-Dec-22 07:46 PM)_ [1052401258989883442]
-
-⌘ Hunt520 used /8ball
-
-<embed>
-<title>8ball Response</title>
-<description>You only live once... so, yeah.</description>
-<footer>Hunt520 asked: "Does the giant put Dutch down this instant?"</footer>
-</embed>
-
-**Trey** _(13-Dec-22 07:46 PM)_ [1052401236948811797]
-
-_`Giant`: The giant places Dutch down in Bellow's arms._
-
 **Hunt520** _(13-Dec-22 07:47 PM)_ [1052401315772375100]
 
 ↪ Zander: Messenger: "The-" he starts to pant, exhausted. "-God of Dea…
@@ -1532,15 +1528,15 @@ _Bellow drops Dutch._
 
 > Excuse me, the god of death, you say? I thought the curator of the afterlife was a goddess?
 
-**Zander** _(13-Dec-22 07:47 PM)_ [1052401395237650503]
-
-> `Messenger`: He wants you to know that... Morra and... the fungus are on their way...
-
 **Trey** _(13-Dec-22 07:47 PM)_ [1052401446437523486]
 
 _Zion sticks his head back inside._
 
 > What's the hold-up?
+
+**Zander** _(13-Dec-22 07:47 PM)_ [1052401395237650503]
+
+> `Messenger`: He wants you to know that... Morra and... the fungus are on their way...
 
 **Silas** _(13-Dec-22 07:47 PM)_ [1052401527987384440]
 
@@ -1570,13 +1566,13 @@ _Dutch turns around._
 
 > He fucking did it.
 
-**Trey** _(13-Dec-22 07:48 PM)_ [1052401642676441158]
-
-_`Messenger`: Messenger 1 begins crawling desperately._
-
 **Silas** _(13-Dec-22 07:48 PM)_ [1052401719054704692]
 
 > That crazy bastard fucking did it.
+
+**Trey** _(13-Dec-22 07:48 PM)_ [1052401642676441158]
+
+_`Messenger`: Messenger 1 begins crawling desperately._
 
 **Trey** _(13-Dec-22 07:48 PM)_ [1052401731356606484]
 
@@ -1614,7 +1610,7 @@ _`Seth`: Sethkinki, the new God of Death, yells from the heavens,_
 
 **Sean** _(13-Dec-22 07:50 PM)_ [1052402130612387890]
 
-> Im Sethkinki! God of Death!
+> I'm Sethkinki! God of Death!
 
 **Hunt520** _(13-Dec-22 07:50 PM)_ [1052402236573110332]
 
