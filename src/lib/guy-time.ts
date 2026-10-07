@@ -12,6 +12,9 @@
 //
 // Notation follows dd-mm-yyyy order: equinox-semester-year, "4-2-3022 GUY".
 // Negative years mark dates before the Galactic Union's founding.
+//
+// NOTE: this file is kept byte-for-byte identical between ff-site
+// (src/lib/guy-time.ts) and ff-server (src/utils/guy-time.ts). Edit both.
 
 export const EQUINOXES_PER_WEEK = 9;
 export const EQUINOXES_PER_SEMESTER = 45;
@@ -49,7 +52,11 @@ export function guyDateToEquinoxes({ year, semester, equinox }: GuyDate): number
     return year * EQUINOXES_PER_GUY + (semester - 1) * EQUINOXES_PER_SEMESTER + (equinox - 1);
 }
 
-/** "4-2-3022" (equinox-semester-year). Append " GUY" yourself where wanted. */
+/**
+ * "32 of 18, 3027" (equinox of semester, year) — the display form. Append
+ * " GUY" yourself where wanted. Note this is *not* the inverse of
+ * parseGuyDate, which reads the compact "32-18-3027" input notation.
+ */
 export function formatGuyDate(equinoxes: number): string {
     const { year, semester, equinox } = equinoxesToGuyDate(equinoxes);
     return `${equinox} of ${semester}, ${year}`;
@@ -68,6 +75,20 @@ export function parseGuyDate(input: string): number | null {
     if (equinox < 1 || equinox > EQUINOXES_PER_SEMESTER) return null;
     if (semester < 1 || semester > SEMESTERS_PER_GUY) return null;
     return guyDateToEquinoxes({ year, semester, equinox });
+}
+
+/**
+ * API input → stored equinox count. Accepts GUY notation ("4-2-3022"),
+ * a raw equinox integer, or null (clear). Throws on malformed input.
+ */
+export function guyInputToEquinoxes(input: string | number | null): number | null {
+    if (input === null) return null;
+    if (typeof input === "number" && Number.isInteger(input)) return input;
+    if (typeof input === "string") {
+        const parsed = parseGuyDate(input);
+        if (parsed !== null) return parsed;
+    }
+    throw new Error("Invalid GUY date — use equinox-semester-year notation, e.g. 4-2-3022");
 }
 
 /** Day-of-week name; 1-1-0 GUY was a Turkal. */
