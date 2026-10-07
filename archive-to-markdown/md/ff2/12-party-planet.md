@@ -1958,7 +1958,7 @@ _Through naivety, Iris takes his remark down at different path._
 
 > Fuck off, you plant prick. I'm married.
 
-_Emmett raises his right hoof, though no ring was on it._
+_Emmett flicks his left ear, showing it off. Despite this, no ring was on it._
 
 **Bagelwrecker** _(18-Aug-18 03:50 PM)_
 
