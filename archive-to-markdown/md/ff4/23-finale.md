@@ -5860,7 +5860,7 @@ _`Jack Madison`: Jack stumbles but still smiles with tears_
 
 **Jonas** _(14-Dec-22 02:21 AM)_ [1052500601344376902]
 
-> Man, remind me not to get on Sanya's bad side.
+> `Chomsky`: Man, remind me not to get on Sanya's bad side.
 
 **Brody** _(14-Dec-22 02:21 AM)_ [1052500625931386911]
 
@@ -5898,7 +5898,7 @@ _Vec makes it through the doors._
 
 **Hunt520** _(14-Dec-22 02:22 AM)_ [1052500861424783412]
 
-_`Jack Madison`: Jack is following the commander_
+_`Jack Madison`: Jack is following the commander._
 
 **Brody** _(14-Dec-22 02:22 AM)_ [1052500937261985822]
 
@@ -5923,7 +5923,7 @@ _Vec cannot hear Morra._
 **Hunt520** _(14-Dec-22 02:23 AM)_ [1052501062512291840]
 
 _Zach speaks silently in his mind._
-> I never said thanks...
+> (I never said thanks...)
 
 **Zander** _(14-Dec-22 02:23 AM)_ [1052501174542151710]
 
@@ -5939,7 +5939,11 @@ _Everyone's gathered at the port. Zach and Dutch are bandaged but feeling OK._
 
 **Zander** _(14-Dec-22 02:24 AM)_ [1052501397704278078]
 
-_Vec is messing with his teeth. He manages to pull one out and flicks it at Dutch._
+_Vec is messing with its teeth. He manages to pull one out and flicks it at Dutch._
+
+**Silas** _(14-Dec-22 02:24 AM)_ [1052501491342114826]
+
+> Ow.
 
 **Jonas** _(14-Dec-22 02:24 AM)_ [1052501401688866816]
 
@@ -5948,10 +5952,6 @@ _Bellow is at Zach and Dutch's sides. His best friends._
 **Hunt520** _(14-Dec-22 02:25 AM)_ [1052501466587353129]
 
 _Zach is just looking at his new arm. Jack hugs him from behind, and the two share a soft kiss._
-
-**Silas** _(14-Dec-22 02:25 AM)_ [1052501491342114826]
-
-> Ow.
 
 **Jonas** _(14-Dec-22 02:25 AM)_ [1052501598359797770]
 
@@ -6040,10 +6040,6 @@ _Morra gazes with a smile._
 
 _Dutch chuckles._
 
-**Trey** _(14-Dec-22 02:30 AM)_ [1052502815970447401]
-
-_`Bellow`: Bellow is left speechless!_
-
 **Hunt520** _(14-Dec-22 02:30 AM)_ [1052502817887232020]
 
 > Me and Jack plan on travelling after the wedding, but by then, you all are invited by the way!
@@ -6072,10 +6068,6 @@ _He stares daggers into Dutch._
 
 > Save me a seat. I'll even shine my helmet.
 
-**Zander** _(14-Dec-22 02:31 AM)_ [1052503091641057320]
-
-> Be careful, Zach.
-
 **Hunt520** _(14-Dec-22 02:31 AM)_ [1052503096137359360]
 
 _Zach speaks silently in his mind._
@@ -6085,9 +6077,9 @@ _Zach speaks silently in his mind._
 
 > I s'pose I can come. Just make sure the food's good!
 
-**Jonas** _(14-Dec-22 02:31 AM)_ [1052503137790984212]
+**Zander** _(14-Dec-22 02:31 AM)_ [1052503091641057320]
 
-> Dutch, you are a valuable friend, and...as much as I hate to admit it...without your reckless endangerment, we might not have made it past this mission alive.
+> Be careful, Zach.
 
 **Zander** _(14-Dec-22 02:31 AM)_ [1052503155717439529]
 
@@ -6103,11 +6095,23 @@ _Dutch lights a cigar._
 
 > You're not going to be there?
 
+**Zander** _(14-Dec-22 02:32 AM)_ [1052503297103233085]
+
+> I'd kill the party, Zach.
+
+**Hunt520** _(14-Dec-22 02:32 AM)_ [1052503347036434493]
+
+> Fair enough...
+
 **Trey** _(14-Dec-22 02:32 AM)_ [1052503229793054720]
 
 _Although you can't see it, Zion smiles big._
 
 > I look forward to crossing paths with you all again. Even you, Dutch.
+
+**Jonas** _(14-Dec-22 02:31 AM)_ [1052503137790984212]
+
+> Dutch, you are a valuable friend, and...as much as I hate to admit it...without your reckless endangerment, we might not have made it past this mission alive.
 
 **Silas** _(14-Dec-22 02:32 AM)_ [1052503240236871690]
 
@@ -6123,14 +6127,6 @@ _Vec gets up, flicks Dutch's cigar away, and starts to walk off._
 
 > Zach, I'm looking forward to the wedding. I'll make sure to wear something nice, heh.
 
-**Zander** _(14-Dec-22 02:32 AM)_ [1052503297103233085]
-
-> I'd kill the party, Zach.
-
-**Hunt520** _(14-Dec-22 02:32 AM)_ [1052503347036434493]
-
-> Fair enough...
-
 **Jonas** _(14-Dec-22 02:32 AM)_ [1052503409175052328]
 
 > Zion, you are...the best captain a guy could ask for. Thank you for leading this team.
@@ -6145,13 +6141,17 @@ _He points to Morra, Zion, and Zach._
 
 > Morra, share with me some of your arcane knowledge when you get the chance...I think I need to learn some magic...
 
-**Zander** _(14-Dec-22 02:33 AM)_ [1052503524845568041]
-
-> Take care.
-
 **Brody** _(14-Dec-22 02:33 AM)_ [1052503545078878208]
 
 > There's a million worlds out there to explore. And Elf Heaven knows I've got the time to do it all. But this? this will be my fondest memory for as long as I may travel.
+
+**Jonas** _(14-Dec-22 02:33 AM)_ [1052503617682292757]
+
+> Vec...You are a pain. But you're OUR pain. Have a nice trip, wherever you go.
+
+**Zander** _(14-Dec-22 02:33 AM)_ [1052503524845568041]
+
+> Take care.
 
 **Zander** _(14-Dec-22 02:33 AM)_ [1052503550627950632]
 
@@ -6161,10 +6161,6 @@ _Vec walks off._
 
 > See you later Vec!
 
-**Jonas** _(14-Dec-22 02:33 AM)_ [1052503617682292757]
-
-> Vec...You are a pain. But you're OUR pain. Have a nice trip, wherever you go.
-
 **Trey** _(14-Dec-22 02:33 AM)_ [1052503670148845579]
 
 _Zion looks over at Vec, knowing he'll probably be stuck with it._
@@ -6173,23 +6169,23 @@ _Zion looks over at Vec, knowing he'll probably be stuck with it._
 
 > I'm stuck here.
 
+**Zander** _(14-Dec-22 02:34 AM)_ [1052503770514337793]
+
+↪ Trey: Zion looks over at Vec, knowing he'll probably be stuck with…
+
+_And those were Vec's last words to the crew... But likely not to Zion._
+
 **Silas** _(14-Dec-22 02:34 AM)_ [1052503735147970561]
 
 > Y'all know I don't too much do pleasantries, but, y'know. We were a good team. I'll see y'all in a blue moon.
 
-**Vortox** _(14-Dec-22 02:34 AM)_ [1052503770514337793]
+**Hunt520** _(14-Dec-22 02:34 AM)_ [1052503839665823774]
 
-↪ Trey: Zion looks over at Vec, knowing he'll probably be stuck with…
-
-_And those were his last words to the crew... But likely not to Zion._
+> I've already said what I needed to say to you guys.... so I won't repeat myself.
 
 **Jonas** _(14-Dec-22 02:34 AM)_ [1052503794954547301]
 
 > I...suppose this is goodbye for now. I'm heading back to Moonshine to see if I can end our war peacefully.
-
-**Hunt520** _(14-Dec-22 02:34 AM)_ [1052503839665823774]
-
-> I've already said what I needed to say to you guys.... so I won't repeat myself.
 
 **Jonas** _(14-Dec-22 02:34 AM)_ [1052503840081059910]
 
@@ -6229,13 +6225,13 @@ _Dutch waves goodbye and strolls off._
 
 > See you around Fleabag!
 
-**Jonas** _(14-Dec-22 02:35 AM)_ [1052504156096692234]
-
-_Bellow smiles deeply again, as deeply as he can with his teeny little mouth._
-
 **Brody** _(14-Dec-22 02:35 AM)_ [1052504165731008543]
 
 > Farewell, Dutch.
+
+**Jonas** _(14-Dec-22 02:35 AM)_ [1052504156096692234]
+
+_Bellow smiles deeply again, as deeply as he can with his teeny little mouth._
 
 **Jonas** _(14-Dec-22 02:36 AM)_ [1052504220827394068]
 
@@ -6303,26 +6299,22 @@ _He runs off._
 
 _`Zion`: Zion thinks about the gift he was given... Who gave him the gold?_
 
-**Vortox** _(14-Dec-22 02:41 AM)_ [1052505709956321280]
+**Trey** _(14-Dec-22 02:41 AM)_ [1052505709956321280]
 
 Space Rule #82: Keep yourself out of hot (dog) water.
 
-**Vortox** _(14-Dec-22 02:42 AM)_ [1052505765811867648]
+**Silas** _(14-Dec-22 02:42 AM)_ [1052505765811867648]
 
 Space Rule #11: Friends are important. And the weak are vile creatures.
 
-**Vortox** _(14-Dec-22 02:42 AM)_ [1052505970275794955]
+**Hunt520** _(14-Dec-22 02:42 AM)_ [1052505970275794955]
 
 Space Rule #520: Throw yourself headfirst in danger! You never know who you fall in love with!
 
-**Vortox** _(14-Dec-22 02:43 AM)_ [1052506085271023636]
+**Jonas** _(14-Dec-22 02:43 AM)_ [1052506085271023636]
 
 Space Rule #89: Don't stare into the unknown too long; IT STARES BACK.
 
-**Vortox** _(14-Dec-22 02:43 AM)_ [1052506157241081916]
-
-Vec Rule #2: Friends are important... And the weak are vile.
-
-**Vortox** _(14-Dec-22 02:44 AM)_ [1052506358739640360]
+**Brody** _(14-Dec-22 02:44 AM)_ [1052506358739640360]
 
 Space Rule #82419: Bravery isn't the absence of fear, but the strength to fight through it.

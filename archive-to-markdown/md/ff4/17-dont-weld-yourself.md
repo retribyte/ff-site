@@ -1,7 +1,3 @@
-**Sean** _(18-Oct-22 08:14 PM)_ [1032099297191272598]
-
-_Seth is sitting on his newly created Captain's Chair, a swivel chair covered in dildos._
-
 **Vortox** _(18-Oct-22 08:18 PM)_ [1032100483936043049]
 
 <embed>
@@ -14,6 +10,10 @@ The crew has been stuck on the planet for one week. They have constructed a smal
 </description>
 <code>ini</code>
 </embed>
+
+**Sean** _(18-Oct-22 08:14 PM)_ [1032099297191272598]
+
+_Seth is sitting on his newly created Captain's Chair, a swivel chair covered in dildos._
 
 **Sean** _(18-Oct-22 08:21 PM)_ [1032101270711980123]
 

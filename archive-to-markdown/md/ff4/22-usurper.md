@@ -45,6 +45,10 @@ _He turns around and points towards Zach._
 
 > Ok...
 
+**Hunt520** _(13-Dec-22 06:23 PM)_ [1052380355858006016]
+
+_Zach turns his attention to Morra's body, which remains in a heap on the floor._
+
 **Silas** _(13-Dec-22 06:22 PM)_ [1052380140774096956]
 
 > I am...so lost.
@@ -52,10 +56,6 @@ _He turns around and points towards Zach._
 **Trey** _(13-Dec-22 06:23 PM)_ [1052380333653381151]
 
 _Zion fiddles with his holodeck, scrolling through pages of information faster than anyone can read it._
-
-**Hunt520** _(13-Dec-22 06:23 PM)_ [1052380355858006016]
-
-_Zach turns his attention to Morra's body, which remains in a heap on the floor._
 
 **Trey** _(13-Dec-22 06:24 PM)_ [1052380563719327755]
 
@@ -77,19 +77,9 @@ _Bellow is smashing away at the tractor beam controls._
 
 > Bellow.
 
-**Trey** _(13-Dec-22 06:27 PM)_ [1052381206555140106]
-
-> Elven runes!
-
-_Zion jumps up suddenly._
-
 **Jonas** _(13-Dec-22 06:27 PM)_ [1052381264348467301]
 
 > No, don't worry, I can still get them...
-
-**Hunt520** _(13-Dec-22 06:27 PM)_ [1052381269033484289]
-
-> Gods, Captain!
 
 **Hunt520** _(13-Dec-22 06:27 PM)_ [1052381308514484244]
 
@@ -97,11 +87,15 @@ _Zion jumps up suddenly._
 
 > Bellow, stop.
 
-**Silas** _(13-Dec-22 06:27 PM)_ [1052381408108228618]
+**Trey** _(13-Dec-22 06:27 PM)_ [1052381206555140106]
 
-> I've got it!
+> Elven runes!
 
-_Dutch jumps up suddenly._
+_Zion jumps up suddenly._
+
+**Hunt520** _(13-Dec-22 06:27 PM)_ [1052381269033484289]
+
+> Gods, Captain!
 
 **Jonas** _(13-Dec-22 06:28 PM)_ [1052381489523855360]
 
@@ -109,17 +103,23 @@ _Dutch jumps up suddenly._
 
 _Bellow jumps up suddenly in fright._
 
+**Silas** _(13-Dec-22 06:27 PM)_ [1052381408108228618]
+
+> I've got it!
+
+_Dutch jumps up suddenly._
+
 **Silas** _(13-Dec-22 06:28 PM)_ [1052381558956363786]
 
 > I know what we have to do.
 
-**Trey** _(13-Dec-22 06:28 PM)_ [1052381589952286770]
-
-> Okay... I still don't know what exactly it was, but these symbols look like the ones we saw before.
-
 **Silas** _(13-Dec-22 06:29 PM)_ [1052381779576750130]
 
 > Let's call Emmett.
+
+**Trey** _(13-Dec-22 06:28 PM)_ [1052381589952286770]
+
+> Okay... I still don't know what exactly it was, but these symbols look like the ones we saw before.
 
 **Jonas** _(13-Dec-22 06:29 PM)_ [1052381853945958471]
 
@@ -204,10 +204,6 @@ _Zion passes the holographic display over towards Bellow's direction. It's all i
 **Trey** _(13-Dec-22 06:35 PM)_ [1052383232181682229]
 
 > Here's some example text, looks to be for a religious text of some kind.
-
-**Trey** _(13-Dec-22 06:35 PM)_ [1052383245834145892]
-
-> Maybe a sequel.
 
 **Hunt520** _(13-Dec-22 06:35 PM)_ [1052383271234846780]
 
