@@ -84,6 +84,9 @@ NAME_ALIASES = {
     # FF2 short forms (Matthias: a t!8ball line in ep 15; Bail: ep 5)
     "Matthias": "Matthias Lewkey",
     "Bail": "Bail Starlight",
+    # FF4 NPC short forms (Squi: ep 7; GU News: ep 19)
+    "Squi": "Squina",
+    "GU News": "GU News reporter",
 }
 
 
