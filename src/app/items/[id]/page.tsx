@@ -10,6 +10,7 @@ import SignalLost from '@/components/SignalLost';
 import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
 import styles from './itemDetail.module.scss';
+import UserLink from '@/components/UserLink';
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -94,7 +95,9 @@ export default async function ItemPage({ params }: Props) {
                         {item.creator && (
                             <div className={styles.fact}>
                                 <dt>recorded by</dt>
-                                <dd>{item.creator.username}</dd>
+                                <dd>
+                                    <UserLink username={item.creator.username} />
+                                </dd>
                             </div>
                         )}
                     </dl>

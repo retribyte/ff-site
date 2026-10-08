@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import type { NextResponse } from 'next/server';
 import { api } from './api';
 
 // Server-side session helpers. The ff-server JWT lives in an httpOnly cookie
@@ -12,7 +13,12 @@ export interface SessionUser {
     email: string | null;
     role: 'USER' | 'ADMIN';
     icon: string | null;
+    /** booru.vortox.space post the icon was resolved from */
+    iconBooruId: number | null;
     bio: string | null;
+    wikiUser: string | null;
+    /** Seeded/reset accounts: every write but the password change is refused until set */
+    mustChangePassword: boolean;
 }
 
 export async function getToken(): Promise<string | null> {
@@ -43,4 +49,15 @@ export function tokenMaxAge(token: string): number {
         // unparseable token — use the fallback
     }
     return 3600;
+}
+
+/** Puts a fresh ff-server token in the session cookie. */
+export function setSessionCookie(response: NextResponse, token: string): void {
+    response.cookies.set(SESSION_COOKIE, token, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+        maxAge: tokenMaxAge(token),
+    });
 }

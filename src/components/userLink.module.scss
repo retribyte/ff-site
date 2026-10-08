@@ -1,0 +1,9 @@
+.userLink {
+    color: inherit;
+    text-decoration: underline dotted;
+    text-underline-offset: 0.2em;
+
+    &:hover {
+        color: var(--link-hover);
+    }
+}

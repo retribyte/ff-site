@@ -35,10 +35,12 @@ function SessionArea() {
 
     return (
         <span className={styles.session}>
-            {user.icon && (
-                <Image src={user.icon} alt='' width={22} height={22} className={styles.sessionIcon} unoptimized />
-            )}
-            <span className={styles.sessionName}>{user.username}</span>
+            <Link href='/account' className={styles.sessionLink} title='Your account'>
+                {user.icon && (
+                    <Image src={user.icon} alt='' width={22} height={22} className={styles.sessionIcon} unoptimized />
+                )}
+                <span className={styles.sessionName}>{user.username}</span>
+            </Link>
             <button type='button' className={styles.logout} onClick={() => void logout()} title='Log out'>
                 ⏻
             </button>

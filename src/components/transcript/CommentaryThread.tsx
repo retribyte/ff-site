@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useSession } from '@/components/auth/SessionProvider';
 import type { SlimCommentary } from '@/lib/transcript';
 import styles from './commentary.module.scss';
+import UserLink from '@/components/UserLink';
 
 interface Props {
     episodeTitle: string;
@@ -123,7 +124,7 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
                 <div className={styles.panel}>
                     {notes.map((note) => (
                         <div key={note.id} className={styles.note}>
-                            <span className={styles.noteAuthor}>{note.creatorName}</span>
+                            <UserLink username={note.creatorName} className={styles.noteAuthor} />
                             {editingId === note.id ? (
                                 <span className={styles.editRow}>
                                     <textarea

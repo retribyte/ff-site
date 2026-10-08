@@ -9,6 +9,7 @@ import StoryReader from '@/components/story/StoryReader';
 import ChoiceJump from '@/components/story/ChoiceJump';
 import styles from './story-page.module.scss';
 import DeleteStoryButton from '@/components/story/DeleteStoryButton';
+import UserLink from '@/components/UserLink';
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -96,7 +97,7 @@ export default async function StoryPage({ params }: Props) {
             <header className={styles.header}>
                 <p className='pixel-label'>
                     {chapters.length} chapters · {lineTotal} lines
-                    {story.author && <> · by {story.author.username}</>}
+                    {story.author && <> · by <UserLink username={story.author.username} /></>}
                 </p>
                 <h1 className={styles.title}>{story.title}</h1>
                 {story.blurb && <p className={styles.summary}>{story.blurb}</p>}

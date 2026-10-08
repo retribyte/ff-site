@@ -19,6 +19,16 @@ export interface PublicUser {
     bio: string | null;
 }
 
+/** GET /users/:idOrUsername — the public profile page's payload */
+export interface UserProfile extends PublicUser {
+    iconBooruId: number | null;
+    wikiUser: string | null;
+    createdAt: string;
+    characters: { id: number; name: string; slug: string; image: string | null; color: string | null }[];
+    stories: { id: number; slug: string; title: string; publishedDate: string | null }[];
+    _count: { messages: number; commentaries: number };
+}
+
 export interface Character {
     id: number;
     name: string;

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Lora, Silkscreen } from 'next/font/google';
 import localFont from 'next/font/local';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { SessionProvider } from '@/components/auth/SessionProvider';
+import PasswordChangeGate from '@/components/auth/PasswordChangeGate';
 import Navbar from '@/components/navbar/Navbar';
 import './globals.scss';
 
@@ -66,6 +67,7 @@ export default function RootLayout({
                 <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
                 <ThemeProvider>
                     <SessionProvider>
+                        <PasswordChangeGate />
                         <Navbar />
                         {children}
                     </SessionProvider>

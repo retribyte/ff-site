@@ -1,0 +1,126 @@
+@use '../../styles/mixins' as m;
+
+.panel {
+    margin: 0;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.heading {
+    margin: 0 0 0.25rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--text);
+}
+
+.field {
+    @include m.field-stack;
+
+    input,
+    textarea {
+        @include m.form-field;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 7rem;
+        line-height: 1.5;
+    }
+}
+
+.fieldHint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.hintLink {
+    @include m.plain-link;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+// Avatar picker: preview tile beside the ID input + lookup/remove buttons
+.avatarRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.avatarPreview {
+    flex: none;
+    width: 96px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-2);
+    border: 1px solid var(--border-loud);
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.avatarEmpty {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.avatarControls {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.inline {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+
+    input {
+        @include m.form-field;
+        flex: 1;
+        min-width: 6rem;
+    }
+}
+
+.ghost {
+    @include m.ghost-button;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.submit {
+    @include m.cta-button;
+}
+
+.error {
+    @include m.pixel-error;
+}
+
+.success {
+    margin: 0;
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--ff3);
+}

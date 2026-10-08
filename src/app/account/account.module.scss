@@ -1,0 +1,28 @@
+@use '../../styles/mixins' as m;
+
+.main {
+    @include m.page-main(36rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.header {
+    text-align: center;
+}
+
+.title {
+    margin: 0.25rem 0 0.35rem;
+    @include m.glow-heading(var(--accent-soft));
+}
+
+.publicLink {
+    @include m.pixel-nav-link;
+}
+
+.notice {
+    margin: 0;
+    padding: 1rem 1.25rem;
+    line-height: 1.55;
+    border-color: var(--accent-2);
+}

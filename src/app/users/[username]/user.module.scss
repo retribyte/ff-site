@@ -1,0 +1,97 @@
+@use '../../../styles/mixins' as m;
+
+.main {
+    --tint: var(--accent-soft);
+
+    @include m.page-main;
+}
+
+@include m.detail-layout;
+
+.name {
+    margin: 0 0 0.35rem;
+    @include m.glow-heading(var(--tint));
+}
+
+.roleChip {
+    display: inline-block;
+    margin: 0 0 1rem;
+    font-family: var(--font-pixel);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-2);
+    border: 1px dashed color-mix(in srgb, var(--accent-2) 55%, var(--border-loud));
+    padding: 0.2rem 0.5rem;
+}
+
+.bio {
+    font-family: var(--font-prose);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 40rem;
+    margin: 0 0 1.5rem;
+    white-space: pre-line;
+
+    a {
+        @include m.plain-link;
+    }
+}
+
+.section {
+    margin-top: 2rem;
+}
+
+.sectionTitle {
+    font-size: 1.2rem;
+    margin: 0 0 0.75rem;
+}
+
+.characters {
+    @include m.auto-grid(9rem, 0.75rem);
+}
+
+.stories {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.storyLink {
+    @include m.plain-link;
+    font-family: var(--font-prose);
+    font-size: 1.05rem;
+}
+
+.infobox {
+    @include m.infobox-panel(var(--tint));
+}
+
+.infoboxHeader {
+    @include m.infobox-header(var(--tint));
+
+    img {
+        width: 128px;
+        height: 128px;
+        object-fit: cover;
+        border: 1px solid var(--border-loud);
+    }
+}
+
+.infoboxGlyph {
+    @include m.infobox-glyph(var(--tint));
+    font-family: var(--font-display);
+}
+
+.facts {
+    @include m.facts;
+}
+
+.fact {
+    @include m.fact(var(--tint));
+}
+
+.factLink {
+    @include m.plain-link;
+}
