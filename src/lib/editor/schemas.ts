@@ -1,4 +1,5 @@
 import { ITEM_TYPE_META, SENTIENCE_LABELS } from '@/lib/lore';
+import { decodeEntities } from '@/lib/html';
 
 // Schema-driven editing: every record type declares its fields once and the
 // RecordEditor renders/validates/submits any of them.
@@ -38,6 +39,22 @@ export interface EntitySchema {
     fields: FieldDef[];
 }
 
+// ff-server sanitizes these fields into a small HTML subset (entity-encoding
+// plain text); pages render them with RichText. Decode for editing so the
+// textarea shows what the author typed, not `&amp;`.
+const RICH_TEXT_HELP = 'basic formatting (<b>, <i>, links) is kept';
+
+function richTextField(name: string, label: string, extra: Partial<FieldDef> = {}): FieldDef {
+    return {
+        name,
+        label,
+        kind: 'textarea',
+        help: RICH_TEXT_HELP,
+        read: (record) => decodeEntities(String(record[name] ?? '')),
+        ...extra,
+    };
+}
+
 const SLUG_FIELD: FieldDef = {
     name: 'slug',
     label: 'slug',
@@ -62,7 +79,7 @@ export const characterSchema: EntitySchema = {
             required: true,
             ref: { path: '/species', labelField: 'name' },
         },
-        { name: 'blurb', label: 'blurb', kind: 'textarea', help: 'short public bio shown on the dossier' },
+        richTextField('blurb', 'blurb', { help: `short public bio shown on the dossier; ${RICH_TEXT_HELP}` }),
         { name: 'image', label: 'avatar url', kind: 'text', placeholder: '/avatars/emmett.png' },
         { name: 'color', label: 'theme color', kind: 'color' },
         SLUG_FIELD,
@@ -76,7 +93,7 @@ export const speciesSchema: EntitySchema = {
     indexPath: '/species',
     fields: [
         { name: 'name', label: 'name', kind: 'text', required: true },
-        { name: 'description', label: 'description', kind: 'textarea', required: true },
+        richTextField('description', 'description', { required: true }),
         {
             name: 'class',
             label: 'sentience class',
@@ -102,7 +119,7 @@ export const itemSchema: EntitySchema = {
             required: true,
             options: Object.entries(ITEM_TYPE_META).map(([value, meta]) => ({ value, label: meta.label })),
         },
-        { name: 'description', label: 'description', kind: 'textarea', required: true },
+        richTextField('description', 'description', { required: true }),
         { name: 'image', label: 'image url', kind: 'text' },
         SLUG_FIELD,
     ],

@@ -13,6 +13,7 @@ import ThemedAvatar from '@/components/characters/ThemedAvatar';
 import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
 import styles from './character.module.scss';
+import RichText from '@/components/RichText';
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -139,7 +140,7 @@ export default async function CharacterPage({ params }: Props) {
                     })()}
 
                     {character.blurb ? (
-                        <p className={styles.blurb}>{character.blurb}</p>
+                        <RichText html={character.blurb} className={styles.blurb} />
                     ) : (
                         <p className='pixel-label'>no dossier on file — records pending</p>
                     )}

@@ -11,6 +11,7 @@ import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
 import styles from './itemDetail.module.scss';
 import UserLink from '@/components/UserLink';
+import RichText from '@/components/RichText';
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -74,7 +75,7 @@ export default async function ItemPage({ params }: Props) {
                         </span>
                     </p>
 
-                    <p className={styles.description}>{item.description}</p>
+                    <RichText html={item.description} className={styles.description} />
                 </article>
 
                 <aside className={`pixel-panel ${styles.infobox}`}>

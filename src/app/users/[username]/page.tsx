@@ -7,6 +7,7 @@ import { booruPostUrl } from '@/lib/booru';
 import SignalLost from '@/components/SignalLost';
 import CharacterCard from '@/components/characters/CharacterCard';
 import styles from './user.module.scss';
+import RichText from '@/components/RichText';
 
 interface Props {
     params: Promise<{ username: string }>;
@@ -57,8 +58,7 @@ export default async function UserPage({ params }: Props) {
                     {profile.role === 'ADMIN' && <p className={styles.roleChip}>archive admin</p>}
 
                     {profile.bio ? (
-                        // Sanitized server-side (sanitize-html allow-list) before storage
-                        <div className={styles.bio} dangerouslySetInnerHTML={{ __html: profile.bio }} />
+                        <RichText html={profile.bio} className={styles.bio} />
                     ) : (
                         <p className='pixel-label'>no bio on file</p>
                     )}
