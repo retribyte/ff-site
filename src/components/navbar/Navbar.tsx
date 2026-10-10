@@ -52,6 +52,9 @@ export default function Navbar() {
     const { user } = useSession();
     const navLinks = user?.role === 'ADMIN' ? [...links, { href: '/import', label: 'Import' }] : links;
 
+    // The home page draws its own header as part of the ship-wall scene
+    if (pathname === '/') return null;
+
     return (
         <header className={styles.navbar}>
             <Link href='/' className={styles.brand}>

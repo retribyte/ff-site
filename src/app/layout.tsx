@@ -22,6 +22,11 @@ const silkscreen = Silkscreen({
     subsets: ['latin'],
 });
 
+const mkds = localFont({
+    variable: '--font-mkds',
+    src: '../assets/fonts/Mario-Kart-DS.ttf',
+});
+
 // Reading face for the CYOA chronicle's long-form narration
 const lora = Lora({
     variable: '--font-lora',
@@ -58,7 +63,7 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const fontVars = `${geistSans.variable} ${geistMono.variable} ${silkscreen.variable} ${righteous.variable} ${lora.variable}`;
+    const fontVars = `${geistSans.variable} ${geistMono.variable} ${silkscreen.variable} ${righteous.variable} ${lora.variable} ${mkds.variable}`;
 
     return (
         <html lang='en' data-theme='dark' className={fontVars} suppressHydrationWarning>
