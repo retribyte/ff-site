@@ -19,7 +19,7 @@ describe('wikiFacts', () => {
 
     it('shows pinned fields first, in order, then every other field alphabetically', () => {
         const wiki = { zodiac: 'Leo', eyes: 'Blue', fullname: 'Squemfet Tawfeek', new_field: 'x' };
-        expect(labels(wikiFacts(wiki, [['fullname', 'Full Name'], 'eyes']))).toEqual([
+        expect(labels(wikiFacts(wiki, [{ field: 'fullname', label: 'Full Name' }, 'eyes']))).toEqual([
             'Full Name',
             'Eyes',
             'New Field',
@@ -37,11 +37,13 @@ describe('wikiFacts', () => {
         expect(labels(wikiFacts(wiki, [], ['species', 'type']))).toEqual(['Sex']);
     });
 
-    it('joins repeated fields and decodes entities', () => {
-        const facts = wikiFacts({ planet: ['Vortox-56', 'Vortox-48'], season: 't&amp;l' });
-        expect(facts).toEqual([
-            ['Planet', 'Vortox-56, Vortox-48'],
-            ['Season', 't&l'],
-        ]);
+    it('puts each entry of a list on its own line', () => {
+        const [[, value]] = wikiFacts({ planet: ['Vortox-56', 'Vortox-48'] });
+        expect(Array.isArray(value)).toBe(true); // Vortox-56, <br />, Vortox-48
+        expect(JSON.stringify(value)).not.toContain(', ');
+    });
+
+    it('decodes entities', () => {
+        expect(wikiFacts({ faction: 'Salt &amp; Pepper' })).toEqual([['Faction', 'Salt & Pepper']]);
     });
 });

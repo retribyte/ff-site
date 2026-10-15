@@ -12,24 +12,24 @@ import { getSessionUser } from '@/lib/auth';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
 import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
-import { wikiFacts } from '@/lib/wiki';
+import { wikiFacts, type WikiFieldSpec } from '@/lib/wiki';
 import styles from './character.module.scss';
 import RichText from '@/components/RichText';
 
 // Wiki fields pinned to the top of the infobox, in this order (with a label
 // where the generated one reads badly); any other wiki field follows.
-const CHARACTER_WIKI_ORDER: Parameters<typeof wikiFacts>[1] = [
-    ['fullname', 'Full Name'],
+const CHARACTER_WIKI_ORDER: WikiFieldSpec[] = [
+    { field: 'fullname', label: 'Full Name' },
     // Wiki-page nicknames — a different concept from the DB Persona "also
     // known as" chips in the article body (alternate presentation eras)
-    ['aliases', 'Nicknames'],
+    { field: 'aliases', label: 'Nicknames' },
     'occupation',
     'faction',
-    ['birthdate', 'Born'],
+    { field: 'birthdate', label: 'Born' },
     'birthplace',
-    ['deathdate', 'Died'],
-    ['deathcause', 'Cause of Death'],
-    ['relationship', 'Relationships'],
+    { field: 'deathdate', label: 'Died' },
+    { field: 'deathcause', label: 'Cause of Death' },
+    { field: 'relationship', label: 'Relationships' },
     'planet',
     'alignment',
     'sex',

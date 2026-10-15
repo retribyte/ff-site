@@ -9,7 +9,7 @@ import { getSessionUser } from '@/lib/auth';
 import SignalLost from '@/components/SignalLost';
 import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
-import { wikiFacts } from '@/lib/wiki';
+import { wikiFacts, type WikiFieldSpec } from '@/lib/wiki';
 import styles from './itemDetail.module.scss';
 import UserLink from '@/components/UserLink';
 import RichText from '@/components/RichText';
@@ -17,15 +17,15 @@ import { imageSrc } from '@/lib/images';
 
 // Wiki fields pinned to the top of the infobox, in this order (with a label
 // where the generated one reads badly); any other wiki field follows.
-const ITEM_WIKI_ORDER: Parameters<typeof wikiFacts>[1] = [
+const ITEM_WIKI_ORDER: WikiFieldSpec[] = [
     'rarity',
     'use',
     'damage',
     'armor',
     'value',
-    ['market_value_free', 'Market Value'],
+    { field: 'market_value_free', label: 'Market Value' },
     'faction',
-    ['character', 'Used By'],
+    { field: 'character', label: 'Used By' },
     'age',
     'location',
 ];

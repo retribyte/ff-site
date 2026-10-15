@@ -9,23 +9,23 @@ import SignalLost from '@/components/SignalLost';
 import ActionChip from '@/components/editor/ActionChip';
 import CharacterCard from '@/components/characters/CharacterCard';
 import WikiLink from '@/components/WikiLink';
-import { wikiFacts } from '@/lib/wiki';
+import { wikiFacts, type WikiFieldSpec } from '@/lib/wiki';
 import styles from './speciesDetail.module.scss';
 import RichText from '@/components/RichText';
 
 // Wiki fields pinned to the top of the infobox, in this order (with a label
 // where the generated one reads badly); any other wiki field follows.
-const SPECIES_WIKI_ORDER: Parameters<typeof wikiFacts>[1] = [
-    ['union_name', 'Binomial Name'],
+const SPECIES_WIKI_ORDER: WikiFieldSpec[] = [
+    { field: 'union_name', label: 'Binomial Name' },
     'homeworld',
     'habitat',
     'lifespan',
     'diet',
-    ['procreation_method', 'Procreation'],
+    { field: 'procreation_method', label: 'Procreation' },
     'faction',
     'religion',
     'government',
-    ['technology_progression', 'Technology'],
+    { field: 'technology_progression', label: 'Technology' },
 ];
 
 interface Props {
