@@ -4,7 +4,7 @@ import { decodeEntities } from '@/lib/html';
 // Schema-driven editing: every record type declares its fields once and the
 // RecordEditor renders/validates/submits any of them.
 
-export type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'color' | 'entity-ref';
+export type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'color' | 'entity-ref' | 'entity-refs';
 
 export interface FieldDef {
     name: string;
@@ -15,7 +15,8 @@ export interface FieldDef {
     help?: string;
     /** select: the enum choices */
     options?: { value: string; label: string }[];
-    /** entity-ref: which collection the picker loads (API path + label field) */
+    /** entity-ref(s): which collection the picker loads (API path + label field).
+     *  entity-refs is the multi-pick: its form value is comma-joined ids */
     ref?: { path: string; labelField: string };
     /** custom record → form-value read (default: direct field access) */
     read?: (record: Record<string, unknown>) => unknown;
@@ -73,11 +74,13 @@ export const characterSchema: EntitySchema = {
     fields: [
         { name: 'name', label: 'name', kind: 'text', required: true },
         {
-            name: 'speciesId',
+            name: 'speciesIds',
             label: 'species',
-            kind: 'entity-ref',
+            kind: 'entity-refs',
             required: true,
+            help: 'hybrids: ctrl/cmd-click to pick every species they belong to',
             ref: { path: '/species', labelField: 'name' },
+            read: (record) => ((record.species as { id: number }[] | undefined) ?? []).map((s) => s.id).join(','),
         },
         richTextField('blurb', 'blurb', { help: `short public bio shown on the dossier; ${RICH_TEXT_HELP}` }),
         { name: 'image', label: 'avatar url', kind: 'text', placeholder: '/avatars/emmett.png' },
@@ -176,6 +179,9 @@ export function valuesToPayload(schema: EntitySchema, values: FormValues): Recor
                 break;
             case 'entity-ref':
                 payload[field.name] = value === '' ? null : parseInt(value);
+                break;
+            case 'entity-refs':
+                payload[field.name] = value === '' ? [] : value.split(',').map((id) => parseInt(id));
                 break;
             default:
                 payload[field.name] = value === '' ? null : value;

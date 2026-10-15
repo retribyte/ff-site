@@ -46,7 +46,7 @@ export default async function CharactersPage() {
                     name: c.name,
                     color: c.color,
                     image: c.image,
-                    speciesId: c.speciesId,
+                    speciesIds: c.species.map((s) => s.id),
                     slug: c.slug,
                 }))}
                 species={species.map((s) => ({ id: s.id, name: s.name }))}

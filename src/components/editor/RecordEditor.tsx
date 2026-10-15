@@ -30,7 +30,7 @@ interface Envelope {
 /** Loads the options for an entity-ref picker (species list, character list…). */
 function useRefOptions(fields: FieldDef[]) {
     const refPaths = useMemo(
-        () => [...new Set(fields.filter((f) => f.kind === 'entity-ref').map((f) => f.ref!.path))],
+        () => [...new Set(fields.filter((f) => f.kind === 'entity-ref' || f.kind === 'entity-refs').map((f) => f.ref!.path))],
         [fields]
     );
     const [options, setOptions] = useState<Record<string, { id: number; label: string }[]>>({});
@@ -202,6 +202,26 @@ function Field({
                 </select>
             );
             break;
+        case 'entity-refs': {
+            const selected = value === '' ? [] : value.split(',');
+            control = (
+                <select
+                    id={id}
+                    multiple
+                    size={Math.min(8, Math.max(3, refOptions.length))}
+                    value={selected}
+                    onChange={(e) => onChange([...e.target.selectedOptions].map((o) => o.value).join(','))}
+                    required={field.required}
+                >
+                    {refOptions.map((option) => (
+                        <option key={option.id} value={option.id}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            );
+            break;
+        }
         case 'color':
             control = (
                 <span className={styles.colorRow}>

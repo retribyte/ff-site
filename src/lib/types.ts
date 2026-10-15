@@ -29,16 +29,22 @@ export interface UserProfile extends PublicUser {
     _count: { messages: number; commentaries: number };
 }
 
+export interface SpeciesRef {
+    id: number;
+    name: string;
+    slug: string;
+}
+
 export interface Character {
     id: number;
     name: string;
-    speciesId: number;
     creatorId: number;
     image: string | null;
     color: string | null;
     blurb: string | null;
     slug: string;
-    species?: Species;
+    /** every species the character belongs to — hybrids have several */
+    species: SpeciesRef[];
     creator?: PublicUser;
     personas?: Persona[];
     wiki?: WikiData | null;

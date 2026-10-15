@@ -1,8 +1,9 @@
+import { Fragment } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
-import type { CharacterQuotes, Character, Species } from '@/lib/types';
+import type { CharacterQuotes, Character } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
 import { personaHasName } from '@/lib/personaIdentity';
 import { lineUrl } from '@/lib/seasons';
@@ -68,15 +69,11 @@ export default async function CharacterPage({ params }: Props) {
     const { id: idParam } = await params;
 
     let character: Character | null;
-    let species: Species | null = null;
     let quotes: CharacterQuotes = { messages: [], storyQuotes: [] };
     try {
         character = await getCharacter(idParam);
         if (character) {
-            [species, quotes] = await Promise.all([
-                api<Species>(`/species/${character.speciesId}`).catch(() => null),
-                api<CharacterQuotes>(`/characters/${character.id}/quotes`).catch(() => quotes),
-            ]);
+            quotes = await api<CharacterQuotes>(`/characters/${character.id}/quotes`).catch(() => quotes);
         }
     } catch {
         return (
@@ -123,12 +120,17 @@ export default async function CharacterPage({ params }: Props) {
     const sampleQuotes = [...teaserQuotes].sort(() => Math.random() - 0.5).slice(0, 3);
 
     const facts: [string, React.ReactNode][] = [];
-    if (species) {
+    if (character.species.length) {
         facts.push([
             'species',
-            <Link key='species' href={`/species/${species.slug}`} className={styles.factLink}>
-                {species.name}
-            </Link>,
+            character.species.map((s, i) => (
+                <Fragment key={s.id}>
+                    {i > 0 && ' / '}
+                    <Link href={`/species/${s.slug}`} className={styles.factLink}>
+                        {s.name}
+                    </Link>
+                </Fragment>
+            )),
         ]);
     }
 

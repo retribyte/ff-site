@@ -11,7 +11,7 @@ export interface IndexCharacter {
     name: string;
     color: string | null;
     image: string | null;
-    speciesId: number;
+    speciesIds: number[];
     slug: string;
 }
 
@@ -28,7 +28,7 @@ export default function CharacterIndex({
     const visible = useMemo(() => {
         const q = query.trim().toLowerCase();
         return characters.filter((c) => {
-            if (speciesId !== '' && c.speciesId !== speciesId) return false;
+            if (speciesId !== '' && !c.speciesIds.includes(speciesId)) return false;
             if (!q) return true;
             return c.name.toLowerCase().includes(q);
         });
