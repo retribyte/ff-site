@@ -41,33 +41,17 @@ export interface Character {
     species?: Species;
     creator?: PublicUser;
     personas?: Persona[];
-    wiki?: WikiCharacterData | null;
+    wiki?: WikiData | null;
 }
 
-// Bucket data pulled from the wiki's Character infobox, cached server-side
-// (ff-server's WikiCache). All fields optional — only present if the wiki
-// page actually set them. Unrelated to the DB `Persona` concept below:
-// `aliases` here is wiki-page nicknames, not presentation eras.
-export interface WikiCharacterData {
-    fullname?: string;
-    aliases?: string[];
-    occupation?: string[];
-    faction?: string;
-    birthdate?: string;
-    birthplace?: string;
-    deathdate?: string;
-    deathcause?: string;
-    relationship?: string[];
-    planet?: string[];
-    alignment?: string;
-    sexuality?: string;
-    sex?: string;
-    height?: string;
-    weight?: string;
-    skin?: string;
-    hair?: string;
-    eyes?: string;
-}
+// A record's row from the wiki's Bucket store, cached server-side
+// (ff-server's WikiCache). Whatever fields the wiki's schema has, minus the
+// ones ff-server excludes (images) — the site doesn't fix the set, so render
+// it with wikiFacts() rather than reading fields by name. Repeated fields
+// arrive as string[]. (A character's `aliases` here are wiki-page nicknames,
+// unrelated to the DB Persona concept.)
+export type WikiValue = string | string[] | number | boolean | null;
+export type WikiData = Record<string, WikiValue>;
 
 // A way a character is presented for some stretch of the archive: a
 // different name, a different look, or both. `name` is nullable — a
@@ -92,21 +76,7 @@ export interface Species {
     creatorId: number;
     slug: string;
     Character?: Character[];
-    wiki?: WikiSpeciesData | null;
-}
-
-// Bucket data pulled from the wiki's Species infobox, cached server-side.
-export interface WikiSpeciesData {
-    union_name?: string;
-    faction?: string;
-    lifespan?: string;
-    diet?: string;
-    procreation_method?: string;
-    habitat?: string;
-    homeworld?: string;
-    religion?: string;
-    government?: string;
-    technology_progression?: string;
+    wiki?: WikiData | null;
 }
 
 export interface Season {
@@ -235,20 +205,5 @@ export interface Item {
     creatorId: number;
     slug: string;
     creator?: PublicUser;
-    wiki?: WikiItemData | null;
-}
-
-// Bucket data pulled from the wiki's Item infobox, cached server-side.
-export interface WikiItemData {
-    value?: string;
-    market_value_free?: string;
-    faction?: string;
-    rarity?: string;
-    type?: string;
-    use?: string;
-    damage?: string;
-    armor?: string;
-    character?: string;
-    age?: string;
-    location?: string;
+    wiki?: WikiData | null;
 }

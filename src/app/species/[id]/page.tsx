@@ -9,9 +9,24 @@ import SignalLost from '@/components/SignalLost';
 import ActionChip from '@/components/editor/ActionChip';
 import CharacterCard from '@/components/characters/CharacterCard';
 import WikiLink from '@/components/WikiLink';
-import { renderWikiText } from '@/lib/wiki';
+import { wikiFacts } from '@/lib/wiki';
 import styles from './speciesDetail.module.scss';
 import RichText from '@/components/RichText';
+
+// Wiki fields pinned to the top of the infobox, in this order (with a label
+// where the generated one reads badly); any other wiki field follows.
+const SPECIES_WIKI_ORDER: Parameters<typeof wikiFacts>[1] = [
+    ['union_name', 'Binomial Name'],
+    'homeworld',
+    'habitat',
+    'lifespan',
+    'diet',
+    ['procreation_method', 'Procreation'],
+    'faction',
+    'religion',
+    'government',
+    ['technology_progression', 'Technology'],
+];
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -61,17 +76,7 @@ export default async function SpeciesPage({ params }: Props) {
 
     const facts: [string, React.ReactNode][] = [['sentience', SENTIENCE_LABELS[species.class]]];
 
-    const wiki = species.wiki;
-    if (wiki?.union_name) facts.push(['binomial name', renderWikiText(wiki.union_name)]);
-    if (wiki?.homeworld) facts.push(['homeworld', renderWikiText(wiki.homeworld)]);
-    if (wiki?.habitat) facts.push(['habitat', renderWikiText(wiki.habitat)]);
-    if (wiki?.lifespan) facts.push(['lifespan', renderWikiText(wiki.lifespan)]);
-    if (wiki?.diet) facts.push(['diet', renderWikiText(wiki.diet)]);
-    if (wiki?.procreation_method) facts.push(['procreation', renderWikiText(wiki.procreation_method)]);
-    if (wiki?.faction) facts.push(['faction', renderWikiText(wiki.faction)]);
-    if (wiki?.religion) facts.push(['religion', renderWikiText(wiki.religion)]);
-    if (wiki?.government) facts.push(['government', renderWikiText(wiki.government)]);
-    if (wiki?.technology_progression) facts.push(['technology', renderWikiText(wiki.technology_progression)]);
+    facts.push(...wikiFacts(species.wiki, SPECIES_WIKI_ORDER, facts.map(([label]) => label)));
 
     return (
         <main className={styles.main}>

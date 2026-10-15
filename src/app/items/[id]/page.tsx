@@ -9,11 +9,26 @@ import { getSessionUser } from '@/lib/auth';
 import SignalLost from '@/components/SignalLost';
 import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
-import { renderWikiText } from '@/lib/wiki';
+import { wikiFacts } from '@/lib/wiki';
 import styles from './itemDetail.module.scss';
 import UserLink from '@/components/UserLink';
 import RichText from '@/components/RichText';
 import { imageSrc } from '@/lib/images';
+
+// Wiki fields pinned to the top of the infobox, in this order (with a label
+// where the generated one reads badly); any other wiki field follows.
+const ITEM_WIKI_ORDER: Parameters<typeof wikiFacts>[1] = [
+    'rarity',
+    'use',
+    'damage',
+    'armor',
+    'value',
+    ['market_value_free', 'Market Value'],
+    'faction',
+    ['character', 'Used By'],
+    'age',
+    'location',
+];
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -61,17 +76,7 @@ export default async function ItemPage({ params }: Props) {
     const facts: [string, React.ReactNode][] = [['type', meta.label]];
     if (item.creator) facts.push(['recorded by', <UserLink key='creator' username={item.creator.username} />]);
 
-    const wiki = item.wiki;
-    if (wiki?.rarity) facts.push(['rarity', renderWikiText(wiki.rarity)]);
-    if (wiki?.use) facts.push(['use', renderWikiText(wiki.use)]);
-    if (wiki?.damage) facts.push(['damage', renderWikiText(wiki.damage)]);
-    if (wiki?.armor) facts.push(['armor', renderWikiText(wiki.armor)]);
-    if (wiki?.value) facts.push(['value', renderWikiText(wiki.value)]);
-    if (wiki?.market_value_free) facts.push(['market value', renderWikiText(wiki.market_value_free)]);
-    if (wiki?.faction) facts.push(['faction', renderWikiText(wiki.faction)]);
-    if (wiki?.character) facts.push(['used by', renderWikiText(wiki.character)]);
-    if (wiki?.age) facts.push(['age', renderWikiText(wiki.age)]);
-    if (wiki?.location) facts.push(['location', renderWikiText(wiki.location)]);
+    facts.push(...wikiFacts(item.wiki, ITEM_WIKI_ORDER, facts.map(([label]) => label)));
 
     return (
         <main className={styles.main} style={{ '--type': meta.color } as React.CSSProperties}>

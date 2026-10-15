@@ -12,9 +12,34 @@ import { getSessionUser } from '@/lib/auth';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
 import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
-import { renderWikiText, renderWikiList } from '@/lib/wiki';
+import { wikiFacts } from '@/lib/wiki';
 import styles from './character.module.scss';
 import RichText from '@/components/RichText';
+
+// Wiki fields pinned to the top of the infobox, in this order (with a label
+// where the generated one reads badly); any other wiki field follows.
+const CHARACTER_WIKI_ORDER: Parameters<typeof wikiFacts>[1] = [
+    ['fullname', 'Full Name'],
+    // Wiki-page nicknames — a different concept from the DB Persona "also
+    // known as" chips in the article body (alternate presentation eras)
+    ['aliases', 'Nicknames'],
+    'occupation',
+    'faction',
+    ['birthdate', 'Born'],
+    'birthplace',
+    ['deathdate', 'Died'],
+    ['deathcause', 'Cause of Death'],
+    ['relationship', 'Relationships'],
+    'planet',
+    'alignment',
+    'sex',
+    'sexuality',
+    'height',
+    'weight',
+    'skin',
+    'hair',
+    'eyes',
+];
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -107,31 +132,7 @@ export default async function CharacterPage({ params }: Props) {
         ]);
     }
 
-    const wiki = character.wiki;
-    if (wiki?.fullname) facts.push(['full name', renderWikiText(wiki.fullname)]);
-    // Wiki-page nicknames — a different concept from the DB Persona "also
-    // known as" chips rendered in the article body below (alternate
-    // presentation eras, not nicknames). Kept as its own block so the two
-    // "aka"-shaped concepts never get visually conflated.
-    if (wiki?.aliases?.length) facts.push(['nicknames', renderWikiList(wiki.aliases)]);
-    if (wiki?.occupation?.length) facts.push(['occupation', renderWikiList(wiki.occupation)]);
-    if (wiki?.faction) facts.push(['faction', renderWikiText(wiki.faction)]);
-    if (wiki?.birthdate) facts.push(['born', renderWikiText(wiki.birthdate)]);
-    if (wiki?.birthplace) facts.push(['birthplace', renderWikiText(wiki.birthplace)]);
-    if (wiki?.deathdate) {
-        facts.push(['died', renderWikiText(wiki.deathdate)]);
-        if (wiki.deathcause) facts.push(['cause of death', renderWikiText(wiki.deathcause)]);
-    }
-    if (wiki?.relationship?.length) facts.push(['relationships', renderWikiList(wiki.relationship)]);
-    if (wiki?.planet?.length) facts.push(['planet', renderWikiList(wiki.planet)]);
-    if (wiki?.alignment) facts.push(['alignment', renderWikiText(wiki.alignment)]);
-    if (wiki?.sex) facts.push(['sex', renderWikiText(wiki.sex)]);
-    if (wiki?.sexuality) facts.push(['sexuality', renderWikiText(wiki.sexuality)]);
-    if (wiki?.height) facts.push(['height', renderWikiText(wiki.height)]);
-    if (wiki?.weight) facts.push(['weight', renderWikiText(wiki.weight)]);
-    if (wiki?.skin) facts.push(['skin', renderWikiText(wiki.skin)]);
-    if (wiki?.hair) facts.push(['hair', renderWikiText(wiki.hair)]);
-    if (wiki?.eyes) facts.push(['eyes', renderWikiText(wiki.eyes)]);
+    facts.push(...wikiFacts(character.wiki, CHARACTER_WIKI_ORDER, facts.map(([label]) => label)));
 
     return (
         <main className={styles.main} style={style}>
