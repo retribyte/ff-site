@@ -9,7 +9,15 @@ API-era additions.
 ```
 DiscordChatExporter HTML  ──ff2.py / ff3.py──▶  markdown  ──md-to-api.py──▶  episode JSON  ──/import page──▶  database
         ff-archive/                              md/<season>/                 api/<season>/
+DiscordChatExporter JSON  ──ff4-to-md.py───────▶  markdown  (FF4: md/ff4/raw/ = frozen baseline, md/ff4/ = edited)
+        discord-exports/
 ```
+
+FF4's markdown adds one block per Discord message with its ID in the header,
+reply (`↪`), slash-command (`⌘`) and attachment (`📎`) marker lines, and
+`<embed>` blocks for Vortox output — see `ff4-to-md.py`'s docstring and
+`HANDOFF-ff4-editorial.md`. `editorial/` holds the FF4 editing helpers
+(round-trip, split/join, verify).
 
 1. **HTML → markdown** — `ff2.py` / `ff3.py` (need `beautifulsoup4`; make a
    venv). Per-season scripts because Discord usernames and export quirks
@@ -27,8 +35,13 @@ DiscordChatExporter HTML  ──ff2.py / ff3.py──▶  markdown  ──md-to-
    already titled in the meta file. Output lands in `api/<season>/`
    (gitignored).
 
-3. **upload** — log in as an admin on the site and feed the JSON to
-   `/import`. It resolves player/character names against the database (with
+3. **upload** — either the CLI, `python3 api-import.py [--replace]
+   [--create-missing] api/ff4/[0-6]-*.json` (stdlib only; stamps each
+   message's `persona`, and with `--create-missing` also creates the users,
+   characters and personas the JSON names, so a fresh dev DB needs no
+   hand-patching; `--dry-run` first; see its docstring), or log in as an admin
+   on the site and feed the JSON to `/import` (which ignores `persona` and
+   creates nothing). It resolves player/character names against the database (with
    manual mapping for anything unknown), creates the season/episode if
    needed, and bulk-posts the messages.
 
@@ -54,10 +67,24 @@ DiscordChatExporter HTML  ──ff2.py / ff3.py──▶  markdown  ──md-to-
         // hosts -- Argonian, Llorpus, etc. -- which needed no entry at all)
     },
     "episodes": [
-        { "file_name": "1", "episode_number": 1, "title": "…", "short_desc": "…" }
+        {
+            "file_name": "1", "episode_number": 1, "title": "…", "short_desc": "…",
+            "messageBlacklist": [12, 88, 90]  // optional; see below
+        }
     ]
 }
 ```
+
+`messageBlacklist` (optional, `discord-json-to-api.py` only) drops table talk
+/ OOC lines from a direct Discord-JSON import without editing the source
+export. Entries are **messageNo** — 1-based position in that episode's
+*converted* output (after system messages are dropped and multi-span lines
+are expanded), i.e. the same numbering as `GET
+/episodes/:title/messages/:messageNo` and the DB's `messageNo` column — not
+raw position in the Discord export. It only omits entries from the emitted
+episode JSON; the export file itself is never modified. Out-of-range entries
+are logged as a warning and ignored (a sign the list may be stale against a
+pipeline change) rather than failing the conversion.
 
 `personaTimeline` is keyed by **character**, not player, and is separate
 from `cast` on purpose: `cast` tracks which character a player voices, at
@@ -158,8 +185,11 @@ story, its chapters, and bulk lines directly. Uploading aborts if the slug
 already exists (delete the story via the API to re-upload a revision).
 
 Story metadata lives in the manuscript's frontmatter (`slug` and `title`
-required; `blurb`, `author`, `published`, `themeColor`, `themeColor2`, `format`
-optional — `format` defaults to `script`). Body format:
+required; `blurb`, `author`, `published`, `season`, `themeColor`, `themeColor2`,
+`format` optional — `format` defaults to `script`). `season` is the campaign the
+story belongs to, by season title or slug (`FF3`, `T&L`); it must
+already exist, and the story wears that season's colors unless `themeColor` is
+set. Body format:
 
 ````
 # Chapter 1: The Signal             "# Chapter N[: Title]" starts a chapter;

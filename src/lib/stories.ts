@@ -1,3 +1,4 @@
+import { seasonColors } from './seasons';
 import { apiRaw } from './api';
 import type { SpeakerInfo } from './transcript';
 import type { Character, StoryChapter, StoryFormat, StoryLine, StoryLineType, StoryQuote, StorySegment } from './types';
@@ -151,6 +152,7 @@ export function storyColors(story: {
     slug: string;
     themeColor: string | null;
     themeColor2: string | null;
+    season?: { title: string } | null;
 }): { primary: string; secondary: string } {
     if (THEMED_SLUGS.has(story.slug)) {
         return { primary: `var(--${story.slug})`, secondary: `var(--${story.slug}-2)` };
@@ -158,7 +160,17 @@ export function storyColors(story: {
     if (story.themeColor) {
         return { primary: story.themeColor, secondary: story.themeColor2 ?? story.themeColor };
     }
+    // No colors of its own — wear its campaign's (falls back to the accent too)
+    if (story.season) return seasonColors(story.season.title);
     return { primary: 'var(--accent)', secondary: 'var(--accent-soft)' };
+}
+
+/** Anchor id for a /stories shelf section, e.g. "Final Frontier 3" → "final-frontier-3". */
+export function storyGroupId(label: string): string {
+    return label
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
 }
 
 /** "2-the-signal" for /stories/foo/2-the-signal; resolved by number prefix. */
@@ -190,7 +202,10 @@ export function quotedSpanText(quote: StoryQuote, characterId: number): string {
         .join(' ');
 }
 
-/** Deep link to a StoryQuote's line — chapter route only needs the leading number. */
-export function storyQuoteUrl(quote: StoryQuote): string {
+/** Deep link to a quoted line — chapter route only needs the leading number.
+ * Takes just the three fields it needs (not a full StoryQuote) so callers
+ * with a lighter-weight hit (e.g. a site-wide search result) can pass one
+ * directly; every existing StoryQuote caller still satisfies this. */
+export function storyQuoteUrl(quote: Pick<StoryQuote, 'storySlug' | 'chapterNo' | 'line_no'>): string {
     return `/stories/${quote.storySlug}/${quote.chapterNo}?line=${quote.line_no}`;
 }

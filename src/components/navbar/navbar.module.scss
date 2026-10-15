@@ -72,8 +72,20 @@
     gap: 0.5rem;
 }
 
+.sessionLink {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+
+    &:hover .sessionName {
+        color: var(--link-hover);
+    }
+}
+
+// Booru avatars are arbitrary images, not sprites — scale smoothly, crop square
 .sessionIcon {
-    image-rendering: pixelated;
+    object-fit: cover;
     border: 1px solid var(--border-loud);
     background: var(--surface-2);
 }

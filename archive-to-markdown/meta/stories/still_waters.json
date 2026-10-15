@@ -1,0 +1,17 @@
+{
+    "slug": "still_waters",
+    "title": "Still Waters",
+    "blurb": "Aboard the Seraphine, Zion finally tells Morra about the village he left behind. Later, stranded on Nanam-7, the crew circles the same wounds around a fire.",
+    "author": "Trey",
+    "published": "2026-10-07",
+    "themeColor": null,
+    "themeColor2": null,
+    "format": "prose",
+    "colors": {
+        "#3aa5bd": "Zion Daybreaker",
+        "#ff00ff": "Morra",
+        "#0000ff": "Dutch Elkins",
+        "#134f5c": "Bellow Brightlight"
+    },
+    "season": "FF4"
+}

@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { useSession } from '@/components/auth/SessionProvider';
 import type { SlimCommentary } from '@/lib/transcript';
 import styles from './commentary.module.scss';
+import UserLink from '@/components/UserLink';
+import RichText from '@/components/RichText';
+import { decodeEntities } from '@/lib/html';
 
 interface Props {
     episodeTitle: string;
@@ -123,7 +126,7 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
                 <div className={styles.panel}>
                     {notes.map((note) => (
                         <div key={note.id} className={styles.note}>
-                            <span className={styles.noteAuthor}>{note.creatorName}</span>
+                            <UserLink username={note.creatorName} className={styles.noteAuthor} />
                             {editingId === note.id ? (
                                 <span className={styles.editRow}>
                                     <textarea
@@ -143,14 +146,14 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
                                 </span>
                             ) : (
                                 <>
-                                    <p className={styles.noteContent}>{note.content}</p>
+                                    <RichText html={note.content} className={styles.noteContent} />
                                     {user && (user.id === note.creatorId || user.role === 'ADMIN') && (
                                         <span className={styles.noteActions}>
                                             <button
                                                 type='button'
                                                 onClick={() => {
                                                     setEditingId(note.id);
-                                                    setEditDraft(note.content);
+                                                    setEditDraft(decodeEntities(note.content));
                                                 }}
                                             >
                                                 edit

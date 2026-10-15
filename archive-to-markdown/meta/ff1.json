@@ -1,0 +1,113 @@
+{
+    "seasonTitle": "FF1",
+    "usernames": {
+        "Zander": "Zander",
+        "Bagelwrecker": "Sean",
+        "Enchantingtable2013": "Maxwell",
+        "Master JRM": "Josh",
+        "Brakia": "Brody",
+        "Mica": "Mica",
+        "ProfessorTree": "Silas",
+        "WatchfulDrake": "Bill",
+        "Platinum_Pathos": "Rashidi",
+        "Zvirym Vallaheim": "Thinh",
+        "Junnn": "Jun",
+        "Magic 8 Bot": "FF 8 Ball",
+        "Magic8Ball": "FF 8 Ball",
+        "pbot": "FF 8 Ball",
+        "RPBot": "FF 8 Ball"
+    },
+    "bots": [
+        "FF 8 Ball"
+    ],
+    "cast": {
+        "Zander": {
+            "3": "Grass Stalker"
+        },
+        "Sean": {
+            "3": "Seth Im'Kin'ki"
+        },
+        "Maxwell": {
+            "3": "Matthias"
+        },
+        "Josh": {
+            "3": "Jacob"
+        },
+        "Mica": {
+            "3": "Venus"
+        },
+        "Brody": {
+            "3": "Serpile"
+        },
+        "Thinh": {
+            "6": "Meth"
+        },
+        "Jun": {
+            "10": "Heck"
+        }
+    },
+    "personaTimeline": {
+        "Grass Stalker": [
+            {
+                "from_episode": 3,
+                "persona": "Emmett"
+            }
+        ],
+        "Serpile": [
+            {
+                "from_episode": 3,
+                "persona": "Kabaju"
+            }
+        ]
+    },
+    "episodes": [
+        {
+            "title": "Honeymoon Over",
+            "file_name": "3",
+            "episode_number": 3,
+            "short_desc": "Seth stuffs his bride in a bag, turns into a marble, rockets off his homeplanet, and gets flung back onto the ship, where a wet bed, a drink swap and a very familiar AI await."
+        },
+        {
+            "title": "Nudist Massacre",
+            "file_name": "4",
+            "episode_number": 4,
+            "short_desc": "Matthias wakes from a two-semester coma, Seth fishes a translator out of his wife, and the crew drifts up to a hole-ridden space yacht beside an asteroid of bitten, dead women, where Emmett recognizes the Grasshoppers' handiwork and Matthias finds a laser rifle."
+        },
+        {
+            "title": "Freeze Day",
+            "file_name": "5",
+            "episode_number": 5,
+            "short_desc": "Seth's taunting brings a Grasshopper down on the crew, forcing Emmett to leave Seth and Matthias in cryo while a long time skip drops them in a crate on a far-future planet, where they loot, steal a ship, and reach a space station."
+        },
+        {
+            "title": "Buzzkill",
+            "file_name": "6",
+            "episode_number": 6,
+            "short_desc": "Seth and Matthias kidnap a drow elf named Meth on the space station, crash their ship into a hive on the bee planet, and wind up in a transparent-walled prison where Meth falls in love with the warden and a golden wasp arrives."
+        },
+        {
+            "title": "Belly Button Dog",
+            "file_name": "7",
+            "episode_number": 7,
+            "short_desc": "Jacob returns from a long journey with immortality and a returned dog, and Seth uses his last wormhole use to pull him into the prison cell."
+        },
+        {
+            "title": "Prison Break, Sort Of",
+            "file_name": "8",
+            "episode_number": 8,
+            "short_desc": "Venus wakes up in the prison, the guards confirm that Grand Emmett has been dead for sixty years, and Seth simply bends the bars and walks out as they wave goodbye."
+        },
+        {
+            "title": "Park Q",
+            "file_name": "9",
+            "episode_number": 9,
+            "short_desc": "Matthias wakes up in a cell while Seth tracks down Emmett's old ship through an Argonian clerk named Kaba, who looks it up by the ID number 1."
+        },
+        {
+            "title": "Stranger Danger",
+            "file_name": "10",
+            "episode_number": 10,
+            "short_desc": "Two hundred years after the freeze, Seth reaches Emmett's ship, empties his gun at a stranger, and refuses to believe the golden wasp in front of him is really his dead friend."
+        }
+    ]
+}

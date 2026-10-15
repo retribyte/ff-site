@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { api } from '@/lib/api';
 import type { Story } from '@/lib/types';
 import { storyColors } from '@/lib/stories';
+import { seasonDisplayName } from '@/lib/seasons';
 import SignalLost from '@/components/SignalLost';
 import StoryIndex, { type IndexStory } from '@/components/story/StoryIndex';
 import styles from './stories.module.scss';
@@ -26,7 +27,20 @@ export default async function StoriesPage() {
         );
     }
 
-    const indexStories: IndexStory[] = stories.map((s) => ({
+    // Shelf sections follow campaign order; stories without a campaign go last.
+    const seasonOrder = (title: string | undefined) => {
+        if (!title) return [2, ''] as const;
+        const ff = /^FF(\d+)$/.exec(title);
+        return ff ? ([0, ff[1].padStart(3, '0')] as const) : ([1, title] as const);
+    };
+    const sorted = [...stories].sort((a, b) => {
+        const [ra, ka] = seasonOrder(a.season?.title);
+        const [rb, kb] = seasonOrder(b.season?.title);
+        return ra - rb || ka.localeCompare(kb) || a.title.localeCompare(b.title);
+    });
+    const anySeason = stories.some((s) => s.season);
+
+    const indexStories: IndexStory[] = sorted.map((s) => ({
         slug: s.slug,
         title: s.title,
         blurb: s.blurb,
@@ -35,6 +49,7 @@ export default async function StoriesPage() {
         chapterCount: s.chapters?.length ?? 0,
         lineCount: (s.chapters ?? []).reduce((sum, c) => sum + (c._count?.lines ?? 0), 0),
         colors: storyColors(s),
+        group: anySeason ? (s.season ? seasonDisplayName(s.season.title) : 'Other') : null,
     }));
 
     return (

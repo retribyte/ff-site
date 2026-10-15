@@ -14,7 +14,19 @@ export interface PublicUser {
     username: string;
     role: UserRole;
     icon: string | null;
+    // dark-mode display color for characterless messages (e.g. the Vortox bot)
+    color?: string | null;
     bio: string | null;
+}
+
+/** GET /users/:idOrUsername — the public profile page's payload */
+export interface UserProfile extends PublicUser {
+    iconBooruId: number | null;
+    wikiUser: string | null;
+    createdAt: string;
+    characters: { id: number; name: string; slug: string; image: string | null; color: string | null }[];
+    stories: { id: number; slug: string; title: string; publishedDate: string | null }[];
+    _count: { messages: number; commentaries: number };
 }
 
 export interface Character {
@@ -39,6 +51,7 @@ export interface Character {
 export interface WikiCharacterData {
     fullname?: string;
     aliases?: string[];
+    occupation?: string[];
     faction?: string;
     birthdate?: string;
     birthplace?: string;
@@ -46,9 +59,12 @@ export interface WikiCharacterData {
     deathcause?: string;
     relationship?: string[];
     planet?: string[];
+    alignment?: string;
+    sexuality?: string;
     sex?: string;
     height?: string;
     weight?: string;
+    skin?: string;
     hair?: string;
     eyes?: string;
 }
@@ -97,6 +113,7 @@ export interface Season {
     title: string;
     slug: string;
     episodes?: Episode[];
+    stories?: Pick<Story, 'slug' | 'title' | 'blurb' | 'themeColor' | 'themeColor2'>[];
 }
 
 export interface Episode {
@@ -152,6 +169,8 @@ export interface Story {
     themeColor: string | null;
     themeColor2: string | null;
     format: StoryFormat;
+    seasonTitle?: string | null;
+    season?: Pick<Season, 'title' | 'slug'> | null;
     author?: PublicUser;
     chapters?: StoryChapter[];
 }

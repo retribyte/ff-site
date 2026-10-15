@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { useSession } from '@/components/auth/SessionProvider';
+import SiteSearch from './SiteSearch';
 import styles from './navbar.module.scss';
 
 const links = [
@@ -34,10 +35,12 @@ function SessionArea() {
 
     return (
         <span className={styles.session}>
-            {user.icon && (
-                <Image src={user.icon} alt='' width={22} height={22} className={styles.sessionIcon} unoptimized />
-            )}
-            <span className={styles.sessionName}>{user.username}</span>
+            <Link href='/account' className={styles.sessionLink} title='Your account'>
+                {user.icon && (
+                    <Image src={user.icon} alt='' width={22} height={22} className={styles.sessionIcon} unoptimized />
+                )}
+                <span className={styles.sessionName}>{user.username}</span>
+            </Link>
             <button type='button' className={styles.logout} onClick={() => void logout()} title='Log out'>
                 ⏻
             </button>
@@ -70,6 +73,8 @@ export default function Navbar() {
                     </Link>
                 ))}
             </nav>
+
+            <SiteSearch />
 
             <SessionArea />
 

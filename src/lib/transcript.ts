@@ -34,7 +34,7 @@ export interface TranscriptData {
     episodeTitle: string;
     messages: SlimMessage[];
     characters: Record<number, SpeakerInfo>;
-    players: Record<number, { name: string; icon: string | null }>;
+    players: Record<number, { name: string; icon: string | null; color: string | null }>;
     personas: Record<number, { name: string | null; image: string | null; color: string | null }>;
 }
 
@@ -68,6 +68,7 @@ export function slimTranscript(messages: Message[]): TranscriptData {
             players[message.player.id] = {
                 name: message.player.username,
                 icon: message.player.icon,
+                color: message.player.color ?? null,
             };
         }
         if (message.persona && !(message.persona.id in personas)) {

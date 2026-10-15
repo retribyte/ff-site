@@ -11,6 +11,7 @@ import CharacterCard from '@/components/characters/CharacterCard';
 import WikiLink from '@/components/WikiLink';
 import { renderWikiText } from '@/lib/wiki';
 import styles from './speciesDetail.module.scss';
+import RichText from '@/components/RichText';
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -86,7 +87,7 @@ export default async function SpeciesPage({ params }: Props) {
                         {canEdit && <ActionChip href={`/species/${species.slug}/edit`} label='edit ✎' />}
                     </div>
 
-                    <p className={styles.description}>{species.description}</p>
+                    <RichText html={species.description} className={styles.description} />
 
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>

@@ -249,14 +249,11 @@ t!8ball Does hector wake up and immediately check his pack?
 **Jelsafan0** _(08-Sep-18 03:39 PM)_
 
 > Please, get him off me.
+> I am begging you.
 
 **Bagelwrecker** _(08-Sep-18 03:39 PM)_
 
 > Yee haw like a bee haw nee haw!
-
-**Jelsafan0** _(08-Sep-18 03:39 PM)_
-
-> I am begging you.
 
 **TheBlade** _(08-Sep-18 03:39 PM)_
 
@@ -537,7 +534,7 @@ _Hector starts packing up his doctor's bag._
 
 _Seth, as he's putting his clothes back on, scowls at the others' lack of interest._
 
-> We are literally half a mile a way from my home town, retards.
+> We are literally half a mile away from my home town, stupidloids.
 
 **PlasmaPerson** _(08-Sep-18 03:52 PM)_
 
@@ -563,7 +560,7 @@ _Sanya helps Emmett stand, propping him with her shoulder._
 
 _Seth furrows his brow and snarls._
 
-> Well guess what, retard? I have a ship lot that we can go to and use one of the many ships I captured!
+> Well guess what, stupidloid? I have a ship lot that we can go to and use one of the many ships I captured!
 
 **Zander** _(08-Sep-18 03:53 PM)_
 

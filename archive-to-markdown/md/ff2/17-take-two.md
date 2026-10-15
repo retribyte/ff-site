@@ -761,7 +761,7 @@ _Iris and Sanya tongue-kiss for about 0.5 seconds._
 
 > Well, guess we're going to stay here for all eternity cause' I'm not going to my designated area until I see the Goddess of Death.
 
-**Tatsumaki**
+**Tatsumaki** _(04-Sep-18 02:44 PM)_
 
 🐐 | The boat stops at the end of the river. A large castle stands ahead, adorned with gargoyles and sectioned into many parts of different colors. Several crowds of elves kneel in prayer at designated places of worship, and many others share toasts and games.
 
@@ -2177,7 +2177,7 @@ _Hector tilts his head._
 
 **Bagelwrecker** _(04-Sep-18 03:34 PM)_
 
-t!8ball Does Seth and Seth point at each other and say, "Same sleaze"?
+t!8ball Does Seth and Seth point at each other and say, "Same bing"?
 
 **Tatsumaki** _(04-Sep-18 03:34 PM)_
 
@@ -2193,9 +2193,9 @@ t!8ball Is Kyle running low on power?
 
 **Bagelwrecker** _(04-Sep-18 03:34 PM)_
 
-_The two Seths squat an point to each other, exclaiming, "Same sleaze". They both are taken aback by the others' response._
+_The two Seths squat and point to each other, exclaiming, "Same bing." They both are taken aback by the other's response._
 
-> No, you're the sleaze!
+> No, you're the bing!
 
 **ProfessorTree** _(04-Sep-18 03:34 PM)_
 

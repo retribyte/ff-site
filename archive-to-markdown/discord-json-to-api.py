@@ -38,8 +38,17 @@ stripped, a full "…" wrap around a quote is dropped (the archive stores
 dialogue as bare prose), and ```fenced blocks``` become plain OTHER lines.
 Messages from a bot author (author.isBot) are always BOT_RESPONSE, split one
 per non-empty content line. Embeds (embeds[]) become EMBED messages, one per
-embed, shaped {title?, description[], footer?} per the site's embed reader.
+embed, shaped {title?, description[], footer?, color?} per the site's embed reader.
 RecipientAdd/RecipientRemove system messages are dropped.
+
+An episode's meta["messageBlacklist"] (optional, list[int]) skips messages by
+messageNo -- their 1-based position in this script's own *converted* output
+for that episode, matching the site's `messageNo` (same numbering as
+GET /episodes/:title/messages/:messageNo and the archive DB column) rather
+than raw position in the Discord export. This never touches the source
+export file; it only omits entries from the emitted episode JSON, so it's
+safe to use for dropping table talk / OOC lines from a direct (non-markdown)
+import without any lossy edit to the archive itself.
 """
 
 import glob
@@ -132,6 +141,7 @@ NAME_ALIASES = {
     "Emmett": "Emmett Tawfeek",
     "Seth": "Seth Im'Kin'ki",
     "Chomsky": "Victor Chomsky",
+    "Zach": "Zacharias Smith",
     "Dutch": "Dutch Elkins",
     "Dutchina": "Dutch Elkins",
     "Bellow": "Bellow Brightlight",
@@ -139,6 +149,8 @@ NAME_ALIASES = {
     "Llawdon": "Llawdon Brandanowitz",
     "Zion": "Zion Daybreaker",
     "Sanya": "Sanya Dreadflower",
+    "Mateo": "Mateo Krovak",
+    "Joker": "The Joker",
     # "Fungus" (ep2-10) is Vec's pre-self-naming identity, tracked as a
     # persona now (meta/ff4.json's personaTimeline), not a cast default --
     # cast.Zander already resolves straight to "Vec" from ep2 on. This entry
@@ -368,6 +380,30 @@ DROP_CHARACTER_NAMES = (
     "Morra in FF2",
 )
 
+# Plain third-person action narration typed as its own standalone line with
+# zero markdown (no `quote`/*action* wrapping at all) -- classify_line's
+# "plain line -> OTHER" default (deliberately conservative, since most
+# unwrapped standalone lines really are off-topic chatter) can't tell these
+# apart from genuine noise by text pattern alone; matched by known content
+# instead, same approach as FORCE_CHARACTER_CONTAINING.
+FORCE_ACTION_CONTAINING = (
+    "Dutch barges in the waiting room doors.",
+    "Dutch shuffles towards the receptionist, clearly hiding something in his coat.",
+    "Dutch ignores the receptionist and shuffles over to Chomsky, almost falling over before plopping down right next to him.",
+    "Dutch busts out laughing and pats Chomsky on the back a couple times.",
+)
+
+# "Marv. Take care of them." (Ep 3, Ambush) is a bare, unlabeled code fence
+# with no Ravens-prefix character -- unlike every other Marv/Sascha/Odran/
+# Ravens Leader line, which is voiced via a `+`/`[`/`-`/`>` prefix inside a
+# diff/ini/md fence (see RAVENS_PREFIXES below), so it falls into the
+# fenced-code catch-all as a bare OTHER line instead. Confirmed intended as
+# Ravens Leader dialogue despite the missing prefix; matched by content like
+# FORCE_ACTION_CONTAINING above.
+FORCE_QUOTE_CONTAINING = (
+    ("Marv. Take care of them.", "Ravens Leader"),
+)
+
 # Trey and Zander voice the Ravens (an antagonist faction) entirely through
 # colored code-fence formatting -- never `Name`: or `"quoted"` text -- since
 # that's the only way Discord lets you color a line. Each fence's leading
@@ -383,8 +419,9 @@ VEC_HOSTED_RAVENS_PREFIXES = {"+", "["}
 
 def is_recap_fence(body):
     """The "Last episode..." / "In the ending of the last story..." recap
-    blocks reuse the same ini/diff/md coloring for narration, not dialogue --
-    exclude them from Ravens-member classification."""
+    blocks (and "Attention HORIZONERS" Mission Control transmissions) reuse
+    the same ini/diff/md coloring for narration, not dialogue -- they become
+    EMBEDs, never Ravens lines."""
     stripped = body.strip()
     return (
         stripped.startswith("Last episode")
@@ -574,7 +611,16 @@ def classify_line(line, character, cast_names, quote_ctx=False):
             msg_type, text = classify_span(delim, text)
         else:
             text = clean_inline(text.strip("`"))
-            msg_type = "QUOTE" if quote_ctx else "OTHER"
+            # A plain segment on a line that also has a wrapped span (that's
+            # how it got here -- see the standalone-line branch above for
+            # lines with none) is prose accompanying that dialogue/action,
+            # not off-topic chatter -- e.g. "Doc pats Emmett on the head for
+            # *way* too long..." -- so it defaults to ACTION rather than
+            # OTHER. Known false positives from this (OOC asides that happen
+            # to share a line with a genuine `backtick`/*asterisk* span, e.g.
+            # a stray `/slash command`) are handled via messageBlacklist in
+            # meta/ff4.json instead of a narrower heuristic here.
+            msg_type = "QUOTE" if quote_ctx else "ACTION"
             if msg_type == "QUOTE":
                 text = unwrap_quotes(text)
         if not text:
@@ -663,6 +709,10 @@ def embed_to_json(embed):
     footer = embed.get("footer") or {}
     if footer.get("text"):
         out["footer"] = footer["text"]
+    # Vortox color-codes its output (orange = normal, green = hit/heal,
+    # red = failed roll/miss); kept only alongside real content
+    if out and embed.get("color"):
+        out["color"] = embed["color"]
     return out
 
 
@@ -683,6 +733,14 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names, pers
     character = cast_character(meta, player, episode_number)
 
     def emit_line(msg_type, text, line_character, persona_override=None):
+        if msg_type == "OTHER" and any(s in text for s in FORCE_ACTION_CONTAINING):
+            msg_type = "ACTION"
+        if msg_type == "OTHER":
+            for needle, forced in FORCE_QUOTE_CONTAINING:
+                if needle in text:
+                    msg_type = "QUOTE"
+                    line_character = forced
+                    break
         if any(s in text for s in DROP_CHARACTER_CONTAINING) or line_character in DROP_CHARACTER_NAMES:
             line_character = None
         for needle, forced in FORCE_CHARACTER_CONTAINING:
@@ -740,6 +798,20 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names, pers
     for chunk in content_chunks(content) if content else []:
         if chunk[0] == "fence":
             _, lang, body = chunk
+            if not is_bot and is_recap_fence(body):
+                # GM recaps ("Last episode, the [HORIZONERS]...") and Mission
+                # Control transmissions: an EMBED, not loose OTHER lines. The
+                # [BRACKETS] are Discord ini/md highlight markup -- kept
+                # verbatim, with the fence language under "code", so the
+                # site can render the highlights (it shows them literally
+                # until it does).
+                # "code" is always present (possibly "") -- it marks the
+                # embed as a GM code-block post, whatever its language
+                recap = {"description": [l.strip() for l in body.split("\n") if l.strip()], "code": lang}
+                out.append({"player": player, "character": None, "persona": None,
+                            "timestamp": timestamp, "type": "EMBED",
+                            "text": json.dumps(recap, ensure_ascii=False)})
+                continue
             if not is_bot and lang in ("diff", "ini", "md") and not is_recap_fence(body):
                 for line in body.split("\n"):
                     line = line.strip()
@@ -795,10 +867,16 @@ def convert_message(msg, meta, episode_number, usernames, bots, cast_names, pers
             for msg_type, text, line_character in classified:
                 emit_line(msg_type, text, line_character)
 
+    default_color = (meta.get("defaultEmbedColors") or {}).get(player)
     for embed in msg.get("embeds") or []:
         embed_json = embed_to_json(embed)
         if not embed_json:
             continue
+        # the bot's everyday embed color (Vortox's orange, #FFA500) is left
+        # out -- the reader uses the bot's user color instead (Vortox is
+        # merged into FF 8 Ball, purple); only meaningful colors are kept
+        if default_color and embed_json.get("color", "").lower() == default_color.lower():
+            del embed_json["color"]
         out.append({
             "player": player,
             "character": None,
@@ -827,6 +905,14 @@ def convert_file(json_file, meta, episode):
         for out_msg in convert_message(msg, meta, episode_number, usernames, bots, cast_names, persona_timeline):
             played_date = played_date or out_msg["timestamp"]
             messages.append(out_msg)
+
+    blacklist = set(episode.get("messageBlacklist") or [])
+    if blacklist:
+        stale = blacklist - set(range(1, len(messages) + 1))
+        if stale:
+            print(f"  warning: messageBlacklist entries {sorted(stale)} are out of range "
+                  f"(episode has {len(messages)} converted messages) -- ignored, list may be stale")
+        messages = [m for i, m in enumerate(messages, start=1) if i not in blacklist]
 
     return {
         "seasonTitle": meta["seasonTitle"],
@@ -867,7 +953,9 @@ def emit(json_file, meta, season, episode):
     for msg in payload["messages"]:
         types[msg["type"]] = types.get(msg["type"], 0) + 1
     summary = ", ".join(f"{count} {name}" for name, count in sorted(types.items()))
-    print(f"{json_file} -> {out_file} ({len(payload['messages'])} messages: {summary})")
+    blacklisted = len(episode.get("messageBlacklist") or [])
+    blacklist_note = f", {blacklisted} blacklisted" if blacklisted else ""
+    print(f"{json_file} -> {out_file} ({len(payload['messages'])} messages: {summary}{blacklist_note})")
     return out_file
 
 

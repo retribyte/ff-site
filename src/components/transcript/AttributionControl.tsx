@@ -33,7 +33,7 @@ export default function AttributionControl({ episodeTitle, characterId, anchorNo
     const [personas, setPersonas] = useState<Persona[] | null>(null);
     const [loadError, setLoadError] = useState<string | null>(null);
     const [personaId, setPersonaId] = useState(currentPersonaId !== null ? String(currentPersonaId) : '');
-    const [target, setTarget] = useState<'line' | 'block'>('line');
+    const [target, setTarget] = useState<'line' | 'block'>('block');
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -42,7 +42,7 @@ export default function AttributionControl({ episodeTitle, characterId, anchorNo
         setOpen(next);
         if (next) {
             setPersonaId(currentPersonaId !== null ? String(currentPersonaId) : '');
-            setTarget('line');
+            setTarget('block');
             setError(null);
             if (personas === null) {
                 fetch(`/api/ff/characters/${characterId}/personas`)

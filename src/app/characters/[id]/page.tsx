@@ -14,6 +14,7 @@ import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
 import { renderWikiText, renderWikiList } from '@/lib/wiki';
 import styles from './character.module.scss';
+import RichText from '@/components/RichText';
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -113,6 +114,7 @@ export default async function CharacterPage({ params }: Props) {
     // presentation eras, not nicknames). Kept as its own block so the two
     // "aka"-shaped concepts never get visually conflated.
     if (wiki?.aliases?.length) facts.push(['nicknames', renderWikiList(wiki.aliases)]);
+    if (wiki?.occupation?.length) facts.push(['occupation', renderWikiList(wiki.occupation)]);
     if (wiki?.faction) facts.push(['faction', renderWikiText(wiki.faction)]);
     if (wiki?.birthdate) facts.push(['born', renderWikiText(wiki.birthdate)]);
     if (wiki?.birthplace) facts.push(['birthplace', renderWikiText(wiki.birthplace)]);
@@ -122,9 +124,12 @@ export default async function CharacterPage({ params }: Props) {
     }
     if (wiki?.relationship?.length) facts.push(['relationships', renderWikiList(wiki.relationship)]);
     if (wiki?.planet?.length) facts.push(['planet', renderWikiList(wiki.planet)]);
+    if (wiki?.alignment) facts.push(['alignment', renderWikiText(wiki.alignment)]);
     if (wiki?.sex) facts.push(['sex', renderWikiText(wiki.sex)]);
+    if (wiki?.sexuality) facts.push(['sexuality', renderWikiText(wiki.sexuality)]);
     if (wiki?.height) facts.push(['height', renderWikiText(wiki.height)]);
     if (wiki?.weight) facts.push(['weight', renderWikiText(wiki.weight)]);
+    if (wiki?.skin) facts.push(['skin', renderWikiText(wiki.skin)]);
     if (wiki?.hair) facts.push(['hair', renderWikiText(wiki.hair)]);
     if (wiki?.eyes) facts.push(['eyes', renderWikiText(wiki.eyes)]);
 
@@ -165,7 +170,7 @@ export default async function CharacterPage({ params }: Props) {
                     })()}
 
                     {character.blurb ? (
-                        <p className={styles.blurb}>{character.blurb}</p>
+                        <RichText html={character.blurb} className={styles.blurb} />
                     ) : (
                         <p className='pixel-label'>no dossier on file — records pending</p>
                     )}

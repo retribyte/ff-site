@@ -16,6 +16,9 @@ export const dynamic = 'force-dynamic';
 // The full campaign roster. Seasons without data in the DB still get a strip,
 // dimmed, like the old site listed FF1–FF4 before their archives existed.
 const ROSTER = ['FF1', 'FF2', 'FF3', 'FF4'];
+// Story-only campaigns not ready for the archives roster yet (their season
+// pages still resolve; they're just not listed here).
+const HIDDEN = new Set(['T&L', 'FF5']);
 
 export default async function ArchivesPage() {
     let seasons: Season[];
@@ -29,6 +32,7 @@ export default async function ArchivesPage() {
         );
     }
 
+    seasons = seasons.filter((s) => !HIDDEN.has(s.title));
     const byTitle = new Map(seasons.map((s) => [s.title, s]));
     const roster = [...ROSTER, ...seasons.map((s) => s.title).filter((t) => !ROSTER.includes(t))];
 
@@ -45,6 +49,7 @@ export default async function ArchivesPage() {
                     const colors = seasonColors(title);
                     const style = { '--season': colors.primary, '--season-2': colors.secondary } as React.CSSProperties;
                     const episodeCount = season?.episodes?.length ?? 0;
+                    const storyCount = season?.stories?.length ?? 0;
                     // Skip the reveal-subtitle when it would just repeat the strip code
                     const subtitle = seasonDisplayName(title) !== title ? seasonDisplayName(title) : null;
 
@@ -65,7 +70,12 @@ export default async function ArchivesPage() {
                             <span className={styles.stripCode}>{title}</span>
                             {subtitle && <span className={styles.stripTitle}>{subtitle}</span>}
                             <span className={styles.stripMeta}>
-                                {episodeCount} episode{episodeCount === 1 ? '' : 's'}
+                                {[
+                                    episodeCount > 0 && `${episodeCount} episode${episodeCount === 1 ? '' : 's'}`,
+                                    storyCount > 0 && `${storyCount} stor${storyCount === 1 ? 'y' : 'ies'}`,
+                                ]
+                                    .filter(Boolean)
+                                    .join(' · ') || '0 episodes'}
                             </span>
                         </Link>
                     );

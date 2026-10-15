@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
 import type { Character, Season } from '@/lib/types';
 import { findSeasonBySlug, seasonColors, seasonDisplayName } from '@/lib/seasons';
+import { storyGroupId } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
 import EpisodeList from '@/components/archives/EpisodeList';
 import PersonaStampPanel from '@/components/transcript/PersonaStampPanel';
@@ -55,6 +56,7 @@ export default async function SeasonPage({ params }: Props) {
         .sort((a, b) => a.name.localeCompare(b.name));
 
     const episodes = [...(season.episodes ?? [])].sort((a, b) => a.episode_no - b.episode_no);
+    const stories = season.stories ?? [];
     const colors = seasonColors(season.title);
     const style = {
         '--season': colors.primary,
@@ -85,18 +87,31 @@ export default async function SeasonPage({ params }: Props) {
                 </p>
             </header>
 
-            <PersonaStampPanel scope='season' scopeTitle={season.title} characters={characterOptions} />
+            {episodes.length > 0 && (
+                <PersonaStampPanel scope='season' scopeTitle={season.title} characters={characterOptions} />
+            )}
 
-            <EpisodeList
-                seasonSlug={season.slug}
-                episodes={episodes.map((e) => ({
-                    episode_no: e.episode_no,
-                    title: e.title,
-                    summary: e.summary,
-                    playedDate: e.playedDate,
-                    slug: e.slug,
-                }))}
-            />
+            {episodes.length > 0 && (
+                <EpisodeList
+                    seasonSlug={season.slug}
+                    episodes={episodes.map((e) => ({
+                        episode_no: e.episode_no,
+                        title: e.title,
+                        summary: e.summary,
+                        playedDate: e.playedDate,
+                        slug: e.slug,
+                    }))}
+                />
+            )}
+
+            {stories.length > 0 && (
+                <p className={styles.pointer}>
+                    <Link href={`/stories#${storyGroupId(seasonDisplayName(season.title))}`} className='pixel-label'>
+                        {stories.length} {season.title} short stor{stories.length === 1 ? 'y lives' : 'ies live'} in
+                        Stories →
+                    </Link>
+                </p>
+            )}
         </main>
     );
 }

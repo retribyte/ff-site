@@ -60,7 +60,7 @@ see below).
    | Bellow | Bellow Brightlight | FF4 only |
    | Llafay | Llafay Terrels | FF4 only |
    | Llawdon | Llawdon Brandanowitz | FF4 only |
-   | Zion | Zion Daybreaker | FF4 only (1-message orphan, no real history) |
+   | Zion | Zion Daybreaker | FF4 only |
 
    **Dread is the one exception that does NOT get flattened.** Dread and
    Sanya were confirmed *separate* characters through FF2/FF3 (Dread has 73

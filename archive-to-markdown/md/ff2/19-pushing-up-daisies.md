@@ -2789,7 +2789,7 @@ _Hector continues to dig in his chest and starts yelling in Martian. Unfortunate
 
 **Jelsafan0** _(15-Sep-18 05:44 PM)_
 
-\*Dreadfully, Iris continues to pity herself. "I lost Bridgette... I lost Calypso... Mom.... dad.... aunt.... uncle...."
+_Dreadfully, Iris continues to pity herself. "I lost Bridgette... I lost Calypso... Mom.... dad.... aunt.... uncle...."_
 
 **Zander** _(15-Sep-18 05:45 PM)_
 
@@ -3084,7 +3084,7 @@ _Hector continues to speak in a muffled Martian from his gas mask._
 
 > Etas camos sumtim?
 
-Martian: Shouldn't we do something?
+_Martian Translation: Shouldn't we do something?_
 
 **Jelsafan0** _(15-Sep-18 05:59 PM)_
 
@@ -3102,7 +3102,7 @@ Martian: Shouldn't we do something?
 
 > Penes apis trous Matieu, camos sumtim!
 
-Martian: Matieu get your head out of your pants, we have to do something!
+_Martian Translation: Matieu get your head out of your pants, we have to do something!_
 
 **Enchantingtable2013** _(15-Sep-18 06:00 PM)_
 

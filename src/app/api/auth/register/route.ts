@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { api, ApiError } from '@/lib/api';
-import { SESSION_COOKIE, tokenMaxAge, type SessionUser } from '@/lib/auth';
+import { setSessionCookie, type SessionUser } from '@/lib/auth';
 
 export async function POST(request: Request) {
     const body = (await request.json().catch(() => null)) as {
@@ -26,13 +26,7 @@ export async function POST(request: Request) {
         const user = await api<SessionUser>('/user', { token });
 
         const response = NextResponse.json({ user }, { status: 201 });
-        response.cookies.set(SESSION_COOKIE, token, {
-            httpOnly: true,
-            sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production',
-            path: '/',
-            maxAge: tokenMaxAge(token),
-        });
+        setSessionCookie(response, token);
         return response;
     } catch (error) {
         if (error instanceof ApiError) {

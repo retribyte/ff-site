@@ -427,7 +427,7 @@ def convert(paragraphs, meta):
 
 def frontmatter(meta):
     lines = ["---"]
-    for key in ("slug", "title", "blurb", "author", "published", "themeColor", "themeColor2", "format"):
+    for key in ("slug", "title", "blurb", "author", "published", "season", "themeColor", "themeColor2", "format"):
         value = meta.get(key)
         if value:
             lines.append(f"{key}: {value}")

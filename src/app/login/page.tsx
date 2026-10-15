@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/components/auth/SessionProvider';
+import { ACCOUNT_PATH } from '@/components/auth/PasswordChangeGate';
+import type { SessionUser } from '@/lib/auth';
 import styles from './login.module.scss';
 
 type Mode = 'login' | 'register';
@@ -27,13 +29,13 @@ export default function LoginPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(mode === 'login' ? { username, password } : { username, email, password }),
             });
-            const data = (await res.json()) as { error?: string };
+            const data = (await res.json()) as { error?: string; user?: SessionUser };
             if (!res.ok) {
                 setError(data.error ?? 'Something went wrong');
                 return;
             }
             await refresh();
-            router.push('/');
+            router.push(data.user?.mustChangePassword ? ACCOUNT_PATH : '/');
         } catch {
             setError('The lore server is not answering');
         } finally {

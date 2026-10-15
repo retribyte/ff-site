@@ -1,0 +1,16 @@
+@use '../styles/mixins' as m;
+
+.richText {
+    // Authors type newlines, not <br>s
+    white-space: pre-line;
+
+    p,
+    ul,
+    ol {
+        margin: 0 0 0.75em;
+    }
+
+    a {
+        @include m.plain-link;
+    }
+}

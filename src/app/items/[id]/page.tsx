@@ -11,6 +11,8 @@ import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
 import { renderWikiText } from '@/lib/wiki';
 import styles from './itemDetail.module.scss';
+import UserLink from '@/components/UserLink';
+import RichText from '@/components/RichText';
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -56,7 +58,7 @@ export default async function ItemPage({ params }: Props) {
     const meta = ITEM_TYPE_META[item.itemType];
 
     const facts: [string, React.ReactNode][] = [['type', meta.label]];
-    if (item.creator) facts.push(['recorded by', item.creator.username]);
+    if (item.creator) facts.push(['recorded by', <UserLink key='creator' username={item.creator.username} />]);
 
     const wiki = item.wiki;
     if (wiki?.rarity) facts.push(['rarity', renderWikiText(wiki.rarity)]);
@@ -89,7 +91,7 @@ export default async function ItemPage({ params }: Props) {
                         </span>
                     </p>
 
-                    <p className={styles.description}>{item.description}</p>
+                    <RichText html={item.description} className={styles.description} />
                 </article>
 
                 <aside className={`pixel-panel ${styles.infobox}`}>

@@ -1,15 +1,18 @@
 import { Fragment, type ReactNode } from 'react';
+import { decodeEntities } from '@/lib/html';
 
 // Wiki text fields occasionally carry a literal `<br>`/`<br />` (ff-server's
 // sanitizer allows it through for HTML-rendered fields like blurb) plus real
 // embedded newlines. These render as plain React text here, not HTML, so
 // split on both and rejoin as real <br /> elements — otherwise the tag shows
-// up as literal visible text instead of a line break.
+// up as literal visible text instead of a line break. Values are stored
+// entity-encoded (ff-server sanitizes at cache-write time), so decode them —
+// a text node would otherwise show `t&amp;l`.
 export function renderWikiText(value: string | undefined): ReactNode {
     if (!value) return undefined;
     const lines = value
         .split(/<br\s*\/?>|\n/gi)
-        .map((line) => line.trim())
+        .map((line) => decodeEntities(line).trim())
         .filter(Boolean);
     if (lines.length <= 1) return lines[0] ?? undefined;
     return lines.map((line, i) => (

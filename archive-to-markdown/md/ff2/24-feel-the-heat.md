@@ -1,78 +1,67 @@
-**PlasmaPerson** _(28-Oct-18 02:29 PM)_
-
-> B
-> @RPretribution
-> @Jelsafan0
-> @Final Frontier
-> guys let's start
-
-**Deyner** _(28-Oct-18 02:42 PM)_
-
-> @Final Frontier
-> Lili's not responding
-> Didn't pick up
-
 **Brakia** _(28-Oct-18 02:45 PM)_
 
-> `I still can't believe that Garrick tried to pull some stupid prank.`
+_The morning after the prank, the crew slowly gathers in the kitchen. Sanya leans against the counter, still fuming._
+
+> I still can't believe that Garrick tried to pull some stupid prank.
 
 **PlasmaPerson** _(28-Oct-18 02:46 PM)_
 
-> Chomsky comes out of his room wearing a space suit
-> hey guys.
+_Chomsky comes out of his room wearing a bulky space suit, his bandaged arm tucked awkwardly inside it._
+
+> Hey, guys.
 
 **Deyner** _(28-Oct-18 02:47 PM)_
+
+_Deyner snorts sarcastically._
 
 > Who else but Garrick?
 
 **Zander** _(28-Oct-18 02:47 PM)_
 
-> Emmett holds his head, looking ill as the norm (nowadays).
-
-**Deyner** _(28-Oct-18 02:47 PM)_
-
-> says sarcastically
+_Emmett holds his head, looking ill, as is the norm nowadays._
 
 **Brakia** _(28-Oct-18 02:47 PM)_
 
-> `Hey Emmett. Getting any better?`
+> Hey, Emmett. Getting any better?
 
-**Zander** _(28-Oct-18 02:47 PM)_
-
-t!8ball Is Seth lighting up a fire in space somehow?
-
-**Tatsumaki** _(28-Oct-18 02:47 PM)_
-
-> 🎱 | Better not tell you now,
-> Zander
-> .
+_Sanya pokes Emmett's shoulder with one finger._
 
 **PlasmaPerson** _(28-Oct-18 02:48 PM)_
 
-> you look horrible, Emmett. No offense.
+_Chomsky's voice comes out muffled through the helmet._
+
+> You look horrible, Emmett. No offense.
 
 **Deyner** _(28-Oct-18 02:48 PM)_
 
-> Who the hell fucked up the fridge
-> says while pissed off
+_Deyner yanks open the fridge. Its door comes off in his hand._
+
+> Who the hell fucked up the fridge?
 
 **Zander** _(28-Oct-18 02:48 PM)_
 
-> In a raspy voice
+_Emmett answers in a raspy voice._
+
 > Gee, thanks.
 
 **PlasmaPerson** _(28-Oct-18 02:48 PM)_
 
+_Chomsky raises a gloved hand sheepishly._
+
 > Sorry. My fault. Kind of.
-> I mean it wasn't supposed to get crushed.
+> I mean, it wasn't supposed to get crushed.
 
 **Deyner** _(28-Oct-18 02:49 PM)_
 
-> Ughh go fetch me my toolbox so I can fix it, it's in my room
+_Deyner waves the detached door at Chomsky._
+
+> Ugh, go fetch me my toolbox so I can fix it. It's in my room.
 
 **Zander** _(28-Oct-18 02:49 PM)_
 
-> Nah. It was 12 GUY old me's fault.
+_Emmett waves Chomsky off, wincing._
+
+> Nah. It was twelve-GUY-old me's fault.
 
 **Deyner** _(28-Oct-18 02:50 PM)_
 
@@ -80,51 +69,58 @@ t!8ball Is Seth lighting up a fire in space somehow?
 
 **PlasmaPerson** _(28-Oct-18 02:50 PM)_
 
-> Sanya can you go get Deyner's tool box?
+_Chomsky turns his whole suit to face Sanya._
+
+> Sanya, can you go get Deyner's toolbox?
 
 **Zander** _(28-Oct-18 02:50 PM)_
+
+_Emmett rubs his temple._
 
 > I got an infection when I was younger, Dey.
 > Life-threatening.
 
-**PlasmaPerson** _(28-Oct-18 02:50 PM)_
-
-t!8ball is Sanya mum gae
-
-**Tatsumaki** _(28-Oct-18 02:50 PM)_
-
-> 🎱 | Outlook good,
-> PlasmaPerson
-> .
-
 **Brakia** _(28-Oct-18 02:50 PM)_
 
-> `Why should I grab it?`
+_Sanya folds her arms._
+
+> Why should I grab it?
 
 **Deyner** _(28-Oct-18 02:51 PM)_
 
-> Oh... Sorry
+_Deyner winces at Emmett's confession._
+
+> Oh... sorry.
 
 **PlasmaPerson** _(28-Oct-18 02:51 PM)_
 
-> because,
-> Chomsky gestures to his clunky space suit
+> Because...
+
+_Chomsky gestures to his clunky space suit._
 
 **Brakia** _(28-Oct-18 02:51 PM)_
 
-> `Why can't he grab it.`
+_Sanya jabs a finger at Deyner._
+
+> Why can't he grab it?
 
 **PlasmaPerson** _(28-Oct-18 02:52 PM)_
+
+_Chomsky shrugs, which is barely visible in the suit._
 
 > I dunno.
 
 **Deyner** _(28-Oct-18 02:52 PM)_
 
+_Deyner throws his hands in the air._
+
 > BECAUSE I DIDN'T BREAK THE FRIDGE!
 
 **PlasmaPerson** _(28-Oct-18 02:53 PM)_
 
-> hey Emmett, uh, how would you feel if, I dunno, some people just showed up and started killin people?
+_Chomsky sidles up to Emmett, lowering his voice._
+
+> Hey, Emmett, uh, how would you feel if, I dunno, some people just showed up and started killing people?
 
 **Zander** _(28-Oct-18 02:53 PM)_
 
@@ -132,17 +128,25 @@ t!8ball is Sanya mum gae
 
 **Brakia** _(28-Oct-18 02:53 PM)_
 
-> `It's still your toolbox.`
+> It's still your toolbox.
+
+_Sanya refuses to budge._
 
 **PlasmaPerson** _(28-Oct-18 02:53 PM)_
 
-> hypothetically.
+> Hypothetically.
+
+_Chomsky coughs into his helmet._
 
 **Deyner** _(28-Oct-18 02:53 PM)_
+
+_Deyner clasps his hands together._
 
 > Sanya... can you please grab my toolbox?
 
 **Zander** _(28-Oct-18 02:53 PM)_
+
+_Emmett considers the question, resting his head against the table._
 
 > I would probably be too ill to do anything about it.
 > I usually don't fight anyhow.
@@ -155,339 +159,374 @@ t!8ball Does Sanya grab the toolbox?
 
 **Tatsumaki** _(28-Oct-18 02:54 PM)_
 
-> 🎱 | Ask again later,
-> Brakia
-> .
+🎱 | Yes, definitely, Brakia.
 
 **Brakia** _(28-Oct-18 02:54 PM)_
 
-t!8ball Does Sanya grab the toolbox?
+_Sanya rolls her eyes and stomps off toward Deyner's room._
 
-**Tatsumaki** _(28-Oct-18 02:54 PM)_
-
-> 🎱 | Yes, definitely,
-> Brakia
-> .
-
-**Brakia** _(28-Oct-18 02:54 PM)_
-
-> `Fine.`
+> Fine.
 
 **PlasmaPerson** _(28-Oct-18 02:54 PM)_
 
-> uh huh.....
-> Chomsky slaps his own wrist and forces a smile.
+> Uh huh...
+
+_Chomsky slaps his own wrist and forces a smile._
 
 **Deyner** _(28-Oct-18 02:55 PM)_
 
-> Thank you so much Sanya!
-> smiles at her to be nice
+> Thank you so much, Sanya!
+
+_Deyner smiles at her, just to be nice._
 
 **PlasmaPerson** _(28-Oct-18 02:55 PM)_
 
-> I'm gonna go to my room.....
-> Chomsky also turns off his com
+> I'm gonna go to my room...
+
+_Chomsky turns off his comms._
 
 **Zander** _(28-Oct-18 02:55 PM)_
+
+_Emmett lifts his head from the table._
 
 > By the way, Chomsky.
 
 **PlasmaPerson** _(28-Oct-18 02:56 PM)_
 
-> yeah?
+_Chomsky pauses in the doorway._
+
+> Yeah?
 
 **Deyner** _(28-Oct-18 02:56 PM)_
 
-t!8ball does Deyner fixx the fridge?
+t!8ball Does Deyner fix the fridge?
 
 **Tatsumaki** _(28-Oct-18 02:56 PM)_
 
-> 🎱 | Very doubtful,
-> Deyner
-> .
+🎱 | Very doubtful, Deyner.
 
 **Zander** _(28-Oct-18 02:56 PM)_
 
 > I distributed some of our funds to a private account for you.
 
+_Emmett gives him a tired smile._
+
 **PlasmaPerson** _(28-Oct-18 02:56 PM)_
 
-> oh. Thanks.
+> Oh. Thanks.
 
 **Zander** _(28-Oct-18 02:56 PM)_
 
 > You've been pretty cool around the ship and all.
 
+_Emmett offers a weak thumbs-up._
+
 **PlasmaPerson** _(28-Oct-18 02:56 PM)_
+
+_Chomsky shifts uncomfortably in his suit._
 
 > I'm sure that'll come in handy.
 
 **Deyner** _(28-Oct-18 02:57 PM)_
 
-> Like what in Gathin's name! How can I fix a ship but not a fridge!?
+_Deyner jams the fridge door back on its hinges. It immediately falls off again._
+
+> Like, what in Gathin's name! How can I fix a ship but not a fridge?!
 
 **PlasmaPerson** _(28-Oct-18 02:57 PM)_
 
-> yeah...
+> Yeah...
 
 **Deyner** _(28-Oct-18 02:58 PM)_
 
-> Hey Sanya... you're a chemist right?
+_Deyner squints at the fridge's inner workings._
+
+> Hey, Sanya... you're a chemist, right?
 
 **Brakia** _(28-Oct-18 02:58 PM)_
 
-> `Emmett, can I talk to you?`
+_Sanya returns and drops the toolbox at Deyner's feet without answering him._
+
+> Emmett, can I talk to you?
 
 **PlasmaPerson** _(28-Oct-18 02:59 PM)_
 
-t!8ball does Chomsky go into his room now
+t!8ball Does Chomsky go into his room now?
 
 **Tatsumaki** _(28-Oct-18 02:59 PM)_
 
-> 🎱 | Signs point to yes,
-> PlasmaPerson
-> .
+🎱 | Signs point to yes, PlasmaPerson.
 
 **Zander** _(28-Oct-18 02:59 PM)_
 
-> Emmett rolled off the sofa.
+_Emmett rolls off the sofa._
+
 > Sure.
 
 **PlasmaPerson** _(28-Oct-18 02:59 PM)_
 
-> Chomsky makes sure again that his com is turned off, and turns on his watch communicator to talk to his Boss
+_In his room, Chomsky makes sure again that his comms are turned off, and switches on his watch communicator to talk to his boss._
 
 **Brakia** _(28-Oct-18 03:00 PM)_
 
-> `Kind of.` > `Can i talk to you... alone?`
+> Kind of.
+> Can I talk to you... alone?
 
 **Deyner** _(28-Oct-18 03:00 PM)_
 
-> Knocks on Chomsky's room
+_Deyner knocks on Chomsky's door._
 
 **PlasmaPerson** _(28-Oct-18 03:00 PM)_
 
 > You called me in the middle of something.
 
-> "won't matter in a minute. I'm almost to your location"
+> `Chomsky's Boss`: Won't matter in a minute. I'm almost to your location.
 
 **Deyner** _(28-Oct-18 03:01 PM)_
 
-> Goes to his room/workshop and grabs the special project he's been working on
-> heads to Chomsky's room
+_Deyner goes to his room-slash-workshop, grabs the special project he's been working on, and heads back to Chomsky's room._
 
 **PlasmaPerson** _(28-Oct-18 03:02 PM)_
 
-> (whisper) I'll call you back.
-> "what? No--"
+_Chomsky whispers into his watch._
+
+> I'll call you back.
+
+> `Chomsky's Boss`: What? No--
 
 **Zander** _(28-Oct-18 03:03 PM)_
 
-> Emmett slowly gets up and leans on Sanya.
+_Emmett slowly gets up and leans on Sanya._
+
 > Yo.
 
 **PlasmaPerson** _(28-Oct-18 03:03 PM)_
 
-> beep
+_Chomsky hangs up. His watch beeps._
 
 **Deyner** _(28-Oct-18 03:03 PM)_
 
-> knocks on Chomsky's door
+_Deyner knocks on Chomsky's door again._
 
 **PlasmaPerson** _(28-Oct-18 03:03 PM)_
 
-> come in!
+> Come in!
 
 **Deyner** _(28-Oct-18 03:03 PM)_
 
 > Hello?
-> walks in
+
+_Deyner walks in._
 
 **Brakia** _(28-Oct-18 03:03 PM)_
 
-> `Emmett, I have something to tell you.`
+_Sanya pulls Emmett aside to a quiet corner of the kitchen._
+
+> Emmett, I have something to tell you.
 
 **Deyner** _(28-Oct-18 03:03 PM)_
 
-> Hey you ok?
+> Hey, you okay?
 
 **PlasmaPerson** _(28-Oct-18 03:04 PM)_
+
+_Chomsky quickly hides his watch behind his back._
 
 > Yeah, why?
 
 **Brakia** _(28-Oct-18 03:04 PM)_
 
-> `My dreams with Dread have been getting more frequent.`
+> My dreams with Dread have been getting more frequent.
+
+_Sanya's leaves droop slightly._
 
 **Deyner** _(28-Oct-18 03:04 PM)_
 
-> You've seen a bit down lately
+> You've seemed a bit down lately.
 
 **PlasmaPerson** _(28-Oct-18 03:04 PM)_
 
-> pssh, no. Why would you say that?
+> Pssh, no. Why would you say that?
+
+_Chomsky's laugh comes out a little too loud._
 
 **Zander** _(28-Oct-18 03:04 PM)_
+
+_Emmett's eyes go wide._
 
 > What? You're pregnant?
 
 **Deyner** _(28-Oct-18 03:04 PM)_
 
-> So I went ahead and made you something
-> smiles as he pulls out the fire gauntlets
+> So I went ahead and made you something.
+
+_Deyner smiles as he pulls out a pair of fire gauntlets._
 
 **Brakia** _(28-Oct-18 03:05 PM)_
 
-> `What?`
+> What?
 
 **PlasmaPerson** _(28-Oct-18 03:05 PM)_
 
-> what are those?
+> What are those?
 
 **Zander** _(28-Oct-18 03:05 PM)_
+
+_Emmett pats Sanya's arm reassuringly._
 
 > Sanya, I don't think a plant can be pregnant.
 
 **Brakia** _(28-Oct-18 03:05 PM)_
 
-> `What are you talking about?`
+_Sanya stares at Emmett, baffled._
+
+> What are you talking about?
 
 **Deyner** _(28-Oct-18 03:05 PM)_
 
-> Gauntlets that spew fire so you don't have to carry that clunky flamethrower
+> Gauntlets that spew fire, so you don't have to carry that clunky flamethrower.
 
 **PlasmaPerson** _(28-Oct-18 03:06 PM)_
+
+_Chomsky turns the gauntlets over in his hands._
 
 > Woah, sick. How does it work?
 
 **Deyner** _(28-Oct-18 03:06 PM)_
 
-> That way you can beat up "evil-doers" quicker
+> That way you can beat up "evil-doers" quicker.
 
 **PlasmaPerson** _(28-Oct-18 03:06 PM)_
 
-> yes. Evil-doers. Absolutely.
+> Yes. Evil-doers. Absolutely.
+
+_Chomsky coughs._
 
 **Zander** _(28-Oct-18 03:06 PM)_
+
+_Emmett's ears flatten in embarrassment._
 
 > Uhm, nothing.
 
 **Deyner** _(28-Oct-18 03:06 PM)_
 
-> It's simple, they fit on your wrist and there's a lever inside when you pull it KAPOW flames shoot
+_Deyner mimes pulling a lever._
+
+> It's simple. They fit on your wrist, and there's a lever inside. When you pull it, KAPOW, flames shoot out.
 
 **Zander** _(28-Oct-18 03:07 PM)_
 
-> Emmett looks relieved.
+_Emmett looks relieved._
 
 **Deyner** _(28-Oct-18 03:07 PM)_
 
-> Although they run on solar power
+> Although, they run on solar power.
 
 **PlasmaPerson** _(28-Oct-18 03:07 PM)_
 
-> Chomsky forces another smile, though just because he's in a hurry. He is genuinely grateful.
-> thank you so much, man. I'll use these all the time!
+_Chomsky forces another smile, if only because he's in a hurry. He is genuinely grateful._
 
-**TheBlade** _(28-Oct-18 03:08 PM)_
-
-> Floran babies
+> Thank you so much, man. I'll use these all the time!
 
 **Brakia** _(28-Oct-18 03:08 PM)_
 
-> `Apparently, a part of his soul has infused with mine.`
+_Sanya lowers her voice._
+
+> Apparently, a part of his soul has infused with mine.
 
 **PlasmaPerson** _(28-Oct-18 03:08 PM)_
 
-> now, uh, can I get some privacy?
+_Chomsky's watch buzzes insistently._
+
+> Now, uh, can I get some privacy?
 
 **Deyner** _(28-Oct-18 03:08 PM)_
 
-> No problem, and remember stay cool
-> gets up and leaves the room
+> No problem, and remember: stay cool.
 
-**TheBlade** _(28-Oct-18 03:08 PM)_
-
-> alright im actualy playing please unmute me
+_Deyner gets up and leaves the room._
 
 **PlasmaPerson** _(28-Oct-18 03:08 PM)_
 
-> yep. Stayin cool.
-> Chomsky calls his boss again
-> hey, sorry about that.
-> "no more interruptions?"
+> Yep. Stayin' cool.
+
+_Chomsky calls his boss again._
+
+> Hey, sorry about that.
+
+> `Chomsky's Boss`: No more interruptions?
 
 **Zander** _(28-Oct-18 03:09 PM)_
 
-> Emmett pukes inside his mouth a little before swallowing it up.
+_Emmett pukes inside his mouth a little before swallowing it back down._
+
 > Bleh.
 
 **PlasmaPerson** _(28-Oct-18 03:09 PM)_
 
-> no sir.
+> No, sir.
 
 **Jelsafan0** _(28-Oct-18 03:09 PM)_
 
-> Iris wakes up, rubbing her head. She fell asleep in the middle of the kitchen somehow. Her head hurts.
+_Iris wakes up, rubbing her head. She fell asleep in the middle of the kitchen somehow. Her head hurts._
 
 **Zander** _(28-Oct-18 03:09 PM)_
+
+_Emmett's face goes pale beneath his fur._
 
 > Dread?
 
 **Brakia** _(28-Oct-18 03:09 PM)_
 
-> `Are you all right?`
+_Sanya steadies Emmett by the elbow._
+
+> Are you all right?
 
 **Jelsafan0** _(28-Oct-18 03:09 PM)_
 
-> ouch.
+> Ouch.
 
 **Zander** _(28-Oct-18 03:10 PM)_
 
 > No.
 
-**Jelsafan0** _(28-Oct-18 03:10 PM)_
-
-> Brody I can't hear you at all
-
 **PlasmaPerson** _(28-Oct-18 03:10 PM)_
 
-> how close, exactly, are you?
+_Chomsky paces the length of his room._
+
+> How close, exactly, are you?
 
 **Brakia** _(28-Oct-18 03:10 PM)_
 
-> `Ok then. But, what I'm trying to say is, i'm apparently becoming a god.`
+> Okay then. But, what I'm trying to say is, I'm apparently becoming a god.
+
+_Sanya says this completely seriously._
 
 **Deyner** _(28-Oct-18 03:10 PM)_
 
+_Deyner spots Emmett from across the kitchen._
+
 > EMMETT!!!
-
-**Jelsafan0** _(28-Oct-18 03:10 PM)_
-
-> Oh there it is
-
-**TheBlade** _(28-Oct-18 03:10 PM)_
-
-> i like how he still muted me, so i cant tell him that i didnt destroy his stuff because i knew he would be a dick and kill me
-> he then destroyed my books
 
 **PlasmaPerson** _(28-Oct-18 03:11 PM)_
 
-> "close enough to see the ship on the locator."
-> ah...
+> `Chomsky's Boss`: Close enough to see the ship on the locator.
+
+> Ah...
 
 **Zander** _(28-Oct-18 03:11 PM)_
 
-> Emmett perked up at the sound of Iris' voice.
+_Emmett perks up at the sound of Iris's voice._
+
 > Iris?
 
 **Jelsafan0** _(28-Oct-18 03:11 PM)_
 
-> Iris stands and looks around.
+_Iris stands and looks around._
 
 **PlasmaPerson** _(28-Oct-18 03:11 PM)_
 
-> "i hope you know there's no turning back."
+> `Chomsky's Boss`: I hope you know there's no turning back.
 
 **Jelsafan0** _(28-Oct-18 03:11 PM)_
 
@@ -495,124 +534,157 @@ t!8ball does Chomsky go into his room now
 
 **PlasmaPerson** _(28-Oct-18 03:11 PM)_
 
-> yes, I'm aware.
+> Yes, I'm aware.
+
+_Chomsky swallows hard._
 
 **Brakia** _(28-Oct-18 03:11 PM)_
 
-> `You don't care, do you?`
+_Sanya scowls at Emmett._
+
+> You don't care, do you?
 
 **Deyner** _(28-Oct-18 03:12 PM)_
 
 > EMMETT!!
-> shouts at Emmett and proceeds to run toward him and tackle him
+
+_Deyner shouts and runs full-tilt at Emmett, tackling him to the floor._
 
 **Jelsafan0** _(28-Oct-18 03:12 PM)_
 
-> hey, Sanya.
+> Hey, Sanya.
 
 **TheBlade** _(28-Oct-18 03:12 PM)_
 
-> `Everyone doin' good?`
+_Jim strolls into the kitchen, stepping over the pile of Deyner and Emmett._
+
+> Everyone doin' good?
 
 **Brakia** _(28-Oct-18 03:12 PM)_
 
-> `Hello Iris. How did you sleep?`
+_Sanya turns away from the Emmett-and-Deyner pileup to greet Iris._
+
+> Hello, Iris. How did you sleep?
 
 **Zander** _(28-Oct-18 03:12 PM)_
+
+_Emmett wheezes from underneath Deyner._
 
 > Sanya, you can't become a god when there's only one. That's just silly.
 
 **PlasmaPerson** _(28-Oct-18 03:12 PM)_
 
-> "then why are you so mopey?"
+> `Chomsky's Boss`: Then why are you so mopey?
 
 **Jelsafan0** _(28-Oct-18 03:12 PM)_
 
 > Uh, well... my head hurts. So there's that.
 
+_Iris rubs the back of her head._
+
 **Zander** _(28-Oct-18 03:12 PM)_
 
-> Emmett bangs his head on the ground.
+_Emmett bangs his head on the ground._
 
 **TheBlade** _(28-Oct-18 03:13 PM)_
 
-> `Hey, Deyner, off.`
+> Hey, Deyner, off.
 
 **Zander** _(28-Oct-18 03:13 PM)_
+
+_Emmett groans from the floor._
 
 > Fuck me...
 
 **TheBlade** _(28-Oct-18 03:13 PM)_
 
-> `now`
+> Now.
 
 **PlasmaPerson** _(28-Oct-18 03:13 PM)_
 
-> what? No, I'm not mopey. Just nervous. I mean I haven't seen everyone in so long.
+_Chomsky sits down heavily on his bed._
+
+> What? No, I'm not mopey. Just nervous. I mean, I haven't seen everyone in so long.
 
 **Jelsafan0** _(28-Oct-18 03:13 PM)_
+
+_Iris jumps back from the tangle of limbs on the floor._
 
 > Jesus, why did you do that?!
 
 **Brakia** _(28-Oct-18 03:13 PM)_
 
-> Sanya doesn't know how to react to Emmett's saying, and then tackling
+_Sanya doesn't know how to react to Emmett's comment, let alone the tackling._
 
 **Deyner** _(28-Oct-18 03:13 PM)_
 
-> Are we going to that special place that you said
-> jumps with excitement
+_Deyner bounces up and down with excitement._
+
+> Are we going to that special place that you said?
 
 **TheBlade** _(28-Oct-18 03:13 PM)_
 
-> `Sorry, where we headin' again?`
+_Jim scratches his head._
+
+> Sorry, where we headin' again?
 
 **Jelsafan0** _(28-Oct-18 03:14 PM)_
 
-> Iris hums.
+_Iris hums._
+
 > I suppose we're on our way to those coordinates I had. Still have no clue where those lead.
 
 **PlasmaPerson** _(28-Oct-18 03:14 PM)_
 
-> "you're coming back a hero, Chomsky. They'll be happy to see you. Besides. I've got a new mission for you."
+> `Chomsky's Boss`: You're coming back a hero, Chomsky. They'll be happy to see you. Besides. I've got a new mission for you.
 
 **Deyner** _(28-Oct-18 03:14 PM)_
 
-> Who's Jesus
-> asks Iris
+_Deyner turns to Iris._
+
+> Who's Jesus?
 
 **PlasmaPerson** _(28-Oct-18 03:14 PM)_
 
-> of course.
+> Of course.
 
 **TheBlade** _(28-Oct-18 03:14 PM)_
 
-> `Its a Earth related thing.`
+_Jim waves a metal hand vaguely._
+
+> It's an Earth-related thing.
 
 **Jelsafan0** _(28-Oct-18 03:15 PM)_
+
+_Iris smiles fondly._
 
 > Jesus was my dad's pet bird.
 
 **TheBlade** _(28-Oct-18 03:15 PM)_
 
-> `Well...origonaly.`
+_Jim rubs the back of his neck._
+
+> Well... originally.
 
 **Jelsafan0** _(28-Oct-18 03:15 PM)_
 
-> oh.
+> Oh.
 
 **TheBlade** _(28-Oct-18 03:15 PM)_
 
-> `oh.`
+> Oh.
 
 **Zander** _(28-Oct-18 03:15 PM)_
 
-> Emmett slips out from beneath Deyner and gets out of the crowded kitchen.
+_Emmett slips out from beneath Deyner and escapes the crowded kitchen, heading for the cockpit._
+
 > Yeah, we're going.
 
 **Deyner** _(28-Oct-18 03:15 PM)_
 
-> What's "a Earth"
+_Deyner tilts his head._
+
+> What's "an Earth"?
 
 **Jelsafan0** _(28-Oct-18 03:15 PM)_
 
@@ -620,45 +692,56 @@ t!8ball does Chomsky go into his room now
 
 **PlasmaPerson** _(28-Oct-18 03:15 PM)_
 
-> "then there's nothing to worry about. Over and out."
-> over and out, sir.
-> beep
+> `Chomsky's Boss`: Then there's nothing to worry about. Over and out.
+
+> Over and out, sir.
+
+_Chomsky's watch beeps as the call ends._
 
 **TheBlade** _(28-Oct-18 03:15 PM)_
 
-> `Earth is my home planet.`
+> Earth is my home planet.
+
+_Jim puffs out his chest a little._
 
 **Jelsafan0** _(28-Oct-18 03:15 PM)_
+
+_Iris leans in, genuinely curious._
 
 > So... whose bird is Jesus on your planet?
 
 **Deyner** _(28-Oct-18 03:16 PM)_
 
-> Neat a cyborg, mind if I give a a tune-up
+_Deyner looks Jim up and down, noticing the metal._
+
+> Neat, a cyborg! Mind if I give you a tune-up?
 
 **Zander** _(28-Oct-18 03:16 PM)_
 
-> Emmett exhales, feeling a little dizzy.
+_Emmett slumps into the pilot's seat, feeling a little dizzy._
+
 > Just give me a moment to reconcile myself.
 
 **TheBlade** _(28-Oct-18 03:16 PM)_
 
-> `Jesus wasn't a bird, but a man. Was part of a religion or religions depending on how you looked at it.`
+> Jesus wasn't a bird, but a man. Was part of a religion, or religions, depending on how you looked at it.
 
 **Jelsafan0** _(28-Oct-18 03:16 PM)_
 
-> aha. I see.
-> strange.
+_Iris nods slowly._
+
+> Aha. I see.
+> Strange.
 > We always believed in nature spirits!
 
 **Deyner** _(28-Oct-18 03:17 PM)_
 
-> Ok kinda like Kilthain the highlord
-> What type of nature spirits because we also believe in frost and tree spirits
+> Okay, kinda like Kilthain the Highlord.
+> What type of nature spirits? Because we also believe in frost and tree spirits.
 
 **PlasmaPerson** _(28-Oct-18 03:18 PM)_
 
-> Chomsky turns his coms back on
+_Chomsky turns his comms back on._
 
 **Zander** _(28-Oct-18 03:18 PM)_
 
@@ -666,55 +749,58 @@ t!8ball Does Emmett start the ship, setting the destination to the coordinates?
 
 **Tatsumaki** _(28-Oct-18 03:18 PM)_
 
-> 🎱 | It is decidedly so,
-> Zander
-> .
+🎱 | It is decidedly so, Zander.
 
 **PlasmaPerson** _(28-Oct-18 03:19 PM)_
 
-> beep
+_Chomsky's watch beeps with an incoming call._
 
 **Brakia** _(28-Oct-18 03:19 PM)_
 
-> `I've heard of races who worship Florans as some form as Dryads.`
+_Sanya chimes in, arms crossed._
+
+> I've heard of races who worship florans as some form of dryad.
 
 **TheBlade** _(28-Oct-18 03:19 PM)_
 
-> `Humans, like me (mostly), belive in a one true god, created the universe, people, everything. I myself, eh, never really gave the whole "Creation" thing not much thought, just go from my everyday life to the next, see where i go now, not after.`
+> Humans, like me (mostly), believe in one true god that created the universe, people, everything. I myself, eh, never really gave the whole "Creation" thing much thought. I just go from my everyday life to the next, see where I go now, not after.
 
 **Zander** _(28-Oct-18 03:19 PM)_
 
-> Emmett misclicks and turns on the shipwide radio; the song is horrendous.
+_Emmett sets the course, then misclicks and turns on the shipwide radio. The song is horrendous._
 
 **PlasmaPerson** _(28-Oct-18 03:19 PM)_
 
-> "you're heading away! Tell the captain to stop!"
+> `Chomsky's Boss`: You're heading away! Tell the captain to stop!
+
 > I have no power here.
-> "you will stop that ship, Chomsky, or so help me-"
-> I'll find out where we're going and you can meet me there.
+
+> `Chomsky's Boss`: You will stop that ship, Chomsky, or so help me--
+
+> I'll find out where we're going, and you can meet me there.
 
 **Deyner** _(28-Oct-18 03:21 PM)_
 
-> To the Devil Planet time for some heist
+_Deyner pumps his fist._
+
+> To the Devil Planet! Time for some heist!
 
 **Jelsafan0** _(28-Oct-18 03:21 PM)_
 
-> lake spirit, forest spirit, sea spirit, lone spirit, household spirit- WHAT IS THAT UNHOLY NOISE
+> Lake spirit, forest spirit, sea spirit, lone spirit, household spirit-- WHAT IS THAT UNHOLY NOISE?
 
 **PlasmaPerson** _(28-Oct-18 03:21 PM)_
 
-> "turn off that music while you're at it."
-> beep
+> `Chomsky's Boss`: Turn off that music while you're at it.
+
+_Chomsky's watch beeps again._
 
 **Jelsafan0** _(28-Oct-18 03:21 PM)_
 
+_Iris heads to the cockpit, hands clamped over her ears._
+
 > Hey, Emmett.
-
 > What's our ETA?
-
-**RPretribution** _(28-Oct-18 03:22 PM)_
-
-> what
 
 **Brakia** _(28-Oct-18 03:22 PM)_
 
@@ -722,115 +808,141 @@ t!8ball Does Sanya head to the pool?
 
 **Tatsumaki** _(28-Oct-18 03:22 PM)_
 
-> 🎱 | My reply is no,
-> Brakia
-> .
+🎱 | My reply is no, Brakia.
 
 **TheBlade** _(28-Oct-18 03:22 PM)_
 
-> `Anybody seen Chomsky? Havent seen him since yesterday.`
+_Jim glances around the kitchen._
+
+> Anybody seen Chomsky? Haven't seen him since yesterday.
 
 **Brakia** _(28-Oct-18 03:22 PM)_
 
-> `I wonder where we're headed to.`
+_Sanya stays put in the kitchen, gazing out a porthole._
+
+> I wonder where we're headed to.
 
 **Zander** _(28-Oct-18 03:22 PM)_
 
 > Uh...
-> Emmett's having a hard time reading the control screen.
+
+_Emmett's having a hard time reading the control screen._
+
 > That number right there, Iris.
 
 **RPretribution** _(28-Oct-18 03:23 PM)_
 
-> Garrick is here.
+_Garrick floats up through the kitchen floor._
 
 **Jelsafan0** _(28-Oct-18 03:23 PM)_
 
-> Iris snorts.
+_Iris snorts._
+
 > Because I can see what you're looking at.
 
 **PlasmaPerson** _(28-Oct-18 03:23 PM)_
 
-t!8ball does Chomsky go to the cockpit to find out where they are headed
+t!8ball Does Chomsky go to the cockpit to find out where they are headed?
 
 **Tatsumaki** _(28-Oct-18 03:23 PM)_
 
-> 🎱 | It is certain,
-> PlasmaPerson
-> .
+🎱 | It is certain, PlasmaPerson.
 
 **Deyner** _(28-Oct-18 03:23 PM)_
 
-> Hey I'm heading to the pool who wants to join me
-> realizes he's talking to empty space
+> Hey, I'm heading to the pool. Who wants to join me?
+
+_Deyner realizes he's talking to empty space._
 
 **RPretribution** _(28-Oct-18 03:23 PM)_
 
-> idk but he's here
+_Garrick answers Jim's question with a shrug._
+
+> I dunno, but he's around.
 
 **PlasmaPerson** _(28-Oct-18 03:23 PM)_
 
-> Oh, uh, hey Emmett.
+_Chomsky pokes his head into the cockpit._
+
+> Oh, uh, hey, Emmett.
 
 **Jelsafan0** _(28-Oct-18 03:24 PM)_
 
-> Hey Garrick. What's up?
+_Iris waves at Garrick through the cockpit door._
+
+> Hey, Garrick. What's up?
 
 **Zander** _(28-Oct-18 03:24 PM)_
 
-> I think 2-3 hours?
-> Oh, hey Chomsky.
+_Emmett squints at the screen again._
+
+> I think two to three hours?
+> Oh, hey, Chomsky.
 
 **TheBlade** _(28-Oct-18 03:24 PM)_
 
-> Jim heads out to check around the ship, heads to cockpit first
+_Jim heads out to check around the ship, heading to the cockpit first._
 
 **Jelsafan0** _(28-Oct-18 03:24 PM)_
 
-> Alright. Thanks Emmett.
+> Alright. Thanks, Emmett.
 
 **PlasmaPerson** _(28-Oct-18 03:24 PM)_
 
-> just wanted to find out just where we're going.
+_Chomsky leans over Emmett's shoulder a bit too eagerly._
+
+> Just wanted to find out just where we're going.
 
 **TheBlade** _(28-Oct-18 03:24 PM)_
 
-> `Oh, there you are Chomsky, thought you were in the Living quarters.`
+> Oh, there you are, Chomsky. Thought you were in the living quarters.
 
 **RPretribution** _(28-Oct-18 03:25 PM)_
 
-> Hey Iris. Yes.
+> Hey, Iris. Yes.
 
 **PlasmaPerson** _(28-Oct-18 03:25 PM)_
 
-> nope. I'm here. Right here.
+> Nope. I'm here. Right here.
+
+_Chomsky grins stiffly._
 
 **Zander** _(28-Oct-18 03:25 PM)_
+
+_Emmett rubs his eyes._
 
 > Although I put in the coordinates, I don't remember them.
 
 **Jelsafan0** _(28-Oct-18 03:25 PM)_
 
+_Iris gives Garrick a puzzled look._
+
 > ...Yes?
 
 **Zander** _(28-Oct-18 03:25 PM)_
+
+_Emmett squints at the screen, then gives up._
 
 > Just read them from the screen. I think I'm going blind.
 > Maybe.
 
 **PlasmaPerson** _(28-Oct-18 03:25 PM)_
 
-> uh huh.
+> Uh huh.
 
 **Brakia** _(28-Oct-18 03:25 PM)_
 
-> `Blind?`
+_Sanya comes into the cockpit, overhearing Emmett._
+
+> Blind?
 
 **Deyner** _(28-Oct-18 03:25 PM)_
 
-> goes to his room and puts on his swimsuit
+_Deyner goes to his room and puts on his swimsuit._
 
 **RPretribution** _(28-Oct-18 03:26 PM)_
+
+_Garrick drifts into the cockpit doorway._
 
 > Something happen with Emmett?
 
@@ -840,112 +952,57 @@ t!8ball does Chomsky go to the cockpit to find out where they are headed
 
 **Jelsafan0** _(28-Oct-18 03:26 PM)_
 
-> -18914, 158905, 890373846
+_Iris leans over Emmett's shoulder and reads the coordinates aloud._
 
-**RPretribution** _(28-Oct-18 03:26 PM)_
-
-> 111 out of infinity
+> -18914, 158905, 890373846.
 
 **Zander** _(28-Oct-18 03:26 PM)_
 
 > But my eyes are really unfocused.
 
+_Emmett blinks hard, trying to clear his vision._
+
 **Brakia** _(28-Oct-18 03:27 PM)_
 
-> `hm.`
-
-**RPretribution** _(28-Oct-18 03:27 PM)_
-
-> 1, 1, 1 out of ∞, ∞, ∞
-> But my eyes are burgers
-
-**Jelsafan0** _(28-Oct-18 03:27 PM)_
-
-> Hey what's the planet naming thing
-> How do name planet
-
-**Zander** _(28-Oct-18 03:27 PM)_
-
-> poop 34
-
-**RPretribution** _(28-Oct-18 03:27 PM)_
-
-> no it's 1/∞
-
-**Jelsafan0** _(28-Oct-18 03:27 PM)_
-
-> Fine
-
-**RPretribution** _(28-Oct-18 03:27 PM)_
-
-> they divide it into pieces
-> ∞ pieces
-> FELLAS
-
-**TheBlade** _(28-Oct-18 03:27 PM)_
-
-> 1/infinity = 1
-> obviusly
-
-**RPretribution** _(28-Oct-18 03:28 PM)_
-
-> 1 = ∞
+> Hm.
 
 **Jelsafan0** _(28-Oct-18 03:28 PM)_
 
-> Planet of the Archidemons, then.
-
-**Zander** _(28-Oct-18 03:28 PM)_
-
-> `
-
-**Jelsafan0** _(28-Oct-18 03:28 PM)_
-
-> There. Planet named.
-
-**Enchantingtable2013** _(28-Oct-18 03:28 PM)_
-
-> ~
-
-**RPretribution** _(28-Oct-18 03:28 PM)_
-
-> GAY
-> do something else
-
-**Jelsafan0** _(28-Oct-18 03:28 PM)_
-
-> No
-
-**RPretribution** _(28-Oct-18 03:28 PM)_
-
-> ok
-> sorry
+_Beneath the numbers, the navigation screen displays the destination's name: Planet of the Archidemons._
 
 **PlasmaPerson** _(28-Oct-18 03:28 PM)_
 
-> planet of archidemons?!? That doesn't sound good.
+_Chomsky nearly drops his watch._
+
+> Planet of archidemons?! That doesn't sound good.
 
 **Deyner** _(28-Oct-18 03:28 PM)_
 
-> ~
-> Hey Emmett want me to stay back?
-> ~
+_Deyner pokes his head in and whispers to Emmett._
+
+> Hey, Emmett, want me to stay back?
 
 **TheBlade** _(28-Oct-18 03:28 PM)_
 
-> `ah, alright, hey chomsky you know anything about mechanics? We got a water leak behind the fridge and i cant move it and fix it at the same time. hehe`
+> Ah, alright. Hey, Chomsky, you know anything about mechanics? We got a water leak behind the fridge, and I can't move it and fix it at the same time. Hehe.
 
 **RPretribution** _(28-Oct-18 03:29 PM)_
+
+_Garrick shudders._
 
 > Demons??? Oh no, I don't wanna get involved with them again.
 
 **Jelsafan0** _(28-Oct-18 03:29 PM)_
 
+_Iris freezes._
+
 > WAIT.
 
 **Brakia** _(28-Oct-18 03:29 PM)_
 
-> `Iris, aren't you half archidemon?`
+_Sanya glances at the small red horns atop Iris's head._
+
+> Iris, aren't you half archidemon?
 
 **Jelsafan0** _(28-Oct-18 03:29 PM)_
 
@@ -954,32 +1011,28 @@ t!8ball does Chomsky go to the cockpit to find out where they are headed
 **Zander** _(28-Oct-18 03:29 PM)_
 
 > Iris has been begging me for this place. I can't refuse her.
-> He smiled a little.
+
+_Emmett smiles a little._
 
 **RPretribution** _(28-Oct-18 03:29 PM)_
 
-> garrick's been alive for a long time
+_Garrick has been alive for a very long time, and not all of those years were demon-free._
 
 **Jelsafan0** _(28-Oct-18 03:29 PM)_
 
+_Iris grabs Emmett by the shoulders._
+
 > WHERE DO THESE COORDINATES LEAD?
-
-**RPretribution** _(28-Oct-18 03:29 PM)_
-
-> SHSHSHHHDDJD
 
 **TheBlade** _(28-Oct-18 03:29 PM)_
 
-> `I don't know what's wrong with the leak and I need some help.`
+_Jim tugs Chomsky's sleeve toward the kitchen._
 
-**RPretribution** _(28-Oct-18 03:29 PM)_
-
-> YOU KNOW WHAT I MEANT
+> I don't know what's wrong with the leak, and I need some help.
 
 **Deyner** _(28-Oct-18 03:29 PM)_
 
-> Heads to the pool
-> the moment he gets in it starts to freeze around him
+_Deyner heads to the pool. The moment he gets in, the water starts to freeze around him._
 
 **PlasmaPerson** _(28-Oct-18 03:30 PM)_
 
@@ -993,7 +1046,11 @@ t!8ball does Chomsky go to the cockpit to find out where they are headed
 
 > I have no mechanical experience.
 
+_Chomsky holds up his gloved hands helplessly._
+
 **Jelsafan0** _(28-Oct-18 03:30 PM)_
+
+_Iris's voice cracks._
 
 > Please tell me I heard you right!
 
@@ -1003,28 +1060,17 @@ t!8ball does Chomsky go to the cockpit to find out where they are headed
 
 **Brakia** _(28-Oct-18 03:31 PM)_
 
-> `Iris, what side of your lineage gave you flame powers?`
+_Sanya puts a gentle hand on Iris's back._
 
-**RPretribution** _(28-Oct-18 03:31 PM)_
-
-> ZANDER
-> eats the baby!
+> Iris, what side of your lineage gave you flame powers?
 
 **Jelsafan0** _(28-Oct-18 03:31 PM)_
 
-> iris gasps, eyes filling with tears.
-
-**PlasmaPerson** _(28-Oct-18 03:31 PM)_
-
->
-
-**RPretribution** _(28-Oct-18 03:31 PM)_
-
-> OH MY GOD HE ATE THE BABY
+_Iris gasps, eyes filling with tears._
 
 **Deyner** _(28-Oct-18 03:31 PM)_
 
-> just floats in the pool as the water freezes
+_Deyner just floats in the pool as the water freezes around him._
 
 **Jelsafan0** _(28-Oct-18 03:31 PM)_
 
@@ -1032,53 +1078,52 @@ t!8ball does Chomsky go to the cockpit to find out where they are headed
 
 **TheBlade** _(28-Oct-18 03:31 PM)_
 
-> `Alright, its in the kitchen.`
+_Jim leads Chomsky back toward the kitchen._
+
+> Alright, it's in the kitchen.
 
 **Jelsafan0** _(28-Oct-18 03:31 PM)_
+
+_Iris wipes her eyes and steps out of the cockpit with Sanya to collect herself._
 
 > I don't get my flame powers from my parents.
 
 **PlasmaPerson** _(28-Oct-18 03:32 PM)_
 
-> what if, instead, I didn't help with the fridge and we just got a new one.
+_Chomsky eyes the soggy floor behind the fridge._
 
-**RPretribution** _(28-Oct-18 03:32 PM)_
-
-> iris inhaled the fire
-> like kirby
+> What if, instead, I didn't help with the fridge and we just got a new one?
 
 **Brakia** _(28-Oct-18 03:32 PM)_
 
-> `Oh.`
+> Oh.
 
 **TheBlade** _(28-Oct-18 03:32 PM)_
 
-> `Well i mean, if you pay`
+_Jim shrugs._
 
-**RPretribution** _(28-Oct-18 03:32 PM)_
-
-> iris = danny
+> Well, I mean, if you pay.
 
 **PlasmaPerson** _(28-Oct-18 03:32 PM)_
 
-> yeah, I'll pay.
-> how much is it?
+> Yeah, I'll pay.
+> How much is it?
 
 **TheBlade** _(28-Oct-18 03:32 PM)_
 
-> `I mean, we could just fix it.`
+_Jim hesitates, looking at the fridge again._
 
-**RPretribution** _(28-Oct-18 03:32 PM)_
-
-> 9
+> I mean, we could just fix it.
 
 **TheBlade** _(28-Oct-18 03:33 PM)_
 
-> `I don't know, around 800 or somethin'`
+> I don't know, around 800 or somethin'.
 
 **PlasmaPerson** _(28-Oct-18 03:33 PM)_
 
-> Yeah, Emmett got me done money. I haven't looked at the amount but I'm sure it'll be enough.
+_Chomsky pats the pocket of his space suit._
+
+> Yeah, Emmett got me some money. I haven't looked at the amount, but I'm sure it'll be enough.
 
 **Deyner** _(28-Oct-18 03:33 PM)_
 
@@ -1086,120 +1131,85 @@ t!8ball Does Deyner head to the kitchen and help fix the fridge?
 
 **Tatsumaki** _(28-Oct-18 03:33 PM)_
 
-> 🎱 | As I see it, yes,
-> Deyner
-> .
-
-**TheBlade** _(28-Oct-18 03:33 PM)_
-
-> !8ball Does jim look up how much a fridge cost?
+🎱 | As I see it, yes, Deyner.
 
 **Zander** _(28-Oct-18 03:34 PM)_
 
+_Emmett calls out from the cockpit._
+
 > Iris! Come in here!
-
-**RPretribution** _(28-Oct-18 03:34 PM)_
-
-> ok so basically, im ghost
-
 **TheBlade** _(28-Oct-18 03:34 PM)_
 
-t!8ball does jim look up how much a fridge cost?
+t!8ball Does Jim look up how much a fridge costs?
 
 **Tatsumaki** _(28-Oct-18 03:34 PM)_
 
-> 🎱 | Without a doubt,
-> TheBlade
-> .
+🎱 | Without a doubt, TheBlade.
 
 **Deyner** _(28-Oct-18 03:34 PM)_
 
-> What's wrong Jim?
+_Deyner squelches into the kitchen, still dripping and half-frozen from the pool._
+
+> What's wrong, Jim?
 
 **TheBlade** _(28-Oct-18 03:34 PM)_
 
-> `Yea its about 800-875 D`
+_Jim scrolls through a holonet appliance listing._
+
+> Yeah, it's about 800 to 875 D.
 
 **PlasmaPerson** _(28-Oct-18 03:34 PM)_
 
-> ah.
+> Ah.
 
 **TheBlade** _(28-Oct-18 03:34 PM)_
 
-> `It'll take a bit to get one though.`
-
-**RPretribution** _(28-Oct-18 03:34 PM)_
-
-> 800-875 years AD
-> thats how much it costs
-> jonas only has 64
+> It'll take a bit to get one, though.
 
 **Jelsafan0** _(28-Oct-18 03:34 PM)_
 
-> Iris heads over.
-> coming.
+_Iris heads over to the cockpit._
 
-**PlasmaPerson** _(28-Oct-18 03:35 PM)_
-
-> Yeah a Minecraft stack
-
-**RPretribution** _(28-Oct-18 03:35 PM)_
-
-> yeah
-> a stack of years
+> Coming.
 
 **TheBlade** _(28-Oct-18 03:35 PM)_
 
-> `Ah nothing Deyner, Chomsky is just getting a new fridge`
+_Jim waves Deyner off._
 
-**RPretribution** _(28-Oct-18 03:35 PM)_
-
-> yeah
-> he has at least 64
+> Ah, nothing, Deyner. Chomsky is just getting a new fridge.
 
 **Deyner** _(28-Oct-18 03:35 PM)_
 
 > Why?
 
-**RPretribution** _(28-Oct-18 03:35 PM)_
-
-> "I'm all ears!"
-
 **TheBlade** _(28-Oct-18 03:35 PM)_
 
-> `We had a leak, and i guess we should just get a new one since that thing's been in here since seth had it.`
+> We had a leak, and I guess we should just get a new one, since that thing's been in here since Seth had it.
 
-**RPretribution** _(28-Oct-18 03:36 PM)_
-
-> OH
-> OOOHHHHHHHH
+_Jim kicks the fridge for emphasis._
 
 **PlasmaPerson** _(28-Oct-18 03:36 PM)_
 
-> chomsky texts his boss, "can you spare some money for a new fridge?"
-
-**TheBlade** _(28-Oct-18 03:36 PM)_
-
->
+_Chomsky texts his boss: "Can you spare some money for a new fridge?"_
 
 **Deyner** _(28-Oct-18 03:36 PM)_
 
-> Dude's it's a easy fix
-> does some engineering kajiggering
-> Boom good as new
+> Dude, it's an easy fix.
+
+_Deyner does some engineering kajiggering behind the fridge._
+
+> Boom. Good as new.
 
 **Zander** _(28-Oct-18 03:36 PM)_
 
-> Emmett leans on Iris
+_Emmett leans on Iris for support._
+
 > You look ravishing. Well, uh, I would say that if I could see well.
-
-**RPretribution** _(28-Oct-18 03:36 PM)_
-
-> You look gay
 
 **Jelsafan0** _(28-Oct-18 03:37 PM)_
 
-> Iris blinks before turning pink.
+_Iris blinks before turning pink._
+
 > Is... is your translator broken again?
 
 **Zander** _(28-Oct-18 03:37 PM)_
@@ -1208,130 +1218,97 @@ t!8ball does jim look up how much a fridge cost?
 
 **Deyner** _(28-Oct-18 03:37 PM)_
 
-> fridge looks good as new?
+_Deyner steps back to admire his handiwork._
+
+> Fridge looks good as new?
 
 **PlasmaPerson** _(28-Oct-18 03:37 PM)_
 
-> Chomsky goes into the cockpit again
+_Chomsky goes into the cockpit again._
 
 **Zander** _(28-Oct-18 03:38 PM)_
+
+_Emmett smiles up at her lopsidedly._
 
 > I mean, I honestly think you're pretty.
 
 **RPretribution** _(28-Oct-18 03:38 PM)_
 
-t!8ball is the fridge broken
+t!8ball Does the fridge break again immediately?
 
 **Tatsumaki** _(28-Oct-18 03:38 PM)_
 
-> 🎱 | Concentrate and ask again,
-> RPretribution
-> .
+🎱 | Outlook good, RPretribution.
 
 **RPretribution** _(28-Oct-18 03:38 PM)_
 
-t!8ball does the fridge break immediately
-
-**Tatsumaki** _(28-Oct-18 03:38 PM)_
-
-> 🎱 | Outlook good,
-> RPretribution
-> .
+_The fridge lets out a loud clunk, and a fresh puddle spreads across the kitchen floor._
 
 **Jelsafan0** _(28-Oct-18 03:38 PM)_
 
-> Iris turns redder.
+_Iris turns redder._
 
 **TheBlade** _(28-Oct-18 03:38 PM)_
 
-> `Hey, what was that noise Deyner?`
+> Hey, what was that noise, Deyner?
 
 **PlasmaPerson** _(28-Oct-18 03:38 PM)_
 
-> Chomsky waits in the door so that the lovebirds can finish.
+_Chomsky waits in the doorway so that the lovebirds can finish._
 
 **Jelsafan0** _(28-Oct-18 03:38 PM)_
 
-> Hi Chomsky what's up how's it going do we have any muffin mix
+_Iris spots Chomsky and latches onto the distraction._
+
+> Hi, Chomsky, what's up, how's it going, do we have any muffin mix?
 
 **Deyner** _(28-Oct-18 03:38 PM)_
 
-> motherfucker?!
+_Deyner stares at the puddle._
 
-**RPretribution** _(28-Oct-18 03:38 PM)_
-
-> Iris quite literally turns into a tomato.
-> No, seriously. Emmett goes into shock as well.
+> Motherfucker?!
 
 **Zander** _(28-Oct-18 03:39 PM)_
 
-> Emmett chuckles softly to himself.
-
-**RPretribution** _(28-Oct-18 03:39 PM)_
-
-> hhehsHehEhEhheHEHEHEHhehe
+_Emmett chuckles softly to himself._
 
 **PlasmaPerson** _(28-Oct-18 03:39 PM)_
 
-> uh, probably.
-
-**RPretribution** _(28-Oct-18 03:39 PM)_
-
-> Emmett chokes softly to himself.
+> Uh, probably.
 
 **Brakia** _(28-Oct-18 03:39 PM)_
 
-> `Emmett, are you talking to yourself?`
+_Sanya peeks into the cockpit._
 
-**PlasmaPerson** _(28-Oct-18 03:39 PM)_
-
-> Rip Emmett
+> Emmett, are you talking to yourself?
 
 **Jelsafan0** _(28-Oct-18 03:39 PM)_
 
-> Sounds great gotta go tell me when we land thanks bye have a nice day haha
+> Sounds great, gotta go, tell me when we land, thanks, bye, have a nice day, haha.
 
 **Deyner** _(28-Oct-18 03:39 PM)_
 
-> Deyner gets pushed off and storms out into the kitchen
-> I can fix a goddamn spaceship but not a fridge
-> takes out his cookies out of the pantry
+_Deyner storms around the kitchen._
 
-**PlasmaPerson** _(28-Oct-18 03:40 PM)_
+> I can fix a goddamn spaceship, but not a fridge.
 
->
+_Deyner takes his cookies out of the pantry._
 
 **Jelsafan0** _(28-Oct-18 03:40 PM)_
 
-> Iris quickly speedwalks out of the cockpit, headed for the kitchen.
-
-**Zander** _(28-Oct-18 03:40 PM)_
-
-t!8ball Does Chomsky get smaller, turn yellow, and have one eyeball for a minute?
-
-**Tatsumaki** _(28-Oct-18 03:40 PM)_
-
-> 🎱 | My sources say no,
-> Zander
-> .
+_Iris quickly speedwalks out of the cockpit, headed for the kitchen._
 
 **PlasmaPerson** _(28-Oct-18 03:40 PM)_
 
-> hey, Emmett. I gotta talk to you real quick.
+_Chomsky steps up beside the pilot's seat._
 
-**RPretribution** _(28-Oct-18 03:40 PM)_
-
-> minion chomsky
-> minion chomsky
+> Hey, Emmett. I gotta talk to you real quick.
 
 **Deyner** _(28-Oct-18 03:40 PM)_
 
-> mumbles while eating cookies on the counter
-> fucking fridge
+_Deyner mumbles while eating cookies on the counter._
 
-**RPretribution** _(28-Oct-18 03:40 PM)_
-
-> minion chomsky
+> Fucking fridge.
 
 **Zander** _(28-Oct-18 03:40 PM)_
 
@@ -1339,75 +1316,85 @@ t!8ball Does Chomsky get smaller, turn yellow, and have one eyeball for a minute
 
 **TheBlade** _(28-Oct-18 03:41 PM)_
 
-> Jim just checks around the cockpit at the computers
-> brb bathroom
+_Jim wanders into the cockpit and checks around at the computers._
 
 **Jelsafan0** _(28-Oct-18 03:41 PM)_
 
-> hey Deyner what's up how's it going
+> Hey, Deyner, what's up, how's it going?
 
 **PlasmaPerson** _(28-Oct-18 03:41 PM)_
 
-> Chomsky glares at Jim
+_Chomsky glares at Jim._
+
 > I need to talk alone.
 
 **RPretribution** _(28-Oct-18 03:41 PM)_
 
-> Garrick possesses one of his many spare ears, and flops into the kitchen.
+_Garrick possesses one of his many spare ears and flops into the kitchen._
 
 **Jelsafan0** _(28-Oct-18 03:42 PM)_
 
-> Iris pulls out the muffin mix and begins to make muffins.
+_Iris pulls out the muffin mix and begins to make muffins._
 
 **Deyner** _(28-Oct-18 03:42 PM)_
 
-> It's going alright
-> lightens up at seeing the other elf
-> ooooohhh muffins mind if I help?
+> It's going alright.
+
+_Deyner lightens up at seeing the other elf._
+
+> Oooohhh, muffins! Mind if I help?
 
 **RPretribution** _(28-Oct-18 03:42 PM)_
+
+_The ear lets out a tiny, high-pitched scream._
 
 > ᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬ
 
 **Jelsafan0** _(28-Oct-18 03:43 PM)_
 
-> I stress bake and it always turns out blueberry
-> Iris explains, stirring violently.
+> I stress bake, and it always turns out blueberry.
+
+_Iris explains this while stirring violently._
 
 **Deyner** _(28-Oct-18 03:43 PM)_
+
+_Deyner hops up onto the counter beside her._
 
 > What has you stressed?
 
 **Jelsafan0** _(28-Oct-18 03:44 PM)_
 
-> hahahhahahhaahahhahahhahahhahahahh-
-> Iris turns even redder, stirring with more force.
+> Hahahhahahhaahahhahahhahahhahahahh--
 
-**RPretribution** _(28-Oct-18 03:44 PM)_
-
-> ᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬᴬ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ ᵎ
+_Iris turns even redder, stirring with more force._
 
 **TheBlade** _(28-Oct-18 03:44 PM)_
 
-> `Emmett, these coordinates go to a planet or more space? Wouldn't mind some non-recycled air.`
+> Emmett, do these coordinates go to a planet, or more space? Wouldn't mind some non-recycled air.
 
 **Deyner** _(28-Oct-18 03:44 PM)_
 
-> grabs the hand that's stirring and stops the potential muffin mess
-> Iris seriously what's wrong?
+_Deyner grabs the hand that's stirring, stopping a potential muffin mess._
+
+> Iris, seriously, what's wrong?
 
 **PlasmaPerson** _(28-Oct-18 03:44 PM)_
 
-> bye jiiiim
+_Chomsky waves pointedly at the door._
+
+> Bye, Jiiiim.
 
 **Zander** _(28-Oct-18 03:45 PM)_
+
+_Emmett doesn't look up from the controls._
 
 > A planet.
 
 **Jelsafan0** _(28-Oct-18 03:45 PM)_
 
-> Iris gives deyner a pointed look.
-> I'd prefer not to talk about it please just let me bake my muffins.
+_Iris gives Deyner a pointed look._
+
+> I'd prefer not to talk about it. Please, just let me bake my muffins.
 
 **Zander** _(28-Oct-18 03:45 PM)_
 
@@ -1415,177 +1402,163 @@ t!8ball Does Chomsky get smaller, turn yellow, and have one eyeball for a minute
 
 **Deyner** _(28-Oct-18 03:46 PM)_
 
-> Offers her a CHOCOLATE cookie
-> are you sure?
+_Deyner offers her a CHOCOLATE cookie._
+
+> Are you sure?
 
 **TheBlade** _(28-Oct-18 03:46 PM)_
 
-> `huh? ok then...I'll just go to my room then.`
-> Jim heads to his room
+> Huh? Okay then... I'll just go to my room, then.
+
+_Jim heads to his room._
 
 **RPretribution** _(28-Oct-18 03:46 PM)_
+
+_The ear squeaks up at Iris in a tiny voice._
 
 > ᴵʳᶦˢ, ᵈᵒ ʸᵒᵘ ʷᵃⁿⁿᵃ ᵗᵃˡᵏ ᵃᵇᵒᵘᵗ ᶦᵗˀ ᴵ'ᵐ ᵃˡˡ ᵉᵃʳˢᵎ
 
 **PlasmaPerson** _(28-Oct-18 03:46 PM)_
 
-> so Emmett...remember that hypothetical thing I was talking about earlier?
+_Chomsky waits until Jim's footsteps fade._
+
+> So, Emmett... remember that hypothetical thing I was talking about earlier?
 
 **Jelsafan0** _(28-Oct-18 03:47 PM)_
 
-> Iris takes the cookie, savoring the flavor. It's been forever since she's had anything not blueberry.
+_Iris takes the cookie, savoring the flavor. It's been forever since she's had anything that isn't blueberry._
+
 > Yes.
 
 **Zander** _(28-Oct-18 03:47 PM)_
+
+_Emmett sighs and leans back in the pilot's seat._
 
 > Let me guess: it's actually going to happen?
 
 **PlasmaPerson** _(28-Oct-18 03:47 PM)_
 
-> uhh
+> Uhh...
 > Yeah.
 
 **Zander** _(28-Oct-18 03:47 PM)_
 
-> Emmett shrugs.
+_Emmett shrugs._
+
 > I mean, I'm already doomed.
 
 **PlasmaPerson** _(28-Oct-18 03:47 PM)_
 
-> you're...ok with this?
+_Chomsky blinks behind his sunglasses._
+
+> You're... okay with this?
 
 **Deyner** _(28-Oct-18 03:47 PM)_
 
-> gives her the cookie box
-> Well here have as much as you want but put it in the safe afterwards
-> whispers
-> the code is 5213
+_Deyner hands her the whole cookie box._
+
+> Well, here, have as much as you want, but put it in the safe afterwards.
+
+_Deyner leans in and whispers._
+
+> The code is 5213.
 
 **PlasmaPerson** _(28-Oct-18 03:48 PM)_
 
-> I mean I doubt the others will just forgive me.
+_Chomsky looks down at his boots._
 
-**TheBlade** _(28-Oct-18 03:48 PM)_
-
-> brb
+> I mean, I doubt the others will just forgive me.
 
 **Jelsafan0** _(28-Oct-18 03:48 PM)_
 
-> got it.
+> Got it.
 
 **Zander** _(28-Oct-18 03:48 PM)_
 
 > Live and learn, I suppose.
-> Emmett coughs violently.
 
-**PlasmaPerson** _(28-Oct-18 03:48 PM)_
-
-t!8ball ?
-
-**Tatsumaki** _(28-Oct-18 03:48 PM)_
-
-> 🎱 | Ask again later,
-> PlasmaPerson
-> .
+_Emmett coughs violently._
 
 **Deyner** _(28-Oct-18 03:48 PM)_
 
-> And Iris??
+> And, Iris??
 
 **Jelsafan0** _(28-Oct-18 03:48 PM)_
 
-> hm?
+> Hm?
 
 **RPretribution** _(28-Oct-18 03:48 PM)_
 
-t!8ball does chomsky go into shock
+t!8ball Does Chomsky go into shock?
 
 **Tatsumaki** _(28-Oct-18 03:48 PM)_
 
-> 🎱 | Outlook not so good,
-> RPretribution
-> .
+🎱 | Outlook not so good, RPretribution.
 
 **PlasmaPerson** _(28-Oct-18 03:49 PM)_
 
-> you alright?
+_Chomsky keeps it together, but eyes Emmett with concern._
+
+> You alright?
 
 **Deyner** _(28-Oct-18 03:49 PM)_
 
-> Please tell me when the muffins are done
+> Please tell me when the muffins are done.
 
 **Jelsafan0** _(28-Oct-18 03:49 PM)_
 
-> Iris puts the muffins in the oven
+_Iris puts the muffins in the oven._
 
 **Zander** _(28-Oct-18 03:49 PM)_
+
+_Emmett waves off his concern._
 
 > Chomsky, you already know this.
 
 **Jelsafan0** _(28-Oct-18 03:49 PM)_
 
-t!8ball are they somehow, miraculously
-
-> Just banana and not blueberry banana?
+t!8ball Are the muffins somehow, miraculously, just banana, and not blueberry banana?
 
 **Tatsumaki** _(28-Oct-18 03:49 PM)_
 
-> 🎱 | As I see it, yes,
-> Jelsafan0
-> .
+🎱 | As I see it, yes, Jelsafan0.
 
 **PlasmaPerson** _(28-Oct-18 03:49 PM)_
 
-> I mean I know your sick and injured, but I'm just trying to make sure.
+> I mean, I know you're sick and injured, but I'm just trying to make sure.
+
+_Chomsky fidgets with the gauntlets Deyner gave him._
 
 **Deyner** _(28-Oct-18 03:50 PM)_
 
-t!8ball does Jim's turn get skipped?
+t!8ball Does Deyner fix the fridge?
 
 **Tatsumaki** _(28-Oct-18 03:50 PM)_
 
-> 🎱 | Ask again later,
-> Deyner
-> .
-
-**Deyner** _(28-Oct-18 03:50 PM)_
-
-t!8ball Does Deyner fix the fridge??
-
-**Tatsumaki** _(28-Oct-18 03:50 PM)_
-
-> 🎱 | It is certain,
-> Deyner
-> .
+🎱 | It is certain, Deyner.
 
 **TheBlade** _(28-Oct-18 03:50 PM)_
 
-t!8ball Has Jim been sitting in his room and been watching the security video the entire time?
+t!8ball Has Jim been sitting in his room watching the security feed this entire time?
 
 **Tatsumaki** _(28-Oct-18 03:50 PM)_
 
-> 🎱 | Concentrate and ask again,
-> TheBlade
-> .
-
-**TheBlade** _(28-Oct-18 03:50 PM)_
-
-t!8ball Has Jim been sitting in his room and been watching the security video the entire time?
-
-**Tatsumaki** _(28-Oct-18 03:50 PM)_
-
-> 🎱 | My reply is no,
-> TheBlade
-> .
+🎱 | My reply is no, TheBlade.
 
 **Zander** _(28-Oct-18 03:51 PM)_
 
-> I'm hoping there's someone in the planet that can ease my pain.
+_Emmett stares out the viewport at the stars._
+
+> I'm hoping there's someone on the planet that can ease my pain.
 
 **Deyner** _(28-Oct-18 03:51 PM)_
 
+_The fridge hums to life, properly this time._
+
 > YES!
-> shouts in the kitchen
+
+_Deyner shouts from the kitchen._
+
 > JIM!!!
 
 **Zander** _(28-Oct-18 03:51 PM)_
@@ -1595,55 +1568,69 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **TheBlade** _(28-Oct-18 03:51 PM)_
 
-> `Comin'`
-> Jim runs to kitchen
+> Comin'!
+
+_Jim runs to the kitchen._
 
 **Jelsafan0** _(28-Oct-18 03:51 PM)_
 
-> Iris pulls out the muffin, trying one. Her eyes widen.
+_Iris pulls out a muffin, trying one. Her eyes widen._
 
 **TheBlade** _(28-Oct-18 03:51 PM)_
 
-> `What happened?`
+> What happened?
 
 **Jelsafan0** _(28-Oct-18 03:51 PM)_
 
-> she gasps.
-> IT'S NOT BLUEBERRY
+_Iris gasps._
+
+> IT'S NOT BLUEBERRY!
 
 **PlasmaPerson** _(28-Oct-18 03:51 PM)_
 
-> alright...
+> Alright...
+
+_Chomsky tugs at his collar._
+
 > Man, this space suit is uncomfortable.
 
 **Deyner** _(28-Oct-18 03:52 PM)_
 
-> The fridge is fixed
+_Deyner gestures proudly at the fridge._
+
+> The fridge is fixed.
 
 **Brakia** _(28-Oct-18 03:52 PM)_
 
-> Sanya enters the cockpit
-> `Who was baking? It's not blueberry, so it wasn't iris.`
+_Sanya wanders into the kitchen, sniffing the air._
+
+> Who was baking? It's not blueberry, so it wasn't Iris.
 
 **Jelsafan0** _(28-Oct-18 03:52 PM)_
+
+_Iris holds up the muffin tray triumphantly._
 
 > It was me! It was me, I baked it, and it's just banana!
 
 **TheBlade** _(28-Oct-18 03:52 PM)_
 
-> `And you yelled at me for this?`
+_Jim looks between Deyner and the fridge._
+
+> And you yelled at me for this?
 
 **Zander** _(28-Oct-18 03:52 PM)_
 
-> Just, go man.
+> Just, go, man.
 
 **TheBlade** _(28-Oct-18 03:52 PM)_
 
-> `really?`
+> Really?
 
 **Brakia** _(28-Oct-18 03:52 PM)_
 
-> `Really? Are you lying?`
+_Sanya narrows her eyes at Iris._
+
+> Really? Are you lying?
 
 **Jelsafan0** _(28-Oct-18 03:52 PM)_
 
@@ -1651,11 +1638,13 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **Zander** _(28-Oct-18 03:52 PM)_
 
+_Emmett rubs his forehead._
+
 > I'm a little annoyed.
 
 **Jelsafan0** _(28-Oct-18 03:52 PM)_
 
-> Iris laughs in delight.
+_Iris laughs in delight._
 
 **Zander** _(28-Oct-18 03:52 PM)_
 
@@ -1663,7 +1652,7 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **Deyner** _(28-Oct-18 03:53 PM)_
 
-> yes.. I saved us 600 Ducketts
+> Yes... I saved us 600 Ducketts.
 
 **Jelsafan0** _(28-Oct-18 03:53 PM)_
 
@@ -1671,23 +1660,25 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **PlasmaPerson** _(28-Oct-18 03:53 PM)_
 
+_Chomsky lingers by the cockpit door._
+
 > I'd like to come back one day, you know.
 
 **TheBlade** _(28-Oct-18 03:53 PM)_
 
-> `wait, how did you spend ducketts?`
+_Jim squints at Deyner._
+
+> Wait, how did you spend Ducketts?
 
 **Jelsafan0** _(28-Oct-18 03:53 PM)_
 
-> try it!
+_Iris shoves a muffin at Sanya._
+
+> Try it!
 
 **PlasmaPerson** _(28-Oct-18 03:53 PM)_
 
-> but the Boss has a new assignment.
-
-**RPretribution** _(28-Oct-18 03:53 PM)_
-
-> eat baby chronicles
+> But the Boss has a new assignment.
 
 **Zander** _(28-Oct-18 03:53 PM)_
 
@@ -1695,32 +1686,37 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **Deyner** _(28-Oct-18 03:53 PM)_
 
-> I saved us from having to buy a new fridge
+> I saved us from having to buy a new fridge.
 
 **TheBlade** _(28-Oct-18 03:53 PM)_
 
-> `ah.`
+> Ah.
 
 **RPretribution** _(28-Oct-18 03:53 PM)_
+
+_Garrick's ear twitches, having overheard from the hallway._
 
 > Whoa, what's this mafia?
 
 **Brakia** _(28-Oct-18 03:53 PM)_
 
-> Sanya tries the muffin
-> `Hmm. Not bad.`
+_Sanya tries the muffin._
+
+> Hmm. Not bad.
 
 **PlasmaPerson** _(28-Oct-18 03:53 PM)_
 
-> you know who I'm working with? I haven't told anyone.
+_Chomsky stares at Emmett._
+
+> You know who I'm working with? I haven't told anyone.
 
 **Jelsafan0** _(28-Oct-18 03:54 PM)_
 
-> Iris laughs in delight.
+_Iris laughs in delight._
 
 **Deyner** _(28-Oct-18 03:54 PM)_
 
-> steals 3 muffins
+_Deyner steals three muffins._
 
 **Jelsafan0** _(28-Oct-18 03:54 PM)_
 
@@ -1734,45 +1730,47 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 > It's been years since I've had banana muffins!
 
+_Iris does a little twirl, muffin in hand._
+
 **Zander** _(28-Oct-18 03:54 PM)_
 
 > I probably wouldn't know if you told me. I don't pay attention to space crimes.
 
 **Deyner** _(28-Oct-18 03:54 PM)_
 
-> See's people eyeing his cookies
+_Deyner sees people eyeing his cookies and pulls the box closer._
 
 **Jelsafan0** _(28-Oct-18 03:54 PM)_
 
 > I've had blueberry banana, but not regular banana!
-> Iris snatches the rest of the cupcakes.
+
+_Iris snatches up the rest of the muffins._
+
 > Emmett!
-
-**Tatsumaki** _(28-Oct-18 03:55 PM)_
-
-> 🎱 | Outlook not so good,
-> TheBlade
-> .
 
 **Jelsafan0** _(28-Oct-18 03:55 PM)_
 
-> Hey Emmett! Chomsky!
+> Hey, Emmett! Chomsky!
 
 **Zander** _(28-Oct-18 03:55 PM)_
+
+_Emmett tries to stand and fails._
 
 > Chomsky, I don't think I can get up, man.
 
 **PlasmaPerson** _(28-Oct-18 03:55 PM)_
 
-> yeah?
+> Yeah?
 
 **Jelsafan0** _(28-Oct-18 03:56 PM)_
 
 > I made muffins that aren't blueberry!
 
+_Iris hops excitedly in the cockpit doorway._
+
 **PlasmaPerson** _(28-Oct-18 03:56 PM)_
 
-> here, I'll help you.
+> Here, I'll help you.
 
 **Jelsafan0** _(28-Oct-18 03:56 PM)_
 
@@ -1780,7 +1778,7 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **PlasmaPerson** _(28-Oct-18 03:56 PM)_
 
-> Chomsky uses the little strength he has to haul Emmett to his feet.
+_Chomsky uses what little strength he has to haul Emmett to his feet._
 
 **Jelsafan0** _(28-Oct-18 03:56 PM)_
 
@@ -1788,34 +1786,39 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **Deyner** _(28-Oct-18 03:57 PM)_
 
-> puts a blueberry on top of one of them
+_Deyner sneakily puts a blueberry on top of one of the muffins._
 
 **Jelsafan0** _(28-Oct-18 03:57 PM)_
 
-> Iris is holding all the muffins.
+_Iris is holding all the muffins._
 
 **PlasmaPerson** _(28-Oct-18 03:57 PM)_
 
-> alright. I'll take one.
+_Chomsky reaches for a muffin with his gloved hand._
+
+> Alright. I'll take one.
 
 **Jelsafan0** _(28-Oct-18 03:57 PM)_
 
-> she removes the blueberry and eats it.
+_Iris removes the blueberry and eats it._
 
 **Zander** _(28-Oct-18 03:57 PM)_
 
-> Emmett trudges into the kitchen.
+_Emmett trudges into the kitchen._
+
 > Hm?
 
 **Jelsafan0** _(28-Oct-18 03:57 PM)_
 
-> Iris hands a muffin to Emmett.
+_Iris hands a muffin to Emmett._
 
 **Deyner** _(28-Oct-18 03:57 PM)_
 
-> puts another blueberry on Chomsky's muffin before he eats it@and vanishes
+_Deyner puts another blueberry on Chomsky's muffin before he can eat it, and vanishes._
 
 **Zander** _(28-Oct-18 03:57 PM)_
+
+_Emmett sniffs the muffin suspiciously._
 
 > What is this?
 
@@ -1825,12 +1828,12 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **PlasmaPerson** _(28-Oct-18 03:58 PM)_
 
-> Chomsky fails to notice the blueberry
-> stupid Chomsky
+_Chomsky fails to notice the blueberry._
 
 **Jelsafan0** _(28-Oct-18 03:58 PM)_
 
-> Iris notices it.
+_Iris notices it._
+
 > Wait!
 
 **Zander** _(28-Oct-18 03:58 PM)_
@@ -1839,48 +1842,35 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **Deyner** _(28-Oct-18 03:58 PM)_
 
-> puts a blueberry on Emmett's muffin before it is put in his mouth and vanishes
+_Deyner reappears to put a blueberry on Emmett's muffin just before it reaches his mouth, and vanishes again._
 
 **Jelsafan0** _(28-Oct-18 03:58 PM)_
 
-> Iris plucks off the two blueberries.
+_Iris plucks off the two blueberries._
 
 **TheBlade** _(28-Oct-18 03:58 PM)_
 
-> `Is that a half-baked bannana sticking out of it?`
+_Jim peers at Emmett's muffin._
+
+> Is that a half-baked banana sticking out of it?
 
 **Jelsafan0** _(28-Oct-18 03:58 PM)_
 
-> Deyner quit!
+> Deyner, quit!
 
 **Zander** _(28-Oct-18 03:58 PM)_
 
-> He bites into the muffin.
+_Emmett bites into the muffin._
 
 **Deyner** _(28-Oct-18 03:58 PM)_
 
-> puts more blueberries and banishes
-
-**RPretribution** _(28-Oct-18 03:58 PM)_
-
-> if iris had a child would it be blueberry
-> @Jelsafan0
-> @Jelsafan0
-> @Jelsafan0
-> @Jelsafan0
-
-**Jelsafan0** _(28-Oct-18 03:58 PM)_
-
-> No.
-> No.
-
-**RPretribution** _(28-Oct-18 03:59 PM)_
-
-> yes\*
+_Deyner puts on more blueberries and vanishes._
 
 **Zander** _(28-Oct-18 03:59 PM)_
 
-> Iris, this is a muffin though...
+_Emmett chews slowly, puzzled by Iris's excitement._
+
+> Iris, this is a muffin, though...
 > You okay?
 
 **Jelsafan0** _(28-Oct-18 03:59 PM)_
@@ -1889,19 +1879,21 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **PlasmaPerson** _(28-Oct-18 03:59 PM)_
 
-> Chomsky also eats a muffin because it's important to the plot
+_Chomsky also eats a muffin, blueberry and all._
 
 **Jelsafan0** _(28-Oct-18 03:59 PM)_
 
-> She grins widely.
+_Iris grins widely._
 
 **Zander** _(28-Oct-18 03:59 PM)_
+
+_Emmett raises an eyebrow._
 
 > You weren't stress-baking?
 
 **Deyner** _(28-Oct-18 03:59 PM)_
 
-> puts blueberries inside the muffins and vanishes
+_Deyner stuffs blueberries inside the remaining muffins and vanishes._
 
 **Jelsafan0** _(28-Oct-18 03:59 PM)_
 
@@ -1909,11 +1901,11 @@ t!8ball Has Jim been sitting in his room and been watching the security video th
 
 **RPretribution** _(28-Oct-18 03:59 PM)_
 
-> Garrick eats a ball of rolled-up muffins.
+_Garrick rolls several muffins together into a ball and eats it._
 
 **Jelsafan0** _(28-Oct-18 03:59 PM)_
 
-> well i mean... I was, but...
+> Well, I mean... I was, but...
 
 **Zander** _(28-Oct-18 03:59 PM)_
 
@@ -1921,21 +1913,21 @@ t!8ball Is the ship there?
 
 **Tatsumaki** _(28-Oct-18 03:59 PM)_
 
-> 🎱 | Don't count on it,
-> Zander
-> .
+🎱 | Don't count on it, Zander.
 
 **Jelsafan0** _(28-Oct-18 03:59 PM)_
 
-> they're not blueberry!
+> They're not blueberry!
 
 **TheBlade** _(28-Oct-18 03:59 PM)_
 
-> `Im not hungry, ill have some lator.`
+> I'm not hungry. I'll have some later.
 
 **PlasmaPerson** _(28-Oct-18 03:59 PM)_
 
-> can I make another muffin throne?
+_Chomsky eyes the tray of muffins wistfully._
+
+> Can I make another muffin throne?
 
 **RPretribution** _(28-Oct-18 03:59 PM)_
 
@@ -1943,15 +1935,18 @@ t!8ball Is the ship there?
 
 **Zander** _(28-Oct-18 04:00 PM)_
 
+_Emmett follows her with his eyes, concerned._
+
 > Iris, you know you can tell me why you're stressed, right?
 
 **Jelsafan0** _(28-Oct-18 04:00 PM)_
 
-> Iris grins, and rushes back to the muffin-making process.
+_Iris grins, and rushes back to the muffin-making process._
 
 **TheBlade** _(28-Oct-18 04:00 PM)_
 
-> `The last time we had a muffin throne you fell asleep in it.` > `and burned it....`
+> The last time we had a muffin throne, you fell asleep in it.
+> And burned it...
 
 **Jelsafan0** _(28-Oct-18 04:00 PM)_
 
@@ -1959,114 +1954,101 @@ t!8ball Is the ship there?
 
 **PlasmaPerson** _(28-Oct-18 04:00 PM)_
 
-> it was the comfiest throne ever.
+> It was the comfiest throne ever.
 
 **TheBlade** _(28-Oct-18 04:00 PM)_
 
-> THE SHIP HAS LANDED
+_A few minutes later, the ship touches down on the Planet of the Archidemons._
 
 **PlasmaPerson** _(28-Oct-18 04:00 PM)_
 
-> but all good things must come to an end
+_Chomsky sighs._
 
-**Deyner** _(28-Oct-18 04:00 PM)_
-
-> Some one ping me when we get to the planet
-
-**Zander** _(28-Oct-18 04:00 PM)_
-
-> @Deyner
+> But all good things must come to an end.
 
 **Jelsafan0** _(28-Oct-18 04:01 PM)_
 
-> Iris gasps.
+_Iris gasps._
+
 > We're here!
 
-**Deyner** _(28-Oct-18 04:01 PM)_
-
-> fuxk
-
-**TheBlade** _(28-Oct-18 04:01 PM)_
-
-> @Deyner
-
 **Zander** _(28-Oct-18 04:01 PM)_
+
+_Emmett sways on his hooves._
 
 > I think... I'm going to bed.
 
 **Deyner** _(28-Oct-18 04:01 PM)_
 
-> Hey Emmett do you want me to sty in the ship and repair?
+_Deyner grabs his toolbox._
+
+> Hey, Emmett, do you want me to stay in the ship and repair?
 
 **Zander** _(28-Oct-18 04:01 PM)_
 
-> Yeah, you sty.
+> Yeah, you stay.
 
 **RPretribution** _(28-Oct-18 04:01 PM)_
 
-> CRASH
+_Outside, something slams down onto the landing pad beside the ship with a deafening CRASH._
 
 **Jelsafan0** _(28-Oct-18 04:01 PM)_
 
-> she abandons the muffin mix, snatching her dagger, ribbons, and new weapon.
+_Iris abandons the muffin mix, snatching up her dagger, her ribbons, and her new weapon._
 
 **TheBlade** _(28-Oct-18 04:01 PM)_
 
-> `Hey, emmet, you're not looking so good.`
+_Jim watches Emmett stumble past him._
+
+> Hey, Emmett, you're not looking so good.
 
 **PlasmaPerson** _(28-Oct-18 04:02 PM)_
+
+_Chomsky flinches as the impact rattles the hull, knocking his helmeted head into a cabinet._
 
 > KRAK! OW!
 
-**RPretribution** _(28-Oct-18 04:02 PM)_
-
-> hector diagnoses emmett with ligma
-
 **PlasmaPerson** _(28-Oct-18 04:02 PM)_
 
-> suddenly, the mafia ship!
-> But they don't have to kill people
+_Through the porthole, Chomsky recognizes the ship that just landed: it's the mafia's._
 
 **Deyner** _(28-Oct-18 04:02 PM)_
 
-> Leaves the ship
-
-**PlasmaPerson** _(28-Oct-18 04:03 PM)_
-
-> instead mafia is relatively threatening
+_Despite what he just said, Deyner leaves the ship._
 
 **RPretribution** _(28-Oct-18 04:03 PM)_
 
-> garrick leavey shippy
+_Garrick floats out of the ship after him._
 
 **Zander** _(28-Oct-18 04:03 PM)_
 
-> Emmett falls into his bed and pulls the covers over himself.
+_Emmett falls into his bed and pulls the covers over himself._
 
 **Deyner** _(28-Oct-18 04:03 PM)_
 
-> goes to the market for parts and offers Iris to come with
-> Iris wanna come to the markets?
+_Deyner heads out toward the markets for parts, and turns back to Iris._
+
+> Iris, wanna come to the markets?
 
 **TheBlade** _(28-Oct-18 04:03 PM)_
 
-> `Hey, lets see if we can find you some help, emmet, you really dont look that good.`
+_Jim leans into Emmett's doorway._
+
+> Hey, let's see if we can find you some help, Emmett. You really don't look that good.
 
 **Jelsafan0** _(28-Oct-18 04:03 PM)_
 
-> Iris rushes down the steps, eyes widening in joy.
+_Iris rushes down the ramp, eyes widening in joy._
 
 **Zander** _(28-Oct-18 04:03 PM)_
+
+_Emmett mumbles from under the covers._
 
 > What? No way.
 
 **TheBlade** _(28-Oct-18 04:04 PM)_
 
-> `You can stay here wile we go if you want.`
-
-**RPretribution** _(28-Oct-18 04:04 PM)_
-
-> emmet, you really dont feel that good.
+> You can stay here while we go, if you want.
 
 **Jelsafan0** _(28-Oct-18 04:04 PM)_
 
@@ -2074,24 +2056,17 @@ t!8ball Is the ship there?
 
 **Deyner** _(28-Oct-18 04:04 PM)_
 
-> Iris you wanna come?
-
-**RPretribution** _(28-Oct-18 04:04 PM)_
-
-> -   SHUT UP, HUMAN!
+> Iris, you wanna come?
 
 **PlasmaPerson** _(28-Oct-18 04:04 PM)_
 
-> Boss meets Chomsky outside the ship
-
-**RPretribution** _(28-Oct-18 04:04 PM)_
-
-> final frontier 3 mission failure
-> emmett = papyrus
+_Chomsky's boss meets Chomsky outside the ship._
 
 **Deyner** _(28-Oct-18 04:04 PM)_
 
-> I was here on a diplomatic mission before the incident
+> I was here on a diplomatic mission before the incident.
+
+_Deyner's gaze grows distant._
 
 **Jelsafan0** _(28-Oct-18 04:04 PM)_
 
@@ -2099,51 +2074,55 @@ t!8ball Is the ship there?
 
 **RPretribution** _(28-Oct-18 04:04 PM)_
 
+_Garrick looks around the landing pad._
+
 > This place looks different.
 
 **TheBlade** _(28-Oct-18 04:05 PM)_
 
-> Jim walks outside the ship
+_Jim walks outside the ship._
 
 **Jelsafan0** _(28-Oct-18 04:05 PM)_
 
-> Iris grabs Deyner's wrist, dragging him forward.
+_Iris grabs Deyner's wrist, dragging him forward._
 
 **Deyner** _(28-Oct-18 04:05 PM)_
 
-> gets dragged by a girl
+_Deyner lets himself get dragged along._
 
 **Jelsafan0** _(28-Oct-18 04:05 PM)_
 
 > Meet what's left of my people!
 
-**RPretribution** _(28-Oct-18 04:05 PM)_
-
-> Garrick and God start with the same letter
-
 **PlasmaPerson** _(28-Oct-18 04:05 PM)_
 
-> you don't have to kill them. They're on an important mission too.
+_Chomsky lowers his voice to his boss._
+
+> You don't have to kill them. They're on an important mission too.
 
 **Jelsafan0** _(28-Oct-18 04:05 PM)_
 
-> Iris gestures to the archidemons walking around, chatting and living their lives.
+_Iris gestures to the archidemons walking around, chatting and living their lives._
 
 **Deyner** _(28-Oct-18 04:06 PM)_
 
-> forces a smile on his face until he sees a girl with white hair
+_Deyner forces a smile onto his face, until he sees a girl with white hair in the crowd._
 
 **RPretribution** _(28-Oct-18 04:06 PM)_
+
+_Garrick drifts over to Chomsky, eyeing the stranger._
 
 > Chomko. Tell me more about this mafia.
 
 **TheBlade** _(28-Oct-18 04:06 PM)_
 
-> `Chomsky, who you talkin' to?`
+_Jim squints at the stranger beside Chomsky._
+
+> Chomsky, who you talkin' to?
 
 **Deyner** _(28-Oct-18 04:06 PM)_
 
-> Iris can archidemons have white hair?
+> Iris, can archidemons have white hair?
 
 **Jelsafan0** _(28-Oct-18 04:06 PM)_
 
@@ -2151,36 +2130,43 @@ t!8ball Is the ship there?
 
 **Zander** _(28-Oct-18 04:06 PM)_
 
-> Emmett drifts off to sleep.
+_Back on the ship, Emmett drifts off to sleep._
 
 **PlasmaPerson** _(28-Oct-18 04:06 PM)_
 
-> this is, uh, the group I sent here to kill you.
+_Chomsky rubs the back of his helmet sheepishly._
+
+> This is, uh, the group I sent here to kill you.
 
 **TheBlade** _(28-Oct-18 04:07 PM)_
 
-> `.......`
+_Jim stares at Chomsky._
+
+> ...
 
 **PlasmaPerson** _(28-Oct-18 04:07 PM)_
 
-> but it's all good.
+> But it's all good.
 
 **Deyner** _(28-Oct-18 04:07 PM)_
 
 > What about her?
-> points at the girl he has been staring at
+
+_Deyner points at the girl he has been staring at._
 
 **PlasmaPerson** _(28-Oct-18 04:07 PM)_
 
 > I just need to leave with them for a few months.
 
+_Chomsky's boss checks his watch pointedly._
+
 **Jelsafan0** _(28-Oct-18 04:07 PM)_
 
-> She turns, looking closely.
+_Iris turns, looking closely._
 
 **TheBlade** _(28-Oct-18 04:07 PM)_
 
-> `what?`
+> What?
 
 **RPretribution** _(28-Oct-18 04:07 PM)_
 
@@ -2188,7 +2174,7 @@ t!8ball Is the ship there?
 
 **PlasmaPerson** _(28-Oct-18 04:07 PM)_
 
-> hey garrick!
+> Hey, Garrick!
 
 **RPretribution** _(28-Oct-18 04:07 PM)_
 
@@ -2196,36 +2182,37 @@ t!8ball Is the ship there?
 
 **Deyner** _(28-Oct-18 04:07 PM)_
 
-> (No it's supposed to be my lost queen)
+_Deyner is certain the girl is his lost queen._
 
 **PlasmaPerson** _(28-Oct-18 04:07 PM)_
 
-> come here!
+> Come here!
 
 **RPretribution** _(28-Oct-18 04:08 PM)_
 
 > Alright.
-> He comey the herey
+
+_Garrick floats over._
 
 **Jelsafan0** _(28-Oct-18 04:08 PM)_
 
-> hmm, no, doesn't look like it.
+> Hmm, no, doesn't look like anyone I know.
 
 **Deyner** _(28-Oct-18 04:08 PM)_
 
-> Mind coming with me to check it out
+> Mind coming with me to check it out?
 
 **TheBlade** _(28-Oct-18 04:08 PM)_
 
-> `Garrick stay where you are.`
+> Garrick, stay where you are.
 
 **Jelsafan0** _(28-Oct-18 04:08 PM)_
 
-> hey, I'm gonna head to the barracks.
+> Hey, I'm gonna head to the barracks.
 
 **TheBlade** _(28-Oct-18 04:08 PM)_
 
-> `Chomsky, whats goin' on here?`
+> Chomsky, what's goin' on here?
 
 **RPretribution** _(28-Oct-18 04:08 PM)_
 
@@ -2238,7 +2225,7 @@ t!8ball Is the ship there?
 
 **Deyner** _(28-Oct-18 04:09 PM)_
 
-> Ok I'll come with
+> Okay, I'll come with.
 
 **PlasmaPerson** _(28-Oct-18 04:09 PM)_
 
@@ -2246,21 +2233,21 @@ t!8ball Is the ship there?
 
 **Zander** _(28-Oct-18 04:09 PM)_
 
-t!8ball Do one of the mafia members get turned into a turtle with a funny hat by a demon?
-
-**RPretribution** _(28-Oct-18 04:09 PM)_
-
-> hehehehe u said doodee
+t!8ball Does one of the mafia members get turned into a turtle with a funny hat by a demon?
 
 **Tatsumaki** _(28-Oct-18 04:09 PM)_
 
-> 🎱 | Outlook good,
-> Zander
-> .
+🎱 | Outlook good, Zander.
+
+**Zander** _(28-Oct-18 04:09 PM)_
+
+_A passing archidemon flicks its fingers, and one of the mafia goons is abruptly turned into a turtle wearing a funny hat._
 
 **TheBlade** _(28-Oct-18 04:09 PM)_
 
-> `duties? The hell you talkin' about?`
+> Duties? The hell you talkin' about?
+
+_Jim's hand drifts toward his holster._
 
 **Jelsafan0** _(28-Oct-18 04:10 PM)_
 
@@ -2268,241 +2255,252 @@ t!8ball Do one of the mafia members get turned into a turtle with a funny hat by
 
 **Deyner** _(28-Oct-18 04:10 PM)_
 
-> Lets go Iris
-> looks back at the girl to see that's she's gone
+> Let's go, Iris.
+
+_Deyner looks back at the girl, only to see that she's gone._
 
 **Jelsafan0** _(28-Oct-18 04:10 PM)_
 
-> Iris drags him in the direction of the barracks.
-
-**Zander** _(28-Oct-18 04:10 PM)_
-
->
+_Iris drags him in the direction of the barracks._
 
 **TheBlade** _(28-Oct-18 04:10 PM)_
 
-> `We litteraly just got here, you've been acting strange, and now you have 'duties' with these guys?`
+> We literally just got here, you've been acting strange, and now you have "duties" with these guys?
 
 **Jelsafan0** _(28-Oct-18 04:11 PM)_
 
-> They arrive at the barracks.
-
-**TheBlade** _(28-Oct-18 04:11 PM)_
-
-> also how many mafia guys are there, Jonas?
-> asking for a friend
+_They arrive at the barracks._
 
 **PlasmaPerson** _(28-Oct-18 04:11 PM)_
 
-> well, I've been planning this for weeks. Youre lucky Boss doesn't feel like killing you guys.
+_Chomsky shrugs, not quite meeting Jim's eyes._
+
+> Well, I've been planning this for weeks. You're lucky the Boss doesn't feel like killing you guys.
 
 **Jelsafan0** _(28-Oct-18 04:11 PM)_
 
-> Iris spots someone familiar, working out.
+_Iris spots someone familiar, working out._
 
 **Deyner** _(28-Oct-18 04:11 PM)_
 
-> arrives with Iris
+_Deyner arrives with Iris._
 
 **Jelsafan0** _(28-Oct-18 04:11 PM)_
 
-> She gasps.
+_Iris gasps._
+
 > Damien! Is that you?
 
 **TheBlade** _(28-Oct-18 04:12 PM)_
+
+_Jim counts the mafia goons filing out of the ship behind Chomsky's boss._
 
 t!roll d10
 
 **Tatsumaki** _(28-Oct-18 04:12 PM)_
 
-> [
->
-> > d10
-> > : 8]
+🎱 | Rolling a d10... Rolled a 8, TheBlade.
 
-In the end, the result was:
-8
+**TheBlade** _(28-Oct-18 04:12 PM)_
+
+_There are eight of them._
 
 **Deyner** _(28-Oct-18 04:12 PM)_
 
-> stands awkwardly to the side
+_Deyner stands awkwardly to the side._
 
 **Jelsafan0** _(28-Oct-18 04:12 PM)_
 
-> the boy puts down the huge weights and turns, spotting Iris.
-> He laughs in disbelief.
-> "I didn't think I'd ever see you again!"
+_The boy puts down the huge weights and turns, spotting Iris. He laughs in disbelief._
+
+> `Damien`: I didn't think I'd ever see you again!
 
 **TheBlade** _(28-Oct-18 04:13 PM)_
 
-> Jim cocks shotgun
-> `Chomsky, just go now.`
+_Jim cocks his shotgun._
 
+> Chomsky, just go now.
 **Deyner** _(28-Oct-18 04:14 PM)_
 
-> stands there
+_Deyner keeps standing there._
 
 **PlasmaPerson** _(28-Oct-18 04:14 PM)_
 
-> alright, jeez.
+_Chomsky raises his hands._
+
+> Alright, jeez.
 
 **Deyner** _(28-Oct-18 04:14 PM)_
 
-t!8ball does Deyner spot somebody he thought was dead?
+t!8ball Does Deyner spot somebody he thought was dead?
 
 **Tatsumaki** _(28-Oct-18 04:14 PM)_
 
-> 🎱 | It is certain,
-> Deyner
-> .
+🎱 | It is certain, Deyner.
 
 **Jelsafan0** _(28-Oct-18 04:14 PM)_
 
-> Iris laughs as he jogs over, picking her up in a bear hug.
+_Iris laughs as Damien jogs over and picks her up in a bear hug._
+
 > Hey! Come on, put me down, soldier boy!
 
 **Deyner** _(28-Oct-18 04:15 PM)_
 
-> Spots the girl with white hair again and goes to investigate
+_Deyner spots the girl with white hair again, across the barracks yard, and goes to investigate._
 
 **Jelsafan0** _(28-Oct-18 04:15 PM)_
 
-> He ruffles her hair.
-> "Not a chance, squirt."
-> She smirks and lights her finger on fire.
+_Damien ruffles her hair._
+
+> `Damien`: Not a chance, squirt.
+
+_Iris smirks and lights her finger on fire._
+
 > Now will you let me go?
 
 **Deyner** _(28-Oct-18 04:15 PM)_
 
 > Duske??
-> grabs the girl with white hair on the shoulder only to get thrown on his back
+
+_Deyner grabs the white-haired girl by the shoulder, only to get thrown flat on his back._
 
 **Jelsafan0** _(28-Oct-18 04:16 PM)_
 
-> He puts her down, raising his hands in surrender.
-> "Okay, okay. No need to get rough."
+_Damien puts Iris down, raising his hands in surrender._
+
+> `Damien`: Okay, okay. No need to get rough.
 
 **TheBlade** _(28-Oct-18 04:16 PM)_
 
-> Jim turns on coms
-> `Emmett, you might want to come out here, there are some guys that Chomsky has 'duties' with, and apparently they were ganna kill us before something happened.`
+_Jim turns on his comms._
+
+> Emmett, you might want to come out here. There are some guys that Chomsky has "duties" with, and apparently they were gonna kill us before something happened.
 
 **Zander** _(28-Oct-18 04:17 PM)_
 
-> Emmett has his translator and comms on his bedside table.
+_Emmett's translator and comms sit on his bedside table, next to his snoring head._
 
 **PlasmaPerson** _(28-Oct-18 04:17 PM)_
 
-> Chomsky panics a little
-> no, no, they're not gonna kill anyone
+_Chomsky panics a little._
+
+> No, no, they're not gonna kill anyone!
 
 **Deyner** _(28-Oct-18 04:18 PM)_
 
-> the girl glares at him
-> Don't touch me yo... Deyner??
+_The girl glares down at him._
+
+> `Duske`: Don't touch me, yo... Deyner??
 
 **Jelsafan0** _(28-Oct-18 04:18 PM)_
 
-> Iris grins.
-> Still a huge wuss,
-> She teases.
-> by the way, what happened to being a doctor?
-> Iris comms are still on.
+_Iris grins._
+
+> Still a huge wuss.
+
+_Iris teases him._
+
+> By the way, what happened to being a doctor?
+
+_Iris's comms are still on, crackling with Jim's call._
 
 **PlasmaPerson** _(28-Oct-18 04:18 PM)_
 
-> I'm gonna...go get Emmett.
-> Chomsky slaps Emmett across the face to wake him up
+> I'm gonna... go get Emmett.
+
+_Chomsky stomps into Emmett's room and slaps him across the face to wake him up._
 
 **Jelsafan0** _(28-Oct-18 04:19 PM)_
 
-> Damien shrugs.
-> "I never gave up on it. I'm the army medic now!"
+_Damien shrugs._
+
+> `Damien`: I never gave up on it. I'm the army medic now!
 
 **Zander** _(28-Oct-18 04:19 PM)_
 
-> Emmett's still unconscious.
+_Emmett's still unconscious._
 
 **TheBlade** _(28-Oct-18 04:19 PM)_
 
-> Jim guards door to ship, only letting Chomsky in
+_Jim guards the door to the ship, only letting Chomsky in._
 
 **Deyner** _(28-Oct-18 04:19 PM)_
 
-> the girls offers her hand towards Deyner which he accepts
-> I thought you died!?
-> she says
+_The girl offers her hand to Deyner, which he accepts, and she pulls him up._
 
-**TheBlade** _(28-Oct-18 04:19 PM)_
-
-> https://www.youtube.com/watch?v=zaIJkfZ8bAo
+> `Duske`: I thought you died!?
 
 **PlasmaPerson** _(28-Oct-18 04:19 PM)_
 
-> Chomsky ignores this and just drags Emmett into his shoulders to carry him outside
+_Chomsky ignores Jim and just drags Emmett onto his shoulders to carry him outside._
 
 **Jelsafan0** _(28-Oct-18 04:20 PM)_
 
-> Iris grins.
-> Good for you! Army medic, eh? Sounds important- and fun!
+_Iris grins._
+
+> Good for you! Army medic, eh? Sounds important, and fun!
 
 **Deyner** _(28-Oct-18 04:20 PM)_
 
-> Nope just slightly maimed wanna see the people who maimed/saved me?
-> Sure
-> gets dragged over to Iris by Deyner
+> Nope, just slightly maimed. Wanna see the people who maimed and saved me?
+
+> `Duske`: Sure.
+
+_Deyner drags Duske over toward Iris._
+
 > IRIS!!
 
 **TheBlade** _(28-Oct-18 04:21 PM)_
 
-> `Hey, where are you taking him?`
+> Hey, where are you taking him?
 
 **Jelsafan0** _(28-Oct-18 04:21 PM)_
 
-> Damien laughs.
-> "So what have you been doing, squirt?"
+_Damien laughs._
+
+> `Damien`: So what have you been doing, squirt?
 
 **PlasmaPerson** _(28-Oct-18 04:21 PM)_
 
-> Chomsky throws Emmett on the ground
+_Chomsky throws Emmett on the ground at the bottom of the ramp._
 
 **TheBlade** _(28-Oct-18 04:21 PM)_
 
-> `Chomsky, what are you doing?`
+> Chomsky, what are you doing?
 
 **PlasmaPerson** _(28-Oct-18 04:21 PM)_
 
-> he's not dead, I swear.
+> He's not dead, I swear.
 > I'm trying to wake him up.
 
 **Deyner** _(28-Oct-18 04:21 PM)_
 
-> runs towards Iris with Duske in tow
+_Deyner runs toward Iris with Duske in tow._
+
 > IRIS!
 
 **TheBlade** _(28-Oct-18 04:21 PM)_
 
-> `By bringing him outside?`
+> By bringing him outside?
 
 **Jelsafan0** _(28-Oct-18 04:22 PM)_
 
-> Iris turns, spotting Deyner.
-> Traveling. With a crew. There one comes now.
-> Hey Deyner!
+_Iris turns, spotting Deyner._
+
+> Traveling. With a crew. There's one of them now.
+> Hey, Deyner!
 
 **Deyner** _(28-Oct-18 04:22 PM)_
 
-> IRIS MEET DUSKE!!
+> IRIS, MEET DUSKE!!
 
 **PlasmaPerson** _(28-Oct-18 04:22 PM)_
 
-t!8ball does Emmett wake up Canadian
+t!8ball Does Emmett wake up Canadian?
 
 **Tatsumaki** _(28-Oct-18 04:22 PM)_
 
-> 🎱 | Yes,
-> PlasmaPerson
-> .
+🎱 | Yes, PlasmaPerson.
 
 **Jelsafan0** _(28-Oct-18 04:22 PM)_
 
@@ -2510,105 +2508,108 @@ t!8ball does Emmett wake up Canadian
 
 **Deyner** _(28-Oct-18 04:22 PM)_
 
-> Duske blushes and waves toward the other elf
-> Hi Damien
+_Duske blushes and waves at Damien._
+
+> `Duske`: Hi, Damien.
 
 **Zander** _(28-Oct-18 04:23 PM)_
 
-> Emmett opens his eyes, them being rolled back again.
+_Emmett opens his eyes, rolled back in his head again._
 
 **Jelsafan0** _(28-Oct-18 04:23 PM)_
 
-> Iris turns pink, as Damien slings his arm around her shoulders. He's not wearing a shirt.
+_Iris turns pink as Damien slings his arm around her shoulders. He's not wearing a shirt._
 
 **TheBlade** _(28-Oct-18 04:23 PM)_
 
-> Jim slaps the shit out of Emmett
+_Jim slaps the shit out of Emmett._
 
 **Jelsafan0** _(28-Oct-18 04:23 PM)_
 
 > Uh... heya... Duske.
-> "Hey, dude."
-> Damien greets casually.
+
+> `Damien`: Hey, dude.
+
+_Damien greets her casually._
 
 **Deyner** _(28-Oct-18 04:24 PM)_
 
-> Hi Iris, Deyner's told me a lot about you
+> `Duske`: Hi, Iris. Deyner's told me a lot about you.
 
 **Zander** _(28-Oct-18 04:24 PM)_
 
-> What the fuck is wrong with you guys?
+_Emmett blinks awake, groggy and, for reasons no one can explain, faintly Canadian._
+
+> What the fuck is wrong with you guys, eh?
 
 **Deyner** _(28-Oct-18 04:24 PM)_
 
-> Hey
-> Offers to shake Damien's hand
+> Hey.
+
+_Deyner offers to shake Damien's hand._
 
 **PlasmaPerson** _(28-Oct-18 04:24 PM)_
 
-> you're too easily slappable
+_Chomsky shakes out his hand._
 
-**Tatsumaki** _(28-Oct-18 04:24 PM)_
-
-> 🆙 |
-> PlasmaPerson leveled up!
+> You're too easily slappable.
 
 **Zander** _(28-Oct-18 04:24 PM)_
 
-> Emmett is trying to have some shut eye.
+_Emmett tries to get some shut-eye right there on the ground._
 
 **Jelsafan0** _(28-Oct-18 04:24 PM)_
 
 > Oh! He has...?
-> Iris asks, feeling a bit awkward.
+
+_Iris asks, feeling a bit awkward._
 
 **TheBlade** _(28-Oct-18 04:25 PM)_
 
-> `Sorry, your asleep and woudlnt answer coms.`
+> Sorry, you're asleep and wouldn't answer comms.
 
 **Zander** _(28-Oct-18 04:25 PM)_
 
-> He's been awake for a few weeks straight.
+_Emmett has been awake for a few weeks straight._
 
 **TheBlade** _(28-Oct-18 04:25 PM)_
 
-> `Also, these guys showed up.`
+> Also, these guys showed up.
 
 **Jelsafan0** _(28-Oct-18 04:25 PM)_
 
-> Damien shakes Deyner's hand with his free arm, the other one still slung around Iris' shoulders.
+_Damien shakes Deyner's hand with his free arm, the other one still slung around Iris's shoulders._
 
 **TheBlade** _(28-Oct-18 04:25 PM)_
 
-> `Emmett, look.`
-> Jim points at mafia ship
+> Emmett, look.
+
+_Jim points at the mafia ship._
 
 **Zander** _(28-Oct-18 04:25 PM)_
 
-> Emmett doesn't give a shit. Nor do I.
+_Emmett doesn't give a shit._
 
 **TheBlade** _(28-Oct-18 04:25 PM)_
 
-> `Also Chomsky is leaving.` > `apparently.`
+> Also, Chomsky is leaving.
+> Apparently.
 
 **Deyner** _(28-Oct-18 04:26 PM)_
 
-> gets burned by the touch of a demon
-> This is my queen Iris!! I found her
+_Deyner yelps as the handshake burns him. He's forgotten the touch of a demon._
 
-> "blushes"
+> This is my queen, Iris!! I found her!
+
+_Duske blushes._
 
 **Zander** _(28-Oct-18 04:26 PM)_
 
-> The Squoatling furrows his brow.
-
-**TheBlade** _(28-Oct-18 04:26 PM)_
-
-> you forgot the \*
+_Emmett furrows his brow._
 
 **PlasmaPerson** _(28-Oct-18 04:26 PM)_
 
-> "Chomsky, would you quit with the theatrics? We're on a time schedule."
+> `Chomsky's Boss`: Chomsky, would you quit with the theatrics? We're on a time schedule.
 
 **Jelsafan0** _(28-Oct-18 04:27 PM)_
 
@@ -2616,77 +2617,55 @@ t!8ball does Emmett wake up Canadian
 
 **TheBlade** _(28-Oct-18 04:27 PM)_
 
-> `theatrics...heh.`
-
-**Bagelwrecker** _(28-Oct-18 04:27 PM)_
-
-> You gay
+> "Theatrics"... heh.
 
 **Deyner** _(28-Oct-18 04:27 PM)_
 
-> calls Emmett
+_Deyner tries to call Emmett on his comms, not realizing he's lying right next to Jim._
 
 **PlasmaPerson** _(28-Oct-18 04:28 PM)_
 
-> Boss says hey to Emmett
-
-**Brakia** _(28-Oct-18 04:28 PM)_
-
-> you gay
-
-**TheBlade** _(28-Oct-18 04:28 PM)_
-
-> Boss is a big fat guy in a white suit
-
-**PlasmaPerson** _(28-Oct-18 04:28 PM)_
-
-> Incorrect
-
-**Brakia** _(28-Oct-18 04:28 PM)_
-
-> hey to emmett
+_Chomsky's boss gives Emmett a curt nod._
 
 **Jelsafan0** _(28-Oct-18 04:28 PM)_
 
-> Damien nudges Iris.
-> "By the way..."
-> he mentions quietly.
-> "I still intend to fulfill my promise from last time we saw each other."
+_Damien nudges Iris._
 
-> Iris' face turns very, very red.
+> `Damien`: By the way...
+
+_Damien lowers his voice._
+
+> `Damien`: I still intend to fulfill my promise from the last time we saw each other.
+
+_Iris's face turns very, very red._
 
 **Zander** _(28-Oct-18 04:29 PM)_
 
-> I think Emmett's dying.
-
-**PlasmaPerson** _(28-Oct-18 04:29 PM)_
-
-> Boss still remains completely undescribed
+_Emmett, for what it's worth, looks like he's dying._
 
 **Deyner** _(28-Oct-18 04:29 PM)_
 
 > What do you mean by that?
-> gestures to Damien
+
+_Deyner gestures to Damien._
 
 **Jelsafan0** _(28-Oct-18 04:30 PM)_
 
-> Wh- come on Damien! Y-you don't mean that!
-> she exclaims, face extremely red.
+> Wh-- come on, Damien! Y-you don't mean that!
+
+_Iris exclaims, her face extremely red._
 
 **Deyner** _(28-Oct-18 04:30 PM)_
 
-> "Deyner don't pry into people's personal lives!"
-> gets slapped by Duske
-> t! d4
+> `Duske`: Deyner, don't pry into people's personal lives!
+
+_Duske slaps Deyner._
 
 **Jelsafan0** _(28-Oct-18 04:30 PM)_
 
-> He smirks.
-> "Yes I do~"
+_Damien smirks._
 
-**TheBlade** _(28-Oct-18 04:30 PM)_
-
->
+> `Damien`: Yes I do.~
 
 **Deyner** _(28-Oct-18 04:30 PM)_
 
@@ -2694,23 +2673,23 @@ t!roll d4
 
 **Tatsumaki** _(28-Oct-18 04:30 PM)_
 
-> [
->
-> > d4
-> > : 2]
+🎱 | Rolling a d4... Rolled a 2, Deyner.
 
-In the end, the result was:
-2
+**Deyner** _(28-Oct-18 04:30 PM)_
+
+_The slap stings, leaving a faint handprint on Deyner's cheek._
 
 **Jelsafan0** _(28-Oct-18 04:31 PM)_
 
-> Iris groans, covering her face with her hands.
+_Iris groans, covering her face with her hands._
 
 **PlasmaPerson** _(28-Oct-18 04:31 PM)_
 
-> Yeah, so....I'd better go now.
-> important business at all.
-> I'm sure we'll see eachother again, though in war or in friendship I can't say. See you guys later.
+_Chomsky glances back at his boss, then at the crew._
+
+> Yeah, so... I'd better go now.
+> Important business and all.
+> I'm sure we'll see each other again, though in war or in friendship, I can't say. See you guys later.
 
 **Jelsafan0** _(28-Oct-18 04:32 PM)_
 
@@ -2718,505 +2697,391 @@ In the end, the result was:
 
 **PlasmaPerson** _(28-Oct-18 04:32 PM)_
 
-> **Chomsky
-> Leaves**
+_Chomsky turns and walks toward the mafia ship._
 
 **TheBlade** _(28-Oct-18 04:32 PM)_
 
-> `Just go.`
->
-> Chomsky
-> eats
-> Leaves
+> Just go.
 
 **Jelsafan0** _(28-Oct-18 04:33 PM)_
 
-t!8ball does Damien actually intend to fulfill his promise?
+t!8ball Does Damien actually intend to fulfill his promise?
 
 **Tatsumaki** _(28-Oct-18 04:33 PM)_
 
-> 🎱 | Very doubtful,
-> Jelsafan0
-> .
+🎱 | Very doubtful, Jelsafan0.
 
 **Zander** _(28-Oct-18 04:33 PM)_
 
-> As Chomsky leaves, Emmett starts to foam at the mouth.
+_As Chomsky leaves, Emmett starts to foam at the mouth._
 
 **TheBlade** _(28-Oct-18 04:33 PM)_
 
-> `WOAH WOAH WOAH.`
+> WOAH, WOAH, WOAH!
 
 **Jelsafan0** _(28-Oct-18 04:34 PM)_
 
-> Iris drags Damien towards the ship.
+_Iris drags Damien towards the ship._
+
 > You are gonna love them!
-> She exclaims.
+
+_Iris beams._
 
 **PlasmaPerson** _(28-Oct-18 04:34 PM)_
 
-> Ok Bye guys I'll be back in a couple months
+_Chomsky calls back over his shoulder from the mafia ship's ramp._
+
+> Okay, bye, guys! I'll be back in a couple months!
 
 **TheBlade** _(28-Oct-18 04:34 PM)_
 
-> `Emmett, get on your side, ill help you over`
-> Jim rolls over Emmett
-> Jim turns on coms
-> `Hey, somone get a doctor, something is wrong with emmet, get help!`
+> Emmett, get on your side. I'll help you over.
+
+_Jim rolls Emmett over and turns on his comms._
+
+> Hey, someone get a doctor! Something is wrong with Emmett! Get help!
 
 **Jelsafan0** _(28-Oct-18 04:35 PM)_
 
-> he chuckles.
-> "I'm sure I will."
-> Iris speeds up.
-> They need a doctor.
-> The two run to the ship.
+_Damien chuckles._
+
+> `Damien`: I'm sure I will.
+
+_Hearing Jim over the comms, Iris speeds up. They need a doctor, and she happens to have one on hand. The two run to the ship._
 
 **PlasmaPerson** _(28-Oct-18 04:36 PM)_
 
-> Chomsky stares out the window as the ship flies away
+_Aboard the mafia ship, Chomsky stares out the window as it lifts off._
 
 **Jelsafan0** _(28-Oct-18 04:36 PM)_
 
-> They arrive.
+_They arrive._
 
 **TheBlade** _(28-Oct-18 04:36 PM)_
 
-> Jim looks at chomsky and stares him in the eyes as they leave
+_Jim looks up at Chomsky through the window, staring him in the eyes as the ship leaves._
 
 **Jelsafan0** _(28-Oct-18 04:36 PM)_
 
-> Iris drags Damien through the ship.
+_Iris drags Damien through the ship._
+
 > I've got a medic!
 
 **PlasmaPerson** _(28-Oct-18 04:37 PM)_
 
-> Chomsky is sad to leave, but realizes there are more important things to worry about
+_Chomsky is sad to leave, but reminds himself there are more important things to worry about._
 
 **TheBlade** _(28-Oct-18 04:37 PM)_
 
-> `He is foaming at the mouth and is having a seizure.`
+_Jim holds Emmett steady as he convulses._
+
+> He's foaming at the mouth and having a seizure.
 
 **Jelsafan0** _(28-Oct-18 04:38 PM)_
 
-> She groans.
+_Iris groans, having run straight past them._
+
 > Where are you guys?
 
 **TheBlade** _(28-Oct-18 04:38 PM)_
 
-> `at the ship.`
+> At the bottom of the ramp!
 
 **Jelsafan0** _(28-Oct-18 04:38 PM)_
 
-> Iris pulls Damien to Jim and Emmett.
-> "Move aside, I'm a medic."
+_Iris pulls Damien to Jim and Emmett._
+
+> `Damien`: Move aside, I'm a medic.
 
 **PlasmaPerson** _(28-Oct-18 04:40 PM)_
 
-> Chomsky also sees Jim. He sticks out his tongue as if he's a child
+_Chomsky catches one last glimpse of Jim below, and sticks out his tongue like a child._
 
 **Jelsafan0** _(28-Oct-18 04:40 PM)_
 
-> Damien examines Emmett.
-
-**Tatsumaki** _(28-Oct-18 04:40 PM)_
-
-> 🎱 | Without a doubt,
-> Jelsafan0
-> .
+_Damien kneels and examines Emmett._
 
 **TheBlade** _(28-Oct-18 04:40 PM)_
 
-t!8ball does Jim see his body temperature?
+t!8ball Can Jim read Emmett's body temperature?
 
 **Tatsumaki** _(28-Oct-18 04:40 PM)_
 
-> 🎱 | It is decidedly so,
-> TheBlade
-> .
+🎱 | It is decidedly so, TheBlade.
 
 **Jelsafan0** _(28-Oct-18 04:41 PM)_
 
-t!8ball does Damien think Emmett needs surgery?
+t!8ball Does Damien think Emmett needs surgery?
 
 **Tatsumaki** _(28-Oct-18 04:41 PM)_
 
-> 🎱 | Cannot predict now,
-> Jelsafan0
-> .
+🎱 | Outlook good, Jelsafan0.
 
 **TheBlade** _(28-Oct-18 04:41 PM)_
 
-> `His brain and heart is increasing in temperature.`
+_Jim's cybernetic eye scans Emmett._
+
+> His brain and heart are increasing in temperature.
 
 **Jelsafan0** _(28-Oct-18 04:41 PM)_
 
-t!8ball does Damien think Emmett needs surgery?
-
-**Tatsumaki** _(28-Oct-18 04:41 PM)_
-
-> 🎱 | Outlook good,
-> Jelsafan0
-> .
-
-**Jelsafan0** _(28-Oct-18 04:41 PM)_
-
-> "He's gonna need surgery."
+> `Damien`: He's gonna need surgery.
 
 **TheBlade** _(28-Oct-18 04:42 PM)_
 
-> `You know what's wrong with him?`
+_Jim hovers anxiously over Damien's shoulder._
+
+> You know what's wrong with him?
 
 **Jelsafan0** _(28-Oct-18 04:42 PM)_
 
-t!8ball does Damien perform surgery right here?
+t!8ball Does Damien perform surgery right here?
 
 **Tatsumaki** _(28-Oct-18 04:42 PM)_
 
-> 🎱 | Without a doubt,
-> Jelsafan0
-> .
+🎱 | Without a doubt, Jelsafan0.
 
 **Jelsafan0** _(28-Oct-18 04:43 PM)_
 
-> "Yeah."
+> `Damien`: Yeah.
 
 **TheBlade** _(28-Oct-18 04:43 PM)_
 
-t!8ball does Damien have his tools?
+t!8ball Does Damien have his tools?
 
 **Tatsumaki** _(28-Oct-18 04:43 PM)_
 
-> 🎱 | Most likely,
-> TheBlade
-> .
+🎱 | Most likely, TheBlade.
 
 **Zander** _(28-Oct-18 04:43 PM)_
 
-> (
+_Deep within his unconscious mind, Emmett finds himself standing somewhere dark and empty._
+
 > Hello?
-> )
 
 **Jelsafan0** _(28-Oct-18 04:43 PM)_
 
-> "Get me a shard of sterilized broken glass, I'm missing my scalpel."
+_Damien rummages through his kit and frowns._
+
+> `Damien`: Get me a shard of sterilized broken glass. I'm missing my scalpel.
 
 **TheBlade** _(28-Oct-18 04:44 PM)_
 
-> `alright, ill get some from the ship`
+> Alright, I'll get some from the ship.
+
+_Jim sprints up the ramp._
 
 **Zander** _(28-Oct-18 04:44 PM)_
 
-> (
-> Emmett is pushed to the metaphysical floor.
-> )
+_Something pushes Emmett to the metaphysical floor._
 
 **Jelsafan0** _(28-Oct-18 04:44 PM)_
 
-> "hurry."
+> `Damien`: Hurry.
 
 **Zander** _(28-Oct-18 04:44 PM)_
 
-> (
 > What was that for?
-> )
 
 **TheBlade** _(28-Oct-18 04:45 PM)_
 
-> Jim comes back with a glass cup and alkanol
+_Jim comes back with a glass cup and some rubbing alcohol._
 
 **Jelsafan0** _(28-Oct-18 04:45 PM)_
 
-> "Iris,"
-> Damien prompts.
+> `Damien`: Iris.
+
+_Damien nods at the cup._
 
 **Zander** _(28-Oct-18 04:45 PM)_
 
-> (
-> "You've abused me, Squemfet."
-> )
+_A voice answers from the darkness. It sounds uncomfortably like Emmett's own._
+
+> `The Crave`: You've abused me, Squemfet.
 
 **Jelsafan0** _(28-Oct-18 04:45 PM)_
 
-t!8ball does Iris break and clean the shard?
+t!8ball Does Iris break and clean the shard?
 
 **Tatsumaki** _(28-Oct-18 04:45 PM)_
 
-> 🎱 | My sources say no,
-> Jelsafan0
-> .
+🎱 | My sources say no, Jelsafan0.
 
 **Zander** _(28-Oct-18 04:45 PM)_
 
-> (
 > What do you mean?
-> )
-
-**TheBlade** _(28-Oct-18 04:45 PM)_
-
-t!8ball does Jim fix the glass?
-
-**Tatsumaki** _(28-Oct-18 04:45 PM)_
-
-> 🎱 | Ask again later,
-> TheBlade
-> .
 
 **TheBlade** _(28-Oct-18 04:46 PM)_
 
-t!8ball does Jim fix the glass?
+t!8ball Does Jim break the glass?
 
 **Tatsumaki** _(28-Oct-18 04:46 PM)_
 
-> 🎱 | Outlook good,
-> TheBlade
-> .
+🎱 | Outlook good, TheBlade.
 
 **Jelsafan0** _(28-Oct-18 04:46 PM)_
 
-t!8ball does Iris just break the glass?
+t!8ball Does Iris just break the glass?
 
 **Tatsumaki** _(28-Oct-18 04:46 PM)_
 
-> 🎱 | Outlook not so good,
-> Jelsafan0
-> .
+🎱 | Outlook not so good, Jelsafan0.
 
 **TheBlade** _(28-Oct-18 04:46 PM)_
 
-> `here.` > `you can clean the glass out of my hand later.`
-> metal hand
+_Jim takes the cup from Iris and crushes it in his metal hand._
+
+> Here.
+> You can clean the glass out of my hand later.
 
 **Zander** _(28-Oct-18 04:46 PM)_
 
-> (
-> "We can't keep living on like this. Suppression just leads us to the drain."
-> )
+> `The Crave`: We can't keep living on like this. Suppression just leads us to the drain.
 
 **Jelsafan0** _(28-Oct-18 04:46 PM)_
 
-t!8ball does Iris clean the broken shard of glass?
+t!8ball Does Iris clean the broken shard of glass?
 
 **Tatsumaki** _(28-Oct-18 04:46 PM)_
 
-> 🎱 | Signs point to yes,
-> Jelsafan0
-> .
+🎱 | Signs point to yes, Jelsafan0.
 
 **Zander** _(28-Oct-18 04:46 PM)_
 
-> (
 > I don't understand.
-> )
 
 **Jelsafan0** _(28-Oct-18 04:47 PM)_
 
-> Damien takes it, making an incision.
-
-**TheBlade** _(28-Oct-18 04:47 PM)_
-
-> also you need a hammer for the skull
-> just saying
+_Iris picks out a sharp shard and douses it in alcohol. Damien takes it and makes an incision._
 
 **Zander** _(28-Oct-18 04:47 PM)_
 
-> (
-> "I'm a natural part of us. Squoat made me to be apart of us."
-> )
+> `The Crave`: I'm a natural part of us. Squoat made me to be a part of us.
 
-**Jelsafan0** _(28-Oct-18 04:47 PM)_
-
-> He begins to perform surgery.
-
-**Zander** _(28-Oct-18 04:47 PM)_
-
-> (
-> "Why do you abuse me?"
-> )
+> `The Crave`: Why do you abuse me?
 
 **Jelsafan0** _(28-Oct-18 04:48 PM)_
 
-> Surgery stuff ensues.
-> t!8ball does Damien poke around in Emmett's brain for a minute?
+_Damien begins to perform surgery._
+
+_Damien works in silence, brow furrowed, with Iris holding a light steady over his shoulder._
+
+t!8ball Does Damien poke around in Emmett's brain for a minute?
 
 **Tatsumaki** _(28-Oct-18 04:48 PM)_
 
-> 🎱 | Ask again later,
-> Jelsafan0
-> .
+🎱 | Without a doubt, Jelsafan0.
 
 **Jelsafan0** _(28-Oct-18 04:48 PM)_
 
-t!8ball does Damien poke around in Emmett's brain for a minute?
+t!8ball Does poking a certain part fix it?
 
 **Tatsumaki** _(28-Oct-18 04:48 PM)_
 
-> 🎱 | Without a doubt,
-> Jelsafan0
-> .
-
-**Jelsafan0** _(28-Oct-18 04:48 PM)_
-
-t!8ball does poking a certain part fix it?
-
-**Tatsumaki** _(28-Oct-18 04:48 PM)_
-
-> 🎱 | Concentrate and ask again,
-> Jelsafan0
-> .
-
-**Jelsafan0** _(28-Oct-18 04:48 PM)_
-
-t!8ball does poking a certain part fix it?
-
-**Tatsumaki** _(28-Oct-18 04:48 PM)_
-
-> 🎱 | My reply is no,
-> Jelsafan0
-> .
+🎱 | My reply is no, Jelsafan0.
 
 **Jelsafan0** _(28-Oct-18 04:49 PM)_
 
-t!8ball does Damien need to go deeper?
+t!8ball Does Damien need to go deeper?
 
 **Tatsumaki** _(28-Oct-18 04:49 PM)_
 
-> 🎱 | You may rely on it,
-> Jelsafan0
-> .
+🎱 | You may rely on it, Jelsafan0.
 
 **Jelsafan0** _(28-Oct-18 04:49 PM)_
 
-> Damien goes deeper.
-> t!8ball does Damien find a small parasite in Emmett's brain?
+_Damien goes deeper._
+
+t!8ball Does Damien find a small parasite in Emmett's brain?
 
 **Tatsumaki** _(28-Oct-18 04:49 PM)_
 
-> 🎱 | Outlook good,
-> Jelsafan0
-> .
+🎱 | Outlook good, Jelsafan0.
 
 **Jelsafan0** _(28-Oct-18 04:50 PM)_
 
-> He pulls it out, crushing it under his foot.
+_Damien pulls a wriggling parasite out of Emmett's brain and crushes it under his foot._
 
 **Zander** _(28-Oct-18 04:50 PM)_
 
-> (
+_Emmett gets back up off the metaphysical floor, glaring into the darkness._
+
 > You're crazy. You ruin my civility. You ruin my romance.
-> )
 
 **Jelsafan0** _(28-Oct-18 04:50 PM)_
 
-t!8ball does Damien put Emmett back together, using Iris' fire to cauterize the incisions?
+t!8ball Does Damien put Emmett back together, using Iris's fire to cauterize the incisions?
 
 **Tatsumaki** _(28-Oct-18 04:50 PM)_
 
-> 🎱 | Yes,
-> Jelsafan0
-> .
-
-**Jelsafan0** _(28-Oct-18 04:50 PM)_
-
-t!ball does Iris try to wake Emmett up,
+🎱 | Yes, Jelsafan0.
 
 **Zander** _(28-Oct-18 04:51 PM)_
 
-> (
-> "Those are all because of you, man. Ever know why you're always feeling sick?"
-> )
+> `The Crave`: Those are all because of you, man. Ever know why you're always feeling sick?
 
 **Jelsafan0** _(28-Oct-18 04:51 PM)_
 
-t!8ball does Iris try to wake Emmett up?
+_Iris lights her fingers, and Damien guides them along each incision, sealing them shut._
+
+t!8ball Does Iris try to wake Emmett up?
 
 **Tatsumaki** _(28-Oct-18 04:51 PM)_
 
-> 🎱 | As I see it, yes,
-> Jelsafan0
-> .
+🎱 | As I see it, yes, Jelsafan0.
 
 **Jelsafan0** _(28-Oct-18 04:51 PM)_
 
-> Hey, wake up
-> Iris whispers, shaking Emmett gently.
+> Hey, wake up.
 
-**RPretribution** _(28-Oct-18 04:51 PM)_
-
-> hey what happened
-> my internet broke
-
-**Jelsafan0** _(28-Oct-18 04:51 PM)_
-
-> SURGERY
+_Iris whispers, shaking Emmett gently._
 
 **Zander** _(28-Oct-18 04:51 PM)_
 
-> (
-> "You don't let me into our life. We're brothers man. I'm the brawn and you're the brains."
-> )
-
-**RPretribution** _(28-Oct-18 04:51 PM)_
-
-> oh
-
-**Jelsafan0** _(28-Oct-18 04:51 PM)_
-
-> Yeah
+> `The Crave`: You don't let me into our life. We're brothers, man. I'm the brawn and you're the brains.
 
 **Zander** _(28-Oct-18 04:52 PM)_
 
-> Emmett sticks out his tongue.
-> (
+_On the ground, Emmett sticks out his tongue._
+
 > I guess... But...
-> )
 
 **Jelsafan0** _(28-Oct-18 04:52 PM)_
 
 > Come on, wake up.
-> she shakes him a little more harshly.
 
-**RPretribution** _(28-Oct-18 04:53 PM)_
-
-> emmett doesnt wake up and iris develops ptsd
-
-**Jelsafan0** _(28-Oct-18 04:53 PM)_
-
-> jeez
+_Iris shakes him a little more harshly._
 
 **Zander** _(28-Oct-18 04:53 PM)_
 
-> (
-> "But nothing. You have your whole life ahead of you. If you do what's best for me, you do what's best for you."
-> )
+> `The Crave`: But nothing. You have your whole life ahead of you. If you do what's best for me, you do what's best for you.
 
-> Emmett grumbles a little, signifying that he's awake.
+_Emmett grumbles a little, signifying that he's awake._
 
 **Jelsafan0** _(28-Oct-18 04:53 PM)_
 
-> Iris sighs in relief.
+_Iris sighs in relief._
 
 **Zander** _(28-Oct-18 04:54 PM)_
 
-> (
-> "Lay off the grass."
-> )
-> (
+> `The Crave`: Lay off the grass.
+
 > But I need it!
-> )
 
 **Jelsafan0** _(28-Oct-18 04:54 PM)_
 
-> "So, uh... how do you know this guy again?"
-> ...he's the captain.
+_Damien jerks his thumb at Emmett._
+
+> `Damien`: So, uh... how do you know this guy again?
+
+> ...He's the captain.
 
 **Zander** _(28-Oct-18 04:54 PM)_
 
-> (
-> "Do you?"
-> )
+> `The Crave`: Do you?
 
-> Emmett suddenly bolts upward.
+_Emmett suddenly bolts upward._
+
 > I don't.
 
 **Jelsafan0** _(28-Oct-18 04:55 PM)_
@@ -3225,28 +3090,36 @@ t!8ball does Iris try to wake Emmett up?
 
 **Zander** _(28-Oct-18 04:55 PM)_
 
+_Emmett squints blearily at Damien._
+
 > Iris... Demon...
 
 **Jelsafan0** _(28-Oct-18 04:56 PM)_
 
+_Iris beams, gesturing at the shirtless archidemon._
+
 > Oh! This is Damien. We were friends when I was younger, when I used to come here a lot. He saved your life!
-> "Eh, it was nothing. I needed the practice."
+
+> `Damien`: Eh, it was nothing. I needed the practice.
 
 **Zander** _(28-Oct-18 04:57 PM)_
 
-> Emmett rubbed his own horn a little.
+_Emmett rubs his own horn a little._
+
 > Uhm, yeah. Thanks.
 
 **Jelsafan0** _(28-Oct-18 04:58 PM)_
 
-> Damien nods respectfully.
-> "anytime, man."
+_Damien nods respectfully._
+
+> `Damien`: Anytime, man.
 
 **Zander** _(28-Oct-18 04:58 PM)_
 
-> I uh, I think I'm going to bed.
-> As I'm really tired now.
-> Emmett sighs a little.
+> I, uh, I think I'm going to bed.
+> I'm really tired now.
+
+_Emmett sighs a little._
 
 **Jelsafan0** _(28-Oct-18 04:59 PM)_
 
@@ -3256,4 +3129,5 @@ t!8ball does Iris try to wake Emmett up?
 **Zander** _(28-Oct-18 04:59 PM)_
 
 > Yeah, you do that.
-> The end of this sentence had a downed tone to it.
+
+_Emmett's voice falls flat at the end of the sentence._

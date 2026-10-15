@@ -473,7 +473,7 @@ _The Mickey Mouse Ghost pulls out a pinwheel toy and spins it._
 _Seth sweats a bit before slapping Emmett in the back of the head._
 
 > No.
-> He's retarded.
+> He's a stupidloid.
 
 **Brakia** _(04-Aug-18 05:36 PM)_
 
@@ -1080,7 +1080,7 @@ _The Mickey Mouse Ghost desparately tries to get out of the vacuum chamber to no
 
 **Zander** _(04-Aug-18 06:03 PM)_
 
-`Ovisaron Guard`: The guard pinches her brow, not believing a word of what the ghost said, but still heads over the Seth as per protocol for this type of situation. She shows him the vacuum.\*
+_`Ovisaron Guard`: The guard pinches her brow, not believing a word of what the ghost said, but still heads over the Seth as per protocol for this type of situation. She shows him the vacuum._
 
 > `Ovisaron Guard`: This ghost said he's your slave.
 

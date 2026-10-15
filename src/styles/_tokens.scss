@@ -56,6 +56,7 @@
     --link-hover: #e6d2f7;
     --link-visited: #b08fe0;
     --highlight: rgba(93, 75, 229, 0.22);
+    --code-highlight: #6fd3ff; // [bracketed] runs in Discord ini/md code-block posts
     --shadow: rgba(0, 0, 0, 0.55);
     --glow: 0 0 14px rgba(93, 75, 229, 0.35);
     --star-opacity: 0.5;
@@ -75,6 +76,7 @@
     --link-hover: #5d4be5;
     --link-visited: #9c27b0;
     --highlight: rgba(93, 75, 229, 0.12);
+    --code-highlight: #0b6fa4;
     --shadow: rgba(50, 40, 90, 0.28);
     --glow: 0 0 14px rgba(93, 75, 229, 0.22);
     --star-opacity: 0; // white stars are invisible on paper — hide the texture

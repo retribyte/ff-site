@@ -1,0 +1,43 @@
+@use '../styles/mixins' as m;
+
+.pager {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+
+    a {
+        @include m.pixel-nav-link;
+    }
+}
+
+.side {
+    flex: 1;
+    min-width: 4rem;
+}
+
+.side:last-child {
+    text-align: right;
+}
+
+.pages {
+    display: flex;
+    gap: 0.4rem;
+
+    a {
+        padding: 0.2rem 0.5rem;
+        border: 1px solid transparent;
+        border-radius: var(--radius);
+
+        &:hover {
+            border-color: var(--border-loud);
+        }
+    }
+}
+
+.current {
+    color: var(--text) !important;
+    border-color: var(--border-loud) !important;
+    background: var(--surface-2);
+}

@@ -2179,7 +2179,7 @@ _Chomsky slaps KYL300._
 
 > He's obviously hallucinating...
 
-\*Matthias is reminded of his past with Seth and a different Emmett and how they were trapped in cryostasis for 200 GUYs.
+_Matthias is reminded of his past with Seth and a different Emmett and how they were trapped in cryostasis for 200 GUYs._
 
 **TheBlade** _(25-Aug-18 02:26 PM)_
 
@@ -3190,7 +3190,7 @@ _Somehow, Matthias's earholes were not affected by the sonic blast. A gift from 
 
 _Seth clasps one of his sharp ears, still holding the cigarette for Emmett to grab._
 
-> TAKE THE FUCKING CIGARETTE, RETARD!
+> TAKE THE FUCKING CIGARETTE, STUPIDLOID!
 
 **Enchantingtable2013** _(25-Aug-18 02:52 PM)_
 

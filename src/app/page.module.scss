@@ -55,6 +55,39 @@
     }
 }
 
+.minorDoors,
+.sisterDoors {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    padding-top: 0.25rem;
+
+    @media (max-width: 60rem) {
+        grid-template-columns: repeat(2, 1fr);
+
+        // Odd count: the last door spans the row instead of leaving a hole
+        > :last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+        }
+    }
+
+    .door {
+        padding: 1rem 1.25rem;
+
+        h3 {
+            margin: 0 0 0.4rem;
+        }
+
+        p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    }
+}
+
+.sisterDoors {
+    grid-template-columns: repeat(2, 1fr);
+}
+
 .seasonChips {
     display: flex;
     gap: 0.75rem;

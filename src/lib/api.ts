@@ -3,6 +3,8 @@
 // Paginated endpoints spread extra fields onto the envelope:
 //   { status: 'success', data: T[], total, page, limit }
 
+import type { MessageType } from './types';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000/api';
 
 export class ApiError extends Error {
@@ -29,6 +31,8 @@ interface RequestOptions {
     /** Next.js fetch cache options, e.g. { revalidate: 60 } */
     next?: NextFetchRequestConfig;
     cache?: RequestCache;
+    /** Lets a caller (e.g. a debounced search box) cancel a stale in-flight request. */
+    signal?: AbortSignal;
 }
 
 interface Envelope {
@@ -41,7 +45,7 @@ interface Envelope {
 }
 
 async function request(path: string, options: RequestOptions): Promise<Envelope | undefined> {
-    const { method = 'GET', body, token, next, cache } = options;
+    const { method = 'GET', body, token, next, cache, signal } = options;
 
     const res = await fetch(`${API_URL}${path}`, {
         method,
@@ -53,6 +57,7 @@ async function request(path: string, options: RequestOptions): Promise<Envelope 
         ...(body !== undefined && { body: JSON.stringify(body) }),
         ...(next && { next }),
         ...(cache && { cache }),
+        ...(signal && { signal }),
     });
 
     if (res.status === 204) return undefined;
@@ -98,4 +103,21 @@ export async function apiPaged<T>(path: string, options: RequestOptions = {}): P
         page: envelope?.page ?? 1,
         limit: envelope?.limit ?? data.length,
     };
+}
+
+// GET /search — grouped by category, not a single merged ranked list (a
+// message's keyword-relevance rank and a character's name match aren't
+// comparable scores). See ff-server's src/search/ for the backing endpoint.
+export interface SearchResults {
+    characters: { id: number; name: string; slug: string; image: string | null }[];
+    species: { id: number; name: string; slug: string }[];
+    items: { id: number; name: string; slug: string; image: string | null }[];
+    // `type` lets the UI preview the matched field of an EMBED message's JSON
+    // body, rather than the raw JSON string, for non-EMBED types.
+    messages: { episodeTitle: string; episodeNo: number; messageNo: number; text: string; type: MessageType }[];
+    storyLines: { storySlug: string; chapterNo: number; lineNo: number; text: string }[];
+}
+
+export async function searchSite(q: string, options: RequestOptions = {}): Promise<SearchResults> {
+    return api<SearchResults>(`/search?q=${encodeURIComponent(q)}`, options);
 }

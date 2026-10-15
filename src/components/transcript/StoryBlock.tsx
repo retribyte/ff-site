@@ -6,6 +6,7 @@ import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
 import { resolvePersonaIdentity } from '@/lib/personaIdentity';
+import { parseEmbed } from '@/lib/search';
 import type { SlimMessage, TranscriptData } from '@/lib/transcript';
 import AttributionControl from './AttributionControl';
 import CommentaryThread from './CommentaryThread';
@@ -26,19 +27,25 @@ function formatTimestamp(iso: string | null): string | null {
     });
 }
 
-interface Embed {
-    title?: string;
-    description?: string[];
-    footer?: string;
-}
+// Discord colors [bracketed] runs inside ini/md code blocks; the brackets
+// themselves stay visible, as they did in Discord.
+const CODE_MARK = /(\[[^\]\n]+\])/;
 
-function parseEmbed(text: string): Embed | null {
-    try {
-        const parsed = JSON.parse(text);
-        return typeof parsed === 'object' && parsed !== null ? (parsed as Embed) : null;
-    } catch {
-        return null;
-    }
+function EmbedLine({ line, code, query }: { line: string; code?: string; query: string | null }) {
+    if (code !== 'ini' && code !== 'md') return <Highlighted text={line} query={query} />;
+    return (
+        <>
+            {line.split(CODE_MARK).map((part, i) =>
+                i % 2 === 1 ? (
+                    <span key={i} className={styles.codeMark}>
+                        <Highlighted text={part} query={query} />
+                    </span>
+                ) : (
+                    part && <Highlighted key={i} text={part} query={query} />
+                )
+            )}
+        </>
+    );
 }
 
 function MessageLine({ message, query, children }: { message: SlimMessage; query: string | null; children?: React.ReactNode }) {
@@ -69,12 +76,17 @@ function MessageLine({ message, query, children }: { message: SlimMessage; query
                     </div>
                 );
             }
+            // Discord's embed color, when it has one, replaces the speaker tint
+            const colorStyle = embed.color ? ({ '--embed-color': embed.color } as React.CSSProperties) : undefined;
             return (
-                <div className={styles.embed}>
+                <div
+                    className={`${styles.embed} ${embed.code !== undefined ? styles.embedCode : ''}`}
+                    style={colorStyle}
+                >
                     {embed.title && <p className={styles.embedTitle}>{embed.title}</p>}
                     {(embed.description ?? []).map((line, i) => (
                         <p key={i}>
-                            <Highlighted text={line} query={query} />
+                            <EmbedLine line={line} code={embed.code} query={query} />
                         </p>
                     ))}
                     {embed.footer && <p className={styles.embedFooter}>{embed.footer}</p>}
@@ -114,8 +126,11 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
     const player = players[block.playerId];
     const persona = block.personaId !== null ? personas[block.personaId] : null;
     const { speaker, color: rawColor, avatarSrc } = resolvePersonaIdentity(persona, character, player);
-    // Characterless speakers (the bot, table talk) still get legacy-table colors by name
-    const color = characterColor(speaker, rawColor, colorMode);
+    // A player speaking as themselves (no character, no persona, no color of
+    // their own -- table talk, bare commands) reads in one neutral grey;
+    // a bot keeps its user color (FF 8 Ball's purple, which FF4's Vortox is merged into)
+    const isPlayerVoice = !character && !persona && !rawColor;
+    const color = isPlayerVoice ? 'var(--text-muted)' : characterColor(speaker, rawColor, colorMode);
 
     const isTarget =
         targetNo !== null && block.messages.some((m) => m.no === targetNo);
