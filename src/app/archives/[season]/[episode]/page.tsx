@@ -83,6 +83,7 @@ export default async function EpisodePage({ params }: Props) {
             </nav>
 
             <header className={styles.header}>
+                <h1 className={styles.title}>{episodeTitle}</h1>
                 <p className='pixel-label'>
                     transmission {String(episode.episode_no).padStart(2, '0')} · {data.messages.length} lines
                     {episode.playedDate && (
@@ -98,7 +99,6 @@ export default async function EpisodePage({ params }: Props) {
                         </>
                     )}
                 </p>
-                <h1 className={styles.title}>{episodeTitle}</h1>
                 {episode.summary && <p className={styles.summary}>{episode.summary}</p>}
             </header>
 

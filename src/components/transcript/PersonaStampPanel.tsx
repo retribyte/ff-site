@@ -102,64 +102,67 @@ export default function PersonaStampPanel({
     };
 
     return (
-        <section className={`pixel-panel ${styles.panel}`}>
-            <h2 className='pixel-label'>persona stamp</h2>
-            <p className={styles.help}>
-                set a character&apos;s presentation across every message in this {scope} at once — pick
-                &ldquo;canonical&rdquo; to clear back to their default look.
-            </p>
-
-            <div className={styles.row}>
-                <label className={styles.field}>
-                    <span className={styles.fieldLabel}>character</span>
-                    <select
-                        value={characterId}
-                        onChange={(e) => {
-                            setCharacterId(e.target.value);
-                            setPersonaId('');
-                            setResult(null);
-                            setError(null);
-                        }}
-                        disabled={busy}
-                        aria-label='character to stamp'
-                    >
-                        <option value=''>— select —</option>
-                        {characters.map((c) => (
-                            <option key={c.id} value={c.id}>
-                                {c.name}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-
-                <label className={styles.field}>
-                    <span className={styles.fieldLabel}>persona</span>
-                    <select
-                        value={personaId}
-                        onChange={(e) => setPersonaId(e.target.value)}
-                        disabled={busy || !characterId}
-                        aria-label='persona to apply'
-                    >
-                        <option value=''>canonical</option>
-                        {personasForCharacter.map((p) => (
-                            <option key={p.id} value={p.id}>
-                                {p.name ?? p.label ?? `#${p.id}`}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-
-                <button type='button' className={styles.apply} onClick={apply} disabled={busy || !characterId}>
-                    {busy ? '…' : 'apply'}
-                </button>
-            </div>
-
-            {result !== null && <p className={styles.success}>✔ {result} message{result === 1 ? '' : 's'} updated</p>}
-            {error && (
-                <p className={styles.error} role='alert'>
-                    ✖ {error}
+        <details className={styles.adminTools}>
+            <summary className='pixel-label'>Admin tools</summary>
+            <section className={`pixel-panel ${styles.panel}`}>
+                <h2 className='pixel-label'>persona stamp</h2>
+                <p className={styles.help}>
+                    set a character&apos;s presentation across every message in this {scope}{' '}at once — pick
+                    &ldquo;canonical&rdquo; to clear back to their default look.
                 </p>
-            )}
-        </section>
+
+                <div className={styles.row}>
+                    <label className={styles.field}>
+                        <span className={styles.fieldLabel}>character</span>
+                        <select
+                            value={characterId}
+                            onChange={(e) => {
+                                setCharacterId(e.target.value);
+                                setPersonaId('');
+                                setResult(null);
+                                setError(null);
+                            }}
+                            disabled={busy}
+                            aria-label='character to stamp'
+                        >
+                            <option value=''>— select —</option>
+                            {characters.map((c) => (
+                                <option key={c.id} value={c.id}>
+                                    {c.name}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+
+                    <label className={styles.field}>
+                        <span className={styles.fieldLabel}>persona</span>
+                        <select
+                            value={personaId}
+                            onChange={(e) => setPersonaId(e.target.value)}
+                            disabled={busy || !characterId}
+                            aria-label='persona to apply'
+                        >
+                            <option value=''>canonical</option>
+                            {personasForCharacter.map((p) => (
+                                <option key={p.id} value={p.id}>
+                                    {p.name ?? p.label ?? `#${p.id}`}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+
+                    <button type='button' className={styles.apply} onClick={apply} disabled={busy || !characterId}>
+                        {busy ? '…' : 'apply'}
+                    </button>
+                </div>
+
+                {result !== null && <p className={styles.success}>✔ {result} message{result === 1 ? '' : 's'} updated</p>}
+                {error && (
+                    <p className={styles.error} role='alert'>
+                        ✖ {error}
+                    </p>
+                )}
+            </section>
+        </details>
     );
 }

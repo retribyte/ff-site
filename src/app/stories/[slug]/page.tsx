@@ -66,12 +66,12 @@ export default async function StoryPage({ params }: Props) {
                 </nav>
 
                 <header className={styles.header}>
+                    <h1 className={styles.title}>{story.title}</h1>
                     <p className='pixel-label'>
                         {data.lines.length} lines
                         {choices.length > 0 && <> · {choices.length} choices</>}
                         {voices > 0 && <> · {voices} voices</>}
                     </p>
-                    <h1 className={styles.title}>{story.title}</h1>
                     {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
                 <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
                 </header>
