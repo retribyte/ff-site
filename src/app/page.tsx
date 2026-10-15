@@ -8,6 +8,19 @@ const seasons = [
     { id: 'ff4', title: 'Final Frontier 4', colorVar: '--ff4' },
 ];
 
+const minorDoors = [
+    { href: '/characters', title: 'Characters', blurb: 'Player characters and the people they met.' },
+    { href: '/species', title: 'Species', blurb: 'The peoples of the galaxy.' },
+    { href: '/items', title: 'Items', blurb: 'Gear, weapons, and artifacts.' },
+    { href: '/search', title: 'Search', blurb: 'Find any line in the archive.' },
+    { href: '/8ball', title: '8-Ball', blurb: 'Ask the archive oracle a question.' },
+];
+
+const sisterSites = [
+    { href: 'https://wiki.vortox.space', title: 'Wiki', blurb: 'The full lore encyclopedia.' },
+    { href: 'https://booru.vortox.space', title: 'Booru', blurb: 'Character art and the image gallery.' },
+];
+
 export default function Home() {
     return (
         <main className={styles.main}>
@@ -46,6 +59,30 @@ export default function Home() {
                         CYOA · FICTION
                     </span>
                 </Link>
+            </section>
+
+            <section className={`${styles.doors} ${styles.minorDoors}`}>
+                {minorDoors.map((d) => (
+                    <Link key={d.href} href={d.href} className={`pixel-panel ${styles.door}`}>
+                        <h3>{d.title}</h3>
+                        <p>{d.blurb}</p>
+                    </Link>
+                ))}
+            </section>
+
+            <section className={`${styles.doors} ${styles.sisterDoors}`} aria-label='Sister sites'>
+                {sisterSites.map((d) => (
+                    <a
+                        key={d.href}
+                        href={d.href}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className={`pixel-panel ${styles.door}`}
+                    >
+                        <h3>{d.title} ↗</h3>
+                        <p>{d.blurb}</p>
+                    </a>
+                ))}
             </section>
 
             <footer className={styles.footer}>
