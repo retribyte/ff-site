@@ -150,14 +150,26 @@
     text-align: center;
 }
 
+// The search button isn't at the screen edge (session + theme sit to its
+// right), so anchor to the sticky navbar instead of the button
 @media (max-width: 640px) {
+    .wrap {
+        position: static;
+    }
+
     .expandedBar {
-        width: calc(100vw - 1.5rem);
-        right: -0.75rem;
+        top: calc((var(--navbar-height) - 2rem) / 2);
+        left: 0.75rem;
+        right: 0.75rem;
+        width: auto;
+        height: 2rem;
     }
 
     .panel {
-        width: calc(100vw - 1.5rem);
-        right: -0.75rem;
+        top: calc(100% + 0.5rem);
+        left: 0.75rem;
+        right: 0.75rem;
+        width: auto;
+        max-width: none;
     }
 }

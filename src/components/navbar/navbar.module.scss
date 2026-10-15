@@ -48,6 +48,7 @@
     text-decoration: none;
     padding: 0.5rem 0.7rem;
     border: 1px solid transparent;
+    white-space: nowrap;
 
     &:hover {
         color: var(--text);
@@ -114,7 +115,8 @@
     }
 }
 
-.themeToggle {
+.themeToggle,
+.menuToggle {
     font-size: 1rem;
     line-height: 1;
     width: 2rem;
@@ -130,6 +132,56 @@
     }
 }
 
+// Only shown once the links collapse (below)
+.menuToggle {
+    display: none;
+    flex: 0 0 auto;
+}
+
+// Admin sessions (Import link + username) need the most room — tighten first
+@media (max-width: 1240px) {
+    .navbar {
+        gap: 1rem;
+    }
+
+    .link {
+        padding: 0.5rem 0.45rem;
+    }
+}
+
+// Links collapse into a dropdown panel under the bar
+@media (max-width: 1080px) {
+    .menuToggle {
+        display: block;
+    }
+
+    .brand {
+        margin-right: auto;
+    }
+
+    .links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.75rem 1.25rem 1rem;
+        background: var(--surface);
+        border-bottom: var(--px) solid var(--border-loud);
+        box-shadow: 0 var(--px) 0 0 var(--shadow);
+
+        &[data-open] {
+            display: flex;
+        }
+    }
+
+    .link {
+        padding: 0.65rem 0.75rem;
+    }
+}
+
 @media (max-width: 640px) {
     .navbar {
         gap: 0.75rem;
@@ -138,5 +190,23 @@
 
     .brand {
         font-size: 1.05rem;
+    }
+
+    .links {
+        padding: 0.5rem 0.75rem 0.75rem;
+    }
+}
+
+// Too narrow for the wordmark next to search, session, and theme
+@media (max-width: 400px) {
+    .brandText {
+        display: none;
+    }
+}
+
+// Logged in on a phone: the avatar alone links to /account
+@media (max-width: 640px) {
+    .sessionIcon + .sessionName {
+        display: none;
     }
 }

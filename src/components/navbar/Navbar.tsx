@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { useSession } from '@/components/auth/SessionProvider';
@@ -53,15 +54,30 @@ export default function Navbar() {
     const { colorMode, toggleColorMode } = useTheme();
     const { user } = useSession();
     const navLinks = user?.role === 'ADMIN' ? [...links, { href: '/import', label: 'Import' }] : links;
+    // The small-screen menu remembers the page it was opened on, so any
+    // navigation (link, search result, back button) closes it without an effect
+    const [menuOpenAt, setMenuOpenAt] = useState<string | null>(null);
+    const menuOpen = menuOpenAt === pathname;
 
     return (
         <header className={styles.navbar}>
+            <button
+                type='button'
+                className={styles.menuToggle}
+                onClick={() => setMenuOpenAt(menuOpen ? null : pathname)}
+                aria-expanded={menuOpen}
+                aria-controls='primary-nav'
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            >
+                {menuOpen ? '✕' : '☰'}
+            </button>
+
             <Link href='/' className={styles.brand}>
                 <img src='/images/logo.svg' width={32} height={32} alt='Final Frontier' className={styles.brandMark} />
-                Final Frontier
+                <span className={styles.brandText}>Final Frontier</span>
             </Link>
 
-            <nav className={styles.links} aria-label='Primary'>
+            <nav id='primary-nav' className={styles.links} aria-label='Primary' data-open={menuOpen || undefined}>
                 {navLinks.map(({ href, label }) => (
                     <Link
                         key={href}
