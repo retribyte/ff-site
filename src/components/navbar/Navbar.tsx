@@ -8,6 +8,7 @@ import { useTheme } from '@/components/theme/ThemeProvider';
 import { useSession } from '@/components/auth/SessionProvider';
 import SiteSearch from './SiteSearch';
 import styles from './navbar.module.scss';
+import { imageSrc } from '@/lib/images';
 
 const links = [
     { href: '/archives', label: 'Archives' },
@@ -38,7 +39,7 @@ function SessionArea() {
         <span className={styles.session}>
             <Link href='/account' className={styles.sessionLink} title='Your account'>
                 {user.icon && (
-                    <Image src={user.icon} alt='' width={22} height={22} className={styles.sessionIcon} unoptimized />
+                    <Image src={imageSrc(user.icon)} alt='' width={22} height={22} className={styles.sessionIcon} unoptimized />
                 )}
                 <span className={styles.sessionName}>{user.username}</span>
             </Link>

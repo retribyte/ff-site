@@ -7,6 +7,7 @@ import type { ItemType } from '@/lib/types';
 import { ITEM_TYPE_META } from '@/lib/lore';
 import IndexScan from '@/components/IndexScan';
 import styles from './itemIndex.module.scss';
+import { imageSrc } from '@/lib/images';
 
 export interface IndexItem {
     id: number;
@@ -85,7 +86,7 @@ export default function ItemIndex({ items }: { items: IndexItem[] }) {
                             >
                                 <span className={styles.cardArt} aria-hidden>
                                     {item.image ? (
-                                        <Image src={item.image} alt='' width={56} height={56} unoptimized />
+                                        <Image src={imageSrc(item.image)} alt='' width={56} height={56} unoptimized />
                                     ) : (
                                         meta.glyph
                                     )}

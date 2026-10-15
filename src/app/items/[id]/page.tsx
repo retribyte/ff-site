@@ -13,6 +13,7 @@ import { renderWikiText } from '@/lib/wiki';
 import styles from './itemDetail.module.scss';
 import UserLink from '@/components/UserLink';
 import RichText from '@/components/RichText';
+import { imageSrc } from '@/lib/images';
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -97,7 +98,7 @@ export default async function ItemPage({ params }: Props) {
                 <aside className={`pixel-panel ${styles.infobox}`}>
                     <div className={styles.infoboxHeader}>
                         {item.image ? (
-                            <Image src={item.image} alt={item.name} width={96} height={96} unoptimized />
+                            <Image src={imageSrc(item.image)} alt={item.name} width={96} height={96} unoptimized />
                         ) : (
                             <span className={styles.infoboxGlyph} aria-hidden>
                                 {meta.glyph}

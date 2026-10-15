@@ -1,6 +1,7 @@
+import { imageSrc } from '@/lib/images';
+
 export default function NotFound() {
     return (
-        
         <div
             className='pixel-panel'
             style={{ maxWidth: '28rem', margin: '4rem auto', padding: '1.5rem', textAlign: 'center' }}
@@ -12,7 +13,7 @@ export default function NotFound() {
             <p style={{ color: 'var(--text-muted)' }}>
                 What are you looking for? This page doesn&apos;t exist.
             </p>
-            <img src='https://booru.vortox.space/_images/9ba1671830f52c3fc1d7bd204e90740e' alt="Emmett looking uncomfortable"></img>
+            <img src={imageSrc('https://booru.vortox.space/_images/9ba1671830f52c3fc1d7bd204e90740e')} alt='Emmett looking uncomfortable' />
             <p className='pixel-label'>error code: VCOMM-404</p>
         </div>
     );

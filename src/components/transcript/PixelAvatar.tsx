@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '@/components/theme/ThemeProvider';
+import { imageSrc } from '@/lib/images';
 
 /**
  * The outline color as the browser resolves it on `el` -- works for a hex
@@ -41,7 +42,7 @@ export default function PixelAvatar({ src, name, color, size = 48 }: Props) {
         if (!canvas) return;
 
         const image = new Image();
-        image.src = src;
+        image.src = imageSrc(src);
         image.onload = () => {
             const w = image.width + 2;
             const h = image.height + 2;

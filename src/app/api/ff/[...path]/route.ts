@@ -32,10 +32,20 @@ async function proxy(request: NextRequest, { params }: { params: Promise<{ path:
     if (response.status === 204) {
         return new NextResponse(null, { status: 204 });
     }
+    const contentType = response.headers.get('Content-Type') ?? 'application/json';
+    // Binary responses (proxied booru images) pass through untouched, with
+    // their caching; reading them as text would corrupt the bytes
+    if (!contentType.startsWith('application/json')) {
+        const cacheControl = response.headers.get('Cache-Control');
+        return new NextResponse(response.body, {
+            status: response.status,
+            headers: { 'Content-Type': contentType, ...(cacheControl && { 'Cache-Control': cacheControl }) },
+        });
+    }
     const body = await response.text();
     return new NextResponse(body, {
         status: response.status,
-        headers: { 'Content-Type': response.headers.get('Content-Type') ?? 'application/json' },
+        headers: { 'Content-Type': contentType },
     });
 }
 

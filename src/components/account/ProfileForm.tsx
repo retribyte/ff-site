@@ -7,6 +7,7 @@ import type { SessionUser } from '@/lib/auth';
 import { BOORU_URL, booruPostUrl } from '@/lib/booru';
 import { decodeEntities } from '@/lib/html';
 import styles from './accountForms.module.scss';
+import { imageSrc } from '@/lib/images';
 
 interface Preview {
     id: number;
@@ -113,7 +114,7 @@ export default function ProfileForm({ user }: { user: SessionUser }) {
                     <div className={styles.avatarPreview}>
                         {preview ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img src={preview.imageUrl} alt='Avatar preview' />
+                            <img src={imageSrc(preview.imageUrl)} alt='Avatar preview' />
                         ) : (
                             <span className={styles.avatarEmpty}>no avatar</span>
                         )}

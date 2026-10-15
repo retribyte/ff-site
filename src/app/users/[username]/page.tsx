@@ -8,6 +8,7 @@ import SignalLost from '@/components/SignalLost';
 import CharacterCard from '@/components/characters/CharacterCard';
 import styles from './user.module.scss';
 import RichText from '@/components/RichText';
+import { imageSrc } from '@/lib/images';
 
 interface Props {
     params: Promise<{ username: string }>;
@@ -96,7 +97,7 @@ export default async function UserPage({ params }: Props) {
                     <div className={styles.infoboxHeader}>
                         {profile.icon ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img src={profile.icon} alt={profile.username} width={128} height={128} />
+                            <img src={imageSrc(profile.icon)} alt={profile.username} width={128} height={128} />
                         ) : (
                             <span className={styles.infoboxGlyph} aria-hidden>
                                 {profile.username.charAt(0).toUpperCase()}
