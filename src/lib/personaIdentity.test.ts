@@ -24,6 +24,16 @@ describe('resolvePersonaIdentity', () => {
         expect(resolvePersonaIdentity(null, npc, colored).color).toBeNull();
     });
 
+    it("doesn't give an image-less character the voicing player's avatar", () => {
+        const npc = { name: 'Receptionist', color: null, image: null };
+        expect(resolvePersonaIdentity(null, npc, player).avatarSrc).toBeNull();
+    });
+
+    it("doesn't give an image-less persona the voicing player's avatar", () => {
+        const persona = { name: 'Marv', color: null, image: null };
+        expect(resolvePersonaIdentity(persona, null, player).avatarSrc).toBeNull();
+    });
+
     it('falls through to "Unknown" when nothing at all is known', () => {
         expect(resolvePersonaIdentity(null, null, null).speaker).toBe('Unknown');
     });
