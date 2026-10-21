@@ -2,7 +2,7 @@
 slug: aftermath_of_an_assassination
 title: Aftermath of an Assassination
 blurb: Emmett wakes up beside Jess after the crew's payday and tries to apologize for the night before, while Sanya, Garrick and Volentina plot a prank at his expense.
-author: Archivist
+authors: Zander
 season: FF3
 format: prose
 ---

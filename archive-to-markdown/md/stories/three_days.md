@@ -2,7 +2,7 @@
 slug: three_days
 title: Three Days
 blurb: Zion's log of three dull days sailing an empty ocean on a Llamanian search mission, with an injured Dutch, a wandering Morra and a captain who stays absent.
-author: Archivist
+authors: Trey
 season: FF4
 format: prose
 ---

@@ -2,7 +2,7 @@
 slug: knocked_and_rocked_asleep
 title: Knocked and Rocked Asleep
 blurb: Knocked out aboard the ship, Zach wakes in a dark place between dreaming and dying, where a voice with red eyes asks what he dreads.
-author: Archivist
+authors: Brody, Hunt520
 season: FF4
 format: prose
 ---

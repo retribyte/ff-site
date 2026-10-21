@@ -11,7 +11,7 @@ export interface IndexStory {
     slug: string;
     title: string;
     blurb: string | null;
-    authorName: string | null;
+    authorNames: string[];
     publishedDate: string | null;
     chapterCount: number;
     lineCount: number;
@@ -75,7 +75,7 @@ export default function StoryIndex({ stories }: { stories: IndexStory[] }) {
                                         <span className='pixel-label'>
                                             {s.chapterCount > 1 && <>{s.chapterCount} chapters · </>}
                                             {s.lineCount} line{s.lineCount === 1 ? '' : 's'}
-                                            {s.authorName && <> · by {s.authorName}</>}
+                                            {s.authorNames.length > 0 && <> · by {s.authorNames.join(', ')}</>}
                                         </span>
                                     </span>
                                 </Link>

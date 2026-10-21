@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Fragment } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
@@ -97,7 +98,17 @@ export default async function StoryPage({ params }: Props) {
             <header className={styles.header}>
                 <p className='pixel-label'>
                     {chapters.length} chapters · {lineTotal} lines
-                    {story.author && <> · by <UserLink username={story.author.username} /></>}
+                    {story.authors && story.authors.length > 0 && (
+                        <>
+                            {' · by '}
+                            {story.authors.map((a, i) => (
+                                <Fragment key={a.id}>
+                                    {i > 0 && ', '}
+                                    <UserLink username={a.username} />
+                                </Fragment>
+                            ))}
+                        </>
+                    )}
                 </p>
                 <h1 className={styles.title}>{story.title}</h1>
                 {story.blurb && <p className={styles.summary}>{story.blurb}</p>}

@@ -2,7 +2,7 @@
 slug: give_no_quarter
 title: Give No Quarter
 blurb: Odran and the Ravens' leader sit in the dark after a bruising defeat, puzzled by Sascha's survival and determined to hunt down the crew that beat them.
-author: Archivist
+authors: Trey
 season: FF4
 format: prose
 ---

@@ -185,7 +185,7 @@ story, its chapters, and bulk lines directly. Uploading aborts if the slug
 already exists (delete the story via the API to re-upload a revision).
 
 Story metadata lives in the manuscript's frontmatter (`slug` and `title`
-required; `blurb`, `author`, `published`, `season`, `themeColor`, `themeColor2`,
+required; `blurb`, `authors` (comma-separated usernames), `published`, `season`, `themeColor`, `themeColor2`,
 `format` optional — `format` defaults to `script`). `season` is the campaign the
 story belongs to, by season title or slug (`FF3`, `T&L`); it must
 already exist, and the story wears that season's colors unless `themeColor` is
@@ -217,9 +217,10 @@ spans/styling as annotations.
 
 At upload, dialogue speakers — whole `> Name:` lines and inline `[…]{Speaker}`
 spans alike — are resolved against `/characters` (exact name, then aliases);
-unmatched names are kept as display-name fallbacks and listed in a warning. The
-`author` frontmatter is matched against the uploader (or the user list, when
-uploading as an admin).
+unmatched names are kept as display-name fallbacks and listed in a warning. Each
+`authors` username is matched against the uploader (or the user list, when
+uploading as an admin); with no `authors`, the uploader is credited. The older
+singular `author:` key is still read.
 
 ## Sanity check
 

@@ -2,7 +2,7 @@
 slug: cold_comfort
 title: Cold Comfort
 blurb: Zion's log from five days into being stranded on a frozen planet, with a sealed airlock, a garbled radio and a crew that is starting to come apart.
-author: Archivist
+authors: Trey
 season: FF4
 format: prose
 ---

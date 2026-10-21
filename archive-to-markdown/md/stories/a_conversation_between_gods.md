@@ -2,7 +2,7 @@
 slug: a_conversation_between_gods
 title: A Conversation Between Gods
 blurb: In another bloody dream of the ship, Sanya finds Dread waiting by the pool, with an unexpected explanation of what their shared bond has cost them both.
-author: Archivist
+authors: Brody
 season: FF2
 format: prose
 ---

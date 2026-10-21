@@ -197,7 +197,7 @@ def run_wizard(meta, colors, doc_title, doc_blurb, source_name):
             break
         print("  slug must be lowercase letters, digits, and underscores (^[a-z0-9]+(_[a-z0-9]+)*$)")
     meta["blurb"] = prompt("blurb", meta.get("blurb") or doc_blurb or None)
-    meta["author"] = prompt("author (site username)", meta.get("author") or None)
+    meta["authors"] = prompt("authors (site usernames, comma-separated)", meta.get("authors") or meta.pop("author", None) or None)
     meta["published"] = prompt("published (YYYY-MM-DD)", meta.get("published") or None)
     while True:
         # prose = dialogue is embedded inside narration paragraphs (novel-style);
@@ -427,7 +427,7 @@ def convert(paragraphs, meta):
 
 def frontmatter(meta):
     lines = ["---"]
-    for key in ("slug", "title", "blurb", "author", "published", "season", "themeColor", "themeColor2", "format"):
+    for key in ("slug", "title", "blurb", "authors", "published", "season", "themeColor", "themeColor2", "format"):
         value = meta.get(key)
         if value:
             lines.append(f"{key}: {value}")
@@ -455,7 +455,7 @@ def main():
 
     slug = args.slug or (slugify(doc_title) if doc_title else slugify(args.manuscript.stem))
     meta_path = META_DIR / f"{slug}.json"
-    meta = {"slug": slug, "title": None, "blurb": None, "author": None,
+    meta = {"slug": slug, "title": None, "blurb": None, "authors": None,
             "published": None, "themeColor": None, "themeColor2": None, "format": None, "colors": {}}
     if meta_path.exists():
         meta.update(json.loads(meta_path.read_text(encoding="utf-8")))

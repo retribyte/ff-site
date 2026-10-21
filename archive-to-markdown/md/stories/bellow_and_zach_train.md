@@ -2,7 +2,7 @@
 slug: bellow_and_zach_train
 title: Bellow and Zach Train
 blurb: Zach teaches Bellow swordfighting with sticks on a forest planet, and the lessons slowly turn into quiet talks about home, old crews and what happened on Barbona.
-author: Archivist
+authors: Hunt520
 season: FF4
 format: prose
 ---

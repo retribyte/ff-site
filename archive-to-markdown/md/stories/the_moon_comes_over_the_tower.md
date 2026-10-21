@@ -2,7 +2,7 @@
 slug: the_moon_comes_over_the_tower
 title: The Moon Comes Over the Tower
 blurb: Detective Daniel Whittaker arrives at the silent research station Skywatch-73 to find out why it stopped answering, and soon realizes he is not alone.
-author: Archivist
+authors: Eve
 season: T&L
 format: prose
 ---

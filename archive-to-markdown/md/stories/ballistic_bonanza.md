@@ -2,7 +2,7 @@
 slug: ballistic_bonanza
 title: Ballistic Bonanza
 blurb: Playback from Kari, a Jade Rabbit mercenary android, who walks into a Zomania jazz bar to collect a Llamanian bounty on Oldra. The plan is simple, but the patrons disagree.
-author: Archivist
+authors: Eve
 season: T&L
 format: prose
 ---

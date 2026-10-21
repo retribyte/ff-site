@@ -2,7 +2,7 @@
 slug: bellows_journal_and_audio_logs
 title: Bellow's Journal and Audio Logs
 blurb: Bellow Brightlight's journal entries and audio logs, kept across the Horizoners' missions, tracking his friendship with Dutch and a crew under growing strain.
-author: Archivist
+authors: Jonas
 season: FF4
 format: prose
 ---

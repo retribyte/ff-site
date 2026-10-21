@@ -2,7 +2,7 @@
 slug: obama_story
 title: Obama Story
 blurb: Non-canon. A deliberately absurd blooper reel written by the players while editing Final Pummel, in which the imprisoned crew drifts into memes, fast food and the author's own interference.
-author: Archivist
+authors: Trey
 season: FF3
 format: prose
 ---

@@ -2,7 +2,7 @@
 slug: a_quick_break
 title: A Quick Break
 blurb: Rattled by how badly her last job went, Sanya spends a break researching at her temple with Mary, then calls in a favor from Garrick.
-author: Archivist
+authors: Brody
 season: FF3
 format: prose
 ---

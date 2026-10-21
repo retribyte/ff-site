@@ -2,7 +2,7 @@
 slug: zombification
 title: Zombification
 blurb: Twelve-year-old Squemfet gets a temporary permit to leave Vortox-56 and follows his author father to a foggy burial ground on Vortox-35.
-author: Archivist
+authors: Zander
 season: FF2
 format: prose
 ---

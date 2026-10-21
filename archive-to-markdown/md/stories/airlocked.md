@@ -2,7 +2,7 @@
 slug: airlocked
 title: Airlocked!
 blurb: Emmett finally confronts Seth about the junk stashed in the ship's navigation system, and Seth answers with the airlock. What follows leaves him adrift, armed and facing the Llamanians.
-author: Archivist
+authors: Zander
 season: FF2
 format: prose
 ---

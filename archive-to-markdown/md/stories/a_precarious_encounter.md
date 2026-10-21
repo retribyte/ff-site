@@ -2,7 +2,7 @@
 slug: a_precarious_encounter
 title: A Precarious Encounter
 blurb: Banned from grass and watched around the clock, Emmett seizes one unguarded night to sneak off the ship and meet a stranger from a dating app.
-author: Archivist
+authors: Zander
 season: FF3
 format: prose
 ---

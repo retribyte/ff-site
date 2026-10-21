@@ -2,7 +2,7 @@
 slug: a_wonderful_family_reunion
 title: A Wonderful Family Reunion
 blurb: Four years after running away, Zach is returned to his father John's mansion on Earth, and must find a way off the planet before he is shut away for good.
-author: Archivist
+authors: Hunt520
 season: FF4
 format: prose
 ---

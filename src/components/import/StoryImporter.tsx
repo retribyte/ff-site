@@ -44,7 +44,8 @@ interface ImportPayload {
         season?: string;
         format?: string;
     };
-    author?: string | null;
+    authors?: string[];
+    author?: string | null; // payloads converted before co-authorship
     chapters: ImportChapter[];
 }
 
@@ -118,7 +119,7 @@ export default function StoryImporter() {
     const [storyExists, setStoryExists] = useState(false);
 
     // manual overrides; anything not overridden auto-matches by exact name
-    const [authorOverride, setAuthorOverride] = useState('');
+    const [authorOverrides, setAuthorOverrides] = useState<Record<string, string>>({});
     const [charOverrides, setCharOverrides] = useState<Record<string, string>>({});
 
     const [phase, setPhase] = useState<Phase>({ step: 'idle' });
@@ -136,7 +137,7 @@ export default function StoryImporter() {
     const loadText = (raw: string, name: string) => {
         setPhase({ step: 'idle' });
         setStoryExists(false);
-        setAuthorOverride('');
+        setAuthorOverrides({});
         setCharOverrides({});
         try {
             const parsed = parsePayload(raw);
@@ -196,14 +197,22 @@ export default function StoryImporter() {
 
     const unresolvedSpeakers = speakerNames.filter((n) => charMap[n] === '');
 
-    const defaultAuthorId = useMemo(() => {
-        if (payload?.author) {
-            const match = users.find((u) => u.name === payload.author);
-            if (match) return String(match.id);
-        }
-        return user ? String(user.id) : '';
-    }, [payload, users, user]);
-    const authorId = authorOverride || defaultAuthorId;
+    // Frontmatter author names; none credits the uploader (the '' row)
+    const authorNames = useMemo(() => {
+        const names = payload?.authors ?? (payload?.author ? [payload.author] : []);
+        return names.length > 0 ? names : [''];
+    }, [payload]);
+    const authorMap = useMemo(
+        () =>
+            Object.fromEntries(
+                authorNames.map((n) => {
+                    const match = n ? users.find((u) => u.name === n)?.id : user?.id;
+                    return [n, authorOverrides[n] ?? (match !== undefined ? String(match) : '')];
+                })
+            ) as Record<string, string>,
+        [authorNames, users, user, authorOverrides]
+    );
+    const authorIds = [...new Set(Object.values(authorMap).filter(Boolean))].map((id) => parseInt(id));
 
     const lineTotal = useMemo(
         () => (payload ? payload.chapters.reduce((sum, c) => sum + c.lines.length, 0) : 0),
@@ -238,7 +247,7 @@ export default function StoryImporter() {
                     themeColor2: payload.story.themeColor2 ?? undefined,
                     season: payload.story.season ?? undefined,
                     format: payload.story.format ?? undefined,
-                    authorId: authorId ? parseInt(authorId) : undefined,
+                    authorIds,
                 }),
             });
             storyCreated = true;
@@ -375,24 +384,26 @@ export default function StoryImporter() {
                         </div>
                     </dl>
 
-                    <h3 className='pixel-label'>author</h3>
+                    <h3 className='pixel-label'>{authorNames.length > 1 ? 'authors' : 'author'}</h3>
                     <ul className={styles.mappings}>
-                        <li>
-                            <span className={styles.mapName}>{payload.author || '(unspecified)'}</span>
-                            <select
-                                value={authorId}
-                                onChange={(e) => setAuthorOverride(e.target.value)}
-                                disabled={busy}
-                                aria-label='author user'
-                            >
-                                <option value=''>(no author)</option>
-                                {users.map((u) => (
-                                    <option key={u.id} value={u.id}>
-                                        {u.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </li>
+                        {authorNames.map((name) => (
+                            <li key={name}>
+                                <span className={styles.mapName}>{name || '(unspecified)'}</span>
+                                <select
+                                    value={authorMap[name]}
+                                    onChange={(e) => setAuthorOverrides((prev) => ({ ...prev, [name]: e.target.value }))}
+                                    disabled={busy}
+                                    aria-label={`author user for ${name || 'unspecified'}`}
+                                >
+                                    <option value=''>(no author)</option>
+                                    {users.map((u) => (
+                                        <option key={u.id} value={u.id}>
+                                            {u.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </li>
+                        ))}
                     </ul>
 
                     {speakerNames.length > 0 && (

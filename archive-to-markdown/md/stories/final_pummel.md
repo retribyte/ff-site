@@ -2,7 +2,7 @@
 slug: final_pummel
 title: Final Pummel
 blurb: Out of fuel and adrift in deep space, the Vortox Pummelers are boarded by the Llamanians who have hunted Emmett for years, as the crew's longest mission nears its end.
-author: Archivist
+authors: Trey, Zander, Brody, Lili
 season: FF3
 format: prose
 ---

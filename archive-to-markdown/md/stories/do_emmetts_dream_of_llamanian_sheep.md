@@ -2,7 +2,7 @@
 slug: do_emmetts_dream_of_llamanian_sheep
 title: Do Emmetts Dream of Llamanian Sheep?
 blurb: A ship-wide blackout leaves Emmett on the end of Sanya's leash, and a feverish withdrawal dream pulls him into a surreal park of weddings, bees and old fears.
-author: Archivist
+authors: Trey, Zander, Brody
 season: FF3
 format: prose
 ---

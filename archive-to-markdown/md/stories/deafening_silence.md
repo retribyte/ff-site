@@ -2,7 +2,7 @@
 slug: deafening_silence
 title: Deafening Silence
 blurb: Zion Daybreaker and Naomi, who grew up together, move from a treehouse promise of a better life to a bitter argument over what they owe the people who hurt them.
-author: Archivist
+authors: Trey
 season: FF4
 format: prose
 ---

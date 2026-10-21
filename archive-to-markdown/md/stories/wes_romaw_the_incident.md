@@ -2,7 +2,7 @@
 slug: wes_romaw_the_incident
 title: Wes Romaw - The Incident
 blurb: A hired Anole sniper lies in wait above a packed racing stadium, with a contract on the top finishers and the final laps ticking down.
-author: Archivist
+authors: Silas
 season: FF3
 format: prose
 ---

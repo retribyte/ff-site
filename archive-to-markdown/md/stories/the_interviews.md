@@ -2,7 +2,7 @@
 slug: the_interviews
 title: The Interviews
 blurb: Non-canon. Emmett and Josephine, perhaps the last two Squoatlings, are hounded across Daerthlorn by news crews whose questions get more personal every time.
-author: Archivist
+authors: Zander
 season: FF2
 format: prose
 ---

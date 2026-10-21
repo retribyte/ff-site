@@ -2,7 +2,7 @@
 slug: nehes_origin
 title: Nehe's Origin
 blurb: Young Nehe, a Floran slave in a hidden military compound, clings to an old veteran's stories of the stars and a badge reading CPTN of the INTERSTELLAR DREAM.
-author: Archivist
+authors: Jonas
 season: FF5
 format: prose
 ---

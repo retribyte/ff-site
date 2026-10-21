@@ -2,7 +2,7 @@
 slug: deep_pockets
 title: Deep Pockets
 blurb: Cleaning out his pocket dimension for the first time in years, Garrick finds a forgotten Ottori named Jess, a pulsing egg, and a statue he would rather not explain.
-author: Archivist
+authors: Trey
 season: FF3
 format: prose
 ---

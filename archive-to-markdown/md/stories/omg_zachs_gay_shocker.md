@@ -2,7 +2,7 @@
 slug: omg_zachs_gay_shocker
 title: Omg Zach's Gay, Shocker
 blurb: Hiding in a bar after his crew crashes their ship into a mall, Zach is approached by Jack Madison, a cheerful smuggler's driver who will not take silence for an answer.
-author: Archivist
+authors: Hunt520
 season: FF4
 format: prose
 ---

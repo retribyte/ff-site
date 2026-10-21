@@ -2,7 +2,7 @@
 slug: any_means_necessary
 title: Any Means Necessary
 blurb: In a dark warehouse, three armored Ravens, Odran, Sascha and their leader, take stock of a fallen comrade and vow to wipe out whoever is responsible.
-author: Archivist
+authors: Trey
 season: FF4
 format: prose
 ---

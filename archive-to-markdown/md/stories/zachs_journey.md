@@ -2,7 +2,7 @@
 slug: zachs_journey
 title: Zach's Journey
 blurb: From a mansion where his father despises his eyes to the deck of a pirate ship, Zach's life told in memories at ages five, ten, seventeen and beyond.
-author: Archivist
+authors: Hunt520
 season: FF4
 format: prose
 ---

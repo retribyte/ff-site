@@ -12,7 +12,8 @@ Markdown format (see README, "Stories"):
     slug: the_last_squoatling          required, ^[a-z0-9]+(_[a-z0-9]+)*$
     title: The Last Squoatling         required
     blurb: One-line summary.           optional
-    author: Trey                       optional username, resolved at upload
+    authors: Trey, Zander              optional comma-separated usernames,
+                                       resolved at upload ('author:' also works)
     published: 2026-07-04              optional ISO date
     themeColor: '#e8b23b'              optional (+ themeColor2)
     season: FF3                        optional season title or slug (campaign);
@@ -298,7 +299,8 @@ def convert(md_path):
     if fmt == "prose":
         story["format"] = "PROSE"
 
-    return {"story": story, "author": meta.get("author"), "chapters": parse_body(body)}
+    authors = [a.strip() for a in (meta.get("authors") or meta.get("author") or "").split(",") if a.strip()]
+    return {"story": story, "authors": authors, "chapters": parse_body(body)}
 
 
 # ---------- upload ----------
@@ -343,19 +345,22 @@ def upload(payload, api_base):
 
     username = api.login()
 
-    # Resolve the author (frontmatter username, falling back to the uploader)
+    # Resolve the authors (frontmatter usernames, falling back to the uploader)
     me = api.call("GET", "/user")["data"]
-    author = payload.get("author")
+    authors = payload.get("authors") or []
     story = dict(payload["story"])
-    if not author or author == username:
-        story["authorId"] = me["id"]
+    if not authors:
+        story["authorIds"] = [me["id"]]
     else:
         users = api.call("GET", "/users", ok404=True)  # admin-only
-        match = next((u for u in (users or {}).get("data", []) if u["username"] == author), None)
-        if match:
-            story["authorId"] = match["id"]
-        else:
-            print(f"warning: could not resolve author {author!r}; leaving unset")
+        by_username = {u["username"]: u["id"] for u in (users or {}).get("data", [])}
+        by_username[username] = me["id"]
+        story["authorIds"] = []
+        for author in authors:
+            if author in by_username:
+                story["authorIds"].append(by_username[author])
+            else:
+                print(f"warning: could not resolve author {author!r}; leaving them off")
 
     # Character name -> id (exact name, then aliases) for dialogue attribution
     characters = api.call("GET", "/characters")["data"]

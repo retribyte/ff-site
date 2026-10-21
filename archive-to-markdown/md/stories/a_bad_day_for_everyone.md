@@ -2,7 +2,7 @@
 slug: a_bad_day_for_everyone
 title: A Bad Day for Everyone
 blurb: Non-canon. Sanya drags a leashed, collared Emmett out of the ship on a "special mission" to a roadside diner, with a suspicious Garrick trailing behind.
-author: Archivist
+authors: Brody
 season: FF3
 format: prose
 ---

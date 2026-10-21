@@ -2,7 +2,7 @@
 slug: a_fateful_date
 title: A Fateful Date
 blurb: Sanya lays out a hunter's feast in a glowing blue fern grove for a night alone with Mary, but her Floran urges and an unfamiliar feeling complicate the evening.
-author: Archivist
+authors: Brody
 season: FF3
 format: prose
 ---

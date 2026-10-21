@@ -44,7 +44,7 @@ export default async function StoriesPage() {
         slug: s.slug,
         title: s.title,
         blurb: s.blurb,
-        authorName: s.author?.username ?? null,
+        authorNames: (s.authors ?? []).map((a) => a.username),
         publishedDate: s.publishedDate,
         chapterCount: s.chapters?.length ?? 0,
         lineCount: (s.chapters ?? []).reduce((sum, c) => sum + (c._count?.lines ?? 0), 0),

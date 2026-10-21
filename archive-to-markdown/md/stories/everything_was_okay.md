@@ -2,7 +2,7 @@
 slug: everything_was_okay
 title: Everything Was Okay
 blurb: An ordinary inspection day at a KYL unit factory turns grim when the lights cut out and the blast doors close, with Wade hiding behind a conveyor belt.
-author: Archivist
+authors: Silas
 season: FF4
 format: prose
 ---

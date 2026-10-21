@@ -2,7 +2,7 @@
 slug: hesitation
 title: Hesitation
 blurb: Playback from a Jade Rabbit combat unit clearing a warzone city of Squoatlings, until one shot it cannot bring itself to take changes everything.
-author: Archivist
+authors: Eve
 season: T&L
 format: prose
 ---

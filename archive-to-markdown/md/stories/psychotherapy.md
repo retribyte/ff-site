@@ -2,7 +2,7 @@
 slug: psychotherapy
 title: Psychotherapy
 blurb: Living quietly with Squina and Squorchy, Emmett gets visitors from the Llamanian Republic: his old friend Los, and a job offer that involves keeping Seth sane.
-author: Archivist
+authors: Zander
 season: FF4
 format: prose
 ---

@@ -2,7 +2,7 @@
 slug: one_whole_week
 title: One Whole Week
 blurb: Stuck on a junk asteroid for a week, Sanya teleports to her private Floran temple for peace, only to find it overrun by marauders and one very unbothered stranger named Mary.
-author: Archivist
+authors: Brody
 season: FF3
 format: prose
 ---

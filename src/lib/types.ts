@@ -140,14 +140,13 @@ export interface Story {
     slug: string;
     title: string;
     blurb: string | null;
-    authorId: number | null;
     publishedDate: string | null;
     themeColor: string | null;
     themeColor2: string | null;
     format: StoryFormat;
     seasonTitle?: string | null;
     season?: Pick<Season, 'title' | 'slug'> | null;
-    author?: PublicUser;
+    authors?: PublicUser[];
     chapters?: StoryChapter[];
 }
 

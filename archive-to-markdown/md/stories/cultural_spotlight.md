@@ -2,7 +2,7 @@
 slug: cultural_spotlight
 title: Cultural Spotlight
 blurb: Ryanne Deer's Channel 14 News crew expects a tidy cultural spotlight on Domoleáin, but ends up following Bonacco McGulch and the Sanverde St. Firm through sport, pubs and brawls.
-author: Archivist
+authors: Eve
 season: T&L
 format: prose
 ---
