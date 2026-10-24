@@ -16,7 +16,7 @@ DiscordChatExporter JSON  ──ff4-to-md.py───────▶  markdown  
 FF4's markdown adds one block per Discord message with its ID in the header,
 reply (`↪`), slash-command (`⌘`) and attachment (`📎`) marker lines, and
 `<embed>` blocks for Vortox output — see `ff4-to-md.py`'s docstring and
-`HANDOFF-ff4-editorial.md`. `editorial/` holds the FF4 editing helpers
+`notes/HANDOFF-ff4-editorial.md`. `editorial/` holds the FF4 editing helpers
 (round-trip, split/join, verify).
 
 1. **HTML → markdown** — `ff2.py` / `ff3.py` (need `beautifulsoup4`; make a

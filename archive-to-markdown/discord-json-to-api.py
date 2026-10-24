@@ -193,7 +193,7 @@ FORCE_CHARACTER_CONTAINING = (
     # formal introduction ("First, you may call me Dread" above), still with
     # no `Name:` marker, so these also silently defaulted to Morra. Confirmed
     # by context, not text pattern -- see
-    # REVIEW-finale-sanya-morra-attribution.md Group A for the corroborating
+    # notes/REVIEW-finale-sanya-morra-attribution.md Group A for the corroborating
     # surrounding lines (in particular Jonas's Chomsky answering "Ah, Sanya,
     # you've arrived" two lines after "Who said I wasn't helping?").
     ("A light, distant sense of fear begins to seep into the minds of Zion and Zach", "Sanya Dreadflower"),
@@ -326,7 +326,7 @@ JACK_TEXT_HEADER_LINES = (
 )
 
 # The rest of "Don't Weld Yourself"'s Jack lines, confirmed line by line
-# (REVIEW-hunt520-terry-zach-jack.md) rather than guessed -- several are too
+# (notes/REVIEW-hunt520-terry-zach-jack.md) rather than guessed -- several are too
 # short/generic ("Oh?", "Well then...") to safely match anywhere else in
 # the corpus, so scoped to this episode+player like the Finale banter table.
 DONT_WELD_YOURSELF_EPISODE_NUMBER = 17

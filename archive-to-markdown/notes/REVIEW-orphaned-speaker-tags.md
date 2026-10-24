@@ -1,7 +1,7 @@
 # Orphaned speaker tags — root cause
 
 **Status: fixed, corpus-diffed, not reseeded.** Follow-up to
-`ff-server/FF4-orphaned-speaker-tags.md`
+`ff-server/docs/notes/FF4-orphaned-speaker-tags.md`
 (12 FF4 messages that are just `CharacterName:` with the real line either
 unattributed or misattributed on the next row). Traced each of the 12 against
 the raw Discord export it came from. Three separate, unrelated bugs in

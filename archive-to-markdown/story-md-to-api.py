@@ -60,6 +60,7 @@ Output lands in api/stories/<slug>.json (gitignored). Stdlib only.
 import argparse
 import getpass
 import json
+import os
 import re
 import sys
 import urllib.error
@@ -329,8 +330,9 @@ class Api:
             sys.exit(f"error: {method} {path} -> HTTP {err.code}: {detail}")
 
     def login(self):
-        username = input("username: ")
-        password = getpass.getpass("password: ")
+        # FF_USERNAME / FF_PASSWORD skip the prompts (batch uploads, no tty).
+        username = os.environ.get("FF_USERNAME") or input("username: ")
+        password = os.environ.get("FF_PASSWORD") or getpass.getpass("password: ")
         res = self.call("POST", "/login", {"username": username, "password": password})
         self.token = res["data"]["token"]
         return username

@@ -282,12 +282,12 @@ see below).
   `meta/ff4.json` — cast dicts updated to full names / fixed keys.
 - `ff-server/prisma/seed-legacy.ts` — legacy color/avatar/CYOA alias
   fallback.
-- `ff-site/archive-to-markdown/npc-fenced-dialogue-review.md` — historical;
+- `ff-site/archive-to-markdown/notes/npc-fenced-dialogue-review.md` — historical;
   the manual inventory that led to discovering the mechanical Ravens rule.
-- `ff-site/archive-to-markdown/REVIEW-finale-sanya-morra-attribution.md` —
+- `ff-site/archive-to-markdown/notes/REVIEW-finale-sanya-morra-attribution.md` —
   the follow-up pass on Sanya/Dread's Finale scene (§3 above); full
   per-line evidence and confidence ratings.
-- `ff-site/archive-to-markdown/REVIEW-hunt520-terry-zach-jack.md` — the
+- `ff-site/archive-to-markdown/notes/REVIEW-hunt520-terry-zach-jack.md` — the
   Hunt520/Terry/Zacharias Smith/Jack Madison pass (§5 above); full per-line
   evidence and confidence ratings.
 - No changes to `discord-exports/episodes/` (raw FF4 source), `md/ff2/`,
