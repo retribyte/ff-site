@@ -102,7 +102,7 @@ _The arrow narrowly misses Bellow's head, and he gives a scowl to Dutch._
 
 **Sean** _(26-Jul-22 05:52 PM)_ [1001623060606111895]
 
-> Well you're a slorpigger.
+> Well you're a slorpaloid.
 
 **Zander** _(26-Jul-22 05:52 PM)_ [1001623082450030642]
 
@@ -146,7 +146,7 @@ _`Olag`: Olag flips off Seth and leaves them._
 
 **Sean** _(26-Jul-22 05:55 PM)_ [1001623867992834128]
 
-> Stupid Slorpigger, next time he comes on my side of the galaxy I'll crush his skull.
+> Stupid Slorpaloid, next time he comes on my side of the galaxy I'll crush his skull.
 
 **Zander** _(26-Jul-22 05:55 PM)_ [1001623927900082327]
 
@@ -1889,7 +1889,7 @@ _Seth's yelling is drowned out by the cheers from the crowd._
 
 **Sean** _(26-Jul-22 07:23 PM)_ [1001645937732624446]
 
-> Slorpiggers!
+> Slorpaloids!
 
 **Zander** _(26-Jul-22 07:23 PM)_ [1001645948541345872]
 
@@ -3377,7 +3377,7 @@ _He points to a golden elevator, labeled, "LAB"._
 
 **Sean** _(26-Jul-22 08:46 PM)_ [1001666942253404210]
 
-> Fuck you, slorpigger.
+> Fuck you, slorpaloid.
 
 **Trey** _(26-Jul-22 08:46 PM)_ [1001666868978925598]
 
