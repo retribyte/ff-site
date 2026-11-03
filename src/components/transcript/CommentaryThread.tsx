@@ -85,7 +85,8 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
                 return;
             }
             setNotes((prev) => prev.map((n) => (n.id === id ? { ...n, content: envelope.data!.content } : n)));
-            setEditingId(null);
+            // only close the editor if it's still this note's
+            setEditingId((current) => (current === id ? null : current));
         } catch {
             setError('The lore server is not answering');
         } finally {
@@ -139,7 +140,7 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
                                         <button type='button' onClick={() => saveEdit(note.id)} disabled={busy}>
                                             save
                                         </button>
-                                        <button type='button' onClick={() => setEditingId(null)}>
+                                        <button type='button' onClick={() => setEditingId(null)} disabled={busy}>
                                             cancel
                                         </button>
                                     </span>
@@ -151,6 +152,7 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
                                         <span className={styles.noteActions}>
                                             <button
                                                 type='button'
+                                                disabled={busy}
                                                 onClick={() => {
                                                     setEditingId(note.id);
                                                     setEditDraft(decodeEntities(note.content));

@@ -637,7 +637,7 @@ _The communicator merely has text on it, so Zion looks stupid speaking into it._
 
 _The communicator merely had text on it, so Zion looked stupid speaking into it._
 
-> `Vec as Sascha`: KILL THE OUTSIDERS, YOUR POSITION'S BEEN COMPROMISED, AS IS THE SQUOATLING'S.
+> `Mission Control`: KILL THE OUTSIDERS, YOUR POSITION'S BEEN COMPROMISED, AS IS THE SQUOATLING'S.
 
 **Trey** _(19-Jul-22 05:51 PM)_ [999086128739127366]
 
@@ -2203,7 +2203,7 @@ _Zion takes off his droning communicator._
 
 **Zander** _(19-Jul-22 07:12 PM)_ [999106403895627826]
 
-> `Vec as Sascha`: GO TO THE CATACOMBS, GET THE VACCINES.
+> `Mission Control`: GO TO THE CATACOMBS, GET THE VACCINES.
 
 **Hunt520** _(19-Jul-22 07:12 PM)_ [999106419024461897]
 

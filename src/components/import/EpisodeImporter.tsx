@@ -11,7 +11,6 @@ import styles from './episodeImporter.module.scss';
 // resolved to database ids here, with manual mapping for anything unknown.
 
 const MESSAGE_TYPES = new Set(['BOT_RESPONSE', 'COMMAND', 'QUOTE', 'ACTION', 'EMBED', 'OTHER']);
-const CHUNK_SIZE = 500;
 
 interface ImportMessage {
     player: string;
@@ -44,11 +43,21 @@ interface PersonaOption {
     characterId: number;
 }
 
+// The whole episode (season too, if new) goes up in one request that
+// ff-server applies in one transaction (POST /episodes/import): a failed
+// upload wrote nothing, so there's no partial state to track or eject.
+// `duplicate` = the server's 409 (title/slug/episode number taken).
 type Phase =
     | { step: 'idle' }
-    | { step: 'uploading'; done: number; total: number }
+    | { step: 'uploading' }
     | { step: 'success'; count: number; href: string }
-    | { step: 'failed'; message: string; episodeCreated: boolean };
+    | { step: 'failed'; message: string; duplicate: boolean };
+
+interface ArchivedEpisode {
+    title: string;
+    seasonTitle: string;
+    episode_no: number;
+}
 
 function parsePayload(raw: string): ImportPayload {
     let json: unknown;
@@ -84,11 +93,20 @@ function parsePayload(raw: string): ImportPayload {
     return payload;
 }
 
+class ApiError extends Error {
+    constructor(
+        message: string,
+        readonly status: number
+    ) {
+        super(message);
+    }
+}
+
 async function ff<T>(path: string, init?: RequestInit): Promise<T> {
     const res = await fetch(`/api/ff${path}`, init);
     const envelope = (await res.json().catch(() => null)) as { status?: string; message?: string; data?: T } | null;
     if (!res.ok || envelope?.status === 'error') {
-        throw new Error(envelope?.message ?? `HTTP ${res.status} on ${path}`);
+        throw new ApiError(envelope?.message ?? `HTTP ${res.status} on ${path}`, res.status);
     }
     return envelope?.data as T;
 }
@@ -102,7 +120,9 @@ export default function EpisodeImporter() {
     const [characters, setCharacters] = useState<Option[]>([]);
     const [personas, setPersonas] = useState<PersonaOption[]>([]);
     const [seasonTitles, setSeasonTitles] = useState<Set<string> | null>(null);
-    const [episodeExists, setEpisodeExists] = useState(false);
+    // Fetched once; the collision check below is derived from it rather than
+    // fetched per file (which raced when files were swapped quickly).
+    const [archived, setArchived] = useState<ArchivedEpisode[] | null>(null);
 
     // manual name → id picks; anything not overridden auto-matches by exact name
     const [playerOverrides, setPlayerOverrides] = useState<Record<string, string>>({});
@@ -125,11 +145,15 @@ export default function EpisodeImporter() {
         ff<{ title: string }[]>('/seasons')
             .then((data) => setSeasonTitles(new Set(data.map((s) => s.title))))
             .catch(() => setSeasonTitles(new Set()));
+        ff<ArchivedEpisode[]>('/episodes')
+            .then((data) =>
+                setArchived(data.map((e) => ({ title: e.title, seasonTitle: e.seasonTitle, episode_no: e.episode_no })))
+            )
+            .catch(() => setArchived(null)); // unknown — the server's 409 still guards the upload
     }, []);
 
     const loadText = (raw: string, name: string) => {
         setPhase({ step: 'idle' });
-        setEpisodeExists(false);
         setPlayerOverrides({});
         setCharOverrides({});
         try {
@@ -137,10 +161,6 @@ export default function EpisodeImporter() {
             setPayload(parsed);
             setFileName(name);
             setParseError(null);
-            // check for an episode title collision (titles are globally unique)
-            fetch(`/api/ff/episodes/${encodeURIComponent(parsed.episode.title)}`)
-                .then((res) => setEpisodeExists(res.ok))
-                .catch(() => {});
         } catch (error) {
             setPayload(null);
             setFileName(name);
@@ -196,6 +216,19 @@ export default function EpisodeImporter() {
         ? payload.messages.filter((m) => m.type === 'QUOTE' && (!m.character || charMap[m.character] === '')).length
         : 0;
 
+    // Titles are globally unique; (season, episode_no) is the episode's key.
+    const collision = useMemo(() => {
+        if (!payload || !archived) return null;
+        const byTitle = archived.find((e) => e.title === payload.episode.title);
+        if (byTitle) return `an episode titled \u201c${byTitle.title}\u201d is already in the archive`;
+        const byNumber = archived.find(
+            (e) => e.seasonTitle === payload.seasonTitle && e.episode_no === payload.episode.episode_no
+        );
+        return byNumber
+            ? `${payload.seasonTitle} already has an episode #${byNumber.episode_no} (\u201c${byNumber.title}\u201d)`
+            : null;
+    }, [payload, archived]);
+
     const typeCounts = useMemo(() => {
         const counts = new Map<string, number>();
         for (const msg of payload?.messages ?? []) {
@@ -207,97 +240,68 @@ export default function EpisodeImporter() {
     // ---- upload -----------------------------------------------------------
     const upload = async () => {
         if (!payload) return;
-        const total = payload.messages.length;
-        setPhase({ step: 'uploading', done: 0, total });
-        let episodeCreated = false;
-        try {
-            if (seasonTitles && !seasonTitles.has(payload.seasonTitle)) {
-                await ff('/seasons', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title: payload.seasonTitle }),
-                });
-                setSeasonTitles(new Set([...seasonTitles, payload.seasonTitle]));
+        setPhase({ step: 'uploading' });
+        const messages = payload.messages.map((msg) => {
+            const resolved = msg.character ? charMap[msg.character] : '';
+            let characterId: number | null = null;
+            let personaId: number | null = null;
+            if (resolved.startsWith('char:')) {
+                characterId = parseInt(resolved.slice('char:'.length));
+            } else if (resolved.startsWith('persona:')) {
+                personaId = parseInt(resolved.slice('persona:'.length));
+                characterId = personas.find((p) => p.id === personaId)?.characterId ?? null;
             }
+            return {
+                playerId: parseInt(playerMap[msg.player]),
+                characterId,
+                personaId,
+                timestamp: msg.timestamp,
+                // FR-MSG-4: a quote with no resolvable speaker becomes OTHER
+                // (a persona-resolved quote IS attributed — characterId is set)
+                type: msg.type === 'QUOTE' && characterId === null ? 'OTHER' : msg.type,
+                text: msg.text,
+            };
+        });
 
-            const createdEpisode = await ff<{ slug?: string }>('/episodes', {
+        try {
+            const created = await ff<{ slug: string; messageCount: number }>('/episodes/import', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    title: payload.episode.title,
                     seasonTitle: payload.seasonTitle,
-                    episode_no: payload.episode.episode_no,
-                    summary: payload.episode.summary ?? undefined,
-                    playedDate: payload.episode.playedDate ?? undefined,
+                    episode: {
+                        title: payload.episode.title,
+                        episode_no: payload.episode.episode_no,
+                        summary: payload.episode.summary ?? undefined,
+                        playedDate: payload.episode.playedDate ?? undefined,
+                    },
+                    messages,
                 }),
             });
-            episodeCreated = true;
-
-            const rows = payload.messages.map((msg) => {
-                const resolved = msg.character ? charMap[msg.character] : '';
-                let characterId: number | null = null;
-                let personaId: number | null = null;
-                if (resolved.startsWith('char:')) {
-                    characterId = parseInt(resolved.slice('char:'.length));
-                } else if (resolved.startsWith('persona:')) {
-                    personaId = parseInt(resolved.slice('persona:'.length));
-                    characterId = personas.find((p) => p.id === personaId)?.characterId ?? null;
-                }
-                return {
-                    playerId: parseInt(playerMap[msg.player]),
-                    characterId,
-                    personaId,
-                    timestamp: msg.timestamp,
-                    // FR-MSG-4: a quote with no resolvable speaker becomes OTHER
-                    // (a persona-resolved quote IS attributed — characterId is set)
-                    type: msg.type === 'QUOTE' && characterId === null ? 'OTHER' : msg.type,
-                    text: msg.text,
-                };
-            });
-            for (let offset = 0; offset < rows.length; offset += CHUNK_SIZE) {
-                await ff(`/episodes/${encodeURIComponent(payload.episode.title)}/messages`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: rows.slice(offset, offset + CHUNK_SIZE) }),
-                });
-                setPhase({ step: 'uploading', done: Math.min(offset + CHUNK_SIZE, total), total });
-            }
-
             const href = `/archives/${seasonSlug(payload.seasonTitle)}/${episodeSlug({
                 title: payload.episode.title,
                 episode_no: payload.episode.episode_no,
-                slug: createdEpisode?.slug,
+                slug: created.slug,
             })}`;
-            setPhase({ step: 'success', count: total, href });
-            setEpisodeExists(true);
+            setPhase({ step: 'success', count: created.messageCount, href });
+            setSeasonTitles((prev) => (prev ? new Set([...prev, payload.seasonTitle]) : prev));
+            setArchived((prev) =>
+                prev
+                    ? [...prev, { title: payload.episode.title, seasonTitle: payload.seasonTitle, episode_no: payload.episode.episode_no }]
+                    : prev
+            );
         } catch (error) {
             setPhase({
                 step: 'failed',
                 message: error instanceof Error ? error.message : 'The lore server is not answering.',
-                episodeCreated,
-            });
-        }
-    };
-
-    /** Roll back a partial import so the file can be re-uploaded cleanly. */
-    const eject = async () => {
-        if (!payload) return;
-        try {
-            await ff(`/episodes/${encodeURIComponent(payload.episode.title)}`, { method: 'DELETE' });
-            setPhase({ step: 'idle' });
-            setEpisodeExists(false);
-        } catch (error) {
-            setPhase({
-                step: 'failed',
-                message: `Rollback failed: ${error instanceof Error ? error.message : 'unknown error'}`,
-                episodeCreated: true,
+                duplicate: error instanceof ApiError && error.status === 409,
             });
         }
     };
 
     const busy = phase.step === 'uploading';
     const canUpload =
-        payload !== null && !busy && phase.step !== 'success' && unresolvedPlayers.length === 0 && !episodeExists;
+        payload !== null && !busy && phase.step !== 'success' && unresolvedPlayers.length === 0 && collision === null;
 
     return (
         <div className={styles.importer}>
@@ -335,7 +339,9 @@ export default function EpisodeImporter() {
                             <dt>episode</dt>
                             <dd>
                                 #{payload.episode.episode_no} · {payload.episode.title}
-                                {episodeExists && <span className={styles.badgeWarn}> already in the archive</span>}
+                                {collision && phase.step !== 'success' && (
+                                    <span className={styles.badgeWarn}> already in the archive</span>
+                                )}
                             </dd>
                         </div>
                         {payload.episode.summary && (
@@ -430,12 +436,9 @@ export default function EpisodeImporter() {
                     <div className={styles.actions}>
                         <button type='button' className={styles.upload} onClick={upload} disabled={!canUpload}>
                             {phase.step === 'uploading'
-                                ? `transmitting ${phase.done}/${phase.total}…`
+                                ? `transmitting ${payload.messages.length} messages…`
                                 : `Upload ${payload.messages.length} messages`}
                         </button>
-                        {phase.step === 'uploading' && (
-                            <progress value={phase.done} max={phase.total} className={styles.progress} />
-                        )}
                     </div>
 
                     {phase.step === 'success' && (
@@ -448,21 +451,16 @@ export default function EpisodeImporter() {
                             <p className={styles.error} role='alert'>
                                 ✖ {phase.message}
                             </p>
-                            {phase.episodeCreated && (
-                                <p className={styles.hint}>
-                                    The episode was created but the transfer did not finish. Eject it before retrying,
-                                    or messages will duplicate.{' '}
-                                    <button type='button' className={styles.eject} onClick={eject}>
-                                        eject &ldquo;{payload.episode.title}&rdquo;
-                                    </button>
-                                </p>
-                            )}
+                            <p className={styles.hint}>
+                                {phase.duplicate
+                                    ? 'Nothing was imported. Remove the existing episode first (api-import.py --replace, or DELETE /episodes/:title), or retitle/renumber this one in the meta file.'
+                                    : 'Nothing was imported — the upload is all-or-nothing, so it is safe to fix the file and try again.'}
+                            </p>
                         </div>
                     )}
-                    {episodeExists && phase.step !== 'success' && (
+                    {collision && phase.step !== 'success' && (
                         <p className={styles.error}>
-                            ✖ an episode titled &ldquo;{payload.episode.title}&rdquo; already exists — eject it first
-                            or retitle this one in the meta file.
+                            ✖ {collision} — remove it first (api-import.py --replace), or retitle/renumber this one in the meta file.
                         </p>
                     )}
                 </section>

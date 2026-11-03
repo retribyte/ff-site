@@ -11,7 +11,6 @@ import styles from './episodeImporter.module.scss';
 // narration, its clean concatenation), so we only resolve names → ids here.
 
 const LINE_TYPES = new Set(['NARRATION', 'DIALOGUE', 'ACTION', 'TRANSCRIPT', 'BREAK', 'HEADING']);
-const CHUNK_SIZE = 500;
 
 interface ImportSegment {
     text: string;
@@ -54,11 +53,20 @@ interface Option {
     name: string;
 }
 
+// The whole story goes up in one request that ff-server applies in one
+// transaction (POST /stories/import), so there is no partial state to track
+// or roll back: a failed upload wrote nothing and can simply be retried.
+// `duplicate` = the server's 409 (slug/title taken, or identical text).
 type Phase =
     | { step: 'idle' }
-    | { step: 'uploading'; done: number; total: number }
+    | { step: 'uploading' }
     | { step: 'success'; count: number; href: string }
-    | { step: 'failed'; message: string; storyCreated: boolean };
+    | { step: 'failed'; message: string; duplicate: boolean };
+
+interface ShelfStory {
+    slug: string;
+    title: string;
+}
 
 const SLUG_RE = /^[a-z0-9]+(_[a-z0-9]+)*$/;
 
@@ -98,11 +106,20 @@ function parsePayload(raw: string): ImportPayload {
     return payload;
 }
 
+class ApiError extends Error {
+    constructor(
+        message: string,
+        readonly status: number
+    ) {
+        super(message);
+    }
+}
+
 async function ff<T>(path: string, init?: RequestInit): Promise<T> {
     const res = await fetch(`/api/ff${path}`, init);
     const envelope = (await res.json().catch(() => null)) as { status?: string; message?: string; data?: T } | null;
     if (!res.ok || envelope?.status === 'error') {
-        throw new Error(envelope?.message ?? `HTTP ${res.status} on ${path}`);
+        throw new ApiError(envelope?.message ?? `HTTP ${res.status} on ${path}`, res.status);
     }
     return envelope?.data as T;
 }
@@ -116,7 +133,10 @@ export default function StoryImporter() {
 
     const [users, setUsers] = useState<Option[]>([]);
     const [characters, setCharacters] = useState<{ id: number; names: string[] }[]>([]);
-    const [storyExists, setStoryExists] = useState(false);
+    // What's already on the shelf, fetched once: the slug/title collision
+    // check below is derived from it rather than fetched per file (which
+    // raced when a second file was picked before the first check returned).
+    const [shelf, setShelf] = useState<ShelfStory[] | null>(null);
 
     // manual overrides; anything not overridden auto-matches by exact name
     const [authorOverrides, setAuthorOverrides] = useState<Record<string, string>>({});
@@ -132,11 +152,13 @@ export default function StoryImporter() {
         ff<{ id: number; name: string }[]>('/characters')
             .then((data) => setCharacters(data.map((c) => ({ id: c.id, names: [c.name] }))))
             .catch(() => setCharacters([]));
+        ff<ShelfStory[]>('/stories')
+            .then((data) => setShelf(data.map((s) => ({ slug: s.slug, title: s.title }))))
+            .catch(() => setShelf(null)); // unknown — the server's 409 still guards the upload
     }, []);
 
     const loadText = (raw: string, name: string) => {
         setPhase({ step: 'idle' });
-        setStoryExists(false);
         setAuthorOverrides({});
         setCharOverrides({});
         try {
@@ -144,10 +166,6 @@ export default function StoryImporter() {
             setPayload(parsed);
             setFileName(name);
             setParseError(null);
-            // a slug is globally unique — POST /stories would reject a collision
-            fetch(`/api/ff/stories/${encodeURIComponent(parsed.story.slug)}`)
-                .then((res) => setStoryExists(res.ok))
-                .catch(() => {});
         } catch (error) {
             setPayload(null);
             setFileName(name);
@@ -219,12 +237,22 @@ export default function StoryImporter() {
         [payload]
     );
 
+    // Slug and title are each unique on the shelf (title case-insensitively,
+    // matching the server). Identical text under a new slug+title can only be
+    // caught server-side (Story.contentHash) — that surfaces as a 409.
+    const collision = useMemo(() => {
+        if (!payload || !shelf) return null;
+        const bySlug = shelf.find((s) => s.slug === payload.story.slug);
+        if (bySlug) return { field: 'slug' as const, story: bySlug };
+        const title = payload.story.title.toLowerCase();
+        const byTitle = shelf.find((s) => s.title.toLowerCase() === title);
+        return byTitle ? { field: 'title' as const, story: byTitle } : null;
+    }, [payload, shelf]);
+
     // ---- upload -----------------------------------------------------------
     const upload = async () => {
         if (!payload) return;
-        setPhase({ step: 'uploading', done: 0, total: lineTotal });
-        let storyCreated = false;
-        const slug = payload.story.slug;
+        setPhase({ step: 'uploading' });
 
         // Attach a resolved character id, or fall back to the raw display name.
         const resolveSpeaker = <T extends { characterId?: number; speaker?: string }>(entry: T, speaker: string) => {
@@ -234,96 +262,63 @@ export default function StoryImporter() {
             return entry;
         };
 
+        const chapters = payload.chapters.map((chapter) => ({
+            chapter_no: chapter.chapter_no,
+            title: chapter.title ?? undefined,
+            lines: chapter.lines.map((line) => {
+                const out: {
+                    type: string;
+                    text: string;
+                    characterId?: number;
+                    speaker?: string;
+                    segments?: (ImportSegment & { characterId?: number })[];
+                } = { type: line.type, text: line.text };
+                if (line.speaker) resolveSpeaker(out, line.speaker);
+                if (line.segments) {
+                    out.segments = line.segments.map((seg) => {
+                        const resolved: ImportSegment & { characterId?: number } = { text: seg.text };
+                        if (seg.speaker) resolveSpeaker(resolved, seg.speaker);
+                        if (seg.italic) resolved.italic = true;
+                        if (seg.bold) resolved.bold = true;
+                        return resolved;
+                    });
+                }
+                return out;
+            }),
+        }));
+
         try {
-            await ff('/stories', {
+            const created = await ff<{ slug: string; title: string }>('/stories/import', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    slug,
-                    title: payload.story.title,
-                    blurb: payload.story.blurb ?? undefined,
-                    publishedDate: payload.story.publishedDate ?? undefined,
-                    themeColor: payload.story.themeColor ?? undefined,
-                    themeColor2: payload.story.themeColor2 ?? undefined,
-                    season: payload.story.season ?? undefined,
-                    format: payload.story.format ?? undefined,
-                    authorIds,
+                    story: {
+                        slug: payload.story.slug,
+                        title: payload.story.title,
+                        blurb: payload.story.blurb ?? undefined,
+                        publishedDate: payload.story.publishedDate ?? undefined,
+                        themeColor: payload.story.themeColor ?? undefined,
+                        themeColor2: payload.story.themeColor2 ?? undefined,
+                        season: payload.story.season ?? undefined,
+                        format: payload.story.format ?? undefined,
+                        authorIds,
+                    },
+                    chapters,
                 }),
             });
-            storyCreated = true;
-
-            let done = 0;
-            for (const chapter of payload.chapters) {
-                await ff(`/stories/${encodeURIComponent(slug)}/chapters`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chapter_no: chapter.chapter_no,
-                        title: chapter.title ?? undefined,
-                    }),
-                });
-
-                const rows = chapter.lines.map((line) => {
-                    const out: {
-                        type: string;
-                        text: string;
-                        characterId?: number;
-                        speaker?: string;
-                        segments?: (ImportSegment & { characterId?: number })[];
-                    } = { type: line.type, text: line.text };
-                    if (line.speaker) resolveSpeaker(out, line.speaker);
-                    if (line.segments) {
-                        out.segments = line.segments.map((seg) => {
-                            const resolved: ImportSegment & { characterId?: number } = { text: seg.text };
-                            if (seg.speaker) resolveSpeaker(resolved, seg.speaker);
-                            if (seg.italic) resolved.italic = true;
-                            if (seg.bold) resolved.bold = true;
-                            return resolved;
-                        });
-                    }
-                    return out;
-                });
-
-                for (let offset = 0; offset < rows.length; offset += CHUNK_SIZE) {
-                    await ff(`/stories/${encodeURIComponent(slug)}/chapters/${chapter.chapter_no}/lines`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ lines: rows.slice(offset, offset + CHUNK_SIZE) }),
-                    });
-                    done += Math.min(CHUNK_SIZE, rows.length - offset);
-                    setPhase({ step: 'uploading', done, total: lineTotal });
-                }
-            }
-
-            setPhase({ step: 'success', count: lineTotal, href: `/stories/${slug}` });
-            setStoryExists(true);
+            setPhase({ step: 'success', count: lineTotal, href: `/stories/${created.slug}` });
+            setShelf((prev) => (prev ? [...prev, { slug: created.slug, title: created.title }] : prev));
         } catch (error) {
             setPhase({
                 step: 'failed',
                 message: error instanceof Error ? error.message : 'The lore server is not answering.',
-                storyCreated,
-            });
-        }
-    };
-
-    /** Roll back a partial import (story + chapters + lines) so it can re-upload cleanly. */
-    const eject = async () => {
-        if (!payload) return;
-        try {
-            await ff(`/stories/${encodeURIComponent(payload.story.slug)}`, { method: 'DELETE' });
-            setPhase({ step: 'idle' });
-            setStoryExists(false);
-        } catch (error) {
-            setPhase({
-                step: 'failed',
-                message: `Rollback failed: ${error instanceof Error ? error.message : 'unknown error'}`,
-                storyCreated: true,
+                duplicate: error instanceof ApiError && error.status === 409,
             });
         }
     };
 
     const busy = phase.step === 'uploading';
-    const canUpload = payload !== null && !busy && phase.step !== 'success' && !storyExists;
+    const canUpload = payload !== null && !busy && phase.step !== 'success' && collision === null;
 
     return (
         <div className={styles.importer}>
@@ -352,7 +347,9 @@ export default function StoryImporter() {
                             <dt>story</dt>
                             <dd>
                                 {payload.story.title}
-                                {storyExists && <span className={styles.badgeWarn}> already on the shelf</span>}
+                                {collision && phase.step !== 'success' && (
+                                    <span className={styles.badgeWarn}> already on the shelf</span>
+                                )}
                             </dd>
                         </div>
                         <div>
@@ -442,13 +439,8 @@ export default function StoryImporter() {
 
                     <div className={styles.actions}>
                         <button type='button' className={styles.upload} onClick={upload} disabled={!canUpload}>
-                            {phase.step === 'uploading'
-                                ? `transmitting ${phase.done}/${phase.total}…`
-                                : `Upload ${lineTotal} lines`}
+                            {phase.step === 'uploading' ? `transmitting ${lineTotal} lines…` : `Upload ${lineTotal} lines`}
                         </button>
-                        {phase.step === 'uploading' && (
-                            <progress value={phase.done} max={phase.total} className={styles.progress} />
-                        )}
                     </div>
 
                     {phase.step === 'success' && (
@@ -461,21 +453,18 @@ export default function StoryImporter() {
                             <p className={styles.error} role='alert'>
                                 ✖ {phase.message}
                             </p>
-                            {phase.storyCreated && (
-                                <p className={styles.hint}>
-                                    The story was created but the transfer did not finish. Eject it before retrying,
-                                    or lines will duplicate.{' '}
-                                    <button type='button' className={styles.eject} onClick={eject}>
-                                        eject &ldquo;{payload.story.title}&rdquo;
-                                    </button>
-                                </p>
-                            )}
+                            <p className={styles.hint}>
+                                {phase.duplicate
+                                    ? 'Nothing was imported. Delete the existing story from its page first, or give this one a new slug and title in the manuscript frontmatter.'
+                                    : 'Nothing was imported — the upload is all-or-nothing, so it is safe to fix the file and try again.'}
+                            </p>
                         </div>
                     )}
-                    {storyExists && phase.step !== 'success' && (
+                    {collision && phase.step !== 'success' && (
                         <p className={styles.error}>
-                            ✖ a story with slug &ldquo;{payload.story.slug}&rdquo; already exists — eject it first or
-                            reslug this one in the manuscript frontmatter.
+                            ✖ the {collision.field} is already taken by{' '}
+                            <Link href={`/stories/${collision.story.slug}`}>&ldquo;{collision.story.title}&rdquo;</Link>{' '}
+                            — delete it from its page first, or change the {collision.field} in the manuscript frontmatter.
                         </p>
                     )}
                 </section>

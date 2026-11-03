@@ -44,6 +44,9 @@ export default function AttributionControl({ episodeTitle, characterId, anchorNo
             setPersonaId(currentPersonaId !== null ? String(currentPersonaId) : '');
             setTarget('block');
             setError(null);
+            // a failed earlier load is retried below — clear it, or its error
+            // branch would keep hiding the form even after the retry succeeds
+            setLoadError(null);
             if (personas === null) {
                 fetch(`/api/ff/characters/${characterId}/personas`)
                     .then((res) => res.json())

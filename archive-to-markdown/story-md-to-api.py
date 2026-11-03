@@ -342,6 +342,8 @@ def upload(payload, api_base):
     api = Api(api_base)
     slug = payload["story"]["slug"]
 
+    # Fast-fail courtesy check; the import itself rejects (409) a taken slug
+    # or title, or text identical to a story already on the shelf.
     if api.call("GET", f"/stories/{slug}", ok404=True) is not None:
         sys.exit(f"error: story '{slug}' already exists — delete it via the API to re-upload")
 
@@ -372,23 +374,17 @@ def upload(payload, api_base):
         for alias in character.get("aliases", []):
             by_name.setdefault(alias["name"], character["id"])
 
-    api.call("POST", "/stories", story)
-    print(f"created story '{slug}'")
+    def resolve_speaker(entry, speaker):
+        """Attach characterId (or a display-name speaker) for a speaker string."""
+        if speaker in by_name:
+            entry["characterId"] = by_name[speaker]
+        else:
+            entry["speaker"] = speaker
+            unresolved.add(speaker)
 
     unresolved = set()
+    chapters = []
     for chapter in payload["chapters"]:
-        api.call("POST", f"/stories/{slug}/chapters", {
-            "chapter_no": chapter["chapter_no"],
-            **({"title": chapter["title"]} if chapter["title"] else {}),
-        })
-        def resolve_speaker(entry, speaker):
-            """Attach characterId (or a display-name speaker) for a speaker string."""
-            if speaker in by_name:
-                entry["characterId"] = by_name[speaker]
-            else:
-                entry["speaker"] = speaker
-                unresolved.add(speaker)
-
         lines = []
         for line in chapter["lines"]:
             out = {"type": line["type"], "text": line["text"]}
@@ -407,11 +403,17 @@ def upload(payload, api_base):
                             resolved[style] = True
                     out["segments"].append(resolved)
             lines.append(out)
-        CHUNK = 500
-        for i in range(0, len(lines), CHUNK):
-            api.call("POST", f"/stories/{slug}/chapters/{chapter['chapter_no']}/lines",
-                     {"lines": lines[i:i + CHUNK]})
-        print(f"  chapter {chapter['chapter_no']}: {len(lines)} lines")
+        chapters.append({
+            "chapter_no": chapter["chapter_no"],
+            **({"title": chapter["title"]} if chapter["title"] else {}),
+            "lines": lines,
+        })
+
+    # One request, one transaction: the story lands complete or not at all,
+    # so a failed upload leaves nothing behind and can simply be re-run.
+    api.call("POST", "/stories/import", {"story": story, "chapters": chapters})
+    for chapter in chapters:
+        print(f"  chapter {chapter['chapter_no']}: {len(chapter['lines'])} lines")
 
     if unresolved:
         print(f"warning: no Character row for {sorted(unresolved)} — kept as display names")
