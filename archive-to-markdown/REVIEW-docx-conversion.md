@@ -34,10 +34,10 @@ It hasn't been ported to TypeScript yet** (see `../PLAN-story-import.md`).
 | paragraphs (converter / manuscript) | 1,433 / 1,509 | **1,509 / 1,509** |
 | extra or missing paragraphs | 79 / 155 | **0 / 0** |
 | copyedit-only differences (similarity ≥ 0.9) | 213 | 252, from the Oct copyedit passes, as expected (more now that paragraphs align) |
-| emphasis differences | 62 | 63: 54 are where the quote marks sit relative to the markers, 9 are hand moves of quotes and commas |
+| emphasis differences | 62 | 32 with the quotes-outside house style: 30 in the Ravens trilogy and *Wes Romaw* (their styled quote marks, the accepted lossy change), 2 editorial |
 | other text differences | — | 12, all editorial (see below) |
 | payload issues (blank lines or segments, literal `*` or span markers) | 9 blank segments in the DB | **0** |
-| scene breaks | 0 | 40 inserted. All 40 were read in context: time skips, scene changes, and journal-entry boundaries in *Bellow's Journal*. |
+| scene breaks | 0 | 43 inserted: 40 from gaps (all read in context: time skips, scene changes, *Bellow's Journal* entry boundaries) and 3 from *Final Pummel*'s horizontal lines (its other 2 lines fall where a break already was, or at the end) |
 
 ## Converter bugs fixed
 
@@ -60,8 +60,8 @@ It hasn't been ported to TypeScript yet** (see `../PLAN-story-import.md`).
    (*Psychotherapy*, *A Precarious Encounter*), a trailing period (*Any Means
    Necessary.*, *Everything was okay.*) and bold. It's now dropped.
 4. **Heading 2 sections.** With the title dropped, a doc whose only headings
-   are Heading 2 ("Part 1", "Part 2") is chaptered by them. This matches *Still
-   Waters*; *Deafening Silence* is a decision for you (see below).
+   are Heading 2 ("Part 1", "Part 2") is chaptered by them, matching *Still
+   Waters*. Heading 3 and below are always sections.
 5. **Prologue numbering.** Text before an explicit "Chapter 1" became an
    implicit chapter 1, so the upload failed with "duplicate chapter number".
    It's now `Chapter 0`, with a warning to give it a title.
@@ -78,30 +78,63 @@ It hasn't been ported to TypeScript yet** (see `../PLAN-story-import.md`).
 8. **Punctuation-only emphasis.** An italic "(" or "." produced a stray `*(*`.
    Now it's plain text.
 
+9. **Google horizontal lines** were invisible to the converter. They're now
+   `***` breaks (see Decisions).
+10. **Quote marks at a styled run's edge** now sit outside the styling (see
+    Decisions). The converter used to write `[“…”]{X}` (107×) where the docx
+    colored the quote marks, and the manuscripts never do.
+
 What did *not* need fixing: emphasis around dialogue spans. October's 91 hand
 fixes moved `*[“…”]{X}*` to `[*“…”*]{X}`. The current converter never emits
 the outer form, because it styles inside each span, and none of the 23
 outputs contain it. I didn't check what produced it in October.
 
-## Decisions for you
+## Decisions (2026-11-03)
 
-- **Quote marks and emphasis.** The docx italicizes or bolds the quote marks
-  along with the words, so the converter now writes `*“…”*`. The reviewed
-  manuscripts are split: *Omg Zach's Gay, Shocker* moved the marks outside
-  (`“*…*”`, 45×), while the Ravens trilogy and *Wes Romaw* kept them inside.
-  Both render fine. Pick one if you care; it's a one-line rule either way.
-- **"Part N" headings.** Should they be chapters (*Still Waters*) or sections
-  within one chapter (*Deafening Silence*)? The converter currently promotes
-  them when there's no other Heading 1.
-- **Journal entry labels.** *Bellow's Journal*: "(After Episode N)" lines
-  became chapters by hand. The converter leaves them as text with breaks
-  between entries (33). A rule like "a parenthesized line followed by a gap
-  is a chapter" is possible, but it's specific to this one story.
-- **Existing stories in the DB.** These fixes don't touch the 35 stories
-  already in the DB. Regenerating `md/stories/` from the docx would throw away
-  the hand attributions and copyedits. The safe path is a **proposed patch per
-  manuscript** that only inserts the detected `***` breaks (and splits the
-  `Part` headings if you want), for review, followed by a re-import.
+- **Quote marks go outside the styling and the voice span:** `“[*…*]{Name},”`.
+  A comma before the closing quote goes outside too. Across all 37 manuscripts
+  the span form already holds 907 to 0. The converter applies it (commit
+  1feb455), and so do the patches. The Ravens trilogy and *Wes Romaw* styled
+  the quote marks themselves (bold and colored), 40 cases in 4 stories. They
+  lose that styling: a deliberate lossy change for consistency.
+- **Headings:** Heading 1 is a chapter, and Heading 2 and below are in-chapter
+  sections. The exception is a doc whose only Heading 1 is the title: there,
+  Heading 2s are chapters ("Part 1", "Part 2"). *Final Pummel* is the one
+  story with both levels. *Deafening Silence*'s Parts become chapters in its
+  patch.
+- **Horizontal lines are `***` breaks.** Google exports Insert ▸ Horizontal
+  line as a VML rectangle (`o:hr="t"`), which the old converter didn't see.
+  Of the API stories only *Final Pummel* has them (5). Inside a transcript
+  block, a line splits the block.
+- **Journal entry labels** (*Bellow's Journal*'s "(After Episode N)") are left
+  to review, not converted.
+- **Existing stories:** the patches in `ff-wt/story-docx-import/work/patched/`
+  start from each reviewed manuscript and only add breaks, quote restyles and
+  the *Deafening Silence* chapters. `make_patches.py` asserts that every
+  patched payload has the same line text as today (BREAK lines aside). One
+  *Give No Quarter* paragraph had nested markers the restyle couldn't handle
+  safely, so it's left as-is for a hand fix. A side-by-side review page shows
+  all 23.
+
+## Images missing from the archive
+
+The story format has no image line, so pictures in a docx never reached the
+API. **7 pictures in 3 API stories** are missing:
+
+| Story | Pictures | Where |
+|---|---|---|
+| *Bellow's Journal and Audio Logs* | 5 (18–30 KB each) | after four journal entries' closing star-gazing line, and after Terry's call |
+| *Deafening Silence* | 1 (642 KB, full width) | at the very end, after "It's nothing but silence." |
+| *Final Pummel* | 1 (363 KB) | after "Let's kick some ass.", before the Armada report |
+
+Elsewhere in the Drive export, the FF1 archive docx has 12 picture files and
+the FF2 compilation has 1; neither is a story in the API. The other
+"drawings" in *A Quarter At Table*, *Horizon Meets Dawn*, *CYOA*, *Hexgots*
+and *Every Single Vortox Pummeler* are all horizontal lines, not pictures.
+
+Supporting images needs an `IMAGE` story-line type (or a `segments`-style
+attachment), somewhere to store the files, and a converter step that
+extracts `word/media/*` with alt text and position.
 
 ## Judgment calls left alone
 
