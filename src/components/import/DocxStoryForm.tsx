@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { slugify } from '@/lib/slug';
 import styles from './storyImporter.module.scss';
 
 // First step of a Google Doc import: send the .docx to ff-server's
@@ -188,7 +189,8 @@ export default function DocxStoryForm({
                                 id='docx-slug'
                                 value={slug}
                                 onChange={(e) => setSlug(e.target.value)}
-                                placeholder='made from the title'
+                                // the server derives the same slug from the title when this is blank
+                                placeholder={slugify(title) || 'made from the title'}
                                 disabled={locked}
                             />
                         </label>

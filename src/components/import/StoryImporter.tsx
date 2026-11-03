@@ -3,12 +3,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from '@/components/auth/SessionProvider';
+import DeleteControl from '@/components/DeleteControl';
+import DocxStoryForm from './DocxStoryForm';
 import styles from './storyImporter.module.scss';
 
-// Payload produced by archive-to-markdown/story-md-to-api.py: one story, its
-// author username, and chapters of lines keyed by *names* (character/speaker
-// names). The converter already derives each line's `text` (and, for segmented
-// narration, its clean concatenation), so we only resolve names → ids here.
+// Payload produced by ff-server's POST /stories/convert (a Google Doc, via
+// DocxStoryForm) or by archive-to-markdown/story-md-to-api.py (the CLI
+// pipeline's .json): one story, its author usernames, and chapters of lines
+// keyed by *names* (character/speaker names). The converter already derives
+// each line's `text` (and, for segmented narration, its clean concatenation),
+// so we only resolve names → ids here.
 
 const LINE_TYPES = new Set(['NARRATION', 'DIALOGUE', 'ACTION', 'TRANSCRIPT', 'BREAK', 'HEADING']);
 
@@ -60,8 +64,11 @@ interface Option {
 type Phase =
     | { step: 'idle' }
     | { step: 'uploading' }
-    | { step: 'success'; count: number; href: string }
+    | { step: 'success'; count: number; href: string; replaced: boolean }
     | { step: 'failed'; message: string; duplicate: boolean };
+
+// Where the payload came from, for wording the "change the slug" advice.
+type Origin = 'docx' | 'json';
 
 interface ShelfStory {
     slug: string;
@@ -77,6 +84,10 @@ function parsePayload(raw: string): ImportPayload {
     } catch {
         throw new Error('That is not JSON.');
     }
+    return validatePayload(json);
+}
+
+function validatePayload(json: unknown): ImportPayload {
     const payload = json as ImportPayload;
     if (typeof payload?.story?.slug !== 'string' || !SLUG_RE.test(payload.story.slug)) {
         throw new Error("Missing or invalid story.slug — is this a story-md-to-api.py output file?");
@@ -128,6 +139,7 @@ export default function StoryImporter() {
     const { user } = useSession();
 
     const [payload, setPayload] = useState<ImportPayload | null>(null);
+    const [origin, setOrigin] = useState<Origin>('docx');
     const [fileName, setFileName] = useState('');
     const [parseError, setParseError] = useState<string | null>(null);
 
@@ -157,25 +169,25 @@ export default function StoryImporter() {
             .catch(() => setShelf(null)); // unknown — the server's 409 still guards the upload
     }, []);
 
-    const loadText = (raw: string, name: string) => {
+    // Both paths land here: a converted Google Doc, or a CLI .json file.
+    const loadPayload = (read: () => ImportPayload, name: string, from: Origin) => {
         setPhase({ step: 'idle' });
         setAuthorOverrides({});
         setCharOverrides({});
+        setOrigin(from);
+        setFileName(name);
         try {
-            const parsed = parsePayload(raw);
-            setPayload(parsed);
-            setFileName(name);
+            setPayload(read());
             setParseError(null);
         } catch (error) {
             setPayload(null);
-            setFileName(name);
             setParseError(error instanceof Error ? error.message : 'Unreadable file.');
         }
     };
 
-    const onFile = (file: File | undefined) => {
+    const onJsonFile = (file: File | undefined) => {
         if (!file) return;
-        void file.text().then((raw) => loadText(raw, file.name));
+        void file.text().then((raw) => loadPayload(() => parsePayload(raw), file.name, 'json'));
     };
 
     // ---- name resolution --------------------------------------------------
@@ -250,10 +262,9 @@ export default function StoryImporter() {
     }, [payload, shelf]);
 
     // ---- upload -----------------------------------------------------------
-    const upload = async () => {
-        if (!payload) return;
-        setPhase({ step: 'uploading' });
-
+    // Chapters with speakers resolved: a character id, or the raw display name.
+    const resolvedChapters = () => {
+        if (!payload) return [];
         // Attach a resolved character id, or fall back to the raw display name.
         const resolveSpeaker = <T extends { characterId?: number; speaker?: string }>(entry: T, speaker: string) => {
             const id = charMap[speaker];
@@ -262,7 +273,7 @@ export default function StoryImporter() {
             return entry;
         };
 
-        const chapters = payload.chapters.map((chapter) => ({
+        return payload.chapters.map((chapter) => ({
             chapter_no: chapter.chapter_no,
             title: chapter.title ?? undefined,
             lines: chapter.lines.map((line) => {
@@ -286,7 +297,19 @@ export default function StoryImporter() {
                 return out;
             }),
         }));
+    };
 
+    const failed = (error: unknown) =>
+        setPhase({
+            step: 'failed',
+            message: error instanceof Error ? error.message : 'The lore server is not answering.',
+            duplicate: error instanceof ApiError && error.status === 409,
+        });
+
+    const upload = async () => {
+        if (!payload) return;
+        setPhase({ step: 'uploading' });
+        const chapters = resolvedChapters();
         try {
             const created = await ff<{ slug: string; title: string }>('/stories/import', {
                 method: 'POST',
@@ -306,32 +329,58 @@ export default function StoryImporter() {
                     chapters,
                 }),
             });
-            setPhase({ step: 'success', count: lineTotal, href: `/stories/${created.slug}` });
+            setPhase({ step: 'success', count: lineTotal, href: `/stories/${created.slug}`, replaced: false });
             setShelf((prev) => (prev ? [...prev, { slug: created.slug, title: created.title }] : prev));
         } catch (error) {
-            setPhase({
-                step: 'failed',
-                message: error instanceof Error ? error.message : 'The lore server is not answering.',
-                duplicate: error instanceof ApiError && error.status === 409,
+            failed(error);
+        }
+    };
+
+    // A revised draft of a story already on the shelf: PUT /stories/:slug/import
+    // swaps every chapter and line in one transaction, keeping the story's id,
+    // title, blurb, authors and season (edit those on the story page).
+    const replace = async () => {
+        if (!payload || collision?.field !== 'slug') return;
+        setPhase({ step: 'uploading' });
+        const slug = collision.story.slug;
+        try {
+            await ff(`/stories/${encodeURIComponent(slug)}/import`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chapters: resolvedChapters() }),
             });
+            setPhase({ step: 'success', count: lineTotal, href: `/stories/${slug}`, replaced: true });
+        } catch (error) {
+            failed(error);
         }
     };
 
     const busy = phase.step === 'uploading';
     const canUpload = payload !== null && !busy && phase.step !== 'success' && collision === null;
+    const changeWhere = origin === 'docx' ? 'in the form above' : 'in the manuscript frontmatter';
 
     return (
         <div className={styles.importer}>
-            <label className={`pixel-panel ${styles.dropzone}`}>
-                <input
-                    type='file'
-                    accept='.json,application/json'
-                    onChange={(e) => onFile(e.target.files?.[0])}
-                    disabled={busy}
-                />
-                <span className='pixel-label'>▲ select a story .json</span>
-                <span className={styles.dropHint}>{fileName || 'from archive-to-markdown/api/stories/…'}</span>
-            </label>
+            <DocxStoryForm
+                onConverted={(converted, name) => loadPayload(() => validatePayload(converted), name, 'docx')}
+                disabled={busy}
+            />
+
+            <details className={styles.advanced}>
+                <summary className='pixel-label'>advanced: upload a story .json from the CLI pipeline</summary>
+                <label className={`pixel-panel ${styles.dropzone}`}>
+                    <input
+                        type='file'
+                        accept='.json,application/json'
+                        onChange={(e) => onJsonFile(e.target.files?.[0])}
+                        disabled={busy}
+                    />
+                    <span className='pixel-label'>▲ select a story .json</span>
+                    <span className={styles.dropHint}>
+                        {(origin === 'json' && fileName) || 'from archive-to-markdown/api/stories/…'}
+                    </span>
+                </label>
+            </details>
 
             {parseError && (
                 <p className={styles.error} role='alert'>
@@ -341,7 +390,7 @@ export default function StoryImporter() {
 
             {payload && (
                 <section className={`pixel-panel ${styles.preview}`}>
-                    <h2 className='pixel-label'>manifest</h2>
+                    <h2 className='pixel-label'>manifest · {fileName}</h2>
                     <dl className={styles.facts}>
                         <div>
                             <dt>story</dt>
@@ -438,14 +487,28 @@ export default function StoryImporter() {
                     )}
 
                     <div className={styles.actions}>
-                        <button type='button' className={styles.upload} onClick={upload} disabled={!canUpload}>
-                            {phase.step === 'uploading' ? `transmitting ${lineTotal} lines…` : `Upload ${lineTotal} lines`}
-                        </button>
+                        {collision?.field === 'slug' ? (
+                            phase.step !== 'success' && (
+                                <DeleteControl
+                                    onConfirm={() => void replace()}
+                                    busy={busy}
+                                    deleteLabel={`Replace its text with these ${lineTotal} lines`}
+                                    prompt={`replace every chapter of “${collision.story.title}”?`}
+                                    confirmLabel={busy ? 'replacing…' : 'Replace'}
+                                    cancelLabel='Keep'
+                                />
+                            )
+                        ) : (
+                            <button type='button' className={styles.upload} onClick={upload} disabled={!canUpload}>
+                                {phase.step === 'uploading' ? `transmitting ${lineTotal} lines…` : `Upload ${lineTotal} lines`}
+                            </button>
+                        )}
                     </div>
 
                     {phase.step === 'success' && (
                         <p className={styles.success}>
-                            ✔ story archived — <Link href={phase.href}>read it →</Link>
+                            ✔ {phase.replaced ? 'story text replaced' : 'story archived'} —{' '}
+                            <Link href={phase.href}>read it →</Link>
                         </p>
                     )}
                     {phase.step === 'failed' && (
@@ -455,16 +518,25 @@ export default function StoryImporter() {
                             </p>
                             <p className={styles.hint}>
                                 {phase.duplicate
-                                    ? 'Nothing was imported. Delete the existing story from its page first, or give this one a new slug and title in the manuscript frontmatter.'
+                                    ? `Nothing was imported. Delete the existing story from its page first, or give this one a new slug and title ${changeWhere}.`
                                     : 'Nothing was imported — the upload is all-or-nothing, so it is safe to fix the file and try again.'}
                             </p>
                         </div>
                     )}
-                    {collision && phase.step !== 'success' && (
+                    {collision?.field === 'slug' && phase.step !== 'success' && (
+                        <p className={styles.hint}>
+                            This slug is{' '}
+                            <Link href={`/stories/${collision.story.slug}`}>&ldquo;{collision.story.title}&rdquo;</Link>,
+                            already on the shelf. If this is a revised draft of it, replace its text: every chapter and
+                            line is swapped at once, and its title, blurb, authors and season stay as they are (edit
+                            those on the story page). If it&rsquo;s a different story, change the slug {changeWhere}.
+                        </p>
+                    )}
+                    {collision?.field === 'title' && phase.step !== 'success' && (
                         <p className={styles.error}>
-                            ✖ the {collision.field} is already taken by{' '}
+                            ✖ the title is already taken by{' '}
                             <Link href={`/stories/${collision.story.slug}`}>&ldquo;{collision.story.title}&rdquo;</Link>{' '}
-                            — delete it from its page first, or change the {collision.field} in the manuscript frontmatter.
+                            — change the title {changeWhere}, or use that story&rsquo;s slug to replace its text.
                         </p>
                     )}
                 </section>

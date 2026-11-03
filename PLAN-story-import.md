@@ -107,8 +107,8 @@ stopgap.
 
 ## Progress (2026-11-03, branch `story-docx-import`, both repos)
 
-Neither repo is merged or pushed. Dry-run merges with `main` and with the
-MVP session's `mvp-lockdown` are clean in both repos.
+Neither repo is merged to `main` or pushed. `main` (with `mvp-lockdown` and
+`slug-transliterate`) is merged *into* this branch in both repos.
 
 **Done**
 - **Python converter fixed** against the 23 Drive docx that have reviewed
@@ -134,32 +134,41 @@ MVP session's `mvp-lockdown` are clean in both repos.
     and all 23 docx, byte for byte.
   - `POST /stories/convert`: analysis, or `{payload, markdown, warnings}`.
     Admin-only, writes nothing.
-- **ff-site:** `src/components/import/DocxStoryForm.tsx`, **WIP, not
-  rendered anywhere yet.**
+- **ff-site `/import` (wired, verified end to end):**
+  - The Google Doc form (`DocxStoryForm`) is the main path. The CLI `.json`
+    upload sits under an "advanced" `<details>`. Both go through one
+    `loadPayload` + speaker resolution in `StoryImporter`.
+  - The slug placeholder shows the live `slugify(title)`, which is what the
+    server derives when the field is blank.
+  - On a slug collision, Upload becomes a confirm-style **Replace its text**
+    (`DeleteControl`), calling `PUT /stories/:slug/import`. It keeps the
+    title, blurb, authors and season. A title collision under another slug
+    stays an error.
+  - Verified with headless Playwright against an isolated dev pair: API
+    :3100 and site :3101 on DB `final-frontier-docx`, restored from
+    `pre-npc-personas-2026-11-03.dump` and using a minted admin JWT. The
+    replace path keeps the story id. The create path makes a new story. The
+    same text under a new title returns the server's 409 duplicate message.
+    The JSON path still offers Replace. No sideways scroll at 390px, in both
+    themes.
 
 **Next**
-1. Wire `DocxStoryForm` into `StoryImporter`:
-   - Factor `loadText` into a `loadPayload(parsed, name)` that both paths use,
-     and put the JSON upload under an "advanced" `<details>`.
-   - Add the form's SCSS classes. They're named in the component; none exist
-     yet.
-   - Update the `/import` page tagline.
-2. When the slug collides, offer "Replace its text", via `DeleteControl`
-   styled as a confirm, calling `PUT /stories/:slug/import {chapters}`.
-3. Verify end to end in a browser. It needs an admin login: an automated
-   login with the user's dev credentials was blocked in this session.
-4. `Story.importMeta` (save the color map for revisions). This is a schema
-   change: use a separate DB per `SESSION-HANDOFF.md`, or post before pushing.
-5. Images: 7 pictures in 3 API stories are missing (see the review notes). This
+1. **Rendered preview.** Today the "preview" is the manifest (counts,
+   speakers). The plan called for rendering the payload with the real
+   `StoryReader` components before publishing, which matters most for
+   catching a wrong color → speaker pick.
+2. `Story.importMeta` (save the color map for revisions, so a re-import only
+   asks about new colors). This is a schema change: push it to
+   `final-frontier-docx`, never the shared DB.
+3. Images: 7 pictures in 3 API stories are missing (see the review notes). This
    needs an image line type plus storage.
+4. After Beta's Phase 2 lands on `main`, merge it in. NPC speakers then
+   exist as personas, not characters, and the docx color dropdown lists only
+   characters. Decide whether an NPC voice should pick an NPC persona.
 
 **Open decisions (user)**
 - Who can import: admins only (today), or any member credited as author.
 - Drafts, or straight to the shelf.
-- **Slugs and accents:** the canonical `slugify` (`ff-server/src/utils/slug.ts`,
-  mirroring the wiki rule) *drops* accented letters, so "Volentinà
-  Constantini" becomes `volentin_constantini`. The user says
-  `volentina_constantini` is right, which means transliterating (NFKD, then
-  strip the marks), as the Python CLI's slugify does. Changing the rule
-  touches the wiki convention and both copies. `/stories/convert` uses the
-  canonical one for now.
+- ~~Slugs and accents~~: resolved. Accents transliterate in every copy
+  (branch `slug-transliterate`, merged to `main`), and the wiki page is
+  updated.

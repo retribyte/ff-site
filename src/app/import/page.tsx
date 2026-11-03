@@ -28,7 +28,8 @@ export default async function ImportPage() {
             <header className={styles.header}>
                 <h1>Story import</h1>
                 <p className={styles.tagline}>
-                    Feed a story JSON from <code>archive-to-markdown/story-md-to-api.py</code> onto the shelf.
+                    Put a story from a Google Doc onto the shelf, or replace the text of one already there with a
+                    revised draft.
                 </p>
             </header>
             {/* Episode import was retired from the web app — the archive is seeded; re-imports go through archive-to-markdown/api-import.py */}
