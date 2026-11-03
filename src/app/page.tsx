@@ -10,7 +10,6 @@ const seasons = [
 
 const minorDoors = [
     { href: '/characters', title: 'Characters', blurb: 'Player characters and the people they met.' },
-    { href: '/species', title: 'Species', blurb: 'The peoples of the galaxy.' },
     { href: '/items', title: 'Items', blurb: 'Gear, weapons, and artifacts.' },
     { href: '/search', title: 'Search', blurb: 'Find any line in the archive.' },
     { href: '/8ball', title: '8-Ball', blurb: 'Ask the archive oracle a question.' },

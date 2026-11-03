@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -25,6 +24,8 @@ const CHARACTER_WIKI_ORDER: WikiFieldSpec[] = [
     // Wiki-page nicknames — a different concept from the DB Persona "also
     // known as" chips in the article body (alternate presentation eras)
     { field: 'aliases', label: 'Nicknames' },
+    // The wiki owns species (there's no species table in the DB)
+    'species',
     'occupation',
     'faction',
     { field: 'birthdate', label: 'Born' },
@@ -120,22 +121,7 @@ export default async function CharacterPage({ params }: Props) {
     // eslint-disable-next-line react-hooks/purity
     const sampleQuotes = [...teaserQuotes].sort(() => Math.random() - 0.5).slice(0, 3);
 
-    const facts: [string, React.ReactNode][] = [];
-    if (character.species.length) {
-        facts.push([
-            'species',
-            character.species.map((s, i) => (
-                <Fragment key={s.id}>
-                    {i > 0 && ' / '}
-                    <Link href={`/species/${s.slug}`} className={styles.factLink}>
-                        {s.name}
-                    </Link>
-                </Fragment>
-            )),
-        ]);
-    }
-
-    facts.push(...wikiFacts(character.wiki, CHARACTER_WIKI_ORDER, facts.map(([label]) => label)));
+    const facts = wikiFacts(character.wiki, CHARACTER_WIKI_ORDER);
 
     return (
         <main className={styles.main} style={style}>

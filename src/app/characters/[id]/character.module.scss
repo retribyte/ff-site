@@ -29,10 +29,6 @@
     margin-bottom: 0.35rem;
 }
 
-.factLink {
-    @include m.plain-link;
-}
-
 .name {
     margin: 0 0 0.35rem;
     @include m.glow-heading(var(--char));

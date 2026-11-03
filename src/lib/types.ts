@@ -2,7 +2,6 @@
 // Relation fields are optional because the API includes them only on some endpoints.
 
 export type UserRole = 'USER' | 'ADMIN';
-export type SentienceClass = 'BLACK' | 'HIGHER_SENTIENT' | 'LOWER_SENTIENT' | 'NON_SENTIENT';
 export type MessageType = 'BOT_RESPONSE' | 'COMMAND' | 'QUOTE' | 'ACTION' | 'EMBED' | 'OTHER';
 export type ItemType = 'WEAPON' | 'EQUIPMENT' | 'ARTIFACT' | 'OTHER';
 export type StoryLineType = 'NARRATION' | 'DIALOGUE' | 'ACTION' | 'TRANSCRIPT' | 'BREAK' | 'HEADING';
@@ -29,12 +28,6 @@ export interface UserProfile extends PublicUser {
     _count: { messages: number; commentaries: number };
 }
 
-export interface SpeciesRef {
-    id: number;
-    name: string;
-    slug: string;
-}
-
 export interface Character {
     id: number;
     name: string;
@@ -43,8 +36,6 @@ export interface Character {
     color: string | null;
     blurb: string | null;
     slug: string;
-    /** every species the character belongs to — hybrids have several */
-    species: SpeciesRef[];
     creator?: PublicUser;
     personas?: Persona[];
     wiki?: WikiData | null;
@@ -81,17 +72,6 @@ export interface NpcPersona extends Persona {
     name: string;
     characterId: null;
     messageCount: number;
-}
-
-export interface Species {
-    id: number;
-    name: string;
-    description: string;
-    class: SentienceClass;
-    creatorId: number;
-    slug: string;
-    Character?: Character[];
-    wiki?: WikiData | null;
 }
 
 export interface Season {

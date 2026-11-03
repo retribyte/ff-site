@@ -40,7 +40,7 @@ export const metadata: Metadata = {
         default: 'Final Frontier',
         template: '%s · Final Frontier',
     },
-    description: 'The canonical archive of the Final Frontier universe — campaigns, characters, species, and lore.',
+    description: 'The canonical archive of the Final Frontier universe — campaigns, characters, and lore.',
 };
 
 // Runs before paint so the persisted theme applies without a flash.

@@ -129,7 +129,6 @@ export default function SiteSearch() {
     const hasAnyResults =
         !!results &&
         (results.characters.length > 0 ||
-            results.species.length > 0 ||
             results.items.length > 0 ||
             results.messages.length > 0 ||
             results.storyLines.length > 0);
@@ -207,22 +206,6 @@ export default function SiteSearch() {
                                                 size={22}
                                             />
                                             <span>{c.name}</span>
-                                        </Link>
-                                    ))}
-                                </section>
-                            )}
-
-                            {results.species.length > 0 && (
-                                <section className={styles.section}>
-                                    <span className={styles.sectionLabel}>species</span>
-                                    {results.species.map((s) => (
-                                        <Link
-                                            key={`species-${s.id}`}
-                                            href={`/species/${s.slug}`}
-                                            className={styles.row}
-                                            onClick={close}
-                                        >
-                                            <span>{s.name}</span>
                                         </Link>
                                     ))}
                                 </section>

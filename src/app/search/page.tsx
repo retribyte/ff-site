@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { api, apiPaged } from '@/lib/api';
-import type { Character, Species, Item, Season, Episode, MessageType } from '@/lib/types';
+import type { Character, Item, Season, Episode, MessageType } from '@/lib/types';
 import { episodesByTitle, lineUrl } from '@/lib/seasons';
 import { storyQuoteUrl } from '@/lib/stories';
 import { messageSnippet, embedLast } from '@/lib/search';
@@ -59,7 +59,6 @@ export default async function SearchPage({ searchParams }: Props) {
     const storyPage = pageParam(storyLinesPage);
 
     let characters: Character[];
-    let species: Species[];
     let items: Item[];
     let messagesResult: { data: MessageHit[]; total: number; page: number; limit: number };
     let storyLinesResult: { data: StoryLineHit[]; total: number; page: number; limit: number };
@@ -67,16 +66,14 @@ export default async function SearchPage({ searchParams }: Props) {
 
     try {
         const qs = encodeURIComponent(query);
-        const [charactersRes, speciesRes, itemsRes, messagesRes, storyLinesRes, seasons] = await Promise.all([
+        const [charactersRes, itemsRes, messagesRes, storyLinesRes, seasons] = await Promise.all([
             api<Character[]>(`/characters?search=${qs}`),
-            api<Species[]>(`/species?search=${qs}`),
             api<Item[]>(`/items?search=${qs}`),
             apiPaged<MessageHit>(`/search?category=messages&q=${qs}&page=${msgPage}`),
             apiPaged<StoryLineHit>(`/search?category=storyLines&q=${qs}&page=${storyPage}`),
             api<Season[]>('/seasons'),
         ]);
         characters = charactersRes;
-        species = speciesRes;
         items = itemsRes;
         messagesResult = messagesRes;
         storyLinesResult = storyLinesRes;
@@ -92,7 +89,6 @@ export default async function SearchPage({ searchParams }: Props) {
     const sortedMessages = [...messagesResult.data].sort(embedLast);
     const hasAnyResults =
         characters.length > 0 ||
-        species.length > 0 ||
         items.length > 0 ||
         messagesResult.total > 0 ||
         storyLinesResult.total > 0;
@@ -121,19 +117,6 @@ export default async function SearchPage({ searchParams }: Props) {
                                 <CharacterCard
                                     character={{ id: c.id, name: c.name, color: c.color, image: c.image, slug: c.slug }}
                                 />
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )}
-
-            {species.length > 0 && (
-                <section className={styles.section}>
-                    <h2>Species</h2>
-                    <ul className={styles.rowList}>
-                        {species.map((s) => (
-                            <li key={s.id}>
-                                <Link href={`/species/${s.slug}`}>{s.name}</Link>
                             </li>
                         ))}
                     </ul>

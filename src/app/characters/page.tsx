@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { api } from '@/lib/api';
-import type { Character, Species } from '@/lib/types';
+import type { Character } from '@/lib/types';
 import { getSessionUser } from '@/lib/auth';
 import SignalLost from '@/components/SignalLost';
 import ActionChip from '@/components/editor/ActionChip';
@@ -16,9 +16,8 @@ export const dynamic = 'force-dynamic';
 export default async function CharactersPage() {
     const user = await getSessionUser();
     let characters: Character[];
-    let species: Species[];
     try {
-        [characters, species] = await Promise.all([api<Character[]>('/characters'), api<Species[]>('/species')]);
+        characters = await api<Character[]>('/characters');
     } catch {
         return (
             <main className={styles.main}>
@@ -47,10 +46,8 @@ export default async function CharactersPage() {
                     name: c.name,
                     color: c.color,
                     image: c.image,
-                    speciesIds: c.species.map((s) => s.id),
                     slug: c.slug,
                 }))}
-                species={species.map((s) => ({ id: s.id, name: s.name }))}
             />
         </main>
     );

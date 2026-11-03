@@ -62,7 +62,7 @@ function renderWikiValue(value: WikiValue): ReactNode {
  * so a field added on the wiki appears with no site change: `order` only
  * pins fields to the top (see WikiFieldSpec); the rest follow
  * alphabetically with labels made by wikiLabel. A field whose label matches one of `taken`
- * (rows the page already shows from its own data, e.g. "species") is
+ * (rows the page already shows from its own data) is
  * skipped rather than shown twice.
  */
 export function wikiFacts(

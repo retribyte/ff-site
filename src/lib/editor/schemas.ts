@@ -1,4 +1,4 @@
-import { ITEM_TYPE_META, SENTIENCE_LABELS } from '@/lib/lore';
+import { ITEM_TYPE_META } from '@/lib/lore';
 import { decodeEntities } from '@/lib/html';
 
 // Schema-driven editing: every record type declares its fields once and the
@@ -73,37 +73,9 @@ export const characterSchema: EntitySchema = {
     indexPath: '/characters',
     fields: [
         { name: 'name', label: 'name', kind: 'text', required: true },
-        {
-            name: 'speciesIds',
-            label: 'species',
-            kind: 'entity-refs',
-            required: true,
-            help: 'hybrids: ctrl/cmd-click to pick every species they belong to',
-            ref: { path: '/species', labelField: 'name' },
-            read: (record) => ((record.species as { id: number }[] | undefined) ?? []).map((s) => s.id).join(','),
-        },
         richTextField('blurb', 'blurb', { help: `short public bio shown on the dossier; ${RICH_TEXT_HELP}` }),
         { name: 'image', label: 'avatar url', kind: 'text', placeholder: '/avatars/emmett.png' },
         { name: 'color', label: 'theme color', kind: 'color' },
-        SLUG_FIELD,
-    ],
-};
-
-export const speciesSchema: EntitySchema = {
-    kind: 'species',
-    basePath: '/species',
-    viewPath: (idOrSlug) => `/species/${idOrSlug}`,
-    indexPath: '/species',
-    fields: [
-        { name: 'name', label: 'name', kind: 'text', required: true },
-        richTextField('description', 'description', { required: true }),
-        {
-            name: 'class',
-            label: 'sentience class',
-            kind: 'select',
-            required: true,
-            options: Object.entries(SENTIENCE_LABELS).map(([value, label]) => ({ value, label })),
-        },
         SLUG_FIELD,
     ],
 };
@@ -130,7 +102,6 @@ export const itemSchema: EntitySchema = {
 
 export const EDITOR_SCHEMAS = {
     character: characterSchema,
-    species: speciesSchema,
     item: itemSchema,
 } as const;
 

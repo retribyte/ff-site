@@ -42,7 +42,7 @@ export default async function EditorPage({ kind, recordParam }: { kind: EditorKi
                     className='pixel-label'
                     style={{ textDecoration: 'none' }}
                 >
-                    ← {isEdit ? 'back to record' : `all ${kind === 'species' ? 'species' : `${kind}s`}`}
+                    ← {isEdit ? 'back to record' : `all ${kind}s`}
                 </Link>
             </nav>
             <header style={{ textAlign: 'center', marginBottom: '1.5rem' }}>

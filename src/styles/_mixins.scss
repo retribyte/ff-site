@@ -12,7 +12,7 @@
     padding: 0;
 }
 
-// Responsive card grid (character/item/species indexes, member lists).
+// Responsive card grid (character/item indexes, member lists).
 @mixin auto-grid($min: 10.5rem, $gap: 1rem) {
     @include reset-list;
     display: grid;
@@ -130,7 +130,7 @@
         0 0 18px color-mix(in srgb, #{$glow} #{$mix}, transparent);
 }
 
-// ── Dossier infobox (character / item / species detail sidebars) ─────────
+// ── Dossier infobox (character / item detail sidebars) ─────────
 // The wiki portable-infobox: tinted pixel-panel, starfield header, striped
 // fact rows. $tint is the record's inline identity var.
 @mixin infobox-panel($tint, $glow: true) {

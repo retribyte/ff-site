@@ -14,7 +14,6 @@ const links = [
     { href: '/archives', label: 'Archives' },
     { href: '/stories', label: 'Stories' },
     { href: '/characters', label: 'Characters' },
-    { href: '/species', label: 'Species' },
     { href: '/items', label: 'Items' },
     { href: '/convert', label: 'Convert' },
     { href: '/8ball', label: '8-Ball' },

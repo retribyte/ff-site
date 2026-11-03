@@ -27,7 +27,7 @@ interface Envelope {
     data?: { id?: number; slug?: string };
 }
 
-/** Loads the options for an entity-ref picker (species list, character list…). */
+/** Loads the options for an entity-ref picker (character list…). */
 function useRefOptions(fields: FieldDef[]) {
     const refPaths = useMemo(
         () => [...new Set(fields.filter((f) => f.kind === 'entity-ref' || f.kind === 'entity-refs').map((f) => f.ref!.path))],

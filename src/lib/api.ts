@@ -110,7 +110,6 @@ export async function apiPaged<T>(path: string, options: RequestOptions = {}): P
 // comparable scores). See ff-server's src/search/ for the backing endpoint.
 export interface SearchResults {
     characters: { id: number; name: string; slug: string; image: string | null }[];
-    species: { id: number; name: string; slug: string }[];
     items: { id: number; name: string; slug: string; image: string | null }[];
     // `type` lets the UI preview the matched field of an EMBED message's JSON
     // body, rather than the raw JSON string, for non-EMBED types.
