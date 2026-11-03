@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from '@/components/auth/SessionProvider';
-import styles from './episodeImporter.module.scss';
+import styles from './storyImporter.module.scss';
 
 // Payload produced by archive-to-markdown/story-md-to-api.py: one story, its
 // author username, and chapters of lines keyed by *names* (character/speaker

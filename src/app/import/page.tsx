@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getSessionUser } from '@/lib/auth';
-import ImportConsole from '@/components/import/ImportConsole';
+import StoryImporter from '@/components/import/StoryImporter';
 import styles from './import.module.scss';
 
-export const metadata: Metadata = { title: 'Import transcripts' };
+export const metadata: Metadata = { title: 'Import a story' };
 
 export default async function ImportPage() {
     const user = await getSessionUser();
@@ -15,7 +15,7 @@ export default async function ImportPage() {
                 <div className={`pixel-panel ${styles.restricted}`}>
                     <p className='pixel-label'>⚠ restricted frequency</p>
                     <p>
-                        Transcript import needs archivist (admin) clearance.{' '}
+                        Story import needs archivist (admin) clearance.{' '}
                         {!user && <Link href='/login'>Log in</Link>}
                     </p>
                 </div>
@@ -26,12 +26,13 @@ export default async function ImportPage() {
     return (
         <main className={styles.main}>
             <header className={styles.header}>
-                <h1>Archive import</h1>
+                <h1>Story import</h1>
                 <p className={styles.tagline}>
-                    Feed episode or story JSON from the <code>archive-to-markdown</code> pipeline into the archive.
+                    Feed a story JSON from <code>archive-to-markdown/story-md-to-api.py</code> onto the shelf.
                 </p>
             </header>
-            <ImportConsole />
+            {/* Episode import was retired from the web app — the archive is seeded; re-imports go through archive-to-markdown/api-import.py */}
+            <StoryImporter />
         </main>
     );
 }

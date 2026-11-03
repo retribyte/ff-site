@@ -50,7 +50,7 @@ export default function PersonaStampPanel({
     const [error, setError] = useState<string | null>(null);
 
     // Fetched once, lazily, the first time a logged-in user can see the
-    // panel — same /personas index EpisodeImporter uses, filtered locally
+    // panel — same /personas index the (retired) episode importer used, filtered locally
     // to the picked character rather than re-fetched per selection.
     useEffect(() => {
         if (!user || personas !== null) return;
