@@ -71,7 +71,11 @@ Zach shoves them off and punches one in the face and kicks another in the stomac
 
 “[Phone. *Now*.]{Zacharias Smith}” The man doesn’t hesitate before tossing his phone to Zach who catches it with his free hand. He then tosses the gun to the ground before turning around and leaving the mansion, not even sparing a last glance to John.
 
+***
+
 (The rest of this one-shot is just ZachxJack fluff so read if you want to I guess...)
+
+***
 
 Zach gets to the transit station, the very same where he met his first crew, when he sees the advertisement board, he scans it before seeing what he’s looking for.
 
@@ -116,6 +120,8 @@ Zach could cry at Jack’s voice alone… but then he realizes that Jack has nev
 “[Yeah… yeah that works…]{Zacharias Smith}”
 
 “[See you then…]{Jack Madison}” *click* Zach releases a breath he didn’t know he was holding…
+
+***
 
 An hour passes and it’s almost light outside, Zach is pacing outside the station. He doesn’t know if John’s men are watching him, just waiting for their moment to grab Zach and take him back to the mansion. Zach doesn’t want to go back, he wasn’t *supposed* to go back. But here he is! Stuck on Earth with an hour left of freedom, with a boyfriend who is in disbelief that his boyfriend is calling for help, and a crew who is probably freezing to death on a planet that he doesn’t know the name of. *Fuck* he hopes they’re surviving…
 
@@ -202,6 +208,8 @@ Jack can see the Big Dipper.
 “[Now that I get to see the rest of your beautiful face, can I finish with these cuts?]{Jack Madison}” Zach chuckles before lightly shoving Jack.
 
 “[I forgot how suave you are!]{Zacharias Smith}”
+
+***
 
 After Zach was treated, the two took the time to catch up. Talking about what has happened, more specifically what has happened to Zach and his crew… wait…
 

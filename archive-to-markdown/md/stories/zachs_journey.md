@@ -73,6 +73,8 @@ Something special happens, John and Zach are having breakfast together… howeve
 
 Zach is tired, just tired. For 10 years, for *10 years* he’s had to deal with John, and he’s sick of it. So, with a packed bag, a new outfit, and the mindset of “[*I need out*]{Zacharias Smith}” Zach made his way to the door of his- no- *John’s* house. But not before stopping in the living room and seeing the family heirloom hanging above the mantle of the fireplace. The Smith family sword *Oblivion*… Zach knows John isn’t going to miss it, so Zach takes it. After all, it’s a big bad world out there, having a weapon isn’t a bad idea. And with Oblivion strapped to his back, Zach sneaks his way outside.
 
+***
+
 Zach is a couple miles in when he stops in front of the station. He takes a deep breath, this is it. He can finally live his life, whatever that might be, no more yelling, no more bottles, no more expectations. He walks through the door and gets in line, he pulls out his pen and pad in case he needs to talk… those scars still need to heal. But he was free! He’s going on this ship and going to who knows where and starting a new life! Hopefully it will be quiet, and peaceful, and most of all, he’ll be *happy*.
 
 Cut to him at the front of the line wondering what god has forsaken him when his implants won’t work…. *Fucking John*.
@@ -128,6 +130,8 @@ They’re stranded on Barbona. The crew that’s left is Zach and the Captain. E
 “[Good news, found something!]{Pirate Captain}” The Captain cheers. Zach snaps his focus to the Captain. The Captain then gestures Zach over to himself and passes the binoculars to Zach. “[Right ahead, see that ship? It doesn’t look damaged and look-]{Pirate Captain}” He points to a group of Torrids gathering next to the ship. “[-If those things are going to attack it, that means people are on the ship! If we can manage to get to that ship unnoticed by both the crew and the Torrids and let those watery fucks kill them, that ship is free for the taking!]{Pirate Captain}” Zach’s eyes widen at the prospect of not being stranded and he smiles. The Captain smiles back. “[Glad you agree with me, now let’s go already!]{Pirate Captain}” Zach scrambles to get Oblivion and his backpack and runs back to the open hatch, where the Captain has a raft ready.
 
 The pair climbs on and rows to the ship, where the Torrids are already in full swing on their attack. They hear the crew inside shouting and fighting back, but no one is dropping. The Captain sighs before turning to Zach. “[Looks like they’re putting up a fight… at this rate, the Torrids will notice us, so might as well join the fight. You go in and show them what you learned!]{Pirate Captain}” Zach nods and climbs onto the ship.
+
+***
 
 *Present day*
 

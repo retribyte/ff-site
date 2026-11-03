@@ -43,6 +43,8 @@ Two hours pass and Bellow exits the ship, he turns the corner to see Zach holdin
 
 “[*Chuckle* Right.]{Bellow Brightlight}”
 
+***
+
 The next time Bellow gets a text from Zach, Zach says to meet him when it’s dark. An odd request, but he pays no mind to it.
 
 It’s dark when Bellow turns the corner and sees Zach sat crisscrossed near a campfire.
@@ -69,6 +71,8 @@ It’s dark when Bellow turns the corner and sees Zach sat crisscrossed near a c
 
 *The gentle breeze rustling the leaves of the trees*
 
+***
+
 “[*Now then, do these sounds remind you of anything?*]{Zacharias Smith}”
 
 “[It reminds me of… home.]{Bellow Brightlight}”
@@ -94,6 +98,8 @@ It’s dark when Bellow turns the corner and sees Zach sat crisscrossed near a c
 “[Well… I say thanks to him then. After all, I get to receive training now.]{Bellow Brightlight}” Zach smiles a little.
 
 “[*Right, anyway, break over. Let’s continue.*]{Zacharias Smith}”
+
+***
 
 They continue this for several days, Bellow is getting faster and even managing to get a few hits in. Zach is proud of Bellow’s progress, but as the days go by Zach keeps remembering what happened on Barbona. It’s distracting him and he takes a nasty swing to the face.
 
@@ -124,6 +130,8 @@ They continue this for several days, Bellow is getting faster and even managing 
 “[Whenever Seth can actually secure resources… so maybe another day or so…]{Bellow Brightlight}”
 
 “[*Let’s stop for today.*]{Zacharias Smith}”
+
+***
 
 Zach can feel that his bond with Bellow has grown, maybe one day…
 

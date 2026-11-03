@@ -273,6 +273,8 @@ A beat of awkward silence.
 
 “[*Morra! Shut up!*]{Zacharias Smith}”
 
+***
+
 Zach is staring out the window of the new ship, just remembering the “good times”. He knows this mission is practically suicide, but he also knows he needs to call Jack. God knows he isn’t going to hear the end of it…
 
 ….

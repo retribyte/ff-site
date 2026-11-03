@@ -27,6 +27,8 @@ This is all because of Seth.
 
 Out of everyone, he might be in the worst condition. Although it’s hard to tell, because he’s already insane. He keeps shambling around, mumbling about lancers and shadows and friends. I guess losing his bee partner messed him up more than usual, but does that really justify sabotaging our every attempt at survival?
 
+***
+
 We’re lucky that there’s a tundra nearby, otherwise we’d be as good as dead. Dutch and I have spent most of our time gathering wood and other materials. It’s monotonous but doesn’t bother me. It’s actually kind-of spawned a game between me and Dutch to see who can carry more at once. Or, at least, that’s what we made up to distract from the chaos back at base.
 
 Speaking of which, our “base” is functional, but kind of a mess. Morra built most of it here and there while dissociating. Hell, they spent three hours floating and tying sticks together to help us out of that pit in the first place. The underground lab (if you can even call it that) is where Bellow hides most of the time. He’s always down there, writing in his journal or trying to grow things in what I can only assume to be a desperate attempt at normalcy. At least he’s helping grow food…

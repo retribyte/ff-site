@@ -47,6 +47,8 @@ Sanya paused. Normally, she’d let someone head straight first into danger. She
 
 “[Good-]{Mary}” But before the Angelus could finish, Sanya had teleported out of the temple, leaving her alone yet again.
 
+***
+
 After returning to the ship for a few hours, Sanya crept out of her bed. She knew Garrick would still be awake, and she had a few favors to ask him. Sure enough, as soon as she creaked open the door, she could see the ghost dart off to attempt to avoid being caught.
 
 “[Come here, Ghost. I need to ask you some things.]{Sanya Dreadflower}”

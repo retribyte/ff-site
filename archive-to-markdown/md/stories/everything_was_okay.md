@@ -19,7 +19,7 @@ Wade worked diligently, double-checking the finished units for software malfunct
 
 Wade kept at it for the next hour or two, working his standard shift, checking one mechanical brain after another. To his surprise, he heard Gary’s voice over the intercom:
 
-[*“Hello, everyone, I’d just like to inform you that we’re getting a surprise check-up from Company Director Vince. He should arrive shortly. If we get a good rating from him, you’re all getting bonuses, so keep your head in the game. That’s all.”*]{Gary}
+“[*Hello, everyone, I’d just like to inform you that we’re getting a surprise check-up from Company Director Vince. He should arrive shortly. If we get a good rating from him, you’re all getting bonuses, so keep your head in the game. That’s all.*]{Gary}”
 
 The building cheered, although there weren’t many workers. It was the best news Wade had heard in months. Maybe he could buy his wife an anniversary gift early? Or perhaps keep saving up for that new starship they had been looking at? His mind raced with possibilities, but he quickly returned to work, making sure to look as good as possible when the boss came in.
 
@@ -59,11 +59,11 @@ The terror was overpowering. Wade couldn’t stay quiet any longer—a whine esc
 
 The footsteps drew closer. Before he knew it, they stopped and a shadow loomed over him. A figure in crimson armor bent down and grabbed him by the throat, lifting him into the air.
 
-[**“Where is Vincent?”**]{Odran} the figure asked, feigning innocence as they closed Wade’s windpipe.
+“[**Where is Vincent?**]{Odran}” the figure asked, feigning innocence as they closed Wade’s windpipe.
 
 Frantically kicking and attempting to gasp for air, Wade pointed to the conference room. Only his own life mattered to him now.
 
-[**“Thank you. Your death will be much less painful now,”**]{Odran} the figure told him. Tightening their grip, the red-clad figure crushed Wade’s neck like a toothpick. His lifeless body slumped to the floor as the figure let go.
+“[**Thank you. Your death will be much less painful now**]{Odran},” the figure told him. Tightening their grip, the red-clad figure crushed Wade’s neck like a toothpick. His lifeless body slumped to the floor as the figure let go.
 
 The four walked slowly toward the conference room. The one in black walked up to the door and slammed his fist into it, creating the same dent as before. He kicked it in the center and felt the structure weaken. Kicking it once more, the blast door flew backwards and slammed into the oval wooden table. The four walked into the room and stared into the eyes of the two cowering bosses.
 
@@ -97,15 +97,17 @@ The figure in blue walked up to the dying man. Vince noticed an emblem on all of
 
 She put her fist around his skull, muffling his words, waited for a few seconds, and crushed it, as if it were made of paper. Blood gushed through the fingers of her gloves and flecks of bone dropped to the ground, surrounding the now beheaded boss. The four walked out, the red lights still flashing in the station.
 
-[**“Sir, I think I heard of that group before. Didn’t they kidnap that lizard racer?”**]{Odran}
+“[**Sir, I think I heard of that group before. Didn’t they kidnap that lizard racer?**]{Odran}”
 
-[**“Yeah, I think they did. And they’re led by a Squoatling. Llamanians made a big fuss about it.”**]{Marv}
+“[**Yeah, I think they did. And they’re led by a Squoatling. Llamanians made a big fuss about it.**]{Marv}”
 
-[**“It doesn’t matter. We need to locate them and dispose of that pyromaniac.”**]{Sascha}
+“[**It doesn’t matter. We need to locate them and dispose of that pyromaniac.**]{Sascha}”
 
 “[**Hush, all of you. They’re a bounty-hunting group, so all we need to do is put a contract out there. Let’s go...this light is hurting my eyes.**]{Ravens Leader}”
 
 As the four exited the building, Wade’s body lay on the floor, his corpse playing a small part in the scene of the ravaged building. Nobody would come here for a while. He would rot, just like the rest, and he would be forgotten in time. What a shame.
+
+***
 
 Everything was okay.
 

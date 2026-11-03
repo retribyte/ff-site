@@ -7,7 +7,7 @@ season: FF4
 format: prose
 ---
 
-## Part 1
+# Chapter 1: Part 1
 
 [Are you ready, █████?]{Zion Daybreaker}
 
@@ -63,7 +63,7 @@ format: prose
 
 [I would do anything for you, Naomi.]{Zion Daybreaker}
 
-## Part 2
+# Chapter 2: Part 2
 
 “[Zion, this is insane!]{Naomi}” she exclaimed.
 
@@ -143,7 +143,7 @@ He was taken aback by this comment, and turned away. “[It… it says…]{Zion 
 
 “[…and I thought I knew you.]{Naomi}”
 
-## Part 3
+# Chapter 3: Part 3
 
 [It was done.]{Zion Daybreaker}
 

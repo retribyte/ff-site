@@ -9,6 +9,8 @@ format: prose
 
 # Chapter 1: After Episode 3
 
+***
+
 I never would have imagined this mission would be so dangerous. Though I didn’t get hit, my crewmates suffered heavy damage.
 
 Dutch tried to stand up to that brute, but got his rib broken in the process.
@@ -25,7 +27,11 @@ He’s a bit reckless at times, but I admire his bravery.
 
 I’ll be prepared to come to his aid any time he needs.
 
+***
+
 The stars are extra beautiful tonight. It’s amazing how much you can see from space…
+
+***
 
 # Chapter 2: After Episode 3, A Little Later
 
@@ -69,7 +75,11 @@ Bellow: “[Bye.]{Bellow Brightlight}”
 
 “[*I hope there’ll be pancakes…*]{Bellow Brightlight}”
 
+***
+
 # Chapter 3: After Episode 4
+
+***
 
 We visited an ocean planet this week.
 
@@ -83,9 +93,15 @@ Dutch almost got himself killed again, but as always, I was there to revive him.
 
 I did get to destroy him in blackjack though.
 
+***
+
 The reflection of the stars in the ocean waves is the only redeeming quality of this planet…
 
+***
+
 # Chapter 4: After Episode 11
+
+***
 
 I…don’t know how to feel about our captain, or about Dutch, or anyone else on the team anymore.
 
@@ -103,11 +119,19 @@ He’s still one of my very best friends, but…I can’t stand watching him be 
 
 And I don’t know what to do about it.
 
+***
+
 The stars burn fiercely tonight…
+
+***
 
 # Chapter 5: After Episode 14
 
+***
+
 AUDIO LOG
+
+***
 
 Bellow:
 
@@ -145,6 +169,10 @@ Bellow:
 
 *While Quietly Crying:* [What am I supposed to do?]{Bellow Brightlight}
 
+***
+
 END OF AUDIO LOG
+
+***
 
 In the night sky, a warrior declares his triumph despite all odds…

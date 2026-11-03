@@ -47,6 +47,8 @@ Laziness. Blissful laziness. For the first time in what felt like forever, Emmet
 
 "[Anyhow, we're here to see the place. Have some housewarming gifts for you three and a job, if you're interested.]{Llaray}"
 
+***
+
 As the leader began to tell them about the beginnings of Project HORIZON, Los was in the kitchen with Squina, helping her chop some vegetables for the stew.
 
 "[I heard good things about you two from Emmett, uh...]{Los}" Squina got some condiments out and started sprinkling them in.
@@ -73,6 +75,8 @@ As the leader began to tell them about the beginnings of Project HORIZON, Los wa
 
 "[What? It's Squoatling tradition!]{Squina}"
 
+***
+
 After a long-winded tale of the Llamanian war against the GU and how they are failing, Leader Llaray finally got to the mission and job description.
 
 "[Now look, we're proposing one last-ditch effort to get an edge over the GU. There's a black hole in a section that's reportedly undocumented—legends say all who enter are sucked in. In that black hole, or that region, there is an artifact that supposedly can raise the dead and instantly kill the living.]{Llaray}" Squorchy was not amused by this monologue.
@@ -98,6 +102,8 @@ After a long-winded tale of the Llamanian war against the GU and how they are fa
 "[Yeah, just no empty promises this time. I can let bygones be bygones, but trust is fickle, sir, no offense.]{Emmett Tawfeek}"
 
 "[I understand.]{Llaray}"
+
+***
 
 After helping with the stew, Los returned from the kitchen and sat down next to Emmett and Llaray, who were figuring out details of Emmett's job.
 

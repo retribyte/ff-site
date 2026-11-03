@@ -33,6 +33,8 @@ And as the voice mentioned Seth, it shifted from one of darkness, a noise of scr
 
 “[What do you *Fear,* Zach? What do you ***Dread?***]{Dread}”
 
+***
+
 Zach is paralyzed, he doesn’t know how to answer the question, what does he dread? Well, a lot of things, really… his crew hating him, which is reality. His fiancé leaving him, which also might become a reality. And, while not as much anymore, John. But right now-
 
 “[The fact that I might be dead… is this Hell?]{Zacharias Smith}”
@@ -46,6 +48,8 @@ Zach is pissed now, he’s having a crisis, and all this *voice* is doing is jus
 “[What the Hell do you know? You don’t know what it’s like to be in a group full of idiots after being abused for over 20 years. And then when all is done, the gun is still pointed at you! Oh, why am I even talking? You’re just some disembodied voice who already seems to want to kill me. So-]{Zacharias Smith}” Zach sits cross-legged. “[-make it quick…]{Zacharias Smith}” The voice laughs again.
 
 “[Tsk tsk, if only you knew, Zach…-]{Dread}” The sound of boot clicks rings out through the space, Zach closes his eyes, waiting for the final blow. Finally, he can die in peace. The clicks stop just in front of him. “[Just how similar the two of us really are.]{Dread}” The voice is even more feminine now, Zach is confused. He opens his eyes and what he sees isn’t what he was expecting to see while in this situation. A… woman? Yeah, a woman stands there in form-fitting red and black shirt, shorts, and boots. Her skin and hair, green and plant-like. And finally her eyes, bottomless black voids. She has a smug smile, and the yellow flower in her hair glares at Zach with its one eye. Zach should be intimidated, but for some reason, he’s not…
+
+***
 
 “[If my intentions were to kill you, we wouldn’t be talking. I rarely kill myself, not in this manner, at least. No use using a cannon when a knife will do. No, consider this simply a… conversation with a God.]{Dread}”
 
@@ -72,5 +76,7 @@ The body began to step back, approaching the darkness. As her body began to be e
 The eye closed itself, and the eyelid reopened with a grinning smile.
 
 “[After all… the end IS nigh…]{Dread}”
+
+***
 
 And with that, Zach awoke.

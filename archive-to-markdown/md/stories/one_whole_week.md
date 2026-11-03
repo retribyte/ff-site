@@ -17,4 +17,6 @@ As the last body fell, Sanya looked at her new partner, and realized something. 
 
 “[I’m an assassin. I work for a crew of mercenaries.]{Sanya Dreadflower}” Sanya sat on her sleeping bag and cracked open a nearby book. “[I’m a Floran, and I was interested in ancient Floran culture, so I set up base here in this temple. I came because my crew is currently stuck on a junk heap for a whole week. I thought that I would have some privacy here.]{Sanya Dreadflower}” Sanya glared at Mary, taking the first good look at her. She was an angel, a winged humanoid race. Dressed in a silver and gold outfit, her pink hair stood out from the drab tans and dark reds of the temple. “[Oh, don’t worry about me. I’ll make sure I won’t bother you *too* much. But, this will definitely be a fun week! I'm guessing you won’t be staying?]{Mary}” “[That’s right, I won’t stay the whole week.]{Sanya Dreadflower}” “[Can I use your sleeping bag while you’re gone?]{Mary}”
 
+***
+
 “[Fine.]{Sanya Dreadflower}”

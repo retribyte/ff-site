@@ -7,7 +7,7 @@ season: FF3
 format: prose
 ---
 
-*“I can’t believe I’m really doing this,”* I thought. But I need the money.
+“*I can’t believe I’m really doing this*,” I thought. But I need the money.
 
 “[Eight laps left in the race, folks, and it looks like it’s gonna be close! Kenny’s been in the lead for a bit, but Myrnar looks to be gaining!]{Ron}”
 
@@ -59,21 +59,21 @@ Take aim...
 
 Fire.
 
-An ear-piercing *“BLAM”* is heard before Myrnar drops to the floor, clutching the trophy.
+An ear-piercing “*BLAM*” is heard before Myrnar drops to the floor, clutching the trophy.
 
-*“Shit…I forgot my earplugs,”* I thought. This could be bad. No time to waste, though.
+“*Shit…I forgot my earplugs*,” I thought. This could be bad. No time to waste, though.
 
 Pull the bolt. Take aim.
 
 The screams of the public ring out as I take aim...my vision is shaky…
 
-*“BLAM”*
+“*BLAM*”
 
 Fuck. I missed. Kenny ducks and tries to run for cover.
 
 Pull the bolt. Take aim.
 
-*“BLAM”*
+“*BLAM*”
 
 Kenny’s brains splatter on the ground. 150,000 Ducketts so far.
 
@@ -81,7 +81,7 @@ Pull the bolt. Take aim…where’d Rothman go?
 
 Oh well. Fourth place should do nicely.
 
-*“BLAM”*
+“*BLAM*”
 
 Nynja’s dead. 225,000 Ducketts.
 
@@ -91,7 +91,7 @@ But I’m so close to 300K. I have to fit one more.
 
 Pull the bolt. Take aim. Romaw’s next.
 
-*“BLAM”*
+“*BLAM*”
 
 Damnit, missed again. I’ve got to move.
 

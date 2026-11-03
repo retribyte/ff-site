@@ -11,6 +11,8 @@ format: prose
 
 “[Look, I’m sorry that it’s come to this. But you’ve been unreliable lately, and it’s putting us in danger.]{Garrick}” Garrick opened his eyes and looked intently at his vest, which he had taken off and placed opposite to him on his bed. He found himself in a predicament. The incredible amount of clutter in his pockets had become a problem. Just a few weeks ago, during the crew’s raid on the Llamanian mothership, Garrick had attempted to pull out a stun gun when he and Iris were ambushed, but he ended up grabbing an oddly-shaped can of tuna instead. This resulted in him having his first experience with anti-spectral weapons, taking an apparon bullet right to the eye.
 
+***
+
 Emmett just so happened to sluggishly pass by the living quarters during Garrick’s monologue.
 
 “[Garrick?]{Emmett Tawfeek}” The Squoatling had a confused look on his face. “[Who the hell are you talking to? Chomsky’s at the pool.]{Emmett Tawfeek}”
@@ -19,7 +21,11 @@ Emmett just so happened to sluggishly pass by the living quarters during Garrick
 
 “[Maybe. Check the storage room.]{Emmett Tawfeek}” Emmett carried on down the hall, not wanting to involve himself with the ghost’s shenanigans.
 
+***
+
 Garrick returned a few minutes later with garbage bags and a flashlight. “[I guess I’ll just airlock anything that’s junk… I doubt anyone else will find much use for it.]{Garrick}” After psyching himself up for a few minutes, he was ready to enter the lion’s den. This was the first time in at least 12 GUYs that he had entered his own “pocket dimension”. Taking a deep breath, he spread open his left pocket and went inside…
+
+***
 
 Darkness.
 

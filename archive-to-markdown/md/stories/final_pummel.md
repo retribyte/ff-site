@@ -539,6 +539,8 @@ The group looked at one another, with some excited, some worried, some hopeful, 
 
 With confidence in his eyes, Seth turned around to face everyone. “[Alright, Pummelers. Let’s kick some ass.]{Seth Im'Kin'ki}”
 
+***
+
 ```transcript
 LLAMANIAN ARMADA ARMED FORCES DIVISION
 
@@ -549,6 +551,12 @@ MISSION REPORT
 OPERATION FINAL PUMMEL
 
 10-22, 3020 GUY
+
+```
+
+***
+
+```transcript
 
 SUPERVISOR
 
@@ -588,6 +596,12 @@ PURPOSE
 
 The Galactic Union (GU) Research, Statistics, Journalism, Education, and Neuroscience Organization (RSJENO) base houses sensitive information on the latest GU scientific developments. Of course, the Galactic Union is always ahead in its technology and its future planning. Insider knowledge is pivotal for gaining the upper hand. There is no chance of a successful upheaval unless we know what they know.
 
+```
+
+***
+
+```transcript
+
 OVERVIEW
 
 The mission was an overwhelming success. The target location was overtaken in approximately two periods (hours), forty-six unions (minutes), and sixty-one duons (seconds). There were no casualties.
@@ -601,6 +615,10 @@ The RSJENO base is currently under the supervision of General Llod. All division
 Mera eroreni Lla sodotaq.
 ```
 
+***
+
 *The bloopers for Final Pummel are collected in Obama Story.*
+
+***
 
 *Thank you for reading!*
