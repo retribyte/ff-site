@@ -87,7 +87,7 @@ export default async function StoryChapterPage({ params }: Props) {
                 <h1 className={styles.chapterTitle}>{chapter.title ?? `Chapter ${chapter.chapter_no}`}</h1>
             </header>
 
-            <StoryReader data={data} />
+            <StoryReader data={data} authorIds={(story.authors ?? []).map((a) => a.id)} />
 
             <nav className={styles.chapterNav}>
                 <span>

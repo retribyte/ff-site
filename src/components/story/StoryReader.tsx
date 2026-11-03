@@ -1,15 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
-import { collectVoices, type SlimLine, type StoryData } from '@/lib/stories';
+import { collectVoices, npcRuns, type NpcRun, type SlimLine, type StoryData } from '@/lib/stories';
 import type { StorySegment } from '@/lib/types';
 import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
 import DeleteStoryButton from './DeleteStoryButton';
+import VoiceNamePopover from './VoiceNamePopover';
 import styles from './story.module.scss';
+
+/** Opens the namer for the NPC quote at this line (and segment, for a span), anchored to `el`. */
+type NameHandler = (lineNo: number, segment: number | null, el: HTMLElement) => void;
 
 // Stories read as prose: NARRATION is narrator voice, ACTION is a command the
 // protagonist (or the readers, in a CYOA) chose, DIALOGUE is a character
@@ -27,6 +32,52 @@ function voiceColor(
     return characterId === null ? 'var(--text-muted)' : characterColor(name, character?.color ?? null, colorMode);
 }
 
+// An NPC voice has no character page, so its name is a tooltip instead
+// (`help` cursor). Story authors and admins can click one to name it.
+function NpcRunText({
+    text,
+    speaker,
+    query,
+    className,
+    style,
+    onName,
+}: {
+    text: string;
+    speaker: string | null;
+    query: string | null;
+    className: string;
+    style: React.CSSProperties;
+    onName?: (el: HTMLElement) => void;
+}) {
+    const inner = <Highlighted text={text} query={query} />;
+    const classes = `${className} ${styles.npcVoice} ${speaker ? '' : styles.npcUnnamed} ${onName ? styles.npcEditable : ''}`;
+    if (!onName) {
+        return (
+            <span className={classes} style={style} title={speaker ?? 'An unnamed NPC'}>
+                {inner}
+            </span>
+        );
+    }
+    return (
+        <span
+            role='button'
+            tabIndex={0}
+            className={classes}
+            style={style}
+            title={speaker ? `${speaker} (click to rename)` : "Who's speaking? Click to name this NPC"}
+            onClick={(e) => onName(e.currentTarget)}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onName(e.currentTarget);
+                }
+            }}
+        >
+            {inner}
+        </span>
+    );
+}
+
 // A colored dialogue fragment — a segment span inside narration, or a whole
 // prose-format dialogue line. Links to the character page when one is linked.
 function DialogueRun({
@@ -37,6 +88,8 @@ function DialogueRun({
     colorMode,
     query,
     className,
+    npc = false,
+    onName,
 }: {
     text: string;
     characterId: number | null;
@@ -45,11 +98,16 @@ function DialogueRun({
     colorMode: ColorMode;
     query: string | null;
     className: string;
+    npc?: boolean;
+    onName?: (el: HTMLElement) => void;
 }) {
     const character = characterId !== null ? characters[characterId] : null;
     const name = character?.name ?? speaker ?? '?';
     const color = voiceColor(characterId, name, character, colorMode);
     const style = { '--char': color } as React.CSSProperties;
+    if (npc) {
+        return <NpcRunText text={text} speaker={speaker} query={query} className={className} style={style} onName={onName} />;
+    }
     const inner = <Highlighted text={text} query={query} />;
     return characterId !== null ? (
         <Link href={`/characters/${characterId}`} className={className} style={style} title={name}>
@@ -70,13 +128,15 @@ function Segment({
     characters,
     colorMode,
     query,
+    onName,
 }: {
     seg: StorySegment;
     characters: StoryData['characters'];
     colorMode: ColorMode;
     query: string | null;
+    onName?: (el: HTMLElement) => void;
 }) {
-    const hasVoice = seg.characterId != null || !!seg.speaker;
+    const hasVoice = seg.characterId != null || !!seg.speaker || !!seg.npc;
     let node: React.ReactNode = hasVoice ? (
         <DialogueRun
             text={seg.text}
@@ -86,6 +146,8 @@ function Segment({
             colorMode={colorMode}
             query={query}
             className={styles.dialogueSpan}
+            npc={!!seg.npc}
+            onName={seg.npc ? onName : undefined}
         />
     ) : (
         <Highlighted text={seg.text} query={query} />
@@ -102,6 +164,7 @@ const Line = memo(function Line({
     query,
     highlighted,
     format,
+    onName,
 }: {
     line: SlimLine;
     characters: StoryData['characters'];
@@ -109,6 +172,7 @@ const Line = memo(function Line({
     query: string | null;
     highlighted: boolean;
     format: StoryData['format'];
+    onName?: NameHandler;
 }) {
     const [copied, setCopied] = useState(false);
 
@@ -134,6 +198,7 @@ const Line = memo(function Line({
             const character = line.characterId !== null ? characters[line.characterId] : null;
             const name = character?.name ?? line.speaker ?? '?';
             const color = voiceColor(line.characterId, name, character, colorMode);
+            const nameLine = line.npcVoice && onName ? (el: HTMLElement) => onName(line.no, null, el) : undefined;
             // Novel-style: colored prose, no "Name:" prefix — speaker read from
             // color + tooltip + the voice legend.
             if (format === 'PROSE') {
@@ -147,6 +212,8 @@ const Line = memo(function Line({
                             colorMode={colorMode}
                             query={query}
                             className={styles.dialogueSpan}
+                            npc={line.npcVoice}
+                            onName={nameLine}
                         />
                     </p>
                 );
@@ -158,6 +225,18 @@ const Line = memo(function Line({
                         <Link href={`/characters/${line.characterId}`} className={styles.dialogueName}>
                             {name}:
                         </Link>
+                    ) : line.npcVoice ? (
+                        <>
+                            <NpcRunText
+                                text={line.speaker ?? 'unnamed'}
+                                speaker={line.speaker}
+                                query={null}
+                                className={styles.dialogueName}
+                                style={{}}
+                                onName={nameLine}
+                            />
+                            :
+                        </>
                     ) : (
                         <span className={styles.dialogueName}>{name}:</span>
                     )}{' '}
@@ -208,6 +287,7 @@ const Line = memo(function Line({
                                 characters={characters}
                                 colorMode={colorMode}
                                 query={query}
+                                onName={onName ? (el) => onName(line.no, i, el) : undefined}
                             />
                         ))}
                     </p>
@@ -237,9 +317,58 @@ const Line = memo(function Line({
     );
 });
 
-export default function StoryReader({ data, canDelete = false }: { data: StoryData; canDelete?: boolean }) {
+interface Editing {
+    run: NpcRun;
+    anchor: HTMLElement;
+}
+
+export default function StoryReader({
+    data,
+    canDelete = false,
+    authorIds = [],
+}: {
+    data: StoryData;
+    canDelete?: boolean;
+    /** the story's authors, who (with admins) may name its NPC voices */
+    authorIds?: number[];
+}) {
     const { colorMode } = useTheme();
+    const { user } = useSession();
     const searchParams = useSearchParams();
+    const canNameVoices = !!user && (user.role === 'ADMIN' || authorIds.includes(user.id));
+
+    // NPC names given in this visit, by line number; reset on another chapter
+    const chapterKey = `${data.storySlug}#${data.chapterNo}`;
+    const [named, setNamed] = useState<{ key: string; lines: Record<number, Pick<SlimLine, 'speaker' | 'segments'>> }>({
+        key: chapterKey,
+        lines: {},
+    });
+    const lines = useMemo(() => {
+        const overrides = named.key === chapterKey ? named.lines : {};
+        return data.lines.map((line) => (overrides[line.no] ? { ...line, ...overrides[line.no] } : line));
+    }, [data.lines, named, chapterKey]);
+    const runs = useMemo(() => npcRuns(lines), [lines]);
+    const [editing, setEditing] = useState<Editing | null>(null);
+
+    const openNamer = useCallback<NameHandler>(
+        (lineNo, segment, el) => {
+            const run = runs.find(
+                (r) => r.lineNo === lineNo && (segment === null ? r.segments === null : r.segments?.includes(segment))
+            );
+            if (run) setEditing({ run, anchor: el });
+        },
+        [runs]
+    );
+
+    const closeNamer = useCallback(() => setEditing(null), []);
+
+    const applyUpdated = (updated: { lineNo: number; speaker: string | null; segments: StorySegment[] | null }[]) =>
+        setNamed((prev) => {
+            const base = prev.key === chapterKey ? prev.lines : {};
+            const next = { ...base };
+            for (const u of updated) next[u.lineNo] = { speaker: u.speaker, segments: u.segments };
+            return { key: chapterKey, lines: next };
+        });
 
     const lineParam = searchParams.get('line');
     const targetNo = lineParam ? parseInt(lineParam) : null;
@@ -253,7 +382,7 @@ export default function StoryReader({ data, canDelete = false }: { data: StoryDa
 
     // Novel-style stories don't print speaker names inline, so a legend keys
     // the dialogue colors to their characters.
-    const voices = data.format === 'PROSE' ? collectVoices(data) : [];
+    const voices = data.format === 'PROSE' ? collectVoices({ ...data, lines }) : [];
 
     return (
         <div>
@@ -285,7 +414,7 @@ export default function StoryReader({ data, canDelete = false }: { data: StoryDa
                 </ul>
             )}
             <div className={styles.prose}>
-                {data.lines.map((line) => (
+                {lines.map((line) => (
                     <Line
                         key={line.no}
                         line={line}
@@ -294,9 +423,23 @@ export default function StoryReader({ data, canDelete = false }: { data: StoryDa
                         query={scan.activeQuery}
                         highlighted={line.no === targetNo || line.no === scan.currentMatchNo}
                         format={data.format}
+                        onName={canNameVoices ? openNamer : undefined}
                     />
                 ))}
             </div>
+            {editing && (
+                <VoiceNamePopover
+                    key={`${editing.run.lineNo}-${editing.run.segments?.[0] ?? 'line'}`}
+                    storySlug={data.storySlug}
+                    chapterNo={data.chapterNo}
+                    run={editing.run}
+                    anchor={editing.anchor}
+                    runs={runs}
+                    suggestions={voices.filter((v) => v.characterId === null).map((v) => v.name)}
+                    onSaved={applyUpdated}
+                    onClose={closeNamer}
+                />
+            )}
         </div>
     );
 }

@@ -65,6 +65,9 @@ How the document is read:
     punctuation-only styled run      plain (an italic "(" carries no emphasis)
 
 Colors mapped to an empty name count as narration (ink color, not a voice).
+A color mapped to "?" is several NPC voices (gray #666666, typically): each
+span becomes an unnamed NPC voice ([…]{?} / "> ?:"), named per line later in
+the story reader by an author or admin.
 Underline and other inline formatting is flattened to plain text.
 """
 
@@ -283,7 +286,8 @@ def run_wizard(meta, colors, doc_title, doc_blurb, source_name):
 
     unmapped = [c for c in colors if c not in meta["colors"]]
     if unmapped:
-        print("\n-- color → character map (empty answer = narration ink, not a voice) --")
+        print("\n-- color → character map (empty answer = narration ink, not a voice;"
+              " ? = several NPCs, named per line later in the reader) --")
         for color in sorted(unmapped, key=lambda c: -colors[c]["count"]):
             info = colors[color]
             print(f"\n  {color} — {info['count']} run(s):")

@@ -12,6 +12,7 @@ export interface SlimLine {
     text: string;
     characterId: number | null;
     speaker: string | null;
+    npcVoice: boolean; // DIALOGUE: an NPC voice, named by `speaker` or unnamed
     segments: StorySegment[] | null; // sub-paragraph dialogue spans, or null for plain lines
 }
 
@@ -79,6 +80,7 @@ export function slimStoryChapter(
             text: l.text,
             characterId: l.characterId,
             speaker: l.speaker,
+            npcVoice: l.npcVoice ?? false,
             segments: l.segments ?? null,
         })),
     };
@@ -208,4 +210,35 @@ export function quotedSpanText(quote: StoryQuote, characterId: number): string {
  * directly; every existing StoryQuote caller still satisfies this. */
 export function storyQuoteUrl(quote: Pick<StoryQuote, 'storySlug' | 'chapterNo' | 'line_no'>): string {
     return `/stories/${quote.storySlug}/${quote.chapterNo}?line=${quote.line_no}`;
+}
+
+/**
+ * One NPC voice quote in the reader: a whole npcVoice DIALOGUE line
+ * (`segments: null`), or a run of adjacent `npc` segments in a paragraph — one
+ * span that emphasis split into pieces. Named together, as one voice.
+ */
+export interface NpcRun {
+    lineNo: number;
+    segments: number[] | null;
+    speaker: string | null;
+}
+
+/** Every NPC voice quote in a chapter, in reading order. */
+export function npcRuns(lines: SlimLine[]): NpcRun[] {
+    const runs: NpcRun[] = [];
+    for (const line of lines) {
+        if (line.npcVoice) runs.push({ lineNo: line.no, segments: null, speaker: line.speaker });
+        const segs = line.segments ?? [];
+        let start = -1;
+        for (let i = 0; i <= segs.length; i++) {
+            const npc = i < segs.length && !!segs[i].npc;
+            if (npc && start < 0) start = i;
+            if (!npc && start >= 0) {
+                const indexes = Array.from({ length: i - start }, (_, k) => start + k);
+                runs.push({ lineNo: line.no, segments: indexes, speaker: segs[start].speaker ?? null });
+                start = -1;
+            }
+        }
+    }
+    return runs;
 }

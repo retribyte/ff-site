@@ -77,7 +77,7 @@ export default async function StoryPage({ params }: Props) {
                 <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
                 </header>
 
-                <StoryReader data={data} canDelete />
+                <StoryReader data={data} canDelete authorIds={(story.authors ?? []).map((a) => a.id)} />
 
                 <footer className={styles.footer}>
                     <span className='pixel-label'>end of story ⌁ signal terminates here</span>

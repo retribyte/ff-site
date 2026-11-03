@@ -30,6 +30,12 @@ export interface ConvertedStory {
 
 const NARRATION = '__narration__';
 const OTHER = '__other__';
+// Several NPCs share this color, so each span imports as an unnamed NPC voice
+// ("?" to the converter: [spoken]{?}). Name them in the importer's modal, or
+// later in the story reader.
+const SEVERAL_NPCS = '__npcs__';
+// The house color for "whichever NPC is talking"
+const NPC_GRAY = '#666666';
 
 async function convertCall<T>(body: unknown): Promise<T> {
     const res = await fetch('/api/ff/stories/convert', {
@@ -106,8 +112,8 @@ export default function DocxStoryForm({
             setTitle(result.defaults.title ?? picked.name.replace(/\.docx$/i, '').replace(/_/g, "'"));
             setBlurb(result.defaults.blurb ?? '');
             setSlug('');
-            // a color whose name matches nothing yet starts unchosen
-            setVoices(Object.fromEntries(result.colors.map((c) => [c.color, ''])));
+            // gray is the house NPC color; any other color starts unchosen
+            setVoices(Object.fromEntries(result.colors.map((c) => [c.color, c.color === NPC_GRAY ? SEVERAL_NPCS : ''])));
             setOtherNames({});
         } catch (err) {
             setFile(null);
@@ -133,6 +139,7 @@ export default function DocxStoryForm({
         const colors = Object.fromEntries(
             analysis.colors.map((c) => {
                 const v = voices[c.color];
+                if (v === SEVERAL_NPCS) return [c.color, '?'];
                 return [c.color, v === NARRATION ? null : v === OTHER ? otherNames[c.color].trim() : v];
             })
         );
@@ -261,6 +268,7 @@ export default function DocxStoryForm({
                                         >
                                             <option value=''>— choose —</option>
                                             <option value={NARRATION}>narration (not a voice)</option>
+                                            <option value={SEVERAL_NPCS}>several NPCs (name each line)</option>
                                             <option value={OTHER}>a name not in the archive…</option>
                                             {characterNames.map((n) => (
                                                 <option key={n} value={n}>
@@ -268,6 +276,12 @@ export default function DocxStoryForm({
                                                 </option>
                                             ))}
                                         </select>
+                                        {voices[c.color] === SEVERAL_NPCS && (
+                                            <span className={styles.pickHint}>
+                                                imports unnamed: name the lines after converting, or later while
+                                                reading
+                                            </span>
+                                        )}
                                         {voices[c.color] === OTHER && (
                                             <input
                                                 aria-label={`display name for ${c.color}`}

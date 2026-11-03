@@ -152,7 +152,37 @@ Neither repo is merged to `main` or pushed. `main` (with `mvp-lockdown` and
     The JSON path still offers Replace. No sideways scroll at 390px, in both
     themes.
 
+- **NPC voices (2026-11-03, user-designed):** a color that several NPCs share
+  (gray `#666666` defaults to "several NPCs (name each line)") imports as
+  unnamed NPC voices.
+  - **Manuscript:** `{?}` / `> ?:`.
+  - **Storage:** a segment `npc: true` / `StoryLine.npcVoice` (a new column,
+    on `final-frontier-docx` only so far).
+  - **Naming:** in the importer's optional modal (Enter carries a name to the
+    next quote), or later by the story's authors or an admin, clicking the
+    quote in the reader (`PATCH /stories/:slug/voices`, with an "also the next
+    N unnamed" option).
+  - **Cursors:** viewers get the `help` cursor and a name tooltip. Editors
+    get a `pointer`, and unnamed quotes a dotted underline.
+  - **Re-imports** keep names by text occurrence and skip placeholder voices
+    such as the legacy "NPC" character.
+  - **Verified** on Horizon Meets Dawn (163 NPC quotes) and two synthetic
+    stories (prose and script) with Playwright, as anonymous, non-author,
+    author and admin.
+
+**Merge notes**
+- When this merges after Beta's `npc-personas`: in
+  `prisma/scripts/seed-npc-personas.ts`, add `npcVoice: false` to the
+  `voicelessDialogue` count's `where`. Otherwise unnamed NPC DIALOGUE lines
+  trip that assertion. Agreed with Beta.
+- `StoryLine.npcVoice` needs a `db push` on whichever DB this lands on (it's
+  additive), then `npm run db:search-indexes`.
+
 **Next**
+0. **Vortox Machina's 7 `speaker: "?"` DIALOGUE lines** (migrated from
+   episode data, so no manuscript) predate NPC voices. Convert them to
+   `npcVoice: true, speaker: null` so they become nameable. That's a one-off
+   SQL statement, or a tweak to the VM migration.
 1. **Rendered preview.** Today the "preview" is the manifest (counts,
    speakers). The plan called for rendering the payload with the real
    `StoryReader` components before publishing, which matters most for

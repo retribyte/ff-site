@@ -30,7 +30,9 @@ Markdown format (see README, "Stories"):
     A plain paragraph is one NARRATION line.
 
     > Emmett: I told you this would happen.     DIALOGUE by Emmett
-    > ?: Who's there?                           DIALOGUE, unknown speaker
+    > ?: Who's there?                           DIALOGUE, an unnamed NPC voice
+                                       ("npcVoice": true, no speaker): named
+                                       later in the reader by an author/admin
 
     The lock clicked. ["Move,"]{Emmett} she hissed.   NARRATION with an inline
                                        dialogue span — [spoken]{Speaker}. The
@@ -40,6 +42,8 @@ Markdown format (see README, "Stories"):
                                        the markers) back to the paragraph, so
                                        'format: prose' novel-style stories keep
                                        dialogue inside their narration.
+                                       [spoken]{?} is an unnamed NPC voice
+                                       span ("npc": true, no speaker).
 
     A *whispered* word, a **shout**.   Inline emphasis: *italic*, **bold**,
                                        ***both***. Works inside dialogue spans
@@ -130,7 +134,10 @@ def flush_paragraph(buffer, lines_out):
             if match:
                 if current:
                     lines_out.append(current)
-                current = {"type": "DIALOGUE", "speaker": match.group(1).strip(), "text": match.group(2)}
+                speaker = match.group(1).strip()
+                # "?" = an unnamed NPC voice, named later in the story reader
+                voice = {"npcVoice": True} if speaker == UNNAMED_NPC else {"speaker": speaker}
+                current = {"type": "DIALOGUE", **voice, "text": match.group(2)}
             elif current:
                 current["text"] += " " + body
             else:
@@ -153,6 +160,10 @@ def flush_paragraph(buffer, lines_out):
         lines_out.append({"type": "NARRATION", "text": clean, "segments": segments})
     else:
         lines_out.append({"type": "NARRATION", "text": joined})
+
+
+# The speaker name for an NPC voice with no name yet ({?} / "> ?:").
+UNNAMED_NPC = "?"
 
 
 def parse_emphasis(text, base):
@@ -195,7 +206,8 @@ def parse_inline_segments(text):
         if match.start() > pos:
             add(parse_emphasis(text[pos:match.start()], {}), True)
         speaker = match.group(2).strip()
-        segments.extend(parse_emphasis(match.group(1), {"speaker": speaker}))
+        voice = {"npc": True} if speaker == UNNAMED_NPC else {"speaker": speaker}
+        segments.extend(parse_emphasis(match.group(1), voice))
         has_annotation = True  # a dialogue span is itself an annotation
         pos = match.end()
     if pos < len(text):

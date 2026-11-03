@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSession } from '@/components/auth/SessionProvider';
 import DeleteControl from '@/components/DeleteControl';
 import DocxStoryForm from './DocxStoryForm';
+import NpcVoiceNamer, { npcFragments } from './NpcVoiceNamer';
 import styles from './storyImporter.module.scss';
 
 // Payload produced by ff-server's POST /stories/convert (a Google Doc, via
@@ -16,9 +17,13 @@ import styles from './storyImporter.module.scss';
 
 const LINE_TYPES = new Set(['NARRATION', 'DIALOGUE', 'ACTION', 'TRANSCRIPT', 'BREAK', 'HEADING']);
 
+// `npc` / `npcVoice`: an NPC voice ([…]{?} in a manuscript), unnamed until a
+// name is given here or later in the story reader. Its name is never matched
+// to a character: NPCs are exactly the voices without a character row.
 interface ImportSegment {
     text: string;
     speaker?: string;
+    npc?: boolean;
     italic?: boolean;
     bold?: boolean;
 }
@@ -27,6 +32,7 @@ interface ImportLine {
     type: string;
     text: string;
     speaker?: string;
+    npcVoice?: boolean;
     segments?: ImportSegment[];
 }
 
@@ -155,6 +161,7 @@ export default function StoryImporter() {
     const [charOverrides, setCharOverrides] = useState<Record<string, string>>({});
 
     const [phase, setPhase] = useState<Phase>({ step: 'idle' });
+    const [naming, setNaming] = useState(false);
 
     useEffect(() => {
         ff<{ id: number; username: string }[]>('/users')
@@ -197,9 +204,9 @@ export default function StoryImporter() {
         const names = new Set<string>();
         for (const chapter of payload.chapters) {
             for (const line of chapter.lines) {
-                if (line.speaker) names.add(line.speaker);
+                if (line.speaker && !line.npcVoice) names.add(line.speaker);
                 for (const seg of line.segments ?? []) {
-                    if (seg.speaker) names.add(seg.speaker);
+                    if (seg.speaker && !seg.npc) names.add(seg.speaker);
                 }
             }
         }
@@ -226,6 +233,9 @@ export default function StoryImporter() {
     );
 
     const unresolvedSpeakers = speakerNames.filter((n) => charMap[n] === '');
+
+    const npcQuotes = useMemo(() => (payload ? npcFragments(payload.chapters) : []), [payload]);
+    const npcNamed = npcQuotes.filter((f) => f.name.trim()).length;
 
     // Frontmatter author names; none credits the uploader (the '' row)
     const authorNames = useMemo(() => {
@@ -283,12 +293,19 @@ export default function StoryImporter() {
                     characterId?: number;
                     speaker?: string;
                     segments?: (ImportSegment & { characterId?: number })[];
+                    npcVoice?: boolean;
                 } = { type: line.type, text: line.text };
-                if (line.speaker) resolveSpeaker(out, line.speaker);
+                if (line.npcVoice) {
+                    out.npcVoice = true;
+                    if (line.speaker) out.speaker = line.speaker;
+                } else if (line.speaker) resolveSpeaker(out, line.speaker);
                 if (line.segments) {
                     out.segments = line.segments.map((seg) => {
                         const resolved: ImportSegment & { characterId?: number } = { text: seg.text };
-                        if (seg.speaker) resolveSpeaker(resolved, seg.speaker);
+                        if (seg.npc) {
+                            resolved.npc = true;
+                            if (seg.speaker) resolved.speaker = seg.speaker;
+                        } else if (seg.speaker) resolveSpeaker(resolved, seg.speaker);
                         if (seg.italic) resolved.italic = true;
                         if (seg.bold) resolved.bold = true;
                         return resolved;
@@ -484,6 +501,37 @@ export default function StoryImporter() {
                                 </p>
                             )}
                         </>
+                    )}
+
+                    {npcQuotes.length > 0 && (
+                        <>
+                            <h3 className='pixel-label'>npc voices</h3>
+                            <div className={styles.npcSummary}>
+                                <p className={styles.hint}>
+                                    {`${npcNamed} of ${npcQuotes.length} NPC quote${npcQuotes.length === 1 ? '' : 's'} named. `}
+                                    Unnamed ones upload as they are, and this story&rsquo;s authors or an admin can name
+                                    each one by clicking it while reading.
+                                    {collision?.field === 'slug' &&
+                                        ' Replacing keeps the names already given to quotes whose text is unchanged.'}
+                                </p>
+                                <button
+                                    type='button'
+                                    className={styles.namerOpen}
+                                    onClick={() => setNaming(true)}
+                                    disabled={busy || phase.step === 'success'}
+                                >
+                                    {npcNamed > 0 ? 'Edit NPC names…' : 'Name them now…'}
+                                </button>
+                            </div>
+                        </>
+                    )}
+                    {naming && payload && (
+                        <NpcVoiceNamer
+                            chapters={payload.chapters}
+                            knownNames={[]}
+                            onApply={(chapters) => setPayload({ ...payload, chapters: chapters as ImportChapter[] })}
+                            onClose={() => setNaming(false)}
+                        />
                     )}
 
                     <div className={styles.actions}>

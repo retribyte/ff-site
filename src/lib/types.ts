@@ -131,6 +131,8 @@ export interface StorySegment {
     text: string;
     characterId?: number | null;
     speaker?: string | null;
+    /** An NPC voice: `speaker` is its name, absent while unnamed (still dialogue, not narration) */
+    npc?: boolean;
     italic?: boolean;
     bold?: boolean;
 }
@@ -167,6 +169,7 @@ export interface StoryLine {
     text: string;
     characterId: number | null;
     speaker: string | null; // display-name fallback when no Character row exists
+    npcVoice?: boolean; // DIALOGUE: an NPC voice, named by `speaker` or unnamed (null)
     segments?: StorySegment[] | null; // sub-paragraph dialogue spans (NARRATION only); concat === text
     character?: Character;
 }

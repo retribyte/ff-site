@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as m;
+
 // Story reader prose. --story/--story-2 are set inline per page from
 // storyColors() so every story carries its own identity colors.
 
@@ -226,5 +228,92 @@
 @media (prefers-reduced-motion: reduce) {
     .anchor {
         transition: none;
+    }
+}
+
+// ── NPC voices ───────────────────────────────────────────────────────────
+// An NPC has no character page, so its quote carries its name as a tooltip
+// (help cursor) instead of a link. Unnamed ones read as ordinary gray
+// dialogue to everyone except the story's authors and admins, who get a
+// dotted "who's speaking?" marker and a click to name it.
+.npcVoice {
+    cursor: help;
+}
+
+.npcEditable {
+    cursor: pointer;
+    border-radius: var(--radius);
+
+    &:hover {
+        background: var(--highlight);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent-soft);
+        outline-offset: 1px;
+    }
+
+    &.npcUnnamed {
+        text-decoration: underline dotted var(--accent-soft);
+        text-underline-offset: 0.2em;
+    }
+}
+
+.namePopover {
+    position: fixed;
+    z-index: 50;
+    width: 300px;
+    max-width: calc(100vw - 16px);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.85rem;
+    box-shadow: 0 6px 24px var(--shadow);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+}
+
+.namePopoverField {
+    @include m.field-stack;
+
+    input {
+        @include m.form-field(0.85rem, 0.4rem 0.55rem);
+    }
+}
+
+.namePopoverNext {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+
+    input {
+        @include m.form-field(0.8rem, 0.2rem 0.3rem);
+        width: 3.5rem;
+    }
+}
+
+.namePopoverError {
+    @include m.pixel-error(0.62rem);
+}
+
+.namePopoverActions {
+    display: flex;
+    gap: 0.5rem;
+
+    button {
+        @include m.ghost-button;
+    }
+
+    button[type='submit'] {
+        color: var(--text);
+        border-style: solid;
+    }
+
+    button:disabled {
+        opacity: 0.6;
+        cursor: default;
     }
 }
