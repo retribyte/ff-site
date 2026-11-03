@@ -53,9 +53,10 @@ How the document is read:
     monospace paragraphs (Courier,   one TRANSCRIPT block per run of consecutive
       Consolas, Roboto Mono...)      monospace paragraphs
     horizontal rule or *** / - - -   BREAK (scene break)
-    page break, or a run of empty    BREAK — "usual spacing" is the doc's most
-      paragraphs longer than the     common gap between paragraphs (0 or 1);
-      doc's usual spacing            never next to a heading or at the end
+    page break, or a run of empty    BREAK — "spacing around it" is the most
+      paragraphs longer than the     common gap (0 or 1) among the 3 gaps on
+      spacing around it              either side and across the doc; never
+                                     next to a heading or at the end
     mostly-monospace document        monospace is the body font, not TRANSCRIPT
     punctuation-only styled run      plain (an italic "(" carries no emphasis)
 
@@ -357,25 +358,36 @@ def scene_gaps(paragraphs):
     """Indices of paragraphs that open a new scene.
 
     Authors space paragraphs either with no blank paragraph between them or
-    with exactly one; whichever is more common between two text paragraphs is
-    the document's baseline. A longer run of empty paragraphs — or a page
-    break — is a deliberate gap: a scene break or time skip."""
-    gaps, run, last_text = [], 0, None
+    with exactly one, and some switch styles partway through a doc (a phone
+    call typed one blank line apart inside an unspaced journal). So a run of
+    empty paragraphs is a deliberate gap — a scene break or time skip — only
+    when it is longer than the spacing around it: the most common gap among
+    the three gaps on either side, and the doc's overall most common gap
+    (0 or 1). A page break is always a gap."""
+    gaps, run, last_text, page = [], 0, None, False
     for index, paragraph in enumerate(paragraphs):
+        if paragraph["page_break"]:
+            page = True
         if paragraph_text(paragraph) or (paragraph["hr"] and not paragraph["runs"]):
             if last_text is not None:
-                gaps.append((index, run, paragraph["page_break"]))
-            last_text, run = index, 0
+                gaps.append((index, run, page))
+            last_text, run, page = index, 0, False
         else:
             run += 1
-            if paragraph["page_break"]:
-                run += 100  # a page break always counts as a gap
-    counts = {}
-    for _index, run, _page in gaps:
-        if run <= 1:
-            counts[run] = counts.get(run, 0) + 1
-    baseline = max(counts, key=lambda k: (counts[k], -k)) if counts else 0
-    return {index for index, run, page in gaps if run > baseline or page}
+
+    def mode(runs):
+        counts = {}
+        for r in runs:
+            counts[min(r, 1)] = counts.get(min(r, 1), 0) + 1
+        return max(counts, key=lambda k: (counts[k], -k)) if counts else 0
+
+    overall = mode(r for _i, r, _p in gaps)
+    breaks = set()
+    for k, (index, run, page) in enumerate(gaps):
+        nearby = [r for _i, r, _p in gaps[max(k - 3, 0):k] + gaps[k + 1:k + 4]]
+        if page or run > max(overall, mode(nearby)):
+            breaks.add(index)
+    return breaks
 
 
 def convert(paragraphs, meta):

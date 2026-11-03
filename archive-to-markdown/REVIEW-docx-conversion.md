@@ -37,7 +37,7 @@ It hasn't been ported to TypeScript yet** (see `../PLAN-story-import.md`).
 | emphasis differences | 62 | 63: 54 are where the quote marks sit relative to the markers, 9 are hand moves of quotes and commas |
 | other text differences | — | 12, all editorial (see below) |
 | payload issues (blank lines or segments, literal `*` or span markers) | 9 blank segments in the DB | **0** |
-| scene breaks | 0 | 59 inserted. All were read in context; they're time skips and scene changes. |
+| scene breaks | 0 | 40 inserted. All 40 were read in context: time skips, scene changes, and journal-entry boundaries in *Bellow's Journal*. |
 
 ## Converter bugs fixed
 
@@ -46,10 +46,14 @@ It hasn't been ported to TypeScript yet** (see `../PLAN-story-import.md`).
    Rocked Asleep* and *Do Emmetts Dream* write whole scenes as one paragraph
    of tab-indented lines, which came out as run-ons ("“Hey, Red? You good?”
    “What? Oh, yes, I’m fine.”"). Each soft break now starts a paragraph.
-2. **Scene breaks.** Empty paragraphs were all dropped. Now the doc's usual
-   spacing is the most common gap between paragraphs (0 or 1), and any longer
-   run of empty paragraphs, or a page break, becomes `***`. A break is never
-   placed next to a heading, after another break, or at the end.
+2. **Scene breaks.** Empty paragraphs were all dropped. Now a run of empty
+   paragraphs becomes `***` only when it's longer than the spacing around it,
+   or when there's a page break. "The spacing around it" is the most common
+   gap (0 or 1) among the three gaps on each side and across the whole doc.
+   The local check matters: *Bellow's Journal* types a phone call one blank
+   line apart inside otherwise unspaced entries, and a doc-wide baseline
+   alone broke every line of it (33 breaks → 14). A break is never placed
+   next to a heading, after another break, or at the end.
 3. **Title line.** A first paragraph repeating the story title was kept as
    narration or as "Chapter 1: <title>". This covered Heading 1 (*Cold
    Comfort*, *Deep Pockets*, *Deafening Silence*, *A Quick Break*), plain text
@@ -74,9 +78,10 @@ It hasn't been ported to TypeScript yet** (see `../PLAN-story-import.md`).
 8. **Punctuation-only emphasis.** An italic "(" or "." produced a stray `*(*`.
    Now it's plain text.
 
-What did *not* need fixing: emphasis around dialogue spans. The 91 hand fixes
-from October (`*[“…”]{X}*` → `[*“…”*]{X}`) were from an older converter. The
-current one already styles inside each span.
+What did *not* need fixing: emphasis around dialogue spans. October's 91 hand
+fixes moved `*[“…”]{X}*` to `[*“…”*]{X}`. The current converter never emits
+the outer form, because it styles inside each span, and none of the 23
+outputs contain it. I didn't check what produced it in October.
 
 ## Decisions for you
 
@@ -105,4 +110,6 @@ current one already styles inside each span.
 - The *Omg Zach's Gay* `(“*…*”)` thought-aside: the doc italicizes only the
   parentheses.
 - Copyedits: dialogue-tag case, commas, `--` → `—`, "Touche" → "Touché",
-  a backwards `”...”`.
+  a backwards `”...”`. The 20 lowest-similarity copyedits were read
+  individually; all are tense, wording or punctuation changes. The one
+  glued word (`legs.This`) is in the source docx.

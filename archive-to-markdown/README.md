@@ -175,7 +175,7 @@ How a Doc is read:
 | wholly italic paragraph | **prose:** italic narration · **script:** `_action_` line |
 | consecutive monospace paragraphs | one ```` ```transcript ```` block (unless most of the doc is monospace — then it's just the body font) |
 | horizontal rule, `***`, `- - -` | `***` scene break |
-| a page break, or more empty paragraphs than the doc's usual spacing (0 or 1) | `***` scene break (never next to a heading or at the end) |
+| a page break, or a run of empty paragraphs longer than the spacing around it (nearby gaps and the doc overall, 0 or 1) | `***` scene break (never next to a heading or at the end) |
 | an italic/bold run that is only punctuation | plain text |
 
 Underline and other inline formatting is flattened to plain text. Always review
