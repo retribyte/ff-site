@@ -200,7 +200,19 @@ def parse_inline_segments(text):
     if pos < len(text):
         add(parse_emphasis(text[pos:], {}), True)
 
-    return segments if has_annotation else None
+    if not has_annotation:
+        return None
+    # A whitespace-only segment (a space between two styled runs) carries no
+    # visible style: fold it into its neighbour so no segment is blank.
+    merged = []
+    for seg in segments:
+        if merged and not seg["text"].strip():
+            merged[-1] = {**merged[-1], "text": merged[-1]["text"] + seg["text"]}
+        elif merged and not merged[-1]["text"].strip():
+            merged[-1] = {**seg, "text": merged[-1]["text"] + seg["text"]}
+        else:
+            merged.append(seg)
+    return merged
 
 
 def parse_body(lines):

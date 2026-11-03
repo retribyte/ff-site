@@ -128,7 +128,7 @@ are dropped. Quotes that end up with no character import as OTHER (FR-MSG-4).
 ## Stories
 
 Short stories (and anything else that reads at `/stories`) have their own
-pipeline — no `/import` page:
+pipeline. Its JSON output can also go through the admin `/import` page:
 
 ```
 Google Doc  ──File ▸ Download ▸ .docx──▶  story-docx-to-md.py  ──▶  markdown manuscript
@@ -165,14 +165,18 @@ How a Doc is read:
 | in the Doc | becomes |
 |---|---|
 | Title / Subtitle styles | frontmatter `title` / `blurb` defaults |
-| Heading 1 | chapter break (`Chapter N: ...` numbering honored) |
-| Heading 2 | **prose:** `## Title` in-chapter heading · **script:** another chapter break |
+| a first line that repeats the story title (any style, bold, trailing period) | dropped |
+| Heading 1 | chapter break (`Chapter N: ...` numbering honored; text before an explicit `Chapter 1` becomes `Chapter 0`) |
+| Heading 2 | **prose:** `## Title` in-chapter heading, or a chapter break when the doc has no Heading 1 besides the title · **script:** another chapter break |
+| soft line break (Shift+Enter) inside a paragraph | a new paragraph |
 | paragraph wholly in a mapped color | `> Name:` dialogue line (a typed `Name:` prefix is stripped) |
 | colored span inside a paragraph | **script:** paragraph splits into narration + dialogue lines · **prose:** kept in one paragraph as an inline `[span]{Speaker}` |
 | italic / bold run | **prose:** `*italic*` / `**bold**` emphasis, kept inline (nests inside dialogue spans) · **script:** flattened |
 | wholly italic paragraph | **prose:** italic narration · **script:** `_action_` line |
-| consecutive monospace paragraphs | one ```` ```transcript ```` block |
+| consecutive monospace paragraphs | one ```` ```transcript ```` block (unless most of the doc is monospace — then it's just the body font) |
 | horizontal rule, `***`, `- - -` | `***` scene break |
+| a page break, or more empty paragraphs than the doc's usual spacing (0 or 1) | `***` scene break (never next to a heading or at the end) |
+| an italic/bold run that is only punctuation | plain text |
 
 Underline and other inline formatting is flattened to plain text. Always review
 the generated markdown before uploading — in `script` mode, prose-style

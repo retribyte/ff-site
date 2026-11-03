@@ -34,10 +34,14 @@ colored spans inside a paragraph are handled:
 
 How the document is read:
     Title / Subtitle styles          story title / blurb (frontmatter defaults)
+    first line repeating the title   dropped (any style; bold / trailing "." ok)
     Heading 1                        chapter break ("Chapter N: ..." numbering is
-                                     honored when increasing, else sequential)
-    Heading 2                        prose: "## Title" in-chapter heading;
-                                     script: another chapter break
+                                     honored when increasing, else sequential;
+                                     text before an explicit "Chapter 1" → Chapter 0)
+    Heading 2                        prose: "## Title" in-chapter heading, or a
+                                     chapter break when there's no Heading 1
+                                     besides the title; script: chapter break
+    soft line break (Shift+Enter)    starts a new paragraph
     paragraph in a mapped color      DIALOGUE by that character
     colored span inside a paragraph  script: splits into narration + dialogue
                                      lines; prose: inline [span]{Speaker} kept in
@@ -49,6 +53,11 @@ How the document is read:
     monospace paragraphs (Courier,   one TRANSCRIPT block per run of consecutive
       Consolas, Roboto Mono...)      monospace paragraphs
     horizontal rule or *** / - - -   BREAK (scene break)
+    page break, or a run of empty    BREAK — "usual spacing" is the doc's most
+      paragraphs longer than the     common gap between paragraphs (0 or 1);
+      doc's usual spacing            never next to a heading or at the end
+    mostly-monospace document        monospace is the body font, not TRANSCRIPT
+    punctuation-only styled run      plain (an italic "(" carries no emphasis)
 
 Colors mapped to an empty name count as narration (ink color, not a voice).
 Underline and other inline formatting is flattened to plain text.
@@ -74,6 +83,7 @@ MD_DIR = ROOT / "md" / "stories"
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
+PAGE_BREAK = "\x0c"  # stand-in for <w:br w:type="page"/> inside run text
 MONO_FONTS = {"courier new", "courier", "consolas", "roboto mono", "source code pro", "jetbrains mono"}
 CHAPTER_HEADING = re.compile(r"^chapter\s+(\d+)\s*[:.–—-]?\s*(.*)$", re.IGNORECASE)
 BREAK_TEXT = re.compile(r"^(\*\s*){3,}$|^(-\s*){3,}$|^(_\s*){3,}$")
@@ -110,7 +120,9 @@ def run_properties(run):
         elif node.tag == f"{W}tab":
             parts.append("\t")
         elif node.tag == f"{W}br":
-            parts.append("\n")
+            # Shift+Enter (textWrapping, or untyped) starts a new paragraph;
+            # a page break is a section boundary (see read_paragraphs)
+            parts.append(PAGE_BREAK if node.get(f"{W}type") == "page" else "\n")
     text = "".join(parts)
 
     rpr = run.find(f"{W}rPr")
@@ -131,7 +143,13 @@ def run_properties(run):
 
 
 def read_paragraphs(body):
-    """Flatten the document into dicts: {style, hr, runs: [(text, color, italic, mono, bold)]}."""
+    """Flatten the document into dicts: {style, hr, page_break, runs: [(text, color, italic, mono, bold)]}.
+
+    A soft line break (Shift+Enter) inside a paragraph splits it: several
+    Drive stories write a whole scene as one paragraph of tab-indented lines
+    joined by soft breaks, which would otherwise collapse into one run-on
+    line. A page break also splits, and the piece after it is flagged
+    `page_break` so convert() can read it as a section boundary."""
     paragraphs = []
     for p in body.iter(f"{W}p"):
         ppr = p.find(f"{W}pPr")
@@ -142,9 +160,19 @@ def read_paragraphs(body):
                 style = style_el.get(f"{W}val")
             # Google exports a horizontal rule as an empty paragraph with a border
             hr = ppr.find(f"{W}pBdr") is not None
-        runs = [run_properties(r) for r in p.findall(f"{W}r")]
-        runs = [r for r in runs if r[0]]
-        paragraphs.append({"style": style, "hr": hr, "runs": runs})
+        pieces = [{"style": style, "hr": hr, "page_break": False, "runs": []}]
+        for run in p.findall(f"{W}r"):
+            text, *props = run_properties(run)
+            for k, chunk in enumerate(re.split(f"(\n|{PAGE_BREAK})", text)):
+                if chunk == "\n" or chunk == PAGE_BREAK:
+                    pieces.append({"style": style, "hr": False, "page_break": chunk == PAGE_BREAK, "runs": []})
+                elif chunk:
+                    pieces[-1]["runs"].append((chunk, *props))
+        if len(pieces) > 1:
+            # a border marks a rule only on a paragraph with no text at all
+            for piece in pieces:
+                piece["hr"] = False
+        paragraphs.extend(pieces)
     return paragraphs
 
 
@@ -252,6 +280,11 @@ def segment_paragraph_prose(paragraph, color_map):
     Runs merge while (speaker, italic, bold) are identical."""
     merged = []  # (speaker, italic, bold, raw)
     for text, color, italic, _mono, bold in paragraph["runs"]:
+        if merged and not text.strip():
+            # whitespace carries no visible style or voice: fold it into the
+            # previous run, so `**a** **b**` in one voice stays one atom
+            merged[-1] = (*merged[-1][:3], merged[-1][3] + text)
+            continue
         speaker = speaker_for(color, color_map)
         key = (speaker, italic, bold)
         if merged and merged[-1][:3] == key:
@@ -272,14 +305,13 @@ def segment_paragraph_prose(paragraph, color_map):
 
 
 def emphasize(core, italic, bold):
-    """Wrap text in the markdown emphasis markers for its style."""
-    if italic and bold:
-        return f"***{core}***"
-    if bold:
-        return f"**{core}**"
-    if italic:
-        return f"*{core}*"
-    return core
+    """Wrap text in the markdown emphasis markers for its style, exactly as
+    the source run is styled (quote marks included). A run that is nothing
+    but punctuation — an italic "(" or "." — gets no emphasis at all."""
+    marker = "***" if italic and bold else "**" if bold else "*" if italic else ""
+    if not marker or not any(ch.isalnum() for ch in core):
+        return core
+    return f"{marker}{core}{marker}"
 
 
 def render_prose_paragraph(atoms):
@@ -316,15 +348,76 @@ def strip_speaker_prefix(text, speaker):
     return text
 
 
+def title_key(text):
+    """Comparable form of a title line: case, emphasis and punctuation dropped."""
+    return re.sub(r"[^0-9a-z]+", "", unicodedata.normalize("NFKD", text).casefold())
+
+
+def scene_gaps(paragraphs):
+    """Indices of paragraphs that open a new scene.
+
+    Authors space paragraphs either with no blank paragraph between them or
+    with exactly one; whichever is more common between two text paragraphs is
+    the document's baseline. A longer run of empty paragraphs — or a page
+    break — is a deliberate gap: a scene break or time skip."""
+    gaps, run, last_text = [], 0, None
+    for index, paragraph in enumerate(paragraphs):
+        if paragraph_text(paragraph) or (paragraph["hr"] and not paragraph["runs"]):
+            if last_text is not None:
+                gaps.append((index, run, paragraph["page_break"]))
+            last_text, run = index, 0
+        else:
+            run += 1
+            if paragraph["page_break"]:
+                run += 100  # a page break always counts as a gap
+    counts = {}
+    for _index, run, _page in gaps:
+        if run <= 1:
+            counts[run] = counts.get(run, 0) + 1
+    baseline = max(counts, key=lambda k: (counts[k], -k)) if counts else 0
+    return {index for index, run, page in gaps if run > baseline or page}
+
+
 def convert(paragraphs, meta):
     """Paragraph dicts -> markdown body lines (without frontmatter)."""
     color_map = meta["colors"]
     is_prose = (meta.get("format") or "script").strip().lower() == "prose"
     out = []
+
+    # A leading line that just repeats the story title (as a Heading 1, a
+    # plain or bold paragraph, with or without a trailing period) is the
+    # document's title, not story text.
+    title = title_key(meta.get("title") or "")
+    first = next((i for i, p in enumerate(paragraphs)
+                  if paragraph_text(p) and p["style"] not in ("Title", "Subtitle")), None)
+    skip = {first} if first is not None and title and title_key(paragraph_text(paragraphs[first])) == title else set()
+
+    # With the title gone, a document whose only sections are Heading 2s
+    # ("Part 1", "Part 2") is chaptered by them.
+    def level(p):
+        style = p["style"] or ""
+        return style[7:] if style.startswith("Heading") and paragraph_text(p) else None
+    kept = [p for i, p in enumerate(paragraphs) if i not in skip]
+    promote_h2 = not any(level(p) == "1" for p in kept) and any(level(p) == "2" for p in kept)
+
+    breaks = scene_gaps(paragraphs)
+
+    # Monospace marks a TRANSCRIPT block only against a proportional body
+    # font; a story typed entirely in Courier is just set in Courier.
+    body_chars = mono_chars = 0
+    for p in paragraphs:
+        if p["style"] in ("Title", "Subtitle"):
+            continue
+        for text, _c, _i, mono, _b in p["runs"]:
+            body_chars += len(text.strip())
+            mono_chars += len(text.strip()) if mono else 0
+    mono_is_body = body_chars > 0 and mono_chars * 2 > body_chars
     chapter_count = 0
     last_number = 0
     transcript = []  # consecutive monospace paragraphs, flushed as one block
     warnings = []
+    if mono_is_body:
+        warnings.append("most of the text is monospace — treated as the body font, not TRANSCRIPT blocks")
 
     def flush_transcript():
         nonlocal transcript
@@ -335,17 +428,31 @@ def convert(paragraphs, meta):
             out.append("")
             transcript = []
 
-    for paragraph in paragraphs:
+    def scene_break():
+        # one BREAK per gap, never next to a heading or right after another
+        previous = next((line for line in reversed(out) if line), None)
+        if previous is None or previous.startswith("#") or previous == "***":
+            return
+        flush_transcript()
+        out.append("***")
+        out.append("")
+
+    for index, paragraph in enumerate(paragraphs):
         style = paragraph["style"] or ""
         text = paragraph_text(paragraph)
 
-        if style in ("Title", "Subtitle"):
-            continue  # consumed as frontmatter defaults
+        if style in ("Title", "Subtitle") or index in skip:
+            continue  # consumed as frontmatter defaults / the title line
 
-        if style.startswith("Heading") and style[7:] in ("1", "2") and text:
-            # Prose: Heading 1 = chapter, Heading 2 = in-chapter section heading.
-            # Script: both levels are chapters (legacy behavior).
-            if is_prose and style[7:] == "2":
+        is_heading = style.startswith("Heading") and style[7:] in ("1", "2") and text
+        if index in breaks and not is_heading:
+            scene_break()
+
+        if is_heading:
+            # Prose: Heading 1 = chapter, Heading 2 = in-chapter section heading
+            # (or a chapter, when there are no Heading 1s). Script: both levels
+            # are chapters (legacy behavior).
+            if is_prose and style[7:] == "2" and not promote_h2:
                 flush_transcript()
                 out.append(f"## {text}")
                 out.append("")
@@ -353,6 +460,15 @@ def convert(paragraphs, meta):
             flush_transcript()
             chapter_count += 1
             match = CHAPTER_HEADING.match(text)
+            if chapter_count == 1 and any(line and not line.startswith("#") for line in out):
+                # Story text before the first chapter heading would become an
+                # implicit chapter 1 and collide with an explicit "Chapter 1".
+                # Number that preface 0 instead (or one below the first heading).
+                first_no = int(match.group(1)) if match else 1
+                out.insert(0, "")
+                out.insert(0, f"# Chapter {max(first_no - 1, 0)}")
+                last_number = max(first_no - 1, 0)
+                warnings.append(f"text before the first chapter heading became Chapter {last_number} — give it a title")
             if match and int(match.group(1)) > last_number:
                 number, title = int(match.group(1)), match.group(2).strip()
             else:
@@ -365,21 +481,17 @@ def convert(paragraphs, meta):
             continue
 
         if paragraph["hr"] and not text:
-            flush_transcript()
-            out.append("***")
-            out.append("")
+            scene_break()
             continue
 
         if not text:
             continue
 
         if BREAK_TEXT.match(text):
-            flush_transcript()
-            out.append("***")
-            out.append("")
+            scene_break()
             continue
 
-        if paragraph["runs"] and all(mono for _t, _c, _i, mono, _b in paragraph["runs"]):
+        if not mono_is_body and paragraph["runs"] and all(mono for _t, _c, _i, mono, _b in paragraph["runs"]):
             transcript.append(text)
             continue
         flush_transcript()
@@ -419,10 +531,15 @@ def convert(paragraphs, meta):
             out.append("")
 
     flush_transcript()
-    if chapter_count == 0:
-        # no headings — story-md-to-api treats a headingless body as one chapter
-        pass
-    return out, warnings
+    # no BREAK at the end of the story or right before a heading
+    cleaned = []
+    for k, line in enumerate(out):
+        if line == "***":
+            following = next((l for l in out[k + 1:] if l), None)
+            if following is None or following.startswith("#"):
+                continue
+        cleaned.append(line)
+    return cleaned, warnings
 
 
 def frontmatter(meta):
