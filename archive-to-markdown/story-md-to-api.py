@@ -101,7 +101,8 @@ def parse_frontmatter(lines):
         key, sep, value = line.partition(":")
         if not sep:
             sys.exit(f"error: bad frontmatter line: {line!r}")
-        value = value.split("#", 1)[0].strip().strip("'\"")
+        # a comment starts at whitespace + "#" (YAML), so '#e8b23b' survives
+        value = re.split(r"\s#", value, maxsplit=1)[0].strip().strip("'\"")
         meta[key.strip()] = value
     sys.exit("error: unterminated frontmatter block")
 

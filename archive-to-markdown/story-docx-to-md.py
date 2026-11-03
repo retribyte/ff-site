@@ -149,6 +149,27 @@ def run_properties(run):
     return text, color, italic, mono, bold
 
 
+# Inline containers that hold a paragraph's runs: Google wraps link text in
+# <w:hyperlink>; Word adds tracked insertions, smart tags, content controls
+# and simple fields. Runs inside them are part of the paragraph's text.
+INLINE_WRAPPERS = {f"{W}hyperlink", f"{W}ins", f"{W}smartTag", f"{W}sdt", f"{W}sdtContent", f"{W}fldSimple", f"{W}customXml"}
+
+
+def paragraph_runs(p):
+    """A paragraph's runs in order as (run, in_link): direct children plus
+    those inside inline wrappers (never runs of a nested paragraph, e.g. in
+    a text box)."""
+    runs = []
+    def walk(el, in_link):
+        for child in el:
+            if child.tag == f"{W}r":
+                runs.append((child, in_link))
+            elif child.tag in INLINE_WRAPPERS:
+                walk(child, in_link or child.tag == f"{W}hyperlink")
+    walk(p, False)
+    return runs
+
+
 def read_paragraphs(body):
     """Flatten the document into dicts: {style, hr, page_break, runs: [(text, color, italic, mono, bold)]}.
 
@@ -171,8 +192,10 @@ def read_paragraphs(body):
         # flagged o:hr="t" inside the paragraph
         hr = hr or any(rect.get(f"{O}hr") == "t" for rect in p.iter(f"{V}rect"))
         pieces = [{"style": style, "hr": hr, "page_break": False, "runs": []}]
-        for run in p.findall(f"{W}r"):
+        for run, in_link in paragraph_runs(p):
             text, *props = run_properties(run)
+            if in_link:
+                props[0] = None  # link blue is link styling, not a speaker's ink
             for k, chunk in enumerate(re.split(f"(\n|{PAGE_BREAK})", text)):
                 if chunk == "\n" or chunk == PAGE_BREAK:
                     pieces.append({"style": style, "hr": False, "page_break": chunk == PAGE_BREAK, "runs": []})

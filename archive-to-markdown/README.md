@@ -169,6 +169,7 @@ How a Doc is read:
 | Heading 1 | chapter break (`Chapter N: ...` numbering honored; text before an explicit `Chapter 1` becomes `Chapter 0`) |
 | Heading 2 and below | **prose:** `## Title` in-chapter section; a Heading 2 becomes a chapter break when the doc has no Heading 1 besides the title · **script:** Heading 2 is another chapter break |
 | soft line break (Shift+Enter) inside a paragraph | a new paragraph |
+| link text (and other inline wrappers: tracked insertions, smart tags, content controls) | read as ordinary text; a link's blue is not a voice color |
 | paragraph wholly in a mapped color | `> Name:` dialogue line (a typed `Name:` prefix is stripped) |
 | colored span inside a paragraph | **script:** paragraph splits into narration + dialogue lines · **prose:** kept in one paragraph as an inline `[span]{Speaker}` |
 | italic / bold run | **prose:** `*italic*` / `**bold**` emphasis, kept inline (nests inside dialogue spans) · **script:** flattened |
