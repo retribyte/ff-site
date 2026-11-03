@@ -52,7 +52,11 @@ How the document is read:
     wholly italic paragraph          prose: italic narration; script: ACTION line
     monospace paragraphs (Courier,   one TRANSCRIPT block per run of consecutive
       Consolas, Roboto Mono...)      monospace paragraphs
-    horizontal rule or *** / - - -   BREAK (scene break)
+    horizontal line or *** / - - -   BREAK (scene break) — Google exports
+                                     Insert ▸ Horizontal line as a VML rect
+    quote marks at a styled/colored  moved outside: “[*…*]{Name},” (comma
+      run's edge                     before the closing quote too)
+    Heading 3+                       prose: "## Title" in-chapter section
     page break, or a run of empty    BREAK — "spacing around it" is the most
       paragraphs longer than the     common gap (0 or 1) among the 3 gaps on
       spacing around it              either side and across the doc; never
@@ -83,6 +87,8 @@ META_DIR = ROOT / "meta" / "stories"
 MD_DIR = ROOT / "md" / "stories"
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+V = "{urn:schemas-microsoft-com:vml}"
+O = "{urn:schemas-microsoft-com:office:office}"
 
 PAGE_BREAK = "\x0c"  # stand-in for <w:br w:type="page"/> inside run text
 MONO_FONTS = {"courier new", "courier", "consolas", "roboto mono", "source code pro", "jetbrains mono"}
@@ -159,8 +165,11 @@ def read_paragraphs(body):
             style_el = ppr.find(f"{W}pStyle")
             if style_el is not None:
                 style = style_el.get(f"{W}val")
-            # Google exports a horizontal rule as an empty paragraph with a border
+            # one form of horizontal rule: an empty paragraph with a border
             hr = ppr.find(f"{W}pBdr") is not None
+        # Google Docs' Insert ▸ Horizontal line exports as a VML rectangle
+        # flagged o:hr="t" inside the paragraph
+        hr = hr or any(rect.get(f"{O}hr") == "t" for rect in p.iter(f"{V}rect"))
         pieces = [{"style": style, "hr": hr, "page_break": False, "runs": []}]
         for run in p.findall(f"{W}r"):
             text, *props = run_properties(run)
@@ -305,14 +314,81 @@ def segment_paragraph_prose(paragraph, color_map):
     return atoms
 
 
+OPEN_QUOTES = "“\"‘"
+CLOSE_QUOTES = "”\"’"
+
+
+def split_quotes(core):
+    """(opening quotes, inner, closing) — closing carries a comma that sits
+    right before the closing quote. Single quotes only peel as a pair, so a
+    possessive ’ stays put."""
+    start, end = 0, len(core)
+    while start < end and core[start] in OPEN_QUOTES:
+        start += 1
+    while end > start and core[end - 1] in CLOSE_QUOTES:
+        end -= 1
+    opened, closed = core[:start], core[end:]
+    if ("‘" in opened) != ("’" in closed):  # an unpaired single quote is an apostrophe
+        if "‘" in opened:
+            start = 0
+        if "’" in closed:
+            end = len(core)
+        opened, closed = core[:start], core[end:]
+    inner = core[start:end]
+    if closed and inner.endswith(","):
+        inner, closed = inner[:-1], "," + closed
+    return opened, inner, closed
+
+
 def emphasize(core, italic, bold):
-    """Wrap text in the markdown emphasis markers for its style, exactly as
-    the source run is styled (quote marks included). A run that is nothing
-    but punctuation — an italic "(" or "." — gets no emphasis at all."""
+    """Wrap text in the markdown emphasis markers for its style.
+
+    House style keeps quote marks outside the styling — “*…*”, with a comma
+    before the closing quote outside too — whatever the source run covered.
+    A run that is nothing but punctuation gets no emphasis at all."""
     marker = "***" if italic and bold else "**" if bold else "*" if italic else ""
     if not marker or not any(ch.isalnum() for ch in core):
         return core
-    return f"{marker}{core}{marker}"
+    opened, inner, closed = split_quotes(core)
+    return f"{opened}{marker}{inner}{marker}{closed}"
+
+
+def normalize_atoms(atoms):
+    """House style for voiced spans: quote marks (and a comma before the
+    closing quote) sit outside the span — “[…]{Name},” — and a voiced run
+    with no letters or digits (a lone colored "…" or ".") is narration."""
+    atoms = [(None if not any(ch.isalnum() for ch in a[3]) else a[0], *a[1:]) for a in atoms]
+    out, i = [], 0
+    while i < len(atoms):
+        speaker = atoms[i][0]
+        j = i
+        while j < len(atoms) and atoms[j][0] == speaker:
+            j += 1
+        group = list(atoms[i:j])
+        if speaker is not None:
+            first, last = group[0], group[-1]
+            opened, _inner, _closed = split_quotes(first[3])
+            if opened:
+                out.append((None, False, False, opened, first[4], False))
+                group[0] = first = (*first[:3], first[3][len(opened):], False, first[5])
+                if len(group) == 1:
+                    last = first
+            _o, _inner, closed = split_quotes(last[3])
+            # a comma that ends the span right before a closing quote outside it
+            nxt = atoms[j] if j < len(atoms) else None
+            if not closed and last[3].endswith(",") and nxt and not last[5] and not nxt[4] and nxt[3][:1] in CLOSE_QUOTES:
+                closed = ","
+            tail = None
+            if closed and len(closed) < len(last[3]):
+                group[-1] = (*last[:3], last[3][: len(last[3]) - len(closed)], last[4], False)
+                tail = (None, False, False, closed, False, last[5])
+            out.extend(group)
+            if tail:
+                out.append(tail)
+        else:
+            out.extend(group)
+        i = j
+    return [a for a in out if a[3]]
 
 
 def render_prose_paragraph(atoms):
@@ -409,6 +485,7 @@ def convert(paragraphs, meta):
     def level(p):
         style = p["style"] or ""
         return style[7:] if style.startswith("Heading") and paragraph_text(p) else None
+    # (Heading 3 and below are always in-chapter sections in prose)
     kept = [p for i, p in enumerate(paragraphs) if i not in skip]
     promote_h2 = not any(level(p) == "1" for p in kept) and any(level(p) == "2" for p in kept)
 
@@ -442,10 +519,10 @@ def convert(paragraphs, meta):
 
     def scene_break():
         # one BREAK per gap, never next to a heading or right after another
+        flush_transcript()  # a pending transcript block ends here, before the check
         previous = next((line for line in reversed(out) if line), None)
         if previous is None or previous.startswith("#") or previous == "***":
             return
-        flush_transcript()
         out.append("***")
         out.append("")
 
@@ -456,15 +533,18 @@ def convert(paragraphs, meta):
         if style in ("Title", "Subtitle") or index in skip:
             continue  # consumed as frontmatter defaults / the title line
 
-        is_heading = style.startswith("Heading") and style[7:] in ("1", "2") and text
-        if index in breaks and not is_heading:
+        is_heading = style.startswith("Heading") and style[7:].isdigit() and text
+        is_mono = not mono_is_body and paragraph["runs"] and all(m for _t, _c, _i, m, _b in paragraph["runs"])
+        # spacing inside a transcript block is its own layout, not a scene gap
+        # (rules and page breaks still split it)
+        if index in breaks and not is_heading and not (transcript and is_mono and not paragraph["page_break"]):
             scene_break()
 
         if is_heading:
             # Prose: Heading 1 = chapter, Heading 2 = in-chapter section heading
             # (or a chapter, when there are no Heading 1s). Script: both levels
             # are chapters (legacy behavior).
-            if is_prose and style[7:] == "2" and not promote_h2:
+            if is_prose and (style[7:] != "1" and not (style[7:] == "2" and promote_h2)):
                 flush_transcript()
                 out.append(f"## {text}")
                 out.append("")
@@ -517,7 +597,7 @@ def convert(paragraphs, meta):
             # emphasis, and their nesting are all handled by render_prose_paragraph.
             if any(ch in text for ch in "[]{}*"):
                 warnings.append(f"prose paragraph contains literal []{{}}* that may collide with span/emphasis syntax: {text[:40]!r}")
-            atoms = segment_paragraph_prose(paragraph, color_map)
+            atoms = normalize_atoms(segment_paragraph_prose(paragraph, color_map))
             paragraph_md = render_prose_paragraph(atoms)
             if paragraph_md[:1] in "#>`":
                 warnings.append(f"paragraph starts with a markdown marker: {paragraph_md[:40]!r}")

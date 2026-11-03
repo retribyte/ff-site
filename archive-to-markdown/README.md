@@ -167,14 +167,15 @@ How a Doc is read:
 | Title / Subtitle styles | frontmatter `title` / `blurb` defaults |
 | a first line that repeats the story title (any style, bold, trailing period) | dropped |
 | Heading 1 | chapter break (`Chapter N: ...` numbering honored; text before an explicit `Chapter 1` becomes `Chapter 0`) |
-| Heading 2 | **prose:** `## Title` in-chapter heading, or a chapter break when the doc has no Heading 1 besides the title · **script:** another chapter break |
+| Heading 2 and below | **prose:** `## Title` in-chapter section; a Heading 2 becomes a chapter break when the doc has no Heading 1 besides the title · **script:** Heading 2 is another chapter break |
 | soft line break (Shift+Enter) inside a paragraph | a new paragraph |
 | paragraph wholly in a mapped color | `> Name:` dialogue line (a typed `Name:` prefix is stripped) |
 | colored span inside a paragraph | **script:** paragraph splits into narration + dialogue lines · **prose:** kept in one paragraph as an inline `[span]{Speaker}` |
 | italic / bold run | **prose:** `*italic*` / `**bold**` emphasis, kept inline (nests inside dialogue spans) · **script:** flattened |
+| quote marks at the edge of a colored or styled run | moved outside: `“[*…*]{Name},”`, with a comma before the closing quote outside too (house style). A colored run with no letters (a lone “…” or “.”) is narration |
 | wholly italic paragraph | **prose:** italic narration · **script:** `_action_` line |
 | consecutive monospace paragraphs | one ```` ```transcript ```` block (unless most of the doc is monospace — then it's just the body font) |
-| horizontal rule, `***`, `- - -` | `***` scene break |
+| horizontal line (Insert ▸ Horizontal line, or a bordered empty paragraph), `***`, `- - -` | `***` scene break (inside a transcript block it splits the block) |
 | a page break, or a run of empty paragraphs longer than the spacing around it (nearby gaps and the doc overall, 0 or 1) | `***` scene break (never next to a heading or at the end) |
 | an italic/bold run that is only punctuation | plain text |
 
