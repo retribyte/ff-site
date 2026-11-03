@@ -9,6 +9,12 @@ Usage:
                                                file, episode number, title, etc.
     python md-to-api.py <season> [file.md ...] batch — convert every episode
                                                already titled in the meta file
+    python md-to-api.py --all                  batch every season (each meta/<s>.json
+                                               with an md/<s>/ folder). This is the
+                                               build step before `npm run seed` in
+                                               ff-server, whose seed-legacy.ts reads
+                                               api/: the markdown is the source,
+                                               api/ (gitignored) is derived from it
 
 Reads  ./meta/<season>.json   (season metadata: cast, username map, episodes)
        ./md/<season>/*.md     (or just the files passed on the command line)
@@ -529,6 +535,15 @@ def main():
             interactive()
         except (KeyboardInterrupt, EOFError):
             sys.exit("\naborted — nothing else was written")
+        return
+    if sys.argv[1] == "--all":
+        base = os.path.dirname(__file__) or "."
+        seasons = sorted(
+            os.path.splitext(os.path.basename(p))[0] for p in glob.glob(f"{base}/meta/*.json")
+            if os.path.isdir(f"{base}/md/{os.path.splitext(os.path.basename(p))[0]}")
+        )
+        for season in seasons:
+            batch(season, [])
         return
     batch(sys.argv[1], sys.argv[2:])
 

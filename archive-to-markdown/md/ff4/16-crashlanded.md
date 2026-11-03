@@ -3195,7 +3195,7 @@ _Zach continues to follow the crew._
 
 **Hunt520** _(27-Sep-22 10:43 PM)_ [1024526792217874462]
 
-> `John`: God damn it! Motherfucking idiots kidnapping me?! Do they know who I am?!
+> `John Smith`: God damn it! Motherfucking idiots kidnapping me?! Do they know who I am?!
 
 **Hunt520** _(27-Sep-22 10:44 PM)_ [1024526901802442763]
 
@@ -3223,7 +3223,7 @@ _`Seth`: Seth spits up a talkative dwarf named John Smith IV from his fanny pack
 
 **Hunt520** _(27-Sep-22 10:48 PM)_ [1024527893805666325]
 
-_`John`: John notices the pair._
+_`John Smith`: John notices the pair._
 
 **Vortox** _(27-Sep-22 10:48 PM)_ [1024527964844597279]
 
@@ -3257,9 +3257,9 @@ _`Sonichu`: Sonichu drops the remote._
 
 ↪ Trey: Zion + Bellow reaches the base where John has awakened.
 
-> `John`: And who are you?
-_`John`: John notices Zach._
-> `John`: Zacharias...
+> `John Smith`: And who are you?
+_`John Smith`: John notices Zach._
+> `John Smith`: Zacharias...
 
 **Hunt520** _(27-Sep-22 10:49 PM)_
 
@@ -3294,7 +3294,7 @@ _Vec pushes Bellow's face to the ground in irritation._
 ↪ Trey: Who's this?
 
 > John Smith, rising politician on Earth... My dad.
-> `John`: Glad you still think of me as my status, but I still think of you as a disappointment!
+> `John Smith`: Glad you still think of me as my status, but I still think of you as a disappointment!
 
 **Jonas** _(27-Sep-22 10:51 PM)_ [1024528681529516123]
 
@@ -3313,7 +3313,7 @@ _Bellow gets back up._
 
 ↪ Jonas: Bellow gets back up
 
-> `John`: Shut up, Insect.
+> `John Smith`: Shut up, Insect.
 
 **Zander** _(27-Sep-22 10:52 PM)_ [1024528945460289577]
 
@@ -3333,7 +3333,7 @@ _Vec moves over to John Smith IV and hops into his gaping maw._
 
 **Hunt520** _(27-Sep-22 10:53 PM)_ [1024529204303380491]
 
-> `John`: Now then, since Zacharias ruined my day by his presence already, mind telling me what is happening?
+> `John Smith`: Now then, since Zacharias ruined my day by his presence already, mind telling me what is happening?
 
 **Vortox** _(27-Sep-22 10:53 PM)_ [1024529220833124402]
 
@@ -3393,7 +3393,7 @@ _Bellow gets uncharacteristically angry at Zach's father._
 
 **Hunt520** _(27-Sep-22 10:56 PM)_ [1024529920556281957]
 
-> `John`: And on whose authority do you get to command me to do so? I'm a GU council member for god's sake!
+> `John Smith`: And on whose authority do you get to command me to do so? I'm a GU council member for god's sake!
 
 **Zander** _(27-Sep-22 10:56 PM)_ [1024529989430943805]
 
@@ -3421,7 +3421,7 @@ _Zion takes out his plasma blaster._
 
 **Hunt520** _(27-Sep-22 10:59 PM)_ [1024530687614795806]
 
-> `John`: I see you didn't learn your lesson, Zacharias... What did I say about talking?
+> `John Smith`: I see you didn't learn your lesson, Zacharias... What did I say about talking?
 
 **Hunt520** _(27-Sep-22 10:59 PM)_
 
@@ -3429,9 +3429,9 @@ _Zion takes out his plasma blaster._
 
 **Hunt520** _(27-Sep-22 10:59 PM)_
 
-_`John`: John gets angry._
-> `John`: You brat!
-_`John`: John starts walking toward Zach._
+_`John Smith`: John gets angry._
+> `John Smith`: You brat!
+_`John Smith`: John starts walking toward Zach._
 
 **Jonas** _(27-Sep-22 11:00 PM)_ [1024530962664656906]
 
@@ -3457,7 +3457,7 @@ _`John`: John starts walking toward Zach._
 
 **Hunt520** _(27-Sep-22 11:02 PM)_ [1024531423497031750]
 
-> `John`: You!
+> `John Smith`: You!
 
 **Zander** _(27-Sep-22 11:02 PM)_ [1024531431541715014]
 
@@ -3469,7 +3469,7 @@ _Zach drops Oblivion, his blindfold falls off, and his phone falls out._
 
 **Hunt520** _(27-Sep-22 11:02 PM)_ [1024531579558699079]
 
-> `John`: Unhand me!
+> `John Smith`: Unhand me!
 
 **Vortox** _(27-Sep-22 11:04 PM)_ [1024532097316179998]
 

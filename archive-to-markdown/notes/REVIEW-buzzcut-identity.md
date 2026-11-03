@@ -1,5 +1,11 @@
 # Buzzcut identity audit — Zander's second FF4 character
 
+> **Superseded 2026-11-03:** `seed-buzzcut-persona.ts` (and `seed-vec-personas.ts`)
+> were deleted. Their message-number lists went stale after the markdown
+> re-import. The markdown now carries this directly (53 `` `Buzzcut as Bee Emmett` ``
+> tags in `md/ff4/12-goblinators.md`), and the seed reads that. The review
+> below is kept for its reasoning.
+
 **Status: implemented, applied.** See "Resolution" at the bottom. Zander plays two characters
 concurrently across FF4: Vec (his registered `cast` default from episode 2
 on) and a second PC who spends "Goblinators" without a name at all, briefly

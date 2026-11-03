@@ -3,6 +3,8 @@
 .pytest_cache/
 __pycache__/
 api/
+# older Discord-JSON conversions moved out of api/ so seed-legacy never reads them
+api-superseded/
 api-baseline/
 json/
 json-legacy/
