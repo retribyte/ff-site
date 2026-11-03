@@ -4,6 +4,14 @@
     @include m.page-main;
 }
 
+.breadcrumb {
+    margin-bottom: 1.25rem;
+
+    a {
+        @include m.pixel-nav-link;
+    }
+}
+
 .header {
     text-align: center;
     margin-bottom: 1.5rem;

@@ -1,0 +1,63 @@
+@use '../../styles/mixins' as m;
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 36rem;
+    margin: 0 auto;
+}
+
+.filter {
+    @include m.form-field;
+}
+
+.list {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    border: 1px dashed var(--border-loud);
+    border-radius: var(--radius);
+}
+
+.name {
+    flex: 1;
+    font-weight: 600;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.count {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.promote {
+    @include m.ghost-button;
+}
+
+// Second click confirms; --ff1 is the error red.
+.armed {
+    @include m.ghost-button(var(--ff1));
+    border-style: solid;
+    border-color: var(--ff1);
+}
+
+.empty {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.error {
+    @include m.pixel-error;
+}

@@ -12,6 +12,7 @@ import SignalLost from '@/components/SignalLost';
 import { getSessionUser } from '@/lib/auth';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
 import ActionChip from '@/components/editor/ActionChip';
+import SpeakerAdmin from '@/components/characters/SpeakerAdmin';
 import WikiLink from '@/components/WikiLink';
 import { wikiFacts, type WikiFieldSpec } from '@/lib/wiki';
 import styles from './character.module.scss';
@@ -203,6 +204,8 @@ export default async function CharacterPage({ params }: Props) {
                             </Link>
                         </section>
                     )}
+
+                    {user?.role === 'ADMIN' && <SpeakerAdmin characterId={character.id} name={character.name} slug={character.slug} />}
                 </article>
 
                 <aside className={`pixel-panel ${styles.infobox}`}>

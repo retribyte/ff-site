@@ -1,0 +1,86 @@
+@use '../../styles/mixins' as m;
+
+// Admin speaker tools on a character page, and the NPC voices list.
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 2rem 0 0;
+    padding: 1rem 1.25rem;
+    border: 1px dashed var(--border-loud);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    max-width: 40rem;
+}
+
+.tabs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tab {
+    @include m.ghost-button;
+
+    &[aria-pressed='true'] {
+        color: var(--text);
+        border-style: solid;
+        border-color: var(--accent);
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.field {
+    @include m.field-stack(0.25rem);
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+
+    input {
+        @include m.form-field;
+        text-transform: none;
+        letter-spacing: normal;
+    }
+}
+
+.check {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.help {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.go {
+    @include m.ghost-button(var(--text), 0.65rem, 0.45rem 0.7rem);
+}
+
+// Armed (second-click) state of a destructive action; --ff1 is the error red.
+.danger {
+    @include m.ghost-button(var(--ff1), 0.65rem, 0.45rem 0.7rem);
+    border-style: solid;
+    border-color: var(--ff1);
+}
+
+.error {
+    @include m.pixel-error;
+}

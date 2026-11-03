@@ -39,6 +39,7 @@ export default async function CharactersPage() {
                 <h1>Dramatis Personae</h1>
                 <p className='pixel-label'>{characters.length} beings on record</p>
                 {user && <ActionChip href='/characters/new' label='+ record a new being' />}
+                {user?.role === 'ADMIN' && <ActionChip href='/characters/npcs' label='NPC voices' />}
             </header>
             <CharacterIndex
                 characters={sorted.map((c) => ({

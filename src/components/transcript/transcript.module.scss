@@ -310,7 +310,8 @@
     letter-spacing: 0.06em;
     color: var(--text-muted);
 
-    select {
+    select,
+    input {
         font-family: var(--font-body);
         font-size: 0.9rem;
         text-transform: none;

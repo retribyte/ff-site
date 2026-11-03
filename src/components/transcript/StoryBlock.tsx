@@ -185,10 +185,11 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
                     messageNo={block.key}
                     initial={block.messages[0].commentaries}
                 />
-                {user?.role === 'ADMIN' && characterId !== null && (
+                {user?.role === 'ADMIN' && (
                     <AttributionControl
                         episodeTitle={episodeTitle}
                         characterId={characterId}
+                        characterName={character?.name ?? null}
                         anchorNo={block.key}
                         blockNos={block.messages.map((m) => m.no)}
                         currentPersonaId={block.personaId}

@@ -63,7 +63,9 @@ export type WikiData = Record<string, WikiValue>;
 // different name, a different look, or both. `name` is nullable — a
 // look-only persona (new avatar/color, same name) has no name opinion.
 // `label` is the admin-facing handle for distinguishing name-less personas
-// in editing UI; it's never rendered in transcripts.
+// in editing UI; it's never rendered in transcripts. `characterId` null is
+// an NPC voice ("Enemy A"): always named, no slug or page, admin-managed,
+// and its lines have no character.
 export interface Persona {
     id: number;
     name: string | null;
@@ -71,7 +73,14 @@ export interface Persona {
     slug: string | null;
     image: string | null;
     color: string | null;
-    characterId: number;
+    characterId: number | null;
+}
+
+// An NPC voice as listed for admins (GET /personas?npc=true).
+export interface NpcPersona extends Persona {
+    name: string;
+    characterId: null;
+    messageCount: number;
 }
 
 export interface Species {
