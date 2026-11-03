@@ -288,7 +288,7 @@ def speaker_for(color, color_map):
     """Character name for a run color, or None when it reads as narration."""
     if color is None:
         return None
-    return color_map.get(color)
+    return color_map.get(color) or None  # "" (narration ink) is not a voice
 
 
 def segment_paragraph(paragraph, color_map):
