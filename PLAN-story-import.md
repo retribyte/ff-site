@@ -104,3 +104,62 @@ stopgap.
 - Wizard UI: 1–1.5 days.
 - Revisions + `importMeta`: about 1 day.
 - Permissions/draft: half a day to 1 day, depending on the decisions above.
+
+## Progress (2026-11-03, branch `story-docx-import`, both repos)
+
+Neither repo is merged or pushed. Dry-run merges with `main` and with the
+MVP session's `mvp-lockdown` are clean in both repos.
+
+**Done**
+- **Python converter fixed** against the 23 Drive docx that have reviewed
+  manuscripts (`archive-to-markdown/REVIEW-docx-conversion.md`):
+  - scene breaks
+  - soft breaks
+  - the title line
+  - heading levels
+  - Google horizontal lines
+  - quote marks outside spans and emphasis
+  - link text
+  - monospace body
+  - blank segments
+  - frontmatter `#`
+- **Manuscripts:** 17 patched on the branch.
+- **Dev DB:** 18 stories re-imported. Text was verified unchanged against a
+  pre-write snapshot.
+- **ff-server:**
+  - `PUT /stories/:slug/import` (atomic revision), plus `chapter_no` 0 now
+    allowed (`main` still rejects it).
+  - `src/story/convert/{py,manuscript,docx,index}.ts`: a TypeScript port of
+    both scripts. `npm test` is golden-tested: 69 tests, all 37 manuscripts
+    and all 23 docx, byte for byte.
+  - `POST /stories/convert`: analysis, or `{payload, markdown, warnings}`.
+    Admin-only, writes nothing.
+- **ff-site:** `src/components/import/DocxStoryForm.tsx`, **WIP, not
+  rendered anywhere yet.**
+
+**Next**
+1. Wire `DocxStoryForm` into `StoryImporter`:
+   - Factor `loadText` into a `loadPayload(parsed, name)` that both paths use,
+     and put the JSON upload under an "advanced" `<details>`.
+   - Add the form's SCSS classes. They're named in the component; none exist
+     yet.
+   - Update the `/import` page tagline.
+2. When the slug collides, offer "Replace its text", via `DeleteControl`
+   styled as a confirm, calling `PUT /stories/:slug/import {chapters}`.
+3. Verify end to end in a browser. It needs an admin login: an automated
+   login with the user's dev credentials was blocked in this session.
+4. `Story.importMeta` (save the color map for revisions). This is a schema
+   change: use a separate DB per `SESSION-HANDOFF.md`, or post before pushing.
+5. Images: 7 pictures in 3 API stories are missing (see the review notes). This
+   needs an image line type plus storage.
+
+**Open decisions (user)**
+- Who can import: admins only (today), or any member credited as author.
+- Drafts, or straight to the shelf.
+- **Slugs and accents:** the canonical `slugify` (`ff-server/src/utils/slug.ts`,
+  mirroring the wiki rule) *drops* accented letters, so "Volentinà
+  Constantini" becomes `volentin_constantini`. The user says
+  `volentina_constantini` is right, which means transliterating (NFKD, then
+  strip the marks), as the Python CLI's slugify does. Changing the rule
+  touches the wiki convention and both copies. `/stories/convert` uses the
+  canonical one for now.
