@@ -215,10 +215,22 @@ def paragraph_text(paragraph):
 
 # ---------- meta / wizard ----------
 
+# Latin letters that NFKD doesn't decompose into a base letter + mark.
+TRANSLITERATIONS = {"ß": "ss", "æ": "ae", "œ": "oe", "ø": "o", "ł": "l", "đ": "d", "ð": "d", "þ": "th", "ı": "i"}
+# JavaScript's /[\s-]+/: Python's \s also matches U+001C–U+001F and U+0085 but
+# not U+FEFF, so spell out the difference to keep the copies byte-identical.
+JS_SPACE_OR_HYPHEN = re.compile(r"(?:[^\S\x1c-\x1f\x85]|[\ufeff-])+")
+
+
 def slugify(text):
-    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+    """The canonical slug rule, identical to ff-server's src/utils/slug.ts and
+    ff-site's src/lib/slug.ts: transliterate accents (à→a, ß→ss, æ→ae, ø→o)
+    rather than drop them, then lowercase, underscore, drop punctuation."""
+    text = unicodedata.normalize("NFKD", text)
+    text = "".join(c for c in text if not unicodedata.category(c).startswith("M"))
     text = text.lower()
-    text = re.sub(r"[\s-]+", "_", text)
+    text = "".join(TRANSLITERATIONS.get(c, c) for c in text)
+    text = re.sub(JS_SPACE_OR_HYPHEN, "_", text)
     text = re.sub(r"[^a-z0-9_]+", "", text)
     text = re.sub(r"_+", "_", text).strip("_")
     return text or "untitled"

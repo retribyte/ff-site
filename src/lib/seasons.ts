@@ -1,9 +1,8 @@
 import type { Episode, Season } from './types';
-import { normalizeSlug } from './slug';
+import { normalizeSlug, slugify } from './slug';
 
 // Season/Episode slugs are now canonical, server-derived fields (see
-// ff-server/src/utils/slug.ts) — lowercase, runs of spaces/hyphens collapse
-// to a single underscore, other punctuation drops. Prefer `season.slug` /
+// ff-server/src/utils/slug.ts, mirrored by ./slug.ts). Prefer `season.slug` /
 // `episode.slug` wherever the object is in hand; the derivation helpers
 // below exist only as fallbacks for call sites that have nothing but a
 // title, and for resolving legacy hyphenated URLs from before the migration.
@@ -29,16 +28,6 @@ const DISPLAY_NAMES: Record<string, string> = {
 
 // Season slugs with dedicated color tokens in _tokens.scss ("ff2" → --ff2/--ff2-2)
 const THEMED_SLUGS = new Set(['ff1', 'ff2', 'ff3', 'ff4']);
-
-/** Mirrors ff-server/src/utils/slug.ts's slugify exactly. */
-function slugify(input: string): string {
-    return input
-        .toLowerCase()
-        .replace(/[\s-]+/g, '_')
-        .replace(/[^a-z0-9_]+/g, '')
-        .replace(/_+/g, '_')
-        .replace(/(^_|_$)/g, '');
-}
 
 /** Pre-migration hyphenated derivation — kept only to resolve legacy bookmarks. */
 function legacySeasonSlug(title: string): string {
