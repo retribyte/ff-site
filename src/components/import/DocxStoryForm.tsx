@@ -28,6 +28,14 @@ export interface ConvertedStory {
     chapters: unknown[];
 }
 
+/** A picture from the doc (its ![alt](docx:n) line), base64 when a browser can show it. */
+export interface DocxPicture {
+    n: number;
+    alt: string;
+    contentType: string | null;
+    data: string | null;
+}
+
 /** Story.importMeta: how this doc was read, remembered so a revision only asks about new colors. */
 export interface ImportMeta {
     format: 'prose' | 'script';
@@ -76,7 +84,13 @@ export default function DocxStoryForm({
     onConverted,
     disabled,
 }: {
-    onConverted: (payload: ConvertedStory, fileName: string, warnings: string[], importMeta: ImportMeta) => void;
+    onConverted: (
+        payload: ConvertedStory,
+        fileName: string,
+        warnings: string[],
+        importMeta: ImportMeta,
+        pictures: DocxPicture[]
+    ) => void;
     disabled?: boolean;
 }) {
     const [file, setFile] = useState<{ name: string; base64: string } | null>(null);
@@ -195,16 +209,20 @@ export default function DocxStoryForm({
                 return [c.color, v === NARRATION ? null : v === OTHER ? otherNameFor(c.color).trim() : v];
             })
         );
-        const meta: Record<string, unknown> = { title: title.trim(), format, colors };
+        // images: pictures come across as IMAGE lines, which need booru posts (given in the importer)
+        const meta: Record<string, unknown> = { title: title.trim(), format, colors, images: true };
         if (slug.trim()) meta.slug = slug.trim();
         if (blurb.trim()) meta.blurb = blurb.trim();
         if (season) meta.season = season;
         if (authors.trim()) meta.authors = authors.trim();
         if (published) meta.published = published;
         try {
-            const result = await convertCall<{ payload: ConvertedStory; warnings: string[] }>({ docx: file.base64, meta });
+            const result = await convertCall<{ payload: ConvertedStory; warnings: string[]; pictures: DocxPicture[] }>({
+                docx: file.base64,
+                meta,
+            });
             setWarnings(result.warnings);
-            onConverted(result.payload, file.name, result.warnings, { format, colors });
+            onConverted(result.payload, file.name, result.warnings, { format, colors }, result.pictures ?? []);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'The conversion failed.');
         } finally {
@@ -362,8 +380,8 @@ export default function DocxStoryForm({
 
                     {analysis.pictures > 0 && (
                         <p className={styles.hint}>
-                            ⚠ This document has {analysis.pictures} picture{analysis.pictures === 1 ? '' : 's'}. Stories can’t
-                            hold images yet, so {analysis.pictures === 1 ? 'it' : 'they'} won’t be imported.
+                            This document has {analysis.pictures} picture{analysis.pictures === 1 ? '' : 's'}. Stories show
+                            pictures from the booru: after converting, give each one its booru post number.
                         </p>
                     )}
 

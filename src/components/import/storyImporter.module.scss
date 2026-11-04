@@ -519,3 +519,57 @@
         padding: 0.5rem;
     }
 }
+
+// ── Pictures (a doc's pictures → booru posts) ────────────────────────────
+.pictureList {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pictureRow {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.6rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    @media (max-width: 36rem) {
+        grid-template-columns: 4.5rem minmax(0, 1fr);
+    }
+}
+
+.pictureThumb {
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: contain;
+    background: var(--surface);
+    border: 1px solid var(--border-loud);
+    color: var(--text-muted);
+}
+
+.pictureInput {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+
+    input {
+        @include m.form-field(0.82rem, 0.3rem 0.5rem, $focus: false);
+        width: 8rem;
+        min-width: 0;
+
+        &:focus {
+            outline: none;
+            border-color: var(--accent-soft);
+        }
+    }
+}

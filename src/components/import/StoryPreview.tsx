@@ -19,6 +19,7 @@ export interface PreviewLine {
     speaker?: string;
     npcVoice?: boolean;
     segments?: StorySegment[];
+    booruId?: number; // IMAGE
 }
 
 export interface PreviewChapter {
@@ -31,7 +32,8 @@ function chapterData(
     slug: string,
     format: StoryFormat,
     chapter: PreviewChapter,
-    characters: Record<number, SpeakerInfo>
+    characters: Record<number, SpeakerInfo>,
+    images: Record<number, string>
 ): StoryData {
     const lines: SlimLine[] = chapter.lines.map((line, index) => ({
         no: index + 1, // the server numbers lines the same way
@@ -41,6 +43,7 @@ function chapterData(
         speaker: line.speaker ?? null,
         npcVoice: line.npcVoice ?? false,
         segments: line.segments ?? null,
+        imageUrl: line.booruId !== undefined ? (images[line.booruId] ?? null) : null,
     }));
     return { storySlug: slug, chapterNo: chapter.chapter_no, format, lines, characters };
 }
@@ -56,6 +59,7 @@ export default function StoryPreview({
     season,
     chapters,
     characters,
+    images,
 }: {
     slug: string;
     format: StoryFormat;
@@ -64,6 +68,8 @@ export default function StoryPreview({
     season?: string;
     chapters: PreviewChapter[];
     characters: Record<number, SpeakerInfo>;
+    /** booru post -> what to show for it (the doc's own picture, or the post's file URL) */
+    images: Record<number, string>;
 }) {
     const [index, setIndex] = useState(0);
     const chapter = chapters[Math.min(index, chapters.length - 1)];
@@ -105,7 +111,7 @@ export default function StoryPreview({
                 </p>
                 <StoryReader
                     key={chapter.chapter_no}
-                    data={chapterData(slug, format, chapter, characters)}
+                    data={chapterData(slug, format, chapter, characters, images)}
                     preview
                 />
             </div>

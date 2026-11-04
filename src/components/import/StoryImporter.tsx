@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from '@/components/auth/SessionProvider';
 import DeleteControl from '@/components/DeleteControl';
-import DocxStoryForm, { type ImportMeta } from './DocxStoryForm';
+import DocxStoryForm, { type DocxPicture, type ImportMeta } from './DocxStoryForm';
+import { BOORU_URL } from '@/lib/booru';
+import { imageSrc } from '@/lib/images';
 import NpcVoiceNamer, { npcFragments } from './NpcVoiceNamer';
 import StoryPreview, { type PreviewChapter, type PreviewLine } from './StoryPreview';
 import type { SpeakerInfo } from '@/lib/transcript';
@@ -17,7 +19,7 @@ import styles from './storyImporter.module.scss';
 // each line's `text` (and, for segmented narration, its clean concatenation),
 // so we only resolve names → ids here.
 
-const LINE_TYPES = new Set(['NARRATION', 'DIALOGUE', 'ACTION', 'TRANSCRIPT', 'BREAK', 'HEADING']);
+const LINE_TYPES = new Set(['NARRATION', 'DIALOGUE', 'ACTION', 'TRANSCRIPT', 'BREAK', 'HEADING', 'IMAGE']);
 
 // `npc` / `npcVoice`: an NPC voice ([…]{?} in a manuscript), unnamed until a
 // name is given here or later in the story reader. Its name is never matched
@@ -36,7 +38,18 @@ interface ImportLine {
     speaker?: string;
     npcVoice?: boolean;
     segments?: ImportSegment[];
+    booruId?: number; // IMAGE: a manuscript's ![alt](booru:N)
+    docxPicture?: number; // IMAGE: picture n of the converted doc, until it's given a booru post
 }
+
+// A booru post number typed for a picture, as the booru answered for it
+type PostCheck =
+    | { state: 'checking' }
+    | { state: 'ok'; imageUrl: string; previewUrl: string | null }
+    | { state: 'missing'; message: string }
+    | { state: 'unavailable'; message: string };
+
+const POST_ID = /^\d{1,9}$/;
 
 interface ImportChapter {
     chapter_no: number;
@@ -158,6 +171,10 @@ export default function StoryImporter() {
     const [origin, setOrigin] = useState<Origin>('docx');
     // A Google Doc's color map, saved on the story (Story.importMeta); none for a .json
     const [importMeta, setImportMeta] = useState<ImportMeta | undefined>(undefined);
+    // The converted doc's pictures, and the booru post typed for each (by picture n)
+    const [docxPictures, setDocxPictures] = useState<DocxPicture[]>([]);
+    const [pictureIds, setPictureIds] = useState<Record<number, string>>({});
+    const [posts, setPosts] = useState<Record<number, PostCheck>>({});
     const [fileName, setFileName] = useState('');
     const [parseError, setParseError] = useState<string | null>(null);
 
@@ -197,9 +214,17 @@ export default function StoryImporter() {
     }, []);
 
     // Both paths land here: a converted Google Doc, or a CLI .json file.
-    const loadPayload = (read: () => ImportPayload, name: string, from: Origin, meta?: ImportMeta) => {
+    const loadPayload = (
+        read: () => ImportPayload,
+        name: string,
+        from: Origin,
+        meta?: ImportMeta,
+        pictures: DocxPicture[] = []
+    ) => {
         setPhase({ step: 'idle' });
         setImportMeta(meta);
+        setDocxPictures(pictures);
+        setPictureIds({});
         setAuthorOverrides({});
         setCharOverrides({});
         setOrigin(from);
@@ -217,6 +242,71 @@ export default function StoryImporter() {
         if (!file) return;
         void file.text().then((raw) => loadPayload(() => parsePayload(raw), file.name, 'json'));
     };
+
+    // ---- pictures ---------------------------------------------------------
+    // Booru post per doc picture (blank = leave it out), and every post the
+    // story will point at: those, plus a CLI manuscript's ![alt](booru:N)
+    const docxPostIds = useMemo(() => {
+        const ids: Record<number, number> = {};
+        for (const [n, raw] of Object.entries(pictureIds)) {
+            if (POST_ID.test(raw.trim())) ids[Number(n)] = parseInt(raw.trim(), 10);
+        }
+        return ids;
+    }, [pictureIds]);
+    const wantedPosts = useMemo(() => {
+        const ids = new Set(Object.values(docxPostIds));
+        for (const chapter of payload?.chapters ?? []) {
+            for (const line of chapter.lines) if (line.type === 'IMAGE' && line.booruId) ids.add(line.booruId);
+        }
+        return [...ids].sort((a, b) => a - b);
+    }, [docxPostIds, payload]);
+
+    // Look each post up once (debounced while typing), via the avatar picker's endpoint
+    useEffect(() => {
+        const unchecked = wantedPosts.filter((id) => !posts[id]);
+        if (unchecked.length === 0) return;
+        const timer = setTimeout(() => {
+            setPosts((prev) => ({ ...prev, ...Object.fromEntries(unchecked.map((id) => [id, { state: 'checking' }])) }));
+            for (const id of unchecked) {
+                ff<{ imageUrl: string; previewUrl: string | null }>(`/booru/${id}`)
+                    .then((post) =>
+                        setPosts((prev) => ({
+                            ...prev,
+                            [id]: { state: 'ok', imageUrl: post.imageUrl, previewUrl: post.previewUrl },
+                        }))
+                    )
+                    .catch((error: unknown) => {
+                        const message = error instanceof Error ? error.message : 'lookup failed';
+                        const unavailable = error instanceof ApiError && error.status === 502;
+                        setPosts((prev) => ({
+                            ...prev,
+                            [id]: unavailable ? { state: 'unavailable', message } : { state: 'missing', message },
+                        }));
+                    });
+            }
+        }, 400);
+        return () => clearTimeout(timer);
+    }, [wantedPosts, posts]);
+
+    const badPosts = wantedPosts.filter((id) => posts[id]?.state === 'missing');
+    const checkingPosts = wantedPosts.filter((id) => !posts[id] || posts[id].state === 'checking');
+    const badPictureInputs = Object.values(pictureIds).filter((raw) => raw.trim() && !POST_ID.test(raw.trim()));
+
+    // What the preview shows for each post: the doc's own picture when it came
+    // from the doc, else the booru's file
+    const previewImages = useMemo(() => {
+        const images: Record<number, string> = {};
+        for (const [id, post] of Object.entries(posts)) {
+            if (post.state === 'ok') images[Number(id)] = post.imageUrl;
+        }
+        for (const picture of docxPictures) {
+            const id = docxPostIds[picture.n];
+            if (id !== undefined && picture.data && picture.contentType) {
+                images[id] = `data:${picture.contentType};base64,${picture.data}`;
+            }
+        }
+        return images;
+    }, [posts, docxPictures, docxPostIds]);
 
     // ---- name resolution --------------------------------------------------
     // Every distinct speaker across dialogue lines and inline dialogue segments.
@@ -312,31 +402,41 @@ export default function StoryImporter() {
             return entry;
         };
 
+        // A doc picture with no booru post yet is left out
+        const postFor = (line: ImportLine) =>
+            line.docxPicture !== undefined ? docxPostIds[line.docxPicture] : line.booruId;
+
         return payload.chapters.map((chapter) => ({
             chapter_no: chapter.chapter_no,
             title: chapter.title ?? undefined,
-            lines: chapter.lines.map((line) => {
-                const out: PreviewLine = { type: line.type, text: line.text };
-                if (line.npcVoice) {
-                    out.npcVoice = true;
-                    if (line.speaker) out.speaker = line.speaker;
-                } else if (line.speaker) resolveSpeaker(out, line.speaker);
-                if (line.segments) {
-                    out.segments = line.segments.map((seg) => {
-                        const resolved: ImportSegment & { characterId?: number } = { text: seg.text };
-                        if (seg.npc) {
-                            resolved.npc = true;
-                            if (seg.speaker) resolved.speaker = seg.speaker;
-                        } else if (seg.speaker) resolveSpeaker(resolved, seg.speaker);
-                        if (seg.italic) resolved.italic = true;
-                        if (seg.bold) resolved.bold = true;
-                        return resolved;
-                    });
-                }
-                return out;
-            }),
+            lines: chapter.lines
+                .filter((line) => line.type !== 'IMAGE' || postFor(line) !== undefined)
+                .map((line) => {
+                    const out: PreviewLine = { type: line.type, text: line.text };
+                    if (line.type === 'IMAGE') {
+                        out.booruId = postFor(line);
+                        return out;
+                    }
+                    if (line.npcVoice) {
+                        out.npcVoice = true;
+                        if (line.speaker) out.speaker = line.speaker;
+                    } else if (line.speaker) resolveSpeaker(out, line.speaker);
+                    if (line.segments) {
+                        out.segments = line.segments.map((seg) => {
+                            const resolved: ImportSegment & { characterId?: number } = { text: seg.text };
+                            if (seg.npc) {
+                                resolved.npc = true;
+                                if (seg.speaker) resolved.speaker = seg.speaker;
+                            } else if (seg.speaker) resolveSpeaker(resolved, seg.speaker);
+                            if (seg.italic) resolved.italic = true;
+                            if (seg.bold) resolved.bold = true;
+                            return resolved;
+                        });
+                    }
+                    return out;
+                }),
         }));
-    }, [payload, charMap]);
+    }, [payload, charMap, docxPostIds]);
 
     // Name/color/portrait by id, for the preview's dialogue colors and legend
     const previewCharacters = useMemo(
@@ -407,14 +507,16 @@ export default function StoryImporter() {
     };
 
     const busy = phase.step === 'uploading';
-    const canUpload = payload !== null && !busy && phase.step !== 'success' && collision === null;
+    // Every typed post must exist (one the booru can't be asked about is left to the server)
+    const picturesReady = badPosts.length === 0 && checkingPosts.length === 0 && badPictureInputs.length === 0;
+    const canUpload = payload !== null && !busy && phase.step !== 'success' && collision === null && picturesReady;
     const changeWhere = origin === 'docx' ? 'in the form above' : 'in the manuscript frontmatter';
 
     return (
         <div className={styles.importer}>
             <DocxStoryForm
-                onConverted={(converted, name, _warnings, meta) =>
-                    loadPayload(() => validatePayload(converted), name, 'docx', meta)
+                onConverted={(converted, name, _warnings, meta, pictures) =>
+                    loadPayload(() => validatePayload(converted), name, 'docx', meta, pictures)
                 }
                 disabled={busy}
             />
@@ -576,6 +678,81 @@ export default function StoryImporter() {
                         />
                     )}
 
+                    {docxPictures.length > 0 && (
+                        <>
+                            <h3 className='pixel-label'>pictures</h3>
+                            <p className={styles.hint}>
+                                Stories show pictures from the{' '}
+                                <a href={BOORU_URL} target='_blank' rel='noreferrer'>
+                                    booru
+                                </a>
+                                . Upload each one there, then type its post number. A picture left blank isn&rsquo;t
+                                imported.
+                            </p>
+                            <ul className={styles.pictureList}>
+                                {docxPictures.map((picture) => {
+                                    const raw = pictureIds[picture.n] ?? '';
+                                    const id = docxPostIds[picture.n];
+                                    const check = id !== undefined ? posts[id] : undefined;
+                                    return (
+                                        <li key={picture.n} className={styles.pictureRow}>
+                                            {picture.data && picture.contentType ? (
+                                                // eslint-disable-next-line @next/next/no-img-element -- a data: URL from the doc
+                                                <img
+                                                    className={styles.pictureThumb}
+                                                    src={`data:${picture.contentType};base64,${picture.data}`}
+                                                    alt={picture.alt || `picture ${picture.n}`}
+                                                />
+                                            ) : (
+                                                <span className={styles.pictureThumb}>?</span>
+                                            )}
+                                            <span className={styles.colorMeta}>
+                                                <span className={styles.mapName}>
+                                                    picture {picture.n}
+                                                    {picture.alt ? ` · “${picture.alt}”` : ''}
+                                                </span>
+                                                <label className={styles.pictureInput}>
+                                                    <span>booru post #</span>
+                                                    <input
+                                                        inputMode='numeric'
+                                                        value={raw}
+                                                        onChange={(e) =>
+                                                            setPictureIds((prev) => ({ ...prev, [picture.n]: e.target.value }))
+                                                        }
+                                                        placeholder='leave out'
+                                                        disabled={busy || phase.step === 'success'}
+                                                        aria-label={`booru post for picture ${picture.n}`}
+                                                    />
+                                                </label>
+                                                <span className={styles.pickHint} aria-live='polite'>
+                                                    {raw.trim() && !POST_ID.test(raw.trim())
+                                                        ? '✖ a post number is digits only'
+                                                        : check?.state === 'checking'
+                                                          ? 'checking the booru…'
+                                                          : check?.state === 'ok'
+                                                            ? '✔ found on the booru'
+                                                            : check?.state === 'missing'
+                                                              ? `✖ ${check.message}`
+                                                              : check?.state === 'unavailable'
+                                                                ? '⚠ the booru isn’t answering; the upload will check again'
+                                                                : ''}
+                                                </span>
+                                            </span>
+                                            {check?.state === 'ok' && (
+                                                // eslint-disable-next-line @next/next/no-img-element -- the booru's copy, through the proxy
+                                                <img
+                                                    className={styles.pictureThumb}
+                                                    src={imageSrc(check.previewUrl ?? check.imageUrl)}
+                                                    alt={`booru post ${id}`}
+                                                />
+                                            )}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </>
+                    )}
+
                     <h3 className='pixel-label'>preview</h3>
                     <p className={styles.hint}>
                         How it will read on the shelf. Check that each color became the right speaker; change a pick
@@ -589,7 +766,13 @@ export default function StoryImporter() {
                         season={payload.story.season}
                         chapters={resolvedChapters}
                         characters={previewCharacters}
+                        images={previewImages}
                     />
+                    {badPosts.length > 0 && (
+                        <p className={styles.error}>
+                            ✖ no booru post {badPosts.join(', ')}: fix the number, or leave the picture out.
+                        </p>
+                    )}
 
                     <div className={styles.actions}>
                         {canReplace ? (

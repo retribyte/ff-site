@@ -14,6 +14,7 @@ export interface SlimLine {
     speaker: string | null;
     npcVoice: boolean; // DIALOGUE: an NPC voice, named by `speaker` or unnamed
     segments: StorySegment[] | null; // sub-paragraph dialogue spans, or null for plain lines
+    imageUrl: string | null; // IMAGE: the picture (a booru file URL, or a data: URL in an import preview)
 }
 
 export interface StoryData {
@@ -82,6 +83,7 @@ export function slimStoryChapter(
             speaker: l.speaker,
             npcVoice: l.npcVoice ?? false,
             segments: l.segments ?? null,
+            imageUrl: l.imageUrl ?? null,
         })),
     };
 }

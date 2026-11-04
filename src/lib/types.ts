@@ -4,7 +4,7 @@
 export type UserRole = 'USER' | 'ADMIN';
 export type MessageType = 'BOT_RESPONSE' | 'COMMAND' | 'QUOTE' | 'ACTION' | 'EMBED' | 'OTHER';
 export type ItemType = 'WEAPON' | 'EQUIPMENT' | 'ARTIFACT' | 'OTHER';
-export type StoryLineType = 'NARRATION' | 'DIALOGUE' | 'ACTION' | 'TRANSCRIPT' | 'BREAK' | 'HEADING';
+export type StoryLineType = 'NARRATION' | 'DIALOGUE' | 'ACTION' | 'TRANSCRIPT' | 'BREAK' | 'HEADING' | 'IMAGE';
 export type StoryFormat = 'SCRIPT' | 'PROSE';
 export type EightBallAnswerType = 'YES' | 'NO' | 'MAYBE';
 
@@ -160,6 +160,8 @@ export interface StoryLine {
     speaker: string | null; // display-name fallback when no Character row exists
     npcVoice?: boolean; // DIALOGUE: an NPC voice, named by `speaker` or unnamed (null)
     segments?: StorySegment[] | null; // sub-paragraph dialogue spans (NARRATION only); concat === text
+    booruId?: number | null; // IMAGE: the booru post holding the picture (text is its alt text)
+    imageUrl?: string | null; // IMAGE: that post's file URL (load it through imageSrc)
     character?: Character;
 }
 

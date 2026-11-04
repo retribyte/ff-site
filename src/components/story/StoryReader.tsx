@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
+import { imageSrc } from '@/lib/images';
 import { collectVoices, npcRuns, type NpcRun, type SlimLine, type StoryData } from '@/lib/stories';
 import type { StorySegment } from '@/lib/types';
 import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
@@ -293,6 +294,17 @@ const Line = memo(function Line({
                 <p className={styles.sceneBreak} aria-hidden>
                     ✦ ✦ ✦
                 </p>
+            );
+            break;
+        case 'IMAGE':
+            // A booru post (through the image proxy), or a data: URL in an import preview
+            content = line.imageUrl ? (
+                <figure className={styles.picture}>
+                    {/* eslint-disable-next-line @next/next/no-img-element -- booru size unknown; proxied */}
+                    <img src={imageSrc(line.imageUrl)} alt={line.text} loading='lazy' />
+                </figure>
+            ) : (
+                <p className={styles.picturePending}>▣ picture{line.text ? `: ${line.text}` : ''}</p>
             );
             break;
         case 'HEADING':
