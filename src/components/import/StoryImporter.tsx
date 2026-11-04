@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from '@/components/auth/SessionProvider';
 import DeleteControl from '@/components/DeleteControl';
-import DocxStoryForm from './DocxStoryForm';
+import DocxStoryForm, { type ImportMeta } from './DocxStoryForm';
 import NpcVoiceNamer, { npcFragments } from './NpcVoiceNamer';
 import StoryPreview, { type PreviewChapter, type PreviewLine } from './StoryPreview';
 import type { SpeakerInfo } from '@/lib/transcript';
@@ -156,6 +156,8 @@ export default function StoryImporter() {
 
     const [payload, setPayload] = useState<ImportPayload | null>(null);
     const [origin, setOrigin] = useState<Origin>('docx');
+    // A Google Doc's color map, saved on the story (Story.importMeta); none for a .json
+    const [importMeta, setImportMeta] = useState<ImportMeta | undefined>(undefined);
     const [fileName, setFileName] = useState('');
     const [parseError, setParseError] = useState<string | null>(null);
 
@@ -195,8 +197,9 @@ export default function StoryImporter() {
     }, []);
 
     // Both paths land here: a converted Google Doc, or a CLI .json file.
-    const loadPayload = (read: () => ImportPayload, name: string, from: Origin) => {
+    const loadPayload = (read: () => ImportPayload, name: string, from: Origin, meta?: ImportMeta) => {
         setPhase({ step: 'idle' });
+        setImportMeta(meta);
         setAuthorOverrides({});
         setCharOverrides({});
         setOrigin(from);
@@ -374,6 +377,7 @@ export default function StoryImporter() {
                         authorIds,
                     },
                     chapters,
+                    importMeta,
                 }),
             });
             setPhase({ step: 'success', count: lineTotal, href: `/stories/${created.slug}`, replaced: false });
@@ -394,7 +398,7 @@ export default function StoryImporter() {
             await ff(`/stories/${encodeURIComponent(slug)}/import`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chapters: resolvedChapters }),
+                body: JSON.stringify({ chapters: resolvedChapters, importMeta }),
             });
             setPhase({ step: 'success', count: lineTotal, href: `/stories/${slug}`, replaced: true });
         } catch (error) {
@@ -409,7 +413,9 @@ export default function StoryImporter() {
     return (
         <div className={styles.importer}>
             <DocxStoryForm
-                onConverted={(converted, name) => loadPayload(() => validatePayload(converted), name, 'docx')}
+                onConverted={(converted, name, _warnings, meta) =>
+                    loadPayload(() => validatePayload(converted), name, 'docx', meta)
+                }
                 disabled={busy}
             />
 

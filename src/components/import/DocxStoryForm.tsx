@@ -28,6 +28,19 @@ export interface ConvertedStory {
     chapters: unknown[];
 }
 
+/** Story.importMeta: how this doc was read, remembered so a revision only asks about new colors. */
+export interface ImportMeta {
+    format: 'prose' | 'script';
+    colors: Record<string, string | null>; // '#rrggbb' -> speaker name, '?' (unnamed NPCs) or null (narration)
+}
+
+// What the last import of the story at this slug remembered
+interface Remembered {
+    slug: string;
+    title: string;
+    meta: ImportMeta;
+}
+
 const NARRATION = '__narration__';
 const OTHER = '__other__';
 // Several NPCs share this color, so each span imports as an unnamed NPC voice
@@ -63,7 +76,7 @@ export default function DocxStoryForm({
     onConverted,
     disabled,
 }: {
-    onConverted: (payload: ConvertedStory, fileName: string, warnings: string[]) => void;
+    onConverted: (payload: ConvertedStory, fileName: string, warnings: string[], importMeta: ImportMeta) => void;
     disabled?: boolean;
 }) {
     const [file, setFile] = useState<{ name: string; base64: string } | null>(null);
@@ -75,13 +88,16 @@ export default function DocxStoryForm({
     const [title, setTitle] = useState('');
     const [slug, setSlug] = useState('');
     const [blurb, setBlurb] = useState('');
-    const [format, setFormat] = useState<'prose' | 'script'>('prose');
+    const [formatChoice, setFormat] = useState<'prose' | 'script' | null>(null);
     const [season, setSeason] = useState('');
     const [authors, setAuthors] = useState('');
     const [published, setPublished] = useState('');
-    // color -> character name, NARRATION, OTHER or '' (not chosen yet)
+    // Picks made in this form: color -> character name, NARRATION, SEVERAL_NPCS
+    // or OTHER. A color without one falls back to the remembered map, then to
+    // the default (gray = several NPCs; anything else unchosen).
     const [voices, setVoices] = useState<Record<string, string>>({});
     const [otherNames, setOtherNames] = useState<Record<string, string>>({});
+    const [remembered, setRemembered] = useState<Remembered | null>(null);
 
     const [characterNames, setCharacterNames] = useState<string[]>([]);
     const [seasons, setSeasons] = useState<string[]>([]);
@@ -112,8 +128,8 @@ export default function DocxStoryForm({
             setTitle(result.defaults.title ?? picked.name.replace(/\.docx$/i, '').replace(/_/g, "'"));
             setBlurb(result.defaults.blurb ?? '');
             setSlug('');
-            // gray is the house NPC color; any other color starts unchosen
-            setVoices(Object.fromEntries(result.colors.map((c) => [c.color, c.color === NPC_GRAY ? SEVERAL_NPCS : ''])));
+            setFormat(null);
+            setVoices({});
             setOtherNames({});
         } catch (err) {
             setFile(null);
@@ -123,24 +139,60 @@ export default function DocxStoryForm({
         }
     };
 
-    const unchosen = useMemo(
-        () =>
-            (analysis?.colors ?? []).filter((c) => {
-                const v = voices[c.color];
-                return !v || (v === OTHER && !(otherNames[c.color] ?? '').trim());
-            }),
-        [analysis, voices, otherNames]
-    );
+    // A revised draft of a story already on the shelf: its last Google Doc
+    // import remembered who each color was (Story.importMeta)
+    const targetSlug = slug.trim() || slugify(title);
+    useEffect(() => {
+        if (!analysis || !targetSlug) return;
+        let live = true;
+        const timer = setTimeout(() => {
+            fetch(`/api/ff/stories/${encodeURIComponent(targetSlug)}`)
+                .then((res) => (res.ok ? res.json() : null))
+                .then((envelope: { data?: { title: string; importMeta?: ImportMeta | null } } | null) => {
+                    if (!live) return;
+                    const meta = envelope?.data?.importMeta;
+                    setRemembered(meta ? { slug: targetSlug, title: envelope.data!.title, meta } : null);
+                })
+                .catch(() => live && setRemembered(null));
+        }, 300);
+        return () => {
+            live = false;
+            clearTimeout(timer);
+        };
+    }, [analysis, targetSlug]);
+    const memory = remembered?.slug === targetSlug ? remembered : null;
+
+    const characterSet = useMemo(() => new Set(characterNames), [characterNames]);
+    // The remembered speaker for a color as a form pick (+ its name, for OTHER)
+    const rememberedPick = (color: string): { pick: string; name?: string } | null => {
+        const colors = memory?.meta.colors;
+        if (!colors || !(color.toLowerCase() in colors)) return null;
+        const speaker = colors[color.toLowerCase()];
+        if (speaker === null) return { pick: NARRATION };
+        if (speaker === '?') return { pick: SEVERAL_NPCS };
+        return characterSet.has(speaker) ? { pick: speaker } : { pick: OTHER, name: speaker };
+    };
+    // gray is the house NPC color; any other color starts unchosen
+    const pickFor = (color: string) =>
+        voices[color] ?? rememberedPick(color)?.pick ?? (color === NPC_GRAY ? SEVERAL_NPCS : '');
+    const otherNameFor = (color: string) => otherNames[color] ?? rememberedPick(color)?.name ?? '';
+    const format = formatChoice ?? memory?.meta.format ?? 'prose';
+
+    const newColors = memory ? (analysis?.colors ?? []).filter((c) => !rememberedPick(c.color)) : [];
+    const unchosen = (analysis?.colors ?? []).filter((c) => {
+        const v = pickFor(c.color);
+        return !v || (v === OTHER && !otherNameFor(c.color).trim());
+    });
 
     const convert = async () => {
         if (!file || !analysis) return;
         setError(null);
         setBusy('converting');
-        const colors = Object.fromEntries(
+        const colors: Record<string, string | null> = Object.fromEntries(
             analysis.colors.map((c) => {
-                const v = voices[c.color];
+                const v = pickFor(c.color);
                 if (v === SEVERAL_NPCS) return [c.color, '?'];
-                return [c.color, v === NARRATION ? null : v === OTHER ? otherNames[c.color].trim() : v];
+                return [c.color, v === NARRATION ? null : v === OTHER ? otherNameFor(c.color).trim() : v];
             })
         );
         const meta: Record<string, unknown> = { title: title.trim(), format, colors };
@@ -152,7 +204,7 @@ export default function DocxStoryForm({
         try {
             const result = await convertCall<{ payload: ConvertedStory; warnings: string[] }>({ docx: file.base64, meta });
             setWarnings(result.warnings);
-            onConverted(result.payload, file.name, result.warnings);
+            onConverted(result.payload, file.name, result.warnings, { format, colors });
         } catch (err) {
             setError(err instanceof Error ? err.message : 'The conversion failed.');
         } finally {
@@ -244,6 +296,14 @@ export default function DocxStoryForm({
                     </div>
 
                     <h3 className='pixel-label'>who is each color?</h3>
+                    {memory && (
+                        <p className={styles.hint}>
+                            Remembered from the last import of &ldquo;{memory.title}&rdquo;, so its colors are filled in
+                            {newColors.length > 0
+                                ? `; ${newColors.length} new color${newColors.length === 1 ? '' : 's'} (marked new) still need a speaker.`
+                                : '.'}
+                        </p>
+                    )}
                     {analysis.colors.length === 0 ? (
                         <p className={styles.hint}>No colored text, so every line imports as narration.</p>
                     ) : (
@@ -254,6 +314,9 @@ export default function DocxStoryForm({
                                     <span className={styles.colorMeta}>
                                         <span className={styles.mapName}>
                                             {c.color} · {c.count} run{c.count === 1 ? '' : 's'}
+                                            {memory && !rememberedPick(c.color) && (
+                                                <span className={styles.badgeWarn}> new</span>
+                                            )}
                                         </span>
                                         <span className={styles.samples} style={{ color: c.color }}>
                                             {c.samples.map((s) => `“${s}”`).join('  ')}
@@ -262,7 +325,7 @@ export default function DocxStoryForm({
                                     <span className={styles.colorPick}>
                                         <select
                                             aria-label={`speaker for ${c.color}`}
-                                            value={voices[c.color] ?? ''}
+                                            value={pickFor(c.color)}
                                             onChange={(e) => setVoices((prev) => ({ ...prev, [c.color]: e.target.value }))}
                                             disabled={locked}
                                         >
@@ -276,16 +339,16 @@ export default function DocxStoryForm({
                                                 </option>
                                             ))}
                                         </select>
-                                        {voices[c.color] === SEVERAL_NPCS && (
+                                        {pickFor(c.color) === SEVERAL_NPCS && (
                                             <span className={styles.pickHint}>
                                                 imports unnamed: name the lines after converting, or later while
                                                 reading
                                             </span>
                                         )}
-                                        {voices[c.color] === OTHER && (
+                                        {pickFor(c.color) === OTHER && (
                                             <input
                                                 aria-label={`display name for ${c.color}`}
-                                                value={otherNames[c.color] ?? ''}
+                                                value={otherNameFor(c.color)}
                                                 onChange={(e) => setOtherNames((prev) => ({ ...prev, [c.color]: e.target.value }))}
                                                 placeholder='display name'
                                                 disabled={locked}
