@@ -178,27 +178,31 @@ Neither repo is merged to `main` or pushed. `main` (with `mvp-lockdown` and
 - `StoryLine.npcVoice` needs a `db push` on whichever DB this lands on (it's
   additive), then `npm run db:search-indexes`.
 
-**Next**
-0. **Vortox Machina's 7 `speaker: "?"` DIALOGUE lines** (migrated from
-   episode data, so no manuscript) predate NPC voices. Convert them to
-   `npcVoice: true, speaker: null` so they become nameable. That's a one-off
-   SQL statement, or a tweak to the VM migration.
-1. **Rendered preview.** Today the "preview" is the manifest (counts,
-   speakers). The plan called for rendering the payload with the real
-   `StoryReader` components before publishing, which matters most for
-   catching a wrong color → speaker pick.
-2. `Story.importMeta` (save the color map for revisions, so a re-import only
-   asks about new colors). This is a schema change: push it to
-   `final-frontier-docx`, never the shared DB.
-3. Images: 7 pictures in 3 API stories are missing (see the review notes). This
-   needs an image line type plus storage.
-4. After Beta's Phase 2 lands on `main`, merge it in. NPC speakers then
-   exist as personas, not characters, and the docx color dropdown lists only
-   characters. Decide whether an NPC voice should pick an NPC persona.
+**Done 2026-11-03 (branch `story-import-next`, both repos)**
+- Vortox Machina's unknown voices seed as unnamed NPC voices
+  (`vm-speakers.ts`), and the dev DB's 7 lines were converted.
+- **Rendered preview**: `/import` renders the resolved payload with
+  `StoryReader`'s `preview` mode, chapter by chapter, before the upload.
+- **`Story.importMeta`**: a Google Doc import saves `{format, colors}`; the
+  docx form pre-fills a revision's colors from it and marks new ones.
+- **Pictures**: `IMAGE` lines point at booru.vortox.space posts (`booruId`,
+  resolved to `imageUrl` at import). The converter emits `![alt](docx:N)`
+  plus the picture bytes; the importer asks for each one's post number.
+  Manuscripts write `![alt](booru:<post>)`.
+- **Decisions (the user's)**: any member imports and is credited as an
+  author; replacing a story's text is for its authors and admins; stories go
+  straight to the shelf (no drafts) now that previews work; story NPC voices
+  stay plain text, never NPC persona rows.
 
-**Open decisions (user)**
-- Who can import: admins only (today), or any member credited as author.
-- Drafts, or straight to the shelf.
-- ~~Slugs and accents~~: resolved. Accents transliterate in every copy
-  (branch `slug-transliterate`, merged to `main`), and the wiki page is
-  updated.
+**Next**
+1. **Backfill the 7 missing pictures** (files in the workspace root's
+   `story-pictures/`): upload each to the booru, then in
+   `md/stories/{bellows_journal_and_audio_logs,deafening_silence,final_pummel}.md`
+   replace `![](docx:N)` with `![](booru:<post>)` (N matches the file's
+   `-N` suffix). Then run `python3 story-md-to-api.py md/stories/<slug>.md`
+   and upload `api/stories/<slug>.json` through `/import` → advanced →
+   **Replace its text** (as an admin). The CLI's `--upload` only creates.
+2. Deleting a story is still admin-only. Decide whether its authors may
+   delete too.
+3. Script format on a prose Doc fails with "chapter 1 has no lines" (seen on
+   *Still Waters*). Pre-existing converter behavior: worth a clearer message.
