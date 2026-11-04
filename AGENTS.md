@@ -19,7 +19,8 @@ Next.js rebuild of the legacy `ff-site` React app. Lore archive + authoring UI f
 - `ff-server/` is also a symlink but is the **live API we actively develop** — it's a separate git repo; commit its changes there (`git -C`), separately from this one.
 - Requirements live in `ff-server/FF design document.md` (FR-* / NFR-* ids). The ff-server Prisma schema is the canonical data model; `src/lib/types.ts` mirrors it. Schema changes go through `prisma db push` (no migrations dir).
   - All FR-* requirements are fulfilled. FR-AUTH-4's "display name" was deliberately dropped: usernames are fixed (the archive import maps players by username) and there's no separate display name.
-- `archive-to-markdown/` is the episode-import pipeline (Discord export → markdown → API JSON → admin `/import` page). See its README before touching import/conversion.
+- `archive-to-markdown/` is the episode-import pipeline (Discord export → markdown → API JSON → `/import` page). See its README before touching import/conversion.
+  - The `/import` page is open to **any member** (who is always credited as an author; replacing a story's text is for its authors and admins) and renders a **preview** with the real `StoryReader` (`preview` mode: no links, anchors or NPC naming) before upload. Stories go straight to the shelf; there are no drafts.
   - The `/import` page is **story-only** (episode import was retired from the web app; ff-server's `POST /episodes/import` returns 410). It and `story-md-to-api.py --upload` send each story as one request to ff-server's atomic `POST /stories/import` — nothing partial can be left behind, so there's no eject/rollback UI; a 409 means it's already on the shelf. Episodes (re)import only via the CLI uploaders (`api-import.py`, `episode-json-upload.py`), which use the chunked append endpoints.
 
 ## Architecture

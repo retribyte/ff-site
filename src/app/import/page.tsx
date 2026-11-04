@@ -9,14 +9,14 @@ export const metadata: Metadata = { title: 'Import a story' };
 export default async function ImportPage() {
     const user = await getSessionUser();
 
-    if (!user || user.role !== 'ADMIN') {
+    // Any member may import a story (and is credited as one of its authors)
+    if (!user) {
         return (
             <main className={styles.main}>
                 <div className={`pixel-panel ${styles.restricted}`}>
                     <p className='pixel-label'>⚠ restricted frequency</p>
                     <p>
-                        Story import needs archivist (admin) clearance.{' '}
-                        {!user && <Link href='/login'>Log in</Link>}
+                        Log in to put a story on the shelf. <Link href='/login'>Log in</Link>
                     </p>
                 </div>
             </main>

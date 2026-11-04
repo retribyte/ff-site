@@ -88,6 +88,7 @@ type Origin = 'docx' | 'json';
 interface ShelfStory {
     slug: string;
     title: string;
+    authorIds: number[];
 }
 
 const SLUG_RE = /^[a-z0-9]+(_[a-z0-9]+)*$/;
@@ -184,8 +185,12 @@ export default function StoryImporter() {
                 )
             )
             .catch(() => setCharacters([]));
-        ff<ShelfStory[]>('/stories')
-            .then((data) => setShelf(data.map((s) => ({ slug: s.slug, title: s.title }))))
+        ff<{ slug: string; title: string; authors?: { id: number }[] }[]>('/stories')
+            .then((data) =>
+                setShelf(
+                    data.map((s) => ({ slug: s.slug, title: s.title, authorIds: (s.authors ?? []).map((a) => a.id) }))
+                )
+            )
             .catch(() => setShelf(null)); // unknown — the server's 409 still guards the upload
     }, []);
 
@@ -265,7 +270,12 @@ export default function StoryImporter() {
             ) as Record<string, string>,
         [authorNames, users, user, authorOverrides]
     );
-    const authorIds = [...new Set(Object.values(authorMap).filter(Boolean))].map((id) => parseInt(id));
+    const pickedAuthorIds = [...new Set(Object.values(authorMap).filter(Boolean))].map((id) => parseInt(id));
+    // A member is always one of the authors of what they import (the server
+    // adds them too); an admin can import on someone else's behalf.
+    const isAdmin = user?.role === 'ADMIN';
+    const selfAdded = !!user && !isAdmin && !pickedAuthorIds.includes(user.id);
+    const authorIds = selfAdded && user ? [...pickedAuthorIds, user.id] : pickedAuthorIds;
 
     const lineTotal = useMemo(
         () => (payload ? payload.chapters.reduce((sum, c) => sum + c.lines.length, 0) : 0),
@@ -283,6 +293,9 @@ export default function StoryImporter() {
         const byTitle = shelf.find((s) => s.title.toLowerCase() === title);
         return byTitle ? { field: 'title' as const, story: byTitle } : null;
     }, [payload, shelf]);
+    // Replacing a story's text is for its authors and admins
+    const canReplace =
+        collision?.field === 'slug' && !!user && (isAdmin || collision.story.authorIds.includes(user.id));
 
     // Chapters with speakers resolved: a character id, or the raw display name.
     // The preview renders exactly this, and the upload sends it.
@@ -364,7 +377,7 @@ export default function StoryImporter() {
                 }),
             });
             setPhase({ step: 'success', count: lineTotal, href: `/stories/${created.slug}`, replaced: false });
-            setShelf((prev) => (prev ? [...prev, { slug: created.slug, title: created.title }] : prev));
+            setShelf((prev) => (prev ? [...prev, { slug: created.slug, title: created.title, authorIds }] : prev));
         } catch (error) {
             failed(error);
         }
@@ -374,7 +387,7 @@ export default function StoryImporter() {
     // swaps every chapter and line in one transaction, keeping the story's id,
     // title, blurb, authors and season (edit those on the story page).
     const replace = async () => {
-        if (!payload || collision?.field !== 'slug') return;
+        if (!payload || collision?.field !== 'slug' || !canReplace) return;
         setPhase({ step: 'uploading' });
         const slug = collision.story.slug;
         try {
@@ -485,6 +498,12 @@ export default function StoryImporter() {
                             </li>
                         ))}
                     </ul>
+                    {selfAdded && user && (
+                        <p className={styles.hint}>
+                            You&rsquo;re credited too, as {user.username}: whoever imports a story is one of its
+                            authors.
+                        </p>
+                    )}
 
                     {speakerNames.length > 0 && (
                         <>
@@ -528,7 +547,7 @@ export default function StoryImporter() {
                                     {`${npcNamed} of ${npcQuotes.length} NPC quote${npcQuotes.length === 1 ? '' : 's'} named. `}
                                     Unnamed ones upload as they are, and this story&rsquo;s authors or an admin can name
                                     each one by clicking it while reading.
-                                    {collision?.field === 'slug' &&
+                                    {canReplace &&
                                         ' Replacing keeps the names already given to quotes whose text is unchanged.'}
                                 </p>
                                 <button
@@ -567,7 +586,7 @@ export default function StoryImporter() {
                     />
 
                     <div className={styles.actions}>
-                        {collision?.field === 'slug' ? (
+                        {canReplace ? (
                             phase.step !== 'success' && (
                                 <DeleteControl
                                     onConfirm={() => void replace()}
@@ -603,7 +622,14 @@ export default function StoryImporter() {
                             </p>
                         </div>
                     )}
-                    {collision?.field === 'slug' && phase.step !== 'success' && (
+                    {collision?.field === 'slug' && !canReplace && phase.step !== 'success' && (
+                        <p className={styles.error}>
+                            ✖ the slug is already taken by{' '}
+                            <Link href={`/stories/${collision.story.slug}`}>&ldquo;{collision.story.title}&rdquo;</Link>,
+                            and only its authors or an admin can replace its text. Change the slug {changeWhere}.
+                        </p>
+                    )}
+                    {canReplace && phase.step !== 'success' && (
                         <p className={styles.hint}>
                             This slug is{' '}
                             <Link href={`/stories/${collision.story.slug}`}>&ldquo;{collision.story.title}&rdquo;</Link>,

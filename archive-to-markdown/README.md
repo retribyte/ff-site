@@ -128,7 +128,7 @@ are dropped. Quotes that end up with no character import as OTHER (FR-MSG-4).
 ## Stories
 
 Short stories (and anything else that reads at `/stories`) have their own
-pipeline. Its JSON output can also go through the admin `/import` page:
+pipeline. Its JSON output can also go through the `/import` page:
 
 ```
 Google Doc  ──File ▸ Download ▸ .docx──▶  story-docx-to-md.py  ──▶  markdown manuscript
