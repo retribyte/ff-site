@@ -87,6 +87,9 @@ EMPHASIS_RE = re.compile(
 )
 # In-chapter section heading: "## Title" (distinct from "# Chapter N")
 HEADING_RE = re.compile(r"^##\s+(.+?)\s*$")
+# A picture on a line of its own: ![alt](booru:<post>), or ![alt](docx:<n>)
+# straight out of the web importer's docx converter
+IMAGE_RE = re.compile(r"^\s*!\[([^\]\n]*)\]\((booru|docx):(\d+)\)\s*$")
 VALID_FORMATS = {"script", "prose"}
 
 
@@ -272,6 +275,15 @@ def parse_body(lines):
             chapters.append(current)
             continue
 
+        image = IMAGE_RE.match(line)
+        if image:
+            if buffer:
+                flush_paragraph(buffer, chapter()["lines"])
+                buffer = []
+            key = "booruId" if image.group(2) == "booru" else "docxPicture"
+            chapter()["lines"].append({"type": "IMAGE", "text": image.group(1).strip(), key: int(image.group(3))})
+            continue
+
         section = HEADING_RE.match(line)
         if section:
             flush_paragraph(buffer, chapter()["lines"])
@@ -413,6 +425,10 @@ def upload(payload, api_base):
         lines = []
         for line in chapter["lines"]:
             out = {"type": line["type"], "text": line["text"]}
+            if line["type"] == "IMAGE":
+                if "booruId" not in line:
+                    sys.exit(f"error: chapter {chapter['chapter_no']} has a picture with no booru post (![...](booru:<post>))")
+                out["booruId"] = line["booruId"]
             speaker = line.get("speaker")
             if speaker:
                 resolve_speaker(out, speaker)

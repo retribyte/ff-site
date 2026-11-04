@@ -211,6 +211,12 @@ The lock clicked. ["Move,"]{Emmett} she hissed.
 A *whispered* word, a **shout**.    inline emphasis: *italic*, **bold**,
                                     ***both***; works inside dialogue spans too
 _action line_                       ACTION (a choice, CYOA-style)
+![A star chart](booru:1234)         IMAGE: a picture, on a line of its own, held
+                                    by booru post 1234 (upload it to
+                                    booru.vortox.space first); the [] part is
+                                    alt text and may be empty. The web
+                                    importer's docx converter writes
+                                    ![alt](docx:N) until a post is given.
 ```transcript … ```                 one TRANSCRIPT line (VCOMM fragment);
                                     interior blank lines = paragraph breaks
 ***                                 BREAK (scene break)
