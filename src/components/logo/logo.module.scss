@@ -1,0 +1,31 @@
+// Size the logo by setting a width on it; the height follows the SVG's aspect.
+.logo {
+    position: relative;
+    display: block;
+    aspect-ratio: 1539 / 642;
+}
+
+.image,
+.glowNear,
+.glowFar {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+// White in Overlay mode doubles the brightness of whatever is behind it, so
+// the glow takes on the background's color. It fades out on pure black and
+// turns plain white on light backgrounds.
+.glowNear,
+.glowFar {
+    fill: var(--logo-glow);
+    stroke: var(--logo-glow);
+    stroke-linejoin: round;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+}
+
+.glowFar {
+    opacity: 0.5;
+}

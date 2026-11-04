@@ -85,7 +85,7 @@ export default async function EpisodePage({ params }: Props) {
             <header className={styles.header}>
                 <h1 className={styles.title}>{episodeTitle}</h1>
                 <p className='pixel-label'>
-                    transmission {String(episode.episode_no).padStart(2, '0')} · {data.messages.length} lines
+                    {data.messages.length} lines
                     {episode.playedDate && (
                         <>
                             {' '}

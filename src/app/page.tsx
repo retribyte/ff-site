@@ -1,5 +1,33 @@
 import Link from 'next/link';
+import Logo from '@/components/logo/Logo';
+import { api } from '@/lib/api';
+import type { Story } from '@/lib/types';
+import { seasonColors, seasonOrder, seasonSlug } from '@/lib/seasons';
 import styles from './page.module.scss';
+
+// The Stories door counts the live shelf — render per-request, not at build time
+export const dynamic = 'force-dynamic';
+
+/** Stories per campaign, in campaign order; stories with no campaign (VM) aren't counted. */
+async function storyCampaigns(): Promise<{ title: string; count: number; color: string }[]> {
+    let stories: Story[];
+    try {
+        stories = await api<Story[]>('/stories');
+    } catch {
+        return []; // API down: the door still renders, just without counts
+    }
+    const counts = new Map<string, number>();
+    for (const s of stories) {
+        if (s.season) counts.set(s.season.title, (counts.get(s.season.title) ?? 0) + 1);
+    }
+    return [...counts]
+        .sort(([a], [b]) => {
+            const [ra, ka] = seasonOrder(a);
+            const [rb, kb] = seasonOrder(b);
+            return ra - rb || ka.localeCompare(kb);
+        })
+        .map(([title, count]) => ({ title, count, color: seasonColors(title).primary }));
+}
 
 const seasons = [
     { id: 'ff1', title: 'Final Frontier 1', colorVar: '--ff1' },
@@ -20,20 +48,13 @@ const sisterSites = [
     { href: 'https://booru.vortox.space', title: 'Booru', blurb: 'Character art and the image gallery.' },
 ];
 
-export default function Home() {
+export default async function Home() {
+    const campaigns = await storyCampaigns();
+
     return (
         <main className={styles.main}>
             <section className={styles.hero}>
-                <p className='pixel-label'>★ Welcome to the home of ★</p>
-                <h1 className={styles.title}>Final Frontier</h1>
-                <p className={styles.tagline}>
-                    The canonical archive of the Final Frontier universe ✦
-                </p>
-                <p className={styles.tagline}>
-                    ✧ Campaign transcripts, short stories, and
-                    assorted lore
-                    {/* <span className='blink'>▌</span> */}
-                </p>
+                <Logo className={styles.heroLogo} />
             </section>
 
             <div className='star-divider'>✦ ✧ ✦</div>
@@ -54,9 +75,14 @@ export default function Home() {
                 <Link href='/stories' className={`pixel-panel ${styles.door}`}>
                     <h2>Stories</h2>
                     <p>Short stories and the Vortox Machina chronicle.</p>
-                    <span className='pixel-label' style={{ color: 'var(--vm)' }}>
-                        CYOA · FICTION
-                    </span>
+                    <ul className={styles.seasonChips}>
+                        <li style={{ color: 'var(--vm)' }}>VM</li>
+                        {campaigns.map((c) => (
+                            <li key={c.title} style={{ color: c.color }}>
+                                {c.count}×{seasonSlug(c.title).toUpperCase()}
+                            </li>
+                        ))}
+                    </ul>
                 </Link>
             </section>
 

@@ -9,7 +9,11 @@
 
 .hero {
     text-align: center;
-    padding: 3rem 0 1rem;
+}
+
+.heroLogo {
+    width: 50%;
+    margin: 0 auto;
 }
 
 .title {
@@ -57,7 +61,7 @@
 
 .minorDoors,
 .sisterDoors {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     padding-top: 0.25rem;
 
@@ -90,6 +94,7 @@
 
 .seasonChips {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
     list-style: none;
     margin: 0;

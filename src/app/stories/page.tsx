@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { api } from '@/lib/api';
 import type { Story } from '@/lib/types';
 import { storyColors } from '@/lib/stories';
-import { seasonDisplayName } from '@/lib/seasons';
+import { seasonDisplayName, seasonOrder } from '@/lib/seasons';
 import SignalLost from '@/components/SignalLost';
 import StoryIndex, { type IndexStory } from '@/components/story/StoryIndex';
 import styles from './stories.module.scss';
@@ -28,11 +28,6 @@ export default async function StoriesPage() {
     }
 
     // Shelf sections follow campaign order; stories without a campaign go last.
-    const seasonOrder = (title: string | undefined) => {
-        if (!title) return [2, ''] as const;
-        const ff = /^FF(\d+)$/.exec(title);
-        return ff ? ([0, ff[1].padStart(3, '0')] as const) : ([1, title] as const);
-    };
     const sorted = [...stories].sort((a, b) => {
         const [ra, ka] = seasonOrder(a.season?.title);
         const [rb, kb] = seasonOrder(b.season?.title);

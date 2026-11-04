@@ -60,6 +60,16 @@ export function seasonDisplayName(title: string): string {
     return DISPLAY_NAMES[seasonSlug(title)] ?? title;
 }
 
+/**
+ * Sort key for campaign order: FF seasons by number, then other campaigns by
+ * title, then no campaign. Compare rank first, then key.
+ */
+export function seasonOrder(title: string | undefined | null): readonly [number, string] {
+    if (!title) return [2, ''];
+    const ff = /^FF(\d+)$/.exec(title);
+    return ff ? [0, ff[1].padStart(3, '0')] : [1, title];
+}
+
 /** CSS color values for a season's primary/secondary identity colors. */
 export function seasonColors(title: string): { primary: string; secondary: string } {
     const slug = seasonSlug(title);

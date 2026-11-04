@@ -72,7 +72,6 @@ export default async function ArchivesPage() {
                             <span className={styles.stripMeta}>
                                 {[
                                     episodeCount > 0 && `${episodeCount} episode${episodeCount === 1 ? '' : 's'}`,
-                                    storyCount > 0 && `${storyCount} stor${storyCount === 1 ? 'y' : 'ies'}`,
                                 ]
                                     .filter(Boolean)
                                     .join(' · ') || '0 episodes'}
