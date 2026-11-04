@@ -195,15 +195,11 @@ Neither repo is merged to `main` or pushed. `main` (with `mvp-lockdown` and
   stay plain text, never NPC persona rows.
 
 **Next**
-1. **Backfill the missing pictures** (files in the workspace root's
-   `story-pictures/`). Deafening Silence's is already post 118 (a larger
-   original), and its manuscript points there. Upload the other six (the
-   booru's `bot` account), then in
-   `md/stories/{bellows_journal_and_audio_logs,deafening_silence,final_pummel}.md`
-   replace `![](docx:N)` with `![](booru:<post>)` (N matches the file's
-   `-N` suffix). Then run `python3 story-md-to-api.py md/stories/<slug>.md`
-   and upload `api/stories/<slug>.json` through `/import` → advanced →
-   **Replace its text** (as an admin). The CLI's `--upload` only creates.
+1. **Picture backfill: manuscripts done.** Deafening Silence → post 118;
+   Bellow's Journal → 1122–1126 (uploaded by the booru's `bot` account,
+   `artist:plasmaperson`); Final Pummel → 1127 (the greyscale copy of 510,
+   same tags). Each story's text on a DB is replaced through `/import` →
+   advanced → the `story-md-to-api.py` JSON → **Replace its text**.
 2. Deleting a story is still admin-only. Decide whether its authors may
    delete too.
 3. Script format on a prose Doc fails with "chapter 1 has no lines" (seen on

@@ -31,7 +31,7 @@ I’ll be prepared to come to his aid any time he needs.
 
 The stars are extra beautiful tonight. It’s amazing how much you can see from space…
 
-![](docx:1)
+![](booru:1122)
 
 ***
 
@@ -69,7 +69,7 @@ Terry: “[O-Oh.]{Terry}”
 
 Bellow: “[Plus, me personally…I’d rather focus on my mission than a relationship…but, dinner still sounds nice.]{Bellow Brightlight}”
 
-![](docx:2)
+![](booru:1123)
 
 Terry: “[Hey, it was worth a shot. See you there!]{Terry}”
 
@@ -101,7 +101,7 @@ I did get to destroy him in blackjack though.
 
 The reflection of the stars in the ocean waves is the only redeeming quality of this planet…
 
-![](docx:3)
+![](booru:1124)
 
 ***
 
@@ -129,7 +129,7 @@ And I don’t know what to do about it.
 
 The stars burn fiercely tonight…
 
-![](docx:4)
+![](booru:1125)
 
 ***
 
@@ -185,4 +185,4 @@ END OF AUDIO LOG
 
 In the night sky, a warrior declares his triumph despite all odds…
 
-![](docx:5)
+![](booru:1126)
