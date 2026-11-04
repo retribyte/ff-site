@@ -6,6 +6,8 @@ import { useSession } from '@/components/auth/SessionProvider';
 import DeleteControl from '@/components/DeleteControl';
 import DocxStoryForm from './DocxStoryForm';
 import NpcVoiceNamer, { npcFragments } from './NpcVoiceNamer';
+import StoryPreview, { type PreviewChapter, type PreviewLine } from './StoryPreview';
+import type { SpeakerInfo } from '@/lib/transcript';
 import styles from './storyImporter.module.scss';
 
 // Payload produced by ff-server's POST /stories/convert (a Google Doc, via
@@ -61,6 +63,13 @@ interface ImportPayload {
 interface Option {
     id: number;
     name: string;
+}
+
+interface CharacterOption {
+    id: number;
+    names: string[];
+    color: string | null;
+    image: string | null;
 }
 
 // The whole story goes up in one request that ff-server applies in one
@@ -150,7 +159,7 @@ export default function StoryImporter() {
     const [parseError, setParseError] = useState<string | null>(null);
 
     const [users, setUsers] = useState<Option[]>([]);
-    const [characters, setCharacters] = useState<{ id: number; names: string[] }[]>([]);
+    const [characters, setCharacters] = useState<CharacterOption[]>([]);
     // What's already on the shelf, fetched once: the slug/title collision
     // check below is derived from it rather than fetched per file (which
     // raced when a second file was picked before the first check returned).
@@ -168,8 +177,12 @@ export default function StoryImporter() {
             .then((data) => setUsers(data.map((u) => ({ id: u.id, name: u.username }))))
             .catch(() => setUsers([]));
         // Characters, so dialogue speakers can be matched by exact name
-        ff<{ id: number; name: string }[]>('/characters')
-            .then((data) => setCharacters(data.map((c) => ({ id: c.id, names: [c.name] }))))
+        ff<{ id: number; name: string; color?: string | null; image?: string | null }[]>('/characters')
+            .then((data) =>
+                setCharacters(
+                    data.map((c) => ({ id: c.id, names: [c.name], color: c.color ?? null, image: c.image ?? null }))
+                )
+            )
             .catch(() => setCharacters([]));
         ff<ShelfStory[]>('/stories')
             .then((data) => setShelf(data.map((s) => ({ slug: s.slug, title: s.title }))))
@@ -271,9 +284,9 @@ export default function StoryImporter() {
         return byTitle ? { field: 'title' as const, story: byTitle } : null;
     }, [payload, shelf]);
 
-    // ---- upload -----------------------------------------------------------
     // Chapters with speakers resolved: a character id, or the raw display name.
-    const resolvedChapters = () => {
+    // The preview renders exactly this, and the upload sends it.
+    const resolvedChapters = useMemo((): PreviewChapter[] => {
         if (!payload) return [];
         // Attach a resolved character id, or fall back to the raw display name.
         const resolveSpeaker = <T extends { characterId?: number; speaker?: string }>(entry: T, speaker: string) => {
@@ -287,14 +300,7 @@ export default function StoryImporter() {
             chapter_no: chapter.chapter_no,
             title: chapter.title ?? undefined,
             lines: chapter.lines.map((line) => {
-                const out: {
-                    type: string;
-                    text: string;
-                    characterId?: number;
-                    speaker?: string;
-                    segments?: (ImportSegment & { characterId?: number })[];
-                    npcVoice?: boolean;
-                } = { type: line.type, text: line.text };
+                const out: PreviewLine = { type: line.type, text: line.text };
                 if (line.npcVoice) {
                     out.npcVoice = true;
                     if (line.speaker) out.speaker = line.speaker;
@@ -314,7 +320,18 @@ export default function StoryImporter() {
                 return out;
             }),
         }));
-    };
+    }, [payload, charMap]);
+
+    // Name/color/portrait by id, for the preview's dialogue colors and legend
+    const previewCharacters = useMemo(
+        () =>
+            Object.fromEntries(
+                characters.map((c) => [c.id, { name: c.names[0], color: c.color, image: c.image }])
+            ) as Record<number, SpeakerInfo>,
+        [characters]
+    );
+
+    // ---- upload -----------------------------------------------------------
 
     const failed = (error: unknown) =>
         setPhase({
@@ -326,7 +343,7 @@ export default function StoryImporter() {
     const upload = async () => {
         if (!payload) return;
         setPhase({ step: 'uploading' });
-        const chapters = resolvedChapters();
+        const chapters = resolvedChapters;
         try {
             const created = await ff<{ slug: string; title: string }>('/stories/import', {
                 method: 'POST',
@@ -364,7 +381,7 @@ export default function StoryImporter() {
             await ff(`/stories/${encodeURIComponent(slug)}/import`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chapters: resolvedChapters() }),
+                body: JSON.stringify({ chapters: resolvedChapters }),
             });
             setPhase({ step: 'success', count: lineTotal, href: `/stories/${slug}`, replaced: true });
         } catch (error) {
@@ -533,6 +550,21 @@ export default function StoryImporter() {
                             onClose={() => setNaming(false)}
                         />
                     )}
+
+                    <h3 className='pixel-label'>preview</h3>
+                    <p className={styles.hint}>
+                        How it will read on the shelf. Check that each color became the right speaker; change a pick
+                        above and the preview follows.
+                    </p>
+                    <StoryPreview
+                        slug={payload.story.slug}
+                        format={payload.story.format === 'PROSE' ? 'PROSE' : 'SCRIPT'}
+                        themeColor={payload.story.themeColor}
+                        themeColor2={payload.story.themeColor2}
+                        season={payload.story.season}
+                        chapters={resolvedChapters}
+                        characters={previewCharacters}
+                    />
 
                     <div className={styles.actions}>
                         {collision?.field === 'slug' ? (

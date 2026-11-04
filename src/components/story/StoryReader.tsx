@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
@@ -12,6 +12,36 @@ import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/tra
 import DeleteStoryButton from './DeleteStoryButton';
 import VoiceNamePopover from './VoiceNamePopover';
 import styles from './story.module.scss';
+
+// An import preview (`/import`, before publishing): character names don't
+// link, since leaving the page would lose the unsaved import, and there are
+// no line anchors or NPC naming (the story isn't on the server yet).
+const PreviewContext = createContext(false);
+
+function CharacterLink({
+    characterId,
+    className,
+    style,
+    title,
+    children,
+}: {
+    characterId: number;
+    className: string;
+    style?: React.CSSProperties;
+    title?: string;
+    children: React.ReactNode;
+}) {
+    const preview = useContext(PreviewContext);
+    return preview ? (
+        <span className={className} style={style} title={title}>
+            {children}
+        </span>
+    ) : (
+        <Link href={`/characters/${characterId}`} className={className} style={style} title={title}>
+            {children}
+        </Link>
+    );
+}
 
 /** Opens the namer for the NPC quote at this line (and segment, for a span), anchored to `el`. */
 type NameHandler = (lineNo: number, segment: number | null, el: HTMLElement) => void;
@@ -110,9 +140,9 @@ function DialogueRun({
     }
     const inner = <Highlighted text={text} query={query} />;
     return characterId !== null ? (
-        <Link href={`/characters/${characterId}`} className={className} style={style} title={name}>
+        <CharacterLink characterId={characterId} className={className} style={style} title={name}>
             {inner}
-        </Link>
+        </CharacterLink>
     ) : (
         <span className={className} style={style} title={name}>
             {inner}
@@ -175,6 +205,7 @@ const Line = memo(function Line({
     onName?: NameHandler;
 }) {
     const [copied, setCopied] = useState(false);
+    const preview = useContext(PreviewContext);
 
     const copyAnchor = () => {
         const url = `${window.location.origin}${window.location.pathname}?line=${line.no}`;
@@ -222,9 +253,9 @@ const Line = memo(function Line({
             content = (
                 <p className={styles.dialogue} style={{ '--char': color } as React.CSSProperties}>
                     {line.characterId !== null ? (
-                        <Link href={`/characters/${line.characterId}`} className={styles.dialogueName}>
+                        <CharacterLink characterId={line.characterId} className={styles.dialogueName}>
                             {name}:
-                        </Link>
+                        </CharacterLink>
                     ) : line.npcVoice ? (
                         <>
                             <NpcRunText
@@ -304,15 +335,17 @@ const Line = memo(function Line({
     return (
         <div id={`m-${line.no}`} className={styles.line} data-target={highlighted || undefined}>
             {content}
-            <button
-                type='button'
-                className={styles.anchor}
-                onClick={copyAnchor}
-                aria-label={`Copy link to line ${line.no}`}
-                title='Copy link to this line'
-            >
-                {copied ? '✓' : '#'}
-            </button>
+            {!preview && (
+                <button
+                    type='button'
+                    className={styles.anchor}
+                    onClick={copyAnchor}
+                    aria-label={`Copy link to line ${line.no}`}
+                    title='Copy link to this line'
+                >
+                    {copied ? '✓' : '#'}
+                </button>
+            )}
         </div>
     );
 });
@@ -326,16 +359,19 @@ export default function StoryReader({
     data,
     canDelete = false,
     authorIds = [],
+    preview = false,
 }: {
     data: StoryData;
     canDelete?: boolean;
     /** the story's authors, who (with admins) may name its NPC voices */
     authorIds?: number[];
+    /** an unpublished import: no character links, line anchors or NPC naming */
+    preview?: boolean;
 }) {
     const { colorMode } = useTheme();
     const { user } = useSession();
     const searchParams = useSearchParams();
-    const canNameVoices = !!user && (user.role === 'ADMIN' || authorIds.includes(user.id));
+    const canNameVoices = !preview && !!user && (user.role === 'ADMIN' || authorIds.includes(user.id));
 
     // NPC names given in this visit, by line number; reset on another chapter
     const chapterKey = `${data.storySlug}#${data.chapterNo}`;
@@ -385,61 +421,63 @@ export default function StoryReader({
     const voices = data.format === 'PROSE' ? collectVoices({ ...data, lines }) : [];
 
     return (
-        <div>
-            <ScanBar scan={scan} />
-            {voices.length > 0 && (
-                <ul className={styles.legend} aria-label='Voices in this chapter'>
-                    {voices.map((voice) => {
-                        const character = voice.characterId !== null ? data.characters[voice.characterId] : null;
-                        const color = voiceColor(voice.characterId, voice.name, character, colorMode);
-                        const style = { '--char': color } as React.CSSProperties;
-                        return (
-                            <li key={voice.name}>
-                                {voice.characterId !== null ? (
-                                    <Link
-                                        href={`/characters/${voice.characterId}`}
-                                        className={styles.legendChip}
-                                        style={style}
-                                    >
-                                        {voice.name}
-                                    </Link>
-                                ) : (
-                                    <span className={styles.legendChip} style={style}>
-                                        {voice.name}
-                                    </span>
-                                )}
-                            </li>
-                        );
-                    })}
-                </ul>
-            )}
-            <div className={styles.prose}>
-                {lines.map((line) => (
-                    <Line
-                        key={line.no}
-                        line={line}
-                        characters={data.characters}
-                        colorMode={colorMode}
-                        query={scan.activeQuery}
-                        highlighted={line.no === targetNo || line.no === scan.currentMatchNo}
-                        format={data.format}
-                        onName={canNameVoices ? openNamer : undefined}
+        <PreviewContext.Provider value={preview}>
+            <div>
+                <ScanBar scan={scan} />
+                {voices.length > 0 && (
+                    <ul className={styles.legend} aria-label='Voices in this chapter'>
+                        {voices.map((voice) => {
+                            const character = voice.characterId !== null ? data.characters[voice.characterId] : null;
+                            const color = voiceColor(voice.characterId, voice.name, character, colorMode);
+                            const style = { '--char': color } as React.CSSProperties;
+                            return (
+                                <li key={voice.name}>
+                                    {voice.characterId !== null ? (
+                                        <CharacterLink
+                                            characterId={voice.characterId}
+                                            className={styles.legendChip}
+                                            style={style}
+                                        >
+                                            {voice.name}
+                                        </CharacterLink>
+                                    ) : (
+                                        <span className={styles.legendChip} style={style}>
+                                            {voice.name}
+                                        </span>
+                                    )}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                )}
+                <div className={styles.prose}>
+                    {lines.map((line) => (
+                        <Line
+                            key={line.no}
+                            line={line}
+                            characters={data.characters}
+                            colorMode={colorMode}
+                            query={scan.activeQuery}
+                            highlighted={line.no === targetNo || line.no === scan.currentMatchNo}
+                            format={data.format}
+                            onName={canNameVoices ? openNamer : undefined}
+                        />
+                    ))}
+                </div>
+                {editing && (
+                    <VoiceNamePopover
+                        key={`${editing.run.lineNo}-${editing.run.segments?.[0] ?? 'line'}`}
+                        storySlug={data.storySlug}
+                        chapterNo={data.chapterNo}
+                        run={editing.run}
+                        anchor={editing.anchor}
+                        runs={runs}
+                        suggestions={voices.filter((v) => v.characterId === null).map((v) => v.name)}
+                        onSaved={applyUpdated}
+                        onClose={closeNamer}
                     />
-                ))}
+                )}
             </div>
-            {editing && (
-                <VoiceNamePopover
-                    key={`${editing.run.lineNo}-${editing.run.segments?.[0] ?? 'line'}`}
-                    storySlug={data.storySlug}
-                    chapterNo={data.chapterNo}
-                    run={editing.run}
-                    anchor={editing.anchor}
-                    runs={runs}
-                    suggestions={voices.filter((v) => v.characterId === null).map((v) => v.name)}
-                    onSaved={applyUpdated}
-                    onClose={closeNamer}
-                />
-            )}
-        </div>
+        </PreviewContext.Provider>
     );
 }
