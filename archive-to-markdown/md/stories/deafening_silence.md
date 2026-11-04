@@ -161,4 +161,4 @@ He was taken aback by this comment, and turned away. “[It… it says…]{Zion 
 
 [It’s nothing but silence.]{Zion Daybreaker}
 
-![](docx:1)
+![](booru:118)

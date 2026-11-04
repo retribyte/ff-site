@@ -195,8 +195,10 @@ Neither repo is merged to `main` or pushed. `main` (with `mvp-lockdown` and
   stay plain text, never NPC persona rows.
 
 **Next**
-1. **Backfill the 7 missing pictures** (files in the workspace root's
-   `story-pictures/`): upload each to the booru, then in
+1. **Backfill the missing pictures** (files in the workspace root's
+   `story-pictures/`). Deafening Silence's is already post 118 (a larger
+   original), and its manuscript points there. Upload the other six (the
+   booru's `bot` account), then in
    `md/stories/{bellows_journal_and_audio_logs,deafening_silence,final_pummel}.md`
    replace `![](docx:N)` with `![](booru:<post>)` (N matches the file's
    `-N` suffix). Then run `python3 story-md-to-api.py md/stories/<slug>.md`
