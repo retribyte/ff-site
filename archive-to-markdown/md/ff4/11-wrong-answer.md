@@ -2906,13 +2906,13 @@ _`Vec as Sascha`: Sascha, from the sudden shot, faceplants into the sand, seemin
 
 > No, it's not fine. You remember what happened last time you breathed in that fungus.
 
-**Vortox** _(09-Aug-22 07:34 PM)_ [1006722286465859665]
-
-_The ooze starts to move towards Fungo, who's still inserting spores into the suit._
-
 **Jonas** _(09-Aug-22 07:35 PM)_ [1006722326953480273]
 
 > You see, Zion? It's not even safe to have that fungus AROUND, let alone him actively trying to kill us.
+
+**Vortox** _(09-Aug-22 07:34 PM)_ [1006722286465859665]
+
+_The ooze starts to move towards Fungo, who's still inserting spores into the suit._
 
 **Trey** _(09-Aug-22 07:35 PM)_ [1006722304316809330]
 

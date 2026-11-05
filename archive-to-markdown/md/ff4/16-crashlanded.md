@@ -562,6 +562,10 @@ _Vec is helping with Morra's wall slams._
 
 > Breakthrough. I've made a bre-
 
+**Brody** _(27-Sep-22 08:47 PM)_ [1024497434270892083]
+
+> Vec, please.
+
 **Vortox** _(27-Sep-22 08:46 PM)_ [1024497383108792400]
 
 ⌘ Hunt520 used /8ball
@@ -571,10 +575,6 @@ _Vec is helping with Morra's wall slams._
 <description>Yes, but with a caveat of your choice.</description>
 <footer>Hunt520 asked: "Will Zach put his hood back on?"</footer>
 </embed>
-
-**Brody** _(27-Sep-22 08:47 PM)_ [1024497434270892083]
-
-> Vec, please.
 
 **Brody** _(27-Sep-22 08:47 PM)_ [1024497469662433362]
 
@@ -828,6 +828,10 @@ _Morra floats up with Zion in their arms._
 
 > `Shadow the Hedgehog`: I am the Ultimate Knight!!
 
+**Sean** _(27-Sep-22 08:55 PM)_ [1024499686087856248]
+
+_`Shadow the Hedgehog`: Shadow poses in the common area._
+
 **Vortox** _(27-Sep-22 08:55 PM)_ [1024499543418601492]
 
 ⌘ Trey used /8ball
@@ -837,10 +841,6 @@ _Morra floats up with Zion in their arms._
 <description>Concentrate and ask the DM.</description>
 <footer>Trey asked: "Does Zion successfully open the airlock?"</footer>
 </embed>
-
-**Sean** _(27-Sep-22 08:55 PM)_ [1024499686087856248]
-
-_`Shadow the Hedgehog`: Shadow poses in the common area._
 
 **Sean** _(27-Sep-22 08:56 PM)_ [1024499701514510396]
 
@@ -1130,13 +1130,13 @@ _Zion sifts through what he has on hand._
 
 > Yeah.
 
-**Zander** _(27-Sep-22 09:03 PM)_ [1024501571716927508]
-
-_Dutch takes out Pauline and points it at Edgy McSpeed._
-
 **Sean** _(27-Sep-22 09:03 PM)_ [1024501607544672286]
 
 > See.
+
+**Zander** _(27-Sep-22 09:03 PM)_ [1024501571716927508]
+
+_Dutch takes out Pauline and points it at Edgy McSpeed._
 
 **Zander** _(27-Sep-22 09:03 PM)_ [1024501654080462889]
 

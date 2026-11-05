@@ -826,12 +826,6 @@ _Dutch notices a Neon sign of a strange pepper, labeled "Chilzor's Bar & Grill."
 
 > It's now the Panty Slingshot 2.
 
-**Hunt520** _(05-Sep-22 12:45 PM)_ [1016403726812053544]
-
-↪ Trey: Zion walks out to see the docked Dildus, to his horror.
-
-_Zach is next to Zion, equally uncomfortable._
-
 **Sean** _(05-Sep-22 12:45 PM)_ [1016403746038759574]
 
 > I'm Seth.
@@ -843,6 +837,12 @@ _Zach is next to Zion, equally uncomfortable._
 **Sean** _(05-Sep-22 12:45 PM)_ [1016403776099340419]
 
 > You get that?
+
+**Hunt520** _(05-Sep-22 12:45 PM)_ [1016403726812053544]
+
+↪ Trey: Zion walks out to see the docked Dildus, to his horror.
+
+_Zach is next to Zion, equally uncomfortable._
 
 **Jonas** _(05-Sep-22 12:45 PM)_ [1016403783334502412]
 
@@ -1450,13 +1450,13 @@ _Written, to Zion:_
 
 _`Angela`: Angela gets up from her desk, walks up to Seth and starts to wag her finger in front of Emmett, who Seth is carrying like a baby._
 
-**Zander** _(05-Sep-22 01:05 PM)_ [1016408863899132065]
-
-_Vec grabs a huge, luxurious meal from another table that was in the process of being eaten and brings it to Dutch's seat._
-
 **Sean** _(05-Sep-22 01:06 PM)_ [1016409003850473512]
 
 > `Angela`: Coochie Coochie Choo.
+
+**Zander** _(05-Sep-22 01:05 PM)_ [1016408863899132065]
+
+_Vec grabs a huge, luxurious meal from another table that was in the process of being eaten and brings it to Dutch's seat._
 
 **Trey** _(05-Sep-22 01:06 PM)_ [1016409011614142504]
 
@@ -2016,6 +2016,10 @@ _`Chilzor`: Chilzor notices the LR representatives._
 
 > Especially with the GU being how it is right now.
 
+**Sean** _(05-Sep-22 01:26 PM)_ [1016413912717082625]
+
+_`Angela`: Angela nods._
+
 **Zander** _(05-Sep-22 01:25 PM)_ [1016413688942563360]
 
 _Vec is tingling._
@@ -2037,10 +2041,6 @@ _Dutch dives over the table and knocks over a nearby table to hide behind._
 **Vortox** _(05-Sep-22 01:25 PM)_ [1016413867812855838]
 
 _There is a large ruckus now._
-
-**Sean** _(05-Sep-22 01:26 PM)_ [1016413912717082625]
-
-_`Angela`: Angela nods._
 
 **Jonas** _(05-Sep-22 01:26 PM)_ [1016413963224891453]
 
@@ -2270,14 +2270,6 @@ _Zach realizes that Oblivion is not with him. He starts to panic and calls Bello
 
 _Chilzor's corpse flies into the table, smashing it into pieces._
 
-**Silas** _(05-Sep-22 01:34 PM)_ [1016416076357173268]
-
-> WHAT THE FUCK WAS THAT ZION!
-
-**Silas** _(05-Sep-22 01:34 PM)_ [1016416115863339018]
-
-> OH MY GOD WHAT THE FUCK!
-
 **Vortox** _(05-Sep-22 01:34 PM)_ [1016416106631659530]
 
 ⌘ Zander used /dmg weapon
@@ -2292,6 +2284,14 @@ Enemy_a has `(-26/30)` hp.
 <footer>Zander (Vec) damaged Enemy_a.</footer>
 <color>#50C878</color>
 </embed>
+
+**Silas** _(05-Sep-22 01:34 PM)_ [1016416076357173268]
+
+> WHAT THE FUCK WAS THAT ZION!
+
+**Silas** _(05-Sep-22 01:34 PM)_ [1016416115863339018]
+
+> OH MY GOD WHAT THE FUCK!
 
 **Silas** _(05-Sep-22 01:35 PM)_ [1016416196997939292]
 
@@ -3233,13 +3233,13 @@ _Seth puts it on the ground and stomps it._
 
 > JANITOR!
 
-**Trey** _(05-Sep-22 02:16 PM)_ [1016426724055068825]
-
-_Zion knocks on Bellow and Dutch's door._
-
 **Sean** _(05-Sep-22 02:17 PM)_ [1016426755139063900]
 
 _Seth gets on the PA system._
+
+**Trey** _(05-Sep-22 02:16 PM)_ [1016426724055068825]
+
+_Zion knocks on Bellow and Dutch's door._
 
 **Hunt520** _(05-Sep-22 02:17 PM)_ [1016426854619545680]
 

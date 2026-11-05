@@ -1019,10 +1019,6 @@ _Seth slips a small ice cube into Dutch's towel._
 
 > I'm so cool.
 
-**Trey** _(06-Dec-22 10:05 PM)_ [1049899549612834917]
-
-_Zion begins to pace._
-
 **Silas** _(06-Dec-22 10:06 PM)_ [1049899589232242699]
 
 > And also my dick is cold.
@@ -1032,6 +1028,10 @@ _Zion begins to pace._
 ↪ Silas: and also my dick is cold
 
 > Again, clothes.
+
+**Trey** _(06-Dec-22 10:05 PM)_ [1049899549612834917]
+
+_Zion begins to pace._
 
 **Trey** _(06-Dec-22 10:06 PM)_ [1049899568713711656]
 

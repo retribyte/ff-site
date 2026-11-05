@@ -1445,6 +1445,10 @@ _Bellow turns to the human._
 
 > Truce for a moment, please...
 
+**Jonas** _(14-Jun-22 06:31 PM)_ [986412483705180190]
+
+> I can heal you, human, if you promise to stop attacking us.
+
 **Vortox** _(14-Jun-22 06:30 PM)_ [986412400813158440]
 
 _There's banging on the outside of the now-closed hangar._
@@ -1461,10 +1465,6 @@ Zach now has `(4/20)` hp.
 </description>
 <color>#50C878</color>
 </embed>
-
-**Jonas** _(14-Jun-22 06:31 PM)_ [986412483705180190]
-
-> I can heal you, human, if you promise to stop attacking us.
 
 **Vortox** _(14-Jun-22 06:31 PM)_ [986412512562008116]
 

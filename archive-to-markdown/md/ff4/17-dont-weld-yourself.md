@@ -159,10 +159,6 @@ _Seth turns his head to the argonian and points at it._
 
 > AHHHHHHHHHHHHHHHHHH!
 
-**Trey** _(18-Oct-22 08:31 PM)_ [1032103780327632916]
-
-_Zion grabs another side of the corpse._
-
 **Sean** _(18-Oct-22 08:32 PM)_ [1032103800309297224]
 
 > MONSTER!!
@@ -170,6 +166,10 @@ _Zion grabs another side of the corpse._
 **Sean** _(18-Oct-22 08:32 PM)_ [1032103836267053137]
 
 > HELP US!
+
+**Trey** _(18-Oct-22 08:31 PM)_ [1032103780327632916]
+
+_Zion grabs another side of the corpse._
 
 **Vortox** _(18-Oct-22 08:32 PM)_ [1032103821469569024]
 
@@ -238,13 +238,13 @@ _The two reaches camp, letting the corpse down with a big thud._
 
 > A message from Zach got through.
 
-**Zander** _(18-Oct-22 08:35 PM)_ [1032104708510330890]
-
-_The argonian exhales and sits back on a toolbox, putting an inhalator to his mask._
-
 **Jonas** _(18-Oct-22 08:35 PM)_ [1032104735269986314]
 
 > Somehow.
+
+**Zander** _(18-Oct-22 08:35 PM)_ [1032104708510330890]
+
+_The argonian exhales and sits back on a toolbox, putting an inhalator to his mask._
 
 **Trey** _(18-Oct-22 08:35 PM)_ [1032104787115778098]
 
@@ -544,6 +544,10 @@ _Bellow flinches at the throw._
 
 > Morra.
 
+**Zander** _(18-Oct-22 08:55 PM)_ [1032109776529801227]
+
+> What's wrong with you?
+
 **Jonas** _(18-Oct-22 08:55 PM)_ [1032109735564030063]
 
 _Bellow sets the oxygen tank into place, and takes a breath of hot oxygen...It's a small reprieve._
@@ -551,10 +555,6 @@ _Bellow sets the oxygen tank into place, and takes a breath of hot oxygen...It's
 **Trey** _(18-Oct-22 08:55 PM)_ [1032109756208386179]
 
 _Zion successfully pierces the skin using the plasma-cutter._
-
-**Zander** _(18-Oct-22 08:55 PM)_ [1032109776529801227]
-
-> What's wrong with you?
 
 **Vortox** _(18-Oct-22 08:55 PM)_ [1032109754044121098]
 
@@ -1688,6 +1688,12 @@ _Vec purposely goes out of line and leans against the wall as they followed._
 
 > Thanks man...
 
+**Zander** _(18-Oct-22 10:12 PM)_ [1032129012010582096]
+
+> This is better than any cig I've tried...
+
+_Vec whispers this to Zion._
+
 **Vortox** _(18-Oct-22 10:11 PM)_ [1032128820066660394]
 
 ⌘ Hunt520 used /8ball
@@ -1697,12 +1703,6 @@ _Vec purposely goes out of line and leans against the wall as they followed._
 <description>Yes, but with a caveat decided by the next person.</description>
 <footer>Hunt520 asked: "Will Jack eavesdrop on this meeting?"</footer>
 </embed>
-
-**Zander** _(18-Oct-22 10:12 PM)_ [1032129012010582096]
-
-> This is better than any cig I've tried...
-
-_Vec whispers this to Zion._
 
 **Trey** _(18-Oct-22 10:13 PM)_ [1032129309000880258]
 

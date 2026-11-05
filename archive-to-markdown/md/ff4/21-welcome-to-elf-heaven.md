@@ -825,9 +825,13 @@ _`Morra`: The retrieval is successful! However, it slingshots into the wormhole 
 
 > Ow.
 
-**Vortox** _(13-Dec-22 04:17 PM)_ [1052348509807984670]
+**Zander** _(13-Dec-22 04:17 PM)_ [1052348509807984670]
 
-_Morra's body disappears from wherever it was._
+_`Morra`: Morra's body disappears from wherever it was._
+
+**Brody** _(13-Dec-22 04:16 PM)_ [1052348334364442644]
+
+> Vec, I appreciate your help, but I prefer to move myself.
 
 **Vortox** _(13-Dec-22 04:15 PM)_ [1052347988657315881]
 
@@ -848,10 +852,6 @@ _The people from the slums form a Elf ladder to go over the gate._
 **Sean** _(13-Dec-22 04:16 PM)_ [1052348314080772096]
 
 _Seth climbs the ladder and gets over the gate._
-
-**Brody** _(13-Dec-22 04:16 PM)_ [1052348334364442644]
-
-> Vec, I appreciate your help, but I prefer to move myself.
 
 **Sean** _(13-Dec-22 04:16 PM)_ [1052348345215103006]
 

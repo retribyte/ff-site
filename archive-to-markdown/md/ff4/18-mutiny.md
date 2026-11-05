@@ -98,6 +98,10 @@ _Seth gets on the intercom._
 
 _Seth turns off the intercom._
 
+**Sean** _(01-Nov-22 08:37 PM)_ [1037178719464345610]
+
+_Seth gets up from his chair and begins to get dressed._
+
 **Jonas** _(01-Nov-22 08:37 PM)_ [1037178635326599199]
 
 _Bellow, still with blankets around himself, shuffles out to the common room._
@@ -109,10 +113,6 @@ _Bellow sneezes violently._
 **Trey** _(01-Nov-22 08:37 PM)_ [1037178660148486195]
 
 _Zion hobbles over to the common area, a trail of onion following behind him like a scroll._
-
-**Sean** _(01-Nov-22 08:37 PM)_ [1037178719464345610]
-
-_Seth gets up from his chair and begins to get dressed._
 
 **Hunt520** _(01-Nov-22 08:38 PM)_ [1037178809004335165]
 
@@ -906,13 +906,13 @@ _Although no one notices, the jar's insides start to rise, revealing a cluster o
 
 > Alright, let's go muck up our co-captain's plan. Haha!
 
-**Zander** _(01-Nov-22 09:07 PM)_ [1037186044090662943]
-
-_Vec jumps atop of the mass and into the jar. It grows, slowly, absorbing the contents._
-
 **Sean** _(01-Nov-22 09:07 PM)_ [1037186084246917261]
 
 _Seth follows Zion._
+
+**Zander** _(01-Nov-22 09:07 PM)_ [1037186044090662943]
+
+_Vec jumps atop of the mass and into the jar. It grows, slowly, absorbing the contents._
 
 **Silas** _(01-Nov-22 09:07 PM)_ [1037186091016531968]
 
@@ -1216,6 +1216,10 @@ _Vec backs up._
 
 _Zach covers Zion and Bellow, and a shard hits his back._
 
+**Hunt520** _(01-Nov-22 09:13 PM)_ [1037187613926379580]
+
+> Ow!
+
 **Trey** _(01-Nov-22 09:13 PM)_ [1037187561820520528]
 
 _Zion leaves Bellow on the floor._
@@ -1227,10 +1231,6 @@ _Bellow snores on, oblivious for now._
 **Zander** _(01-Nov-22 09:13 PM)_ [1037187609379737680]
 
 _The moment Seth makes to leave, Vec grabs him with the spores._
-
-**Hunt520** _(01-Nov-22 09:13 PM)_ [1037187613926379580]
-
-> Ow!
 
 **Sean** _(01-Nov-22 09:13 PM)_ [1037187614274498711]
 
@@ -1717,6 +1717,14 @@ _Zach is getting deja vu from being in the airlock._
 
 > ALL I THINK OF IS EAT.
 
+**Zander** _(01-Nov-22 09:41 PM)_ [1037194780855246848]
+
+> NOT YOU.
+
+**Zander** _(01-Nov-22 09:41 PM)_ [1037194796994932846]
+
+> ANIMAL.
+
 **Vortox** _(01-Nov-22 09:41 PM)_ [1037194727411437649]
 
 ⌘ Trey used /8ball
@@ -1726,14 +1734,6 @@ _Zach is getting deja vu from being in the airlock._
 <description>Only if Dutch would do it.</description>
 <footer>Trey asked: "Is Zion super angry at Vec in this moment?"</footer>
 </embed>
-
-**Zander** _(01-Nov-22 09:41 PM)_ [1037194780855246848]
-
-> NOT YOU.
-
-**Zander** _(01-Nov-22 09:41 PM)_ [1037194796994932846]
-
-> ANIMAL.
 
 **Trey** _(01-Nov-22 09:42 PM)_ [1037194943208370266]
 
@@ -2746,13 +2746,13 @@ _Tiny Vec is a cartoon black smudge on the ground._
 
 _Vec pops off of Zach, in pain._
 
-**Trey** _(01-Nov-22 10:18 PM)_ [1037204059419058197]
-
-_Zion has a burn mark on his chestplate._
-
 **Zander** _(01-Nov-22 10:18 PM)_ [1037204078251479112]
 
 _Vec is bubbling profusely._
+
+**Trey** _(01-Nov-22 10:18 PM)_ [1037204059419058197]
+
+_Zion has a burn mark on his chestplate._
 
 **Trey** _(01-Nov-22 10:18 PM)_ [1037204134413213706]
 
@@ -3090,13 +3090,13 @@ _Bellow puts his hand on Dutch's shoulder, tired, and angry._
 
 > What is there to hear out?
 
-**Zander** _(01-Nov-22 10:31 PM)_ [1037207235773866026]
-
-_Vec's back is bubbling._
-
 **Sean** _(01-Nov-22 10:31 PM)_ [1037207243575271484]
 
 > It's a threat to all of our safeties.
+
+**Zander** _(01-Nov-22 10:31 PM)_ [1037207235773866026]
+
+_Vec's back is bubbling._
 
 **Sean** _(01-Nov-22 10:31 PM)_ [1037207277020651540]
 
@@ -3379,13 +3379,13 @@ _The walls are slathered._
 
 > I'm not calling you a liar.
 
-**Trey** _(01-Nov-22 10:41 PM)_ [1037209702519541771]
-
-_Zion backs off, seeing the giant words._
-
 **Sean** _(01-Nov-22 10:41 PM)_ [1037209703467458691]
 
 > I'm calling the fungus a liar.
+
+**Trey** _(01-Nov-22 10:41 PM)_ [1037209702519541771]
+
+_Zion backs off, seeing the giant words._
 
 **Silas** _(01-Nov-22 10:41 PM)_ [1037209828004737064]
 
@@ -4184,6 +4184,10 @@ _Morra runs back to the Horizoners._
 
 _Morra opens the airlock._
 
+**Brody** _(01-Nov-22 11:10 PM)_ [1037217058389233704]
+
+> The fungus is gone.
+
 **Silas** _(01-Nov-22 11:10 PM)_ [1037217010490290268]
 
 _Dutch bashes the back of Zach's head with the butt of Pauline._
@@ -4191,10 +4195,6 @@ _Dutch bashes the back of Zach's head with the butt of Pauline._
 **Jonas** _(01-Nov-22 11:10 PM)_ [1037217026302816327]
 
 _Bellow wipes his tears, and looks expectantly at Morra._
-
-**Brody** _(01-Nov-22 11:10 PM)_ [1037217058389233704]
-
-> The fungus is gone.
 
 **Hunt520** _(01-Nov-22 11:10 PM)_ [1037217058733174794]
 

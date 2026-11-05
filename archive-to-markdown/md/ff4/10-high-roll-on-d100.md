@@ -542,13 +542,13 @@ _Bellow adds a brooch in the shape of a goat head to the clown outfit._
 
 > Perfect.
 
-**Zander** _(02-Aug-22 06:01 PM)_ [1004162051930857593]
-
-_Fungo grabs some space pesticide and hovers it in front of Dutch's suit's face._
-
 **Jonas** _(02-Aug-22 06:01 PM)_ [1004162141760262255]
 
 > Let's get you back to your head.
+
+**Zander** _(02-Aug-22 06:01 PM)_ [1004162051930857593]
+
+_Fungo grabs some space pesticide and hovers it in front of Dutch's suit's face._
 
 **Vortox** _(02-Aug-22 06:01 PM)_ [1004162030560890890]
 
@@ -1100,13 +1100,13 @@ _Fungo just sits there and doesn't do much, wanting to regenerate itself._
 
 > Ok, but take off your Republic insignia pin.
 
-**Zander** _(02-Aug-22 06:30 PM)_ [1004169431196385371]
-
-_`Officer`: The officer who ticketed the ship knocks on the hatch._
-
 **Trey** _(02-Aug-22 06:30 PM)_ [1004169452339855381]
 
 > I don't even know where you got that.
+
+**Zander** _(02-Aug-22 06:30 PM)_ [1004169431196385371]
+
+_`Officer`: The officer who ticketed the ship knocks on the hatch._
 
 **Jonas** _(02-Aug-22 06:30 PM)_ [1004169452721545237]
 
@@ -3547,13 +3547,13 @@ _The VR headset on the ship emits a muffled voice._
 
 > Mmmfmffmf.
 
-**Silas** _(02-Aug-22 08:46 PM)_ [1004203551872012348]
-
-_Dutch rips Zion's dented helmet apart, saving him!_
-
 **Trey** _(02-Aug-22 08:46 PM)_ [1004203557567864852]
 
 _Zion is still pulling._
+
+**Silas** _(02-Aug-22 08:46 PM)_ [1004203551872012348]
+
+_Dutch rips Zion's dented helmet apart, saving him!_
 
 **Jonas** _(02-Aug-22 08:46 PM)_ [1004203585220915252]
 

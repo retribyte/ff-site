@@ -910,17 +910,9 @@ _Zach flushes pink due to the embarrassment._
 
 > Fortheworldfortheworldfortheworld!
 
-**Vortox** _(13-Dec-22 07:09 PM)_ [1052391762959814766]
-
-_Zach is now entirely pink. A spectre pops out of his mouth. His shape starts to shift._
-
 **Silas** _(13-Dec-22 07:09 PM)_ [1052391816873377874]
 
 > Alright, Zion. Let's head to Lamentria.
-
-**Trey** _(13-Dec-22 07:09 PM)_ [1052391823907246090]
-
-> `Iris`: Hey! Stop stealing my powers!
 
 **Jonas** _(13-Dec-22 07:09 PM)_ [1052391826432196629]
 

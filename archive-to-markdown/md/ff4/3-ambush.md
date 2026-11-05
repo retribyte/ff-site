@@ -1463,6 +1463,10 @@ _`Worker`: The worker points to the walking corpse._
 
 > Hm.
 
+**Trey** _(07-Jun-22 09:06 PM)_ [983914857894150184]
+
+> Well, stay here. We will keep you safe for now.
+
 **Vortox** _(07-Jun-22 09:06 PM)_ [983914822494203904]
 
 _Seth's communicator has been ringing the whole time._
@@ -1470,10 +1474,6 @@ _Seth's communicator has been ringing the whole time._
 **Vortox** _(07-Jun-22 09:06 PM)_ [983914846443683840]
 
 _To no one's amusement._
-
-**Trey** _(07-Jun-22 09:06 PM)_ [983914857894150184]
-
-> Well, stay here. We will keep you safe for now.
 
 **Trey** _(07-Jun-22 09:06 PM)_ [983914893193379870]
 
@@ -1507,13 +1507,13 @@ _Bellow is close behind Dutch and Zion._
 
 _Seth stares into the eyes of the hostages._
 
-**Zander** _(07-Jun-22 09:07 PM)_ [983915144016973835]
-
-> `Vec as Suchan`: Shut up, garbage can. I'm busy. Need to get 10,000 units before shift closes.
-
 **Sean** _(07-Jun-22 09:07 PM)_ [983915199427919933]
 
 _He is one millimeter apart from them._
+
+**Zander** _(07-Jun-22 09:07 PM)_ [983915144016973835]
+
+> `Vec as Suchan`: Shut up, garbage can. I'm busy. Need to get 10,000 units before shift closes.
 
 **Zander** _(07-Jun-22 09:07 PM)_ [983915246999732224]
 

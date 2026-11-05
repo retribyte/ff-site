@@ -2678,6 +2678,16 @@ _He pulls out his plasma blaster and points it at the officers._
 
 > These fucking goblins man.
 
+**Hunt520** _(16-Aug-22 07:33 PM)_ [1009258607008825385]
+
+_Zach is clutching his shoulder._
+
+**Hunt520** _(16-Aug-22 07:33 PM)_ [1009258677980643338]
+
+↪ Sean: These fucking goblins man.
+
+_Zach flips Seth off before Seth left._
+
 **Sean** _(16-Aug-22 07:33 PM)_ [1009258619587543040]
 
 _Seth runs to the cockpit._
@@ -2686,19 +2696,9 @@ _Seth runs to the cockpit._
 
 _Seth knocks on the doors._
 
-**Hunt520** _(16-Aug-22 07:33 PM)_ [1009258607008825385]
-
-_Zach is clutching his shoulder._
-
 **Sean** _(16-Aug-22 07:33 PM)_ [1009258671634665593]
 
 > Hey Emmett, open up.
-
-**Hunt520** _(16-Aug-22 07:33 PM)_ [1009258677980643338]
-
-↪ Sean: These fucking goblins man.
-
-_Zach flips Seth off before Seth left._
 
 **Sean** _(16-Aug-22 07:33 PM)_ [1009258689124909076]
 
@@ -2818,6 +2818,10 @@ _Zach is so done with this situation, and the blood loss is getting to him._
 
 > We got this.
 
+**Sean** _(16-Aug-22 07:38 PM)_ [1009259966680543322]
+
+> Alright Emmett?
+
 **Silas** _(16-Aug-22 07:37 PM)_ [1009259682055073822]
 
 _`SRE Officer 4`: The 4th SRE Officer fires at Zion with his pistol._
@@ -2836,10 +2840,6 @@ Zion now has `(23/35)` hp.
 </description>
 <color>#50C878</color>
 </embed>
-
-**Sean** _(16-Aug-22 07:38 PM)_ [1009259966680543322]
-
-> Alright Emmett?
 
 **Zander** _(16-Aug-22 07:39 PM)_ [1009260035400024094]
 
@@ -3540,13 +3540,13 @@ _Without looking, Dutch fires into the skull of the SRE Officer._
 
 > We're Emmett and Seth, the best duo in this galaxy, who cares if you're a clone, you're still my friend.
 
-**Hunt520** _(16-Aug-22 08:10 PM)_ [1009267960180908134]
-
-_Zach wakes up with a gasp, tears are flowing down his face, he just sits in the pod with his hands on his face._
-
 **Sean** _(16-Aug-22 08:11 PM)_ [1009268093723344968]
 
 > Now let's get out of here.
+
+**Hunt520** _(16-Aug-22 08:10 PM)_ [1009267960180908134]
+
+_Zach wakes up with a gasp, tears are flowing down his face, he just sits in the pod with his hands on his face._
 
 **Silas** _(16-Aug-22 08:11 PM)_ [1009268101981945997]
 

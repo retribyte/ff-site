@@ -28,13 +28,13 @@ _Bellow sticks close behind Dutch._
 
 > `Olag`: Just know that I'm not heading with you all!
 
-**Sean** _(26-Jul-22 05:47 PM)_ [1001621786481397760]
-
-_Seth puts on a brown fedora and a brown bomber jacket._
-
 **Zander** _(26-Jul-22 05:48 PM)_ [1001621968719712407]
 
 _`Olag`: Olag points into the catacombs._
+
+**Sean** _(26-Jul-22 05:47 PM)_ [1001621786481397760]
+
+_Seth puts on a brown fedora and a brown bomber jacket._
 
 **Trey** _(26-Jul-22 05:48 PM)_ [1001621969952837632]
 
@@ -152,10 +152,6 @@ _`Olag`: Olag flips off Seth and leaves them._
 
 > `Vec as Marv`: Harsh. I like it.
 
-**Zander** _(26-Jul-22 05:56 PM)_ [1001623985928274031]
-
-_`Vec as Marv`: Marv looks over to Seth._
-
 **Vortox** _(26-Jul-22 05:55 PM)_ [1001623952180904036]
 
 ⌘ Silas used /8ball
@@ -169,6 +165,10 @@ _`Vec as Marv`: Marv looks over to Seth._
 **Silas** _(26-Jul-22 05:55 PM)_
 
 _Dutch speeds up, trying to edge past Zion._
+
+**Zander** _(26-Jul-22 05:56 PM)_ [1001623985928274031]
+
+_`Vec as Marv`: Marv looks over to Seth._
 
 **Zander** _(26-Jul-22 05:56 PM)_ [1001624043272802345]
 
@@ -816,13 +816,13 @@ _`Bouncer`: The bouncer raises an eyebrow._
 
 _Seth grabs Dutch by the shoulders and shakes him a little._
 
-**Vortox** _(26-Jul-22 06:21 PM)_ [1001630447220043826]
-
-_The dealer starts to rake in their bets._
-
 **Sean** _(26-Jul-22 06:22 PM)_ [1001630522797199412]
 
 > How about a shot for luck?
+
+**Vortox** _(26-Jul-22 06:21 PM)_ [1001630447220043826]
+
+_The dealer starts to rake in their bets._
 
 **Silas** _(26-Jul-22 06:22 PM)_ [1001630544058126387]
 
@@ -1815,13 +1815,13 @@ _`Miny Seth`: Miny Seth lands on Seth's lap._
 
 > Get back in there, little buddy.
 
-**Vortox** _(26-Jul-22 07:18 PM)_ [1001644707065102426]
-
-_The owner is now without a mask, in a jester costume and crown. His eyelids and lips are rotted away, permanently seeing all, and smiling till the end._
-
 **Sean** _(26-Jul-22 07:18 PM)_ [1001644757338038362]
 
 _Seth puts Miny Seth up his nose._
+
+**Vortox** _(26-Jul-22 07:18 PM)_ [1001644707065102426]
+
+_The owner is now without a mask, in a jester costume and crown. His eyelids and lips are rotted away, permanently seeing all, and smiling till the end._
 
 **Sean** _(26-Jul-22 07:18 PM)_ [1001644800098971678]
 
@@ -3065,13 +3065,13 @@ _`Owner`: The owner starts to laugh._
 
 > `Owner`: IT'S NEVERENDING SUFFERING!
 
-**Jonas** _(26-Jul-22 08:29 PM)_ [1001662560862490694]
-
-_Bellow gives a sideways look at Zion, ready to strike if he gives the order._
-
 **Zander** _(26-Jul-22 08:29 PM)_ [1001662693343768719]
 
 _`Owner`: The owner tosses some failed cure vials on the ground._
+
+**Jonas** _(26-Jul-22 08:29 PM)_ [1001662560862490694]
+
+_Bellow gives a sideways look at Zion, ready to strike if he gives the order._
 
 **Trey** _(26-Jul-22 08:30 PM)_ [1001662843806040206]
 
@@ -3143,21 +3143,21 @@ _Zion picks up the various vials, all labeled something like "FAILED PROTOTYPE" 
 
 > `Owner`: No one ever wants to give themselves to the needy.
 
-**Jonas** _(26-Jul-22 08:33 PM)_ [1001663659476525108]
-
-_Bellow relaxes slightly, putting his pistols back in their holsters._
-
 **Zander** _(26-Jul-22 08:34 PM)_ [1001663827332583527]
 
 > `Owner`: So I decided to be the judge of the damned, the cheaters, the indebted.
 
-**Jonas** _(26-Jul-22 08:34 PM)_ [1001663802728792096]
-
-_Bellow picks up a vial too, for his own research._
-
 **Zander** _(26-Jul-22 08:34 PM)_ [1001663913596813312]
 
 > `Owner`: Your rat was necessary to take. And the big one too.
+
+**Jonas** _(26-Jul-22 08:33 PM)_ [1001663659476525108]
+
+_Bellow relaxes slightly, putting his pistols back in their holsters._
+
+**Jonas** _(26-Jul-22 08:34 PM)_ [1001663802728792096]
+
+_Bellow picks up a vial too, for his own research._
 
 **Zander** _(26-Jul-22 08:35 PM)_ [1001664000494411816]
 

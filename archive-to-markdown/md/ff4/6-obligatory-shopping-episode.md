@@ -75,15 +75,15 @@ _Zach just looks at Bellow confused._
 
 > Er... Zach, Terry. Terry, Zach.
 
-**Sean** _(05-Jul-22 05:32 PM)_ [994007980762738789]
-
-_Seth grabs hold of a small child._
-
 **Jonas** _(05-Jul-22 05:33 PM)_ [994008154528559225]
 
 _Bellow turns to Zach._
 
 > We met at a shop a few weeks ago...
+
+**Sean** _(05-Jul-22 05:32 PM)_ [994007980762738789]
+
+_Seth grabs hold of a small child._
 
 **Zander** _(05-Jul-22 05:33 PM)_ [994008110098288680]
 
@@ -1669,6 +1669,10 @@ _`Tacengi`: Tacengi mocks Dutch in a lisp._
 
 _Bellow slowly reaches for a pistol._
 
+**Jonas** _(05-Jul-22 07:19 PM)_ [994034910996221993]
+
+> As he said, we have business here.
+
 **Zander** _(05-Jul-22 07:19 PM)_ [994034787981459507]
 
 _Fungo vibrates to try and get someone's attention._
@@ -1682,10 +1686,6 @@ _Fungo vibrates to try and get someone's attention._
 <description>As I see it, yes.</description>
 <footer>Silas asked: "Does Dutch quickdraw and blast the teeth monster point blank, exploding its face?"</footer>
 </embed>
-
-**Jonas** _(05-Jul-22 07:19 PM)_ [994034910996221993]
-
-> As he said, we have business here.
 
 **Zander** _(05-Jul-22 07:19 PM)_ [994034916742418555]
 
