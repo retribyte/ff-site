@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { memo, useEffect, useState } from 'react';
+import { memo, useState, useSyncExternalStore } from 'react';
 import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
@@ -117,12 +117,15 @@ interface Props {
     currentMatchNo: number | null;
 }
 
+const subscribeNoop = () => () => {};
+
 function StoryBlock({ block, episodeTitle, characters, players, personas, targetNo, query, currentMatchNo }: Props) {
     const { colorMode } = useTheme();
     const { user } = useSession();
     const [copied, setCopied] = useState(false);
-    const [localTime, setLocalTime] = useState(false);
-    useEffect(() => setLocalTime(true), []);
+    // False during SSR/hydration (server has no viewer timezone), true after,
+    // without a setState-in-effect.
+    const localTime = useSyncExternalStore(subscribeNoop, () => true, () => false);
 
     const characterId = block.characterId;
     const character = characterId !== null ? characters[characterId] : null;
