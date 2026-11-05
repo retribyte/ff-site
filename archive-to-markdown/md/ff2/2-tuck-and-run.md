@@ -1530,7 +1530,7 @@ t!8ball Do I use my charisma to get our payment early?
 **Enchantingtable2013** _(23-Jun-18 08:42 PM)_
 
 > `Pocket Watch Guy`: Great, you found one! These watches have energy tied to certain events in history, doing so will make your mark much more useful.
-> How so?
+> `Matthias Lewkey`: How so?
 > `Pocket Watch Guy`: You'll see.
 
 **Zander** _(23-Jun-18 08:43 PM)_
@@ -1850,7 +1850,7 @@ t!choose 5000 Ducketts | 6000 Ducketts | 7000 Ducketts | 8000 Ducketts | 9000 Du
 **Bagelwrecker** _(23-Jun-18 09:06 PM)_
 _`Head of Security`: The Head of Security gives Seth and Matthias 14,000 Ducketts, 1,000 less as the President's Daughter having inexplicably died._
 
-> Alright we're good let's head out.
+> `Seth Im'Kin'ki`: Alright we're good let's head out.
 
 **Enchantingtable2013** _(23-Jun-18 09:06 PM)_
 
@@ -1911,7 +1911,7 @@ t!8ball Do we go back to the spaceship?
 **Zander** _(23-Jun-18 09:11 PM)_
 
 > `Minotaur`: You're in the wrong part of the station, goat-boy."
-> Excuse me?
+> `Emmett Tawfeek`: Excuse me?
 
 **Bagelwrecker** _(23-Jun-18 09:11 PM)_
 
@@ -1944,7 +1944,7 @@ t!8ball Do we go back to the spaceship?
 **Zander** _(23-Jun-18 09:13 PM)_
 
 > `Minotaur`: I hardly think you could handle a wine cooler here.
-> Is that a challenge?
+> `Emmett Tawfeek`: Is that a challenge?
 
 **Bagelwrecker** _(23-Jun-18 09:14 PM)_
 
@@ -1957,8 +1957,8 @@ t!8ball Do we go back to the spaceship?
 **Zander** _(23-Jun-18 09:14 PM)_
 
 > `Minotaur`: Hey, it's your choice. We'll see who's the one in a puddle of their own puke later.
-> Gross.
-> t!8ball Does Emmett order a casual beer for the two of them?
+> `Emmett Tawfeek`: Gross.
+t!8ball Does Emmett order a casual beer for the two of them?
 
 **Tatsumaki** _(23-Jun-18 09:15 PM)_
 
@@ -2320,7 +2320,7 @@ t!8ball Do I shoot her foot?
 **Zander** _(23-Jun-18 09:33 PM)_
 
 > `Aris`: Your friends are ruining our date.
-> This is a date now?
+> `Emmett Tawfeek`: This is a date now?
 
 **Enchantingtable2013** _(23-Jun-18 09:33 PM)_
 

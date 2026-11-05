@@ -1368,7 +1368,7 @@ _Emmett dangles helplessly by his horn._
 **Bagelwrecker** _(10-Oct-18 03:00 PM)_
 
 > `Jessica`: BRING ME TO MY HUSBAND!
-> Oh, ok.
+> `Seth Im'Kin'ki`: Oh, ok.
 > `Jessica`: GARRICK!
 
 **RPretribution** _(10-Oct-18 03:00 PM)_

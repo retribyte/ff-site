@@ -512,7 +512,7 @@ _Deyner spots Emmett from across the kitchen._
 
 > `Chomsky's Boss`: Close enough to see the ship on the locator.
 
-> Ah...
+> `Victor Chomsky`: Ah...
 
 **Zander** _(28-Oct-18 03:11 PM)_
 
@@ -694,9 +694,9 @@ _Deyner tilts his head._
 
 > `Chomsky's Boss`: Then there's nothing to worry about. Over and out.
 
-> Over and out, sir.
+> `Victor Chomsky`: Over and out, sir.
 
-_Chomsky's watch beeps as the call ends._
+_`Victor Chomsky`: Chomsky's watch beeps as the call ends._
 
 **TheBlade** _(28-Oct-18 03:15 PM)_
 
@@ -773,11 +773,11 @@ _Emmett sets the course, then misclicks and turns on the shipwide radio. The son
 
 > `Chomsky's Boss`: You're heading away! Tell the captain to stop!
 
-> I have no power here.
+> `Victor Chomsky`: I have no power here.
 
 > `Chomsky's Boss`: You will stop that ship, Chomsky, or so help me--
 
-> I'll find out where we're going, and you can meet me there.
+> `Victor Chomsky`: I'll find out where we're going, and you can meet me there.
 
 **Deyner** _(28-Oct-18 03:21 PM)_
 
@@ -793,7 +793,7 @@ _Deyner pumps his fist._
 
 > `Chomsky's Boss`: Turn off that music while you're at it.
 
-_Chomsky's watch beeps again._
+_`Victor Chomsky`: Chomsky's watch beeps again._
 
 **Jelsafan0** _(28-Oct-18 03:21 PM)_
 
@@ -2354,7 +2354,7 @@ _Damien ruffles her hair._
 
 > `Damien`: Not a chance, squirt.
 
-_Iris smirks and lights her finger on fire._
+_`Iris Bellatoria`: Iris smirks and lights her finger on fire._
 
 > Now will you let me go?
 
@@ -2446,7 +2446,7 @@ _Iris grins._
 
 > `Duske`: Sure.
 
-_Deyner drags Duske over toward Iris._
+_`Deyner Revathen`: Deyner drags Duske over toward Iris._
 
 > IRIS!!
 
@@ -2637,7 +2637,7 @@ _Damien lowers his voice._
 
 > `Damien`: I still intend to fulfill my promise from the last time we saw each other.
 
-_Iris's face turns very, very red._
+_`Iris Bellatoria`: Iris's face turns very, very red._
 
 **Zander** _(28-Oct-18 04:29 PM)_
 
@@ -2747,7 +2747,7 @@ _Damien chuckles._
 
 > `Damien`: I'm sure I will.
 
-_Hearing Jim over the comms, Iris speeds up. They need a doctor, and she happens to have one on hand. The two run to the ship._
+_`Iris Bellatoria`: Hearing Jim over the comms, Iris speeds up. They need a doctor, and she happens to have one on hand. The two run to the ship._
 
 **PlasmaPerson** _(28-Oct-18 04:36 PM)_
 
@@ -3056,7 +3056,7 @@ _Iris shakes him a little more harshly._
 
 > `The Crave`: But nothing. You have your whole life ahead of you. If you do what's best for me, you do what's best for you.
 
-_Emmett grumbles a little, signifying that he's awake._
+_`Emmett Tawfeek`: Emmett grumbles a little, signifying that he's awake._
 
 **Jelsafan0** _(28-Oct-18 04:53 PM)_
 
@@ -3066,7 +3066,7 @@ _Iris sighs in relief._
 
 > `The Crave`: Lay off the grass.
 
-> But I need it!
+> `Emmett Tawfeek`: But I need it!
 
 **Jelsafan0** _(28-Oct-18 04:54 PM)_
 
@@ -3074,13 +3074,13 @@ _Damien jerks his thumb at Emmett._
 
 > `Damien`: So, uh... how do you know this guy again?
 
-> ...He's the captain.
+> `Iris Bellatoria`: ...He's the captain.
 
 **Zander** _(28-Oct-18 04:54 PM)_
 
 > `The Crave`: Do you?
 
-_Emmett suddenly bolts upward._
+_`Emmett Tawfeek`: Emmett suddenly bolts upward._
 
 > I don't.
 

@@ -339,7 +339,7 @@ _Asier, instead of helping Matthias, just stares at them in confusion._
 
 > `Stone Women`: SQUOAT TAOUQS!
 
-> Squoat?
+> `Emmett Tawfeek`: Squoat?
 
 **Bagelwrecker** _(24-Jun-18 09:20 PM)_
 

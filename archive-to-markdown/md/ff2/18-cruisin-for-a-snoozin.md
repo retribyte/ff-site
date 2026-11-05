@@ -1329,7 +1329,7 @@ _`Gruffy`: The mechanic walks up to the ship at Seth's request._
 
 > `Gruffy`: Hey Seth, ya' takin' the Andromeda?
 
-> Yep.
+> `Seth Im'Kin'ki`: Yep.
 
 **PlasmaPerson** _(08-Sep-18 04:26 PM)_
 
@@ -1343,7 +1343,7 @@ _Chomsky puts his hand behind his head to look cool, but only gives off an awkwa
 
 _`Gruffy`: Gruffy takes out a pocket ladder that extends both upwards and horizontally to be able to work on the cruise ship's engine._
 
-> Of course.
+> `Seth Im'Kin'ki`: Of course.
 
 **Zander** _(08-Sep-18 04:27 PM)_
 
