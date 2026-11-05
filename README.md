@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Final Frontier: the site
 
-## Getting Started
+Next.js frontend for the Final Frontier lore archive and campaign reader. It
+renders on the server and reads everything from the `ff-server` API (a
+separate repo, checked out next to this one).
 
-First, run the development server:
+## Development
+
+Node 22 via nvm (system Node is too old):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+nvm use
+npm ci
+npm run dev        # http://localhost:3001
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+It expects ff-server's dev server on http://localhost:3000 (see that repo's
+README). From the workspace root, `./dev.sh` starts Postgres, both servers and
+their logs together. Tests: `npm test` (vitest); `npx tsc --noEmit`; `npx eslint .`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The episode-import pipeline (Discord export → markdown → API JSON) lives in
+`archive-to-markdown/`; see its README.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Production
 
-## Learn More
+The live site is https://vortox.space, on NearlyFreeSpeech.NET (FreeBSD)
+behind Cloudflare. The setup is documented in ff-server's
+[`docs/deploy-nfsn.md`](../ff-server/docs/deploy-nfsn.md). Deploying an update,
+from a clean, committed, pushed checkout (needs the NFSN SSH key,
+`~/.ssh/booru` by default, or set `NFSN_KEY`):
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+scripts/deploy-nfsn.sh
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+It builds `HEAD` in a temporary worktree (your checkout and a running dev
+server are untouched), uploads the result, restarts the `ffsite` daemon and
+waits until the site answers.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+How the production build differs from dev:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Standalone server:** `next.config.ts` sets `output: 'standalone'`, giving
+  one `server.js` plus only the dependencies it uses (~21 MB, no native
+  modules). Images are served unoptimized: the optimizer needs `sharp`, which
+  has no FreeBSD build.
+- **One domain for site and API:** the host's proxy sends `/api/` to ff-server
+  and everything else here, so this app's own route handlers live under
+  **`/site/`** (`/site/auth/*`, `/site/ff/*`), never `/api/`.
+- **API address:** server code reads `API_URL` at runtime (loopback to
+  ff-server in production); browser code uses `NEXT_PUBLIC_API_URL`, which
+  the deploy builds as `/api`. Both default to `http://localhost:3000/api`.
+- **`CANONICAL_HOST`** (set in production): `src/proxy.ts` 308s requests that
+  arrive by any other name (NFSN's `*.nfshost.com`, `www.`) to it, so
+  nothing skips Cloudflare.
