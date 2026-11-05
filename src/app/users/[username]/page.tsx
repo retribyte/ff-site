@@ -7,6 +7,7 @@ import { booruPostUrl } from '@/lib/booru';
 import SignalLost from '@/components/SignalLost';
 import { compareCharacters } from '@/lib/characterSort';
 import CharacterCard from '@/components/characters/CharacterCard';
+import ResetPasswordControl from '@/components/users/ResetPasswordControl';
 import styles from './user.module.scss';
 import RichText from '@/components/RichText';
 import { imageSrc } from '@/lib/images';
@@ -152,6 +153,7 @@ export default async function UserPage({ params }: Props) {
                             </div>
                         )}
                     </dl>
+                    <ResetPasswordControl userId={profile.id} targetIsAdmin={profile.role === 'ADMIN'} />
                 </aside>
             </div>
         </main>
