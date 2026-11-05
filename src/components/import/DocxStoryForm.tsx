@@ -59,7 +59,7 @@ const SEVERAL_NPCS = '__npcs__';
 const NPC_GRAY = '#666666';
 
 async function convertCall<T>(body: unknown): Promise<T> {
-    const res = await fetch('/api/ff/stories/convert', {
+    const res = await fetch('/site/ff/stories/convert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -116,13 +116,13 @@ export default function DocxStoryForm({
     const [characterNames, setCharacterNames] = useState<string[]>([]);
     const [seasons, setSeasons] = useState<string[]>([]);
     useEffect(() => {
-        fetch('/api/ff/characters')
+        fetch('/site/ff/characters')
             .then((res) => res.json())
             .then((envelope: { data?: { name: string }[] }) =>
                 setCharacterNames([...new Set((envelope.data ?? []).map((c) => c.name))].sort((a, b) => a.localeCompare(b)))
             )
             .catch(() => setCharacterNames([]));
-        fetch('/api/ff/seasons')
+        fetch('/site/ff/seasons')
             .then((res) => res.json())
             .then((envelope: { data?: { title: string }[] }) => setSeasons((envelope.data ?? []).map((s) => s.title)))
             .catch(() => setSeasons([]));
@@ -160,7 +160,7 @@ export default function DocxStoryForm({
         if (!analysis || !targetSlug) return;
         let live = true;
         const timer = setTimeout(() => {
-            fetch(`/api/ff/stories/${encodeURIComponent(targetSlug)}`)
+            fetch(`/site/ff/stories/${encodeURIComponent(targetSlug)}`)
                 .then((res) => (res.ok ? res.json() : null))
                 .then((envelope: { data?: { title: string; importMeta?: ImportMeta | null } } | null) => {
                     if (!live) return;

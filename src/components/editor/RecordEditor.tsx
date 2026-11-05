@@ -39,7 +39,7 @@ function useRefOptions(fields: FieldDef[]) {
         let cancelled = false;
         for (const path of refPaths) {
             const labelField = fields.find((f) => f.ref?.path === path)!.ref!.labelField;
-            fetch(`/api/ff${path}`)
+            fetch(`/site/ff${path}`)
                 .then((res) => res.json())
                 .then((envelope: { data?: Record<string, unknown>[] }) => {
                     if (cancelled || !envelope.data) return;
@@ -85,7 +85,7 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
         }
 
         try {
-            const res = await fetch(`/api/ff${schema.basePath}${isEdit ? `/${recordId}` : ''}`, {
+            const res = await fetch(`/site/ff${schema.basePath}${isEdit ? `/${recordId}` : ''}`, {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -109,7 +109,7 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff${schema.basePath}/${recordId}`, { method: 'DELETE' });
+            const res = await fetch(`/site/ff${schema.basePath}/${recordId}`, { method: 'DELETE' });
             if (!res.ok && res.status !== 204) {
                 const envelope = (await res.json().catch(() => null)) as Envelope | null;
                 setError(envelope?.message ?? `Delete failed (HTTP ${res.status})`);

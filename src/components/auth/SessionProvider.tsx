@@ -5,7 +5,7 @@ import type { SessionUser } from '@/lib/auth';
 
 interface Session {
     user: SessionUser | null;
-    /** true until the first /api/auth/me round trip settles */
+    /** true until the first /site/auth/me round trip settles */
     loading: boolean;
     /** Re-fetch the session (call after login/register) */
     refresh: () => Promise<void>;
@@ -25,7 +25,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
 
     const refresh = useCallback(async () => {
         try {
-            const res = await fetch('/api/auth/me');
+            const res = await fetch('/site/auth/me');
             const data = (await res.json()) as { user: SessionUser | null };
             setUser(data.user);
         } catch {
@@ -38,7 +38,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     // Initial session load; all setState happens after the fetch resolves
     useEffect(() => {
         let cancelled = false;
-        fetch('/api/auth/me')
+        fetch('/site/auth/me')
             .then((res) => res.json())
             .then((data: { user: SessionUser | null }) => {
                 if (!cancelled) setUser(data.user);
@@ -55,7 +55,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const logout = useCallback(async () => {
-        await fetch('/api/auth/logout', { method: 'POST' });
+        await fetch('/site/auth/logout', { method: 'POST' });
         setUser(null);
     }, []);
 

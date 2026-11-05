@@ -24,7 +24,7 @@ export default function LoginForm({ registrationOpen }: { registrationOpen: bool
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/auth/${mode}`, {
+            const res = await fetch(`/site/auth/${mode}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(mode === 'login' ? { username, password } : { username, email, password }),

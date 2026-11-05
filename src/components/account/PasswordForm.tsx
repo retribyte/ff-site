@@ -30,9 +30,9 @@ export default function PasswordForm({ setup = false }: { setup?: boolean }) {
         setBusy(true);
         setStatus({ kind: 'idle' });
         try {
-            // Own route handler, not the /api/ff proxy: it swaps in the fresh
+            // Own route handler, not the /site/ff proxy: it swaps in the fresh
             // token ff-server issues, since the old one is now revoked
-            const res = await fetch('/api/auth/password', {
+            const res = await fetch('/site/auth/password', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ currentPassword, newPassword }),

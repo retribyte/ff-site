@@ -21,7 +21,7 @@ export default function DeleteStoryButton({ slug, redirectTo }: { slug: string; 
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff/stories/${encodeURIComponent(slug)}`, { method: 'DELETE' });
+            const res = await fetch(`/site/ff/stories/${encodeURIComponent(slug)}`, { method: 'DELETE' });
             if (!res.ok && res.status !== 204) {
                 const envelope = (await res.json().catch(() => null)) as { message?: string } | null;
                 setError(envelope?.message ?? `Delete failed (HTTP ${res.status})`);

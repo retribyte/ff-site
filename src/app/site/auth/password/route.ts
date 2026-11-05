@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { api, ApiError } from '@/lib/api';
 import { getToken, setSessionCookie, type SessionUser } from '@/lib/auth';
 
-// Password change goes through here rather than the generic /api/ff proxy:
+// Password change goes through here rather than the generic /site/ff proxy:
 // ff-server revokes every token issued before the change and hands back a
 // fresh one, which has to replace the cookie or this session logs out too.
 export async function PUT(request: Request) {

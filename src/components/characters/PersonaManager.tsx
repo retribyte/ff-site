@@ -38,7 +38,7 @@ function validateDraft(draft: Draft): string | null {
 // stretch with no name change). Personas don't fit the flat
 // EDITOR_SCHEMAS/RecordEditor field model — this is a small self-contained
 // client component: it owns its own list state and talks to the API
-// directly through the /api/ff/ proxy, same pattern as CommentaryThread.
+// directly through the /site/ff/ proxy, same pattern as CommentaryThread.
 export default function PersonaManager({ characterId, initial }: { characterId: number; initial: Persona[] }) {
     const [personas, setPersonas] = useState<Persona[]>(initial);
     const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
@@ -53,7 +53,7 @@ export default function PersonaManager({ characterId, initial }: { characterId: 
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff/characters/${characterId}/personas`, {
+            const res = await fetch(`/site/ff/characters/${characterId}/personas`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -81,7 +81,7 @@ export default function PersonaManager({ characterId, initial }: { characterId: 
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff/personas/${id}`, { method: 'DELETE' });
+            const res = await fetch(`/site/ff/personas/${id}`, { method: 'DELETE' });
             if (!res.ok && res.status !== 204) {
                 const envelope = (await res.json().catch(() => null)) as Envelope | null;
                 // e.g. "400 — messages still reference this persona"

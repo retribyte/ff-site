@@ -32,7 +32,7 @@ export default function NpcVoiceList({ npcs }: { npcs: NpcPersona[] }) {
         setBusyId(npc.id);
         setError(null);
         try {
-            const res = await fetch('/api/ff/admin/speakers/promote', {
+            const res = await fetch('/site/ff/admin/speakers/promote', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ personaId: npc.id }),

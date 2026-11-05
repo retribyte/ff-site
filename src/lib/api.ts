@@ -5,7 +5,15 @@
 
 import type { MessageType } from './types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000/api';
+// Where ff-server is. On the server (rendering, route handlers) API_URL is read
+// at runtime, so production can talk to ff-server directly on loopback. In the
+// browser it's NEXT_PUBLIC_API_URL, inlined at build time: production builds
+// with "/api", the same-origin path the site's proxy sends to ff-server. Dev
+// leaves both unset (localhost:3000).
+export const API_URL =
+    (typeof window === 'undefined' ? process.env.API_URL : undefined) ??
+    process.env.NEXT_PUBLIC_API_URL ??
+    'http://localhost:3000/api';
 
 export class ApiError extends Error {
     constructor(

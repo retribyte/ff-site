@@ -2,7 +2,7 @@
 // challenge can block browsers (the bypass key lives only in ff-server), and
 // PixelAvatar reads pixels back from a canvas, which a cross-origin image
 // taints. Route them through ff-server's /booru/image proxy, same-origin via
-// /api/ff. Every other src (local /avatars/..., data: URLs) passes through.
+// /site/ff. Every other src (local /avatars/..., data: URLs) passes through.
 
 import { BOORU_URL } from '@/lib/booru';
 
@@ -19,5 +19,5 @@ export function imageSrc(src: string | null | undefined): string | null {
         return src; // relative — already ours
     }
     if (url.origin !== BOORU_ORIGIN) return src;
-    return `/api/ff/booru/image?url=${encodeURIComponent(src)}`;
+    return `/site/ff/booru/image?url=${encodeURIComponent(src)}`;
 }

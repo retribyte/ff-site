@@ -101,7 +101,7 @@ export default function VoiceNamePopover({
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff/stories/${encodeURIComponent(storySlug)}/voices`, {
+            const res = await fetch(`/site/ff/stories/${encodeURIComponent(storySlug)}/voices`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ assignments: targets.flatMap((r) => assignmentsFor(r, speaker)) }),

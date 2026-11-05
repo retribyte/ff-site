@@ -77,10 +77,10 @@ export default function AttributionControl({ episodeTitle, characterId, characte
         setLoadError(null);
         const loads: Promise<void>[] = [];
         if (ownPersonas === null && characterId !== null) {
-            loads.push(getJson<Persona[]>(`/api/ff/characters/${characterId}/personas`).then(setOwnPersonas));
+            loads.push(getJson<Persona[]>(`/site/ff/characters/${characterId}/personas`).then(setOwnPersonas));
         }
         if (npcs === null) {
-            loads.push(getJson<Persona[]>('/api/ff/personas?npc=true').then(setNpcs));
+            loads.push(getJson<Persona[]>('/site/ff/personas?npc=true').then(setNpcs));
         }
         Promise.all(loads).catch((err) => setLoadError(err instanceof Error ? err.message : 'The lore server is not answering'));
     };
@@ -88,7 +88,7 @@ export default function AttributionControl({ episodeTitle, characterId, characte
     const chooseOther = (value: Choice) => {
         setChoice(value);
         if (value === 'other' && characters === null) {
-            getJson<Character[]>('/api/ff/characters')
+            getJson<Character[]>('/site/ff/characters')
                 .then((list) => setCharacters([...list].sort((a, b) => a.name.localeCompare(b.name))))
                 .catch(() => setError('Could not load characters'));
         }
@@ -100,7 +100,7 @@ export default function AttributionControl({ episodeTitle, characterId, characte
         setOtherPersonas(null);
         const match = characters?.find((c) => c.name.toLowerCase() === name.trim().toLowerCase());
         if (match) {
-            getJson<Persona[]>(`/api/ff/characters/${match.id}/personas`)
+            getJson<Persona[]>(`/site/ff/characters/${match.id}/personas`)
                 .then(setOtherPersonas)
                 .catch(() => setOtherPersonas([]));
         }
@@ -119,7 +119,7 @@ export default function AttributionControl({ episodeTitle, characterId, characte
         }
         const name = newNpcName.trim();
         if (!name) throw new Error('Name the new NPC voice');
-        const res = await fetch('/api/ff/personas', {
+        const res = await fetch('/site/ff/personas', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name }),
@@ -138,7 +138,7 @@ export default function AttributionControl({ episodeTitle, characterId, characte
             const body = JSON.stringify(await resolveAttribution());
             const nos = target === 'block' ? blockNos : [anchorNo];
             for (const no of nos) {
-                const res = await fetch(`/api/ff/episodes/${encodeURIComponent(episodeTitle)}/messages/${no}`, {
+                const res = await fetch(`/site/ff/episodes/${encodeURIComponent(episodeTitle)}/messages/${no}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body,

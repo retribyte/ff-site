@@ -3,7 +3,7 @@ import type { NextResponse } from 'next/server';
 import { api } from './api';
 
 // Server-side session helpers. The ff-server JWT lives in an httpOnly cookie
-// set by the /api/auth/* route handlers; browser JS never sees it.
+// set by the /site/auth/* route handlers; browser JS never sees it.
 
 export const SESSION_COOKIE = 'ff_token';
 

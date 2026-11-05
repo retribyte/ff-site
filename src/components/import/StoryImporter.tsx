@@ -156,7 +156,7 @@ class ApiError extends Error {
 }
 
 async function ff<T>(path: string, init?: RequestInit): Promise<T> {
-    const res = await fetch(`/api/ff${path}`, init);
+    const res = await fetch(`/site/ff${path}`, init);
     const envelope = (await res.json().catch(() => null)) as { status?: string; message?: string; data?: T } | null;
     if (!res.ok || envelope?.status === 'error') {
         throw new ApiError(envelope?.message ?? `HTTP ${res.status} on ${path}`, res.status);

@@ -1,12 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getToken } from '@/lib/auth';
+import { API_URL } from '@/lib/api';
 
 // Generic authenticated proxy to ff-server. Browser code calls
-// /api/ff/<anything> and the JWT from the httpOnly cookie rides along as
+// /site/ff/<anything> and the JWT from the httpOnly cookie rides along as
 // the Bearer token — ff-server remains the enforcement point for roles
 // and ownership. Same-origin, so no CORS story either.
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000/api';
 
 async function proxy(request: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
     const { path } = await params;

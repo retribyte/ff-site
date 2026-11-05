@@ -17,7 +17,7 @@ interface Preview {
 type Status = { kind: 'idle' } | { kind: 'error'; message: string } | { kind: 'saved' };
 
 async function ff<T>(path: string, init?: RequestInit): Promise<T> {
-    const res = await fetch(`/api/ff${path}`, init);
+    const res = await fetch(`/site/ff${path}`, init);
     const envelope = (await res.json().catch(() => null)) as { status?: string; message?: string; data?: T } | null;
     if (!res.ok || envelope?.status === 'error') {
         throw new Error(envelope?.message ?? `HTTP ${res.status}`);

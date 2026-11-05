@@ -22,7 +22,7 @@ export default function ResetPasswordControl({ userId, targetIsAdmin }: { userId
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff/users/${userId}/password-reset`, { method: 'POST' });
+            const res = await fetch(`/site/ff/users/${userId}/password-reset`, { method: 'POST' });
             if (!res.ok) {
                 const envelope = (await res.json().catch(() => null)) as { message?: string } | null;
                 setError(envelope?.message ?? `Reset failed (HTTP ${res.status})`);

@@ -38,7 +38,7 @@ export default function EightBall() {
 
         try {
             const [envelope] = await Promise.all([
-                fetch('/api/ff/8ball').then((res) => res.json() as Promise<ShakeEnvelope>),
+                fetch('/site/ff/8ball').then((res) => res.json() as Promise<ShakeEnvelope>),
                 new Promise((resolve) => setTimeout(resolve, SHAKE_MS)),
             ]);
             if (envelope.status === 'error' || !envelope.data) {

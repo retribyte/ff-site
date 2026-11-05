@@ -35,7 +35,7 @@ export default function AnswerEditor({ isAdmin }: { isAdmin: boolean }) {
 
     useEffect(() => {
         let cancelled = false;
-        fetch('/api/ff/8ball/answers')
+        fetch('/site/ff/8ball/answers')
             .then((res) => res.json() as Promise<ListEnvelope>)
             .then((envelope) => {
                 if (cancelled) return;
@@ -59,7 +59,7 @@ export default function AnswerEditor({ isAdmin }: { isAdmin: boolean }) {
         setAddBusy(type);
         setActionError(null);
         try {
-            const res = await fetch('/api/ff/8ball/answers', {
+            const res = await fetch('/site/ff/8ball/answers', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ type, text }),
@@ -83,7 +83,7 @@ export default function AnswerEditor({ isAdmin }: { isAdmin: boolean }) {
         setBusyIds((prev) => new Set(prev).add(id));
         setActionError(null);
         try {
-            const res = await fetch(`/api/ff/8ball/answers/${id}`, { method: 'DELETE' });
+            const res = await fetch(`/site/ff/8ball/answers/${id}`, { method: 'DELETE' });
             if (!res.ok && res.status !== 204) {
                 const envelope = (await res.json().catch(() => null)) as { message?: string } | null;
                 setActionError(envelope?.message ?? `Delete failed (HTTP ${res.status})`);

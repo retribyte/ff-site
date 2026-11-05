@@ -20,7 +20,7 @@ interface Props {
 type Action = 'rename' | 'merge' | 'demote';
 
 async function post<T>(path: string, body: unknown): Promise<T> {
-    const res = await fetch(`/api/ff${path}`, {
+    const res = await fetch(`/site/ff${path}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -66,7 +66,7 @@ export default function SpeakerAdmin({ characterId, name, slug }: Props) {
         setError(null);
         setResult(null);
         if (next === 'merge' && characters === null) {
-            fetch('/api/ff/characters')
+            fetch('/site/ff/characters')
                 .then((res) => res.json())
                 .then((envelope: Envelope<Character[]>) =>
                     setCharacters([...(envelope.data ?? [])].sort((a, b) => a.name.localeCompare(b.name)))

@@ -54,7 +54,7 @@ export default function PersonaStampPanel({
     // to the picked character rather than re-fetched per selection.
     useEffect(() => {
         if (!user || personas !== null) return;
-        fetch('/api/ff/personas')
+        fetch('/site/ff/personas')
             .then((res) => res.json())
             .then((envelope: Envelope<PersonaOption[]>) => {
                 if (envelope.status === 'error') throw new Error(envelope.message);
@@ -80,7 +80,7 @@ export default function PersonaStampPanel({
                 scope === 'episode'
                     ? `/episodes/${encodeURIComponent(scopeTitle)}/personas/apply`
                     : `/seasons/${encodeURIComponent(scopeTitle)}/personas/apply`;
-            const res = await fetch(`/api/ff${path}`, {
+            const res = await fetch(`/site/ff${path}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

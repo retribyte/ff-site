@@ -35,7 +35,7 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
     // Nothing to show: no notes, and no one logged in to add one
     if (notes.length === 0 && !user) return null;
 
-    const collectionUrl = `/api/ff/episodes/${encodeURIComponent(episodeTitle)}/messages/${messageNo}/commentaries`;
+    const collectionUrl = `/site/ff/episodes/${encodeURIComponent(episodeTitle)}/messages/${messageNo}/commentaries`;
 
     const add = async () => {
         if (!draft.trim()) return;
@@ -74,7 +74,7 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff/commentaries/${id}`, {
+            const res = await fetch(`/site/ff/commentaries/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content: editDraft.trim() }),
@@ -98,7 +98,7 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
         setBusy(true);
         setError(null);
         try {
-            const res = await fetch(`/api/ff/commentaries/${id}`, { method: 'DELETE' });
+            const res = await fetch(`/site/ff/commentaries/${id}`, { method: 'DELETE' });
             if (!res.ok && res.status !== 204) {
                 setError('Delete failed');
                 return;
