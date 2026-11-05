@@ -174,12 +174,19 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
                         </time>
                     )}
                 </div>
-                {block.messages.map((message) => (
-                    <div key={message.no} id={`m-${message.no}`}>
-                        <MessageLine message={message} query={query}>
-                        </MessageLine>
-                    </div>
-                ))}
+                {block.messages.map((message, i) => {
+                    // A different player voicing the same character: name them
+                    // in the avatar gutter beside their lines
+                    const prevPlayerId = i === 0 ? block.playerId : block.messages[i - 1].playerId;
+                    const otherPlayer = message.playerId !== prevPlayerId ? players[message.playerId] : null;
+                    return (
+                        <div key={message.no} id={`m-${message.no}`}>
+                            {otherPlayer && <span className={styles.playerTag}>{otherPlayer.name}</span>}
+                            <MessageLine message={message} query={query}>
+                            </MessageLine>
+                        </div>
+                    );
+                })}
             </div>
 
             <div className={styles.blockActions}>

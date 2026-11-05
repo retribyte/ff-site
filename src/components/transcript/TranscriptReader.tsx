@@ -16,8 +16,10 @@ export interface Block {
     messages: SlimMessage[];
 }
 
-// Consecutive messages from the same player-as-character read as one
-// transmission, unless more than GAP_MS passes between them.
+// Consecutive messages from the same character (and persona) read as one
+// transmission, unless more than GAP_MS passes between them. Lines by
+// different players still join; StoryBlock labels each change of player.
+// Without a character the player is the speaker, so it must match too.
 const GAP_MS = 15 * 60 * 1000;
 
 function groupIntoBlocks(messages: SlimMessage[]): Block[] {
@@ -27,7 +29,7 @@ function groupIntoBlocks(messages: SlimMessage[]): Block[] {
         const prevLast = prev?.messages[prev.messages.length - 1];
         const sameSpeaker =
             prev &&
-            prev.playerId === message.playerId &&
+            (message.characterId !== null || prev.playerId === message.playerId) &&
             prev.characterId === message.characterId &&
             prev.personaId === message.personaId;
         const closeInTime =
