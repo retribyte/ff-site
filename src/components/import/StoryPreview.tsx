@@ -107,7 +107,7 @@ export default function StoryPreview({
             )}
             <div className={styles.readerFrame}>
                 <p className='pixel-label'>
-                    {chapterName(chapter)} · {chapter.lines.length} line{chapter.lines.length === 1 ? '' : 's'}
+                    {chapterName(chapter)} ⭑ {chapter.lines.length} line{chapter.lines.length === 1 ? '' : 's'}
                 </p>
                 <StoryReader
                     key={chapter.chapter_no}

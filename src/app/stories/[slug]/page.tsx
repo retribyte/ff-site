@@ -70,8 +70,8 @@ export default async function StoryPage({ params }: Props) {
                     <h1 className={styles.title}>{story.title}</h1>
                     <p className='pixel-label'>
                         {data.lines.length} lines
-                        {choices.length > 0 && <> · {choices.length} choices</>}
-                        {voices > 0 && <> · {voices} voices</>}
+                        {choices.length > 0 && <> ⭑ {choices.length} choices</>}
+                        {voices > 0 && <> ⭑ {voices} voices</>}
                     </p>
                     {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
                 <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
@@ -97,10 +97,10 @@ export default async function StoryPage({ params }: Props) {
 
             <header className={styles.header}>
                 <p className='pixel-label'>
-                    {chapters.length} chapters · {lineTotal} lines
+                    {chapters.length} chapters ⭑ {lineTotal} lines
                     {story.authors && story.authors.length > 0 && (
                         <>
-                            {' · by '}
+                            {' ⭑ by '}
                             {story.authors.map((a, i) => (
                                 <Fragment key={a.id}>
                                     {i > 0 && ', '}

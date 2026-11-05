@@ -39,7 +39,7 @@ export default async function NpcVoicesPage() {
             </nav>
             <header className={styles.header}>
                 <h1>NPC voices</h1>
-                <p className='pixel-label'>{npcs.length} one-off speakers · admin only</p>
+                <p className='pixel-label'>{npcs.length} one-off speakers ⭑ admin only</p>
             </header>
             <NpcVoiceList npcs={npcs} />
         </main>

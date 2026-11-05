@@ -89,7 +89,7 @@ export default async function EpisodePage({ params }: Props) {
                     {episode.playedDate && (
                         <>
                             {' '}
-                            · recorded{' '}
+                            ⭑ recorded{' '}
                             {new Date(episode.playedDate).toLocaleDateString('en-US', {
                                 month: 'short',
                                 day: 'numeric',

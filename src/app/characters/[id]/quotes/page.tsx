@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
     try {
         const character = await api<Character>(`/characters/${id}`);
-        return { title: `${character.name} · Quotes` };
+        return { title: `${character.name} ⭑ Quotes` };
     } catch {
         return { title: 'Quotes' };
     }
@@ -90,7 +90,7 @@ export default async function CharacterQuotesPage({ params }: Props) {
                                     {quote.episode && (
                                         <footer>
                                             <Link href={lineUrl(quote.episode, quote.messageNo)}>
-                                                {quote.episode.seasonTitle} · {quote.episodeTitle} · line {quote.messageNo}
+                                                {quote.episode.seasonTitle} ⭑ {quote.episodeTitle} ⭑ line {quote.messageNo}
                                             </Link>
                                         </footer>
                                     )}
@@ -114,7 +114,7 @@ export default async function CharacterQuotesPage({ params }: Props) {
                                     <p>{quotedSpanText(quote, character.id)}</p>
                                     <footer>
                                         <Link href={storyQuoteUrl(quote)}>
-                                            {quote.storyTitle} · ch. {quote.chapterNo} · line {quote.line_no}
+                                            {quote.storyTitle} ⭑ ch. {quote.chapterNo} ⭑ line {quote.line_no}
                                         </Link>
                                     </footer>
                                 </blockquote>

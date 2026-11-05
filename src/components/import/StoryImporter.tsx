@@ -545,7 +545,7 @@ export default function StoryImporter() {
 
             {payload && (
                 <section className={`pixel-panel ${styles.preview}`}>
-                    <h2 className='pixel-label'>manifest · {fileName}</h2>
+                    <h2 className='pixel-label'>manifest ⭑ {fileName}</h2>
                     <dl className={styles.facts}>
                         <div>
                             <dt>story</dt>
@@ -709,7 +709,7 @@ export default function StoryImporter() {
                                             <span className={styles.colorMeta}>
                                                 <span className={styles.mapName}>
                                                     picture {picture.n}
-                                                    {picture.alt ? ` · “${picture.alt}”` : ''}
+                                                    {picture.alt ? ` ⭑ “${picture.alt}”` : ''}
                                                 </span>
                                                 <label className={styles.pictureInput}>
                                                     <span>booru post #</span>

@@ -106,14 +106,14 @@ export default async function CharacterPage({ params }: Props) {
             // Name-less personas (look-only) carry no lore-relevant name, so
             // they're skipped here — only named personas earn "(as X)".
             context: m.episode
-                ? `${m.episode.seasonTitle} · ${m.episodeTitle}${personaHasName(m.persona) ? ` (as ${m.persona!.name})` : ''}`
+                ? `${m.episode.seasonTitle} ⭑ ${m.episodeTitle}${personaHasName(m.persona) ? ` (as ${m.persona!.name})` : ''}`
                 : undefined,
         })),
         ...quotes.storyQuotes.map((q) => ({
             key: `story-${q.id}`,
             text: quotedSpanText(q, character.id),
             href: storyQuoteUrl(q),
-            context: `${q.storyTitle} · ch. ${q.chapterNo}`,
+            context: `${q.storyTitle} ⭑ ch. ${q.chapterNo}`,
         })),
     ];
     // Fresh random intercepts on every visit — intentional impurity on a

@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         const no = chapterNoFromSlug(chapter);
         const match = story.chapters?.find((c) => c.chapter_no === no);
         const chapterName = match?.title ?? (no !== null ? `Chapter ${no}` : null);
-        return { title: chapterName ? `${story.title} · ${chapterName}` : story.title };
+        return { title: chapterName ? `${story.title} ⭑ ${chapterName}` : story.title };
     } catch {
         return { title: 'Stories' };
     }
@@ -82,7 +82,7 @@ export default async function StoryChapterPage({ params }: Props) {
 
             <header className={styles.header}>
                 <p className='pixel-label'>
-                    chapter {chapter.chapter_no} of {chapters.length} · {data.lines.length} lines
+                    chapter {chapter.chapter_no} of {chapters.length} ⭑ {data.lines.length} lines
                 </p>
                 <h1 className={styles.chapterTitle}>{chapter.title ?? `Chapter ${chapter.chapter_no}`}</h1>
             </header>

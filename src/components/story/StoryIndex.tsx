@@ -73,9 +73,9 @@ export default function StoryIndex({ stories }: { stories: IndexStory[] }) {
                                     {s.blurb && <span className={styles.cardBlurb}>{s.blurb}</span>}
                                     <span className={styles.cardMeta}>
                                         <span className='pixel-label'>
-                                            {s.chapterCount > 1 && <>{s.chapterCount} chapters · </>}
+                                            {s.chapterCount > 1 && <>{s.chapterCount} chapters ⭑ </>}
                                             {s.lineCount} line{s.lineCount === 1 ? '' : 's'}
-                                            {s.authorNames.length > 0 && <> · by {s.authorNames.join(', ')}</>}
+                                            {s.authorNames.length > 0 && <> ⭑ by {s.authorNames.join(', ')}</>}
                                         </span>
                                     </span>
                                 </Link>

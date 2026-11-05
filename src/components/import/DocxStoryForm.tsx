@@ -331,7 +331,7 @@ export default function DocxStoryForm({
                                     <span className={styles.swatch} style={{ background: c.color }} aria-hidden />
                                     <span className={styles.colorMeta}>
                                         <span className={styles.mapName}>
-                                            {c.color} · {c.count} run{c.count === 1 ? '' : 's'}
+                                            {c.color} ⭑ {c.count} run{c.count === 1 ? '' : 's'}
                                             {memory && !rememberedPick(c.color) && (
                                                 <span className={styles.badgeWarn}> new</span>
                                             )}

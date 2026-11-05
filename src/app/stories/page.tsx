@@ -27,13 +27,14 @@ export default async function StoriesPage() {
         );
     }
 
-    // Shelf sections follow campaign order; stories without a campaign go last.
+    // Stories without a campaign (VM) go first as an unheaded shelf, then campaign order.
     const sorted = [...stories].sort((a, b) => {
+        const noneA = a.season ? 1 : 0;
+        const noneB = b.season ? 1 : 0;
         const [ra, ka] = seasonOrder(a.season?.title);
         const [rb, kb] = seasonOrder(b.season?.title);
-        return ra - rb || ka.localeCompare(kb) || a.title.localeCompare(b.title);
+        return noneA - noneB || ra - rb || ka.localeCompare(kb) || a.title.localeCompare(b.title);
     });
-    const anySeason = stories.some((s) => s.season);
 
     const indexStories: IndexStory[] = sorted.map((s) => ({
         slug: s.slug,
@@ -44,7 +45,8 @@ export default async function StoriesPage() {
         chapterCount: s.chapters?.length ?? 0,
         lineCount: (s.chapters ?? []).reduce((sum, c) => sum + (c._count?.lines ?? 0), 0),
         colors: storyColors(s),
-        group: anySeason ? (s.season ? seasonDisplayName(s.season.title) : 'Other') : null,
+        // No-campaign stories form an unheaded shelf (sorted first, above the campaign sections)
+        group: s.season ? seasonDisplayName(s.season.title) : null,
     }));
 
     return (

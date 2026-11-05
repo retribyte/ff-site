@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
@@ -15,15 +15,16 @@ import { Highlighted } from './ScanBar';
 import type { Block } from './TranscriptReader';
 import styles from './transcript.module.scss';
 
-function formatTimestamp(iso: string | null): string | null {
-    if (!iso) return null;
+// `local` false -> UTC (what the server renders, so hydration matches);
+// true -> the viewer's own timezone, switched on after mount.
+function formatTimestamp(iso: string, local: boolean): string {
     return new Date(iso).toLocaleString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
         hour: 'numeric',
         minute: '2-digit',
-        timeZone: 'UTC',
+        ...(local ? {} : { timeZone: 'UTC' }),
     });
 }
 
@@ -120,6 +121,8 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
     const { colorMode } = useTheme();
     const { user } = useSession();
     const [copied, setCopied] = useState(false);
+    const [localTime, setLocalTime] = useState(false);
+    useEffect(() => setLocalTime(true), []);
 
     const characterId = block.characterId;
     const character = characterId !== null ? characters[characterId] : null;
@@ -162,12 +165,12 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
                     ) : (
                         <span className={styles.speaker}>{speaker}</span>
                     )}
-                    {character && player && speaker !== player.name && (
+                    {(character || persona) && player && speaker !== player.name && (
                         <span className={styles.playedBy}>{player.name}</span>
                     )}
                     {block.timestamp && (
                         <time className={styles.timestamp} dateTime={block.timestamp}>
-                            {formatTimestamp(block.timestamp)}
+                            {formatTimestamp(block.timestamp, localTime)}
                         </time>
                     )}
                 </div>

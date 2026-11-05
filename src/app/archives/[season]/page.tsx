@@ -83,7 +83,7 @@ export default async function SeasonPage({ params }: Props) {
                 <h1 className={styles.title}>{seasonDisplayName(season.title)}</h1>
                 <p className='pixel-label'>
                     {episodes.length} episode{episodes.length === 1 ? '' : 's'}
-                    {dateRange && <> · recorded {dateRange}</>}
+                    {dateRange && <> ⭑ recorded {dateRange}</>}
                 </p>
             </header>
 

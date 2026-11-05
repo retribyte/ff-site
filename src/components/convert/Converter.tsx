@@ -137,7 +137,7 @@ export default function Converter() {
         }
         const g = msToGuyDateTime(ms - GUY_EPOCH_MS);
         return {
-            text: `${guyWeekday(guyDateToEquinoxes(g))}, ${formatGuyDate(guyDateToEquinoxes(g))} GUY · ${formatGuyTime(g)}`,
+            text: `${guyWeekday(guyDateToEquinoxes(g))}, ${formatGuyDate(guyDateToEquinoxes(g))} GUY ⭑ ${formatGuyTime(g)}`,
         };
     }, [earth, era]);
 
@@ -163,7 +163,7 @@ export default function Converter() {
             <header className={styles.header}>
                 <h1>Chrono Conversion</h1>
                 <p className='pixel-label'>
-                    galactic union ⇄ earth standard · right now it is {guyWeekday(guyDateToEquinoxes(now))},{' '}
+                    galactic union ⇄ earth standard ⭑ right now it is {guyWeekday(guyDateToEquinoxes(now))},{' '}
                     {formatGuyDate(guyDateToEquinoxes(now))} GUY
                 </p>
             </header>
@@ -202,7 +202,7 @@ export default function Converter() {
 
             <footer className={styles.legend}>
                 <span className='pixel-label'>
-                    1 guy = 32 semesters = 1440 equinoxes · 1 equinox = 24 periods = 1 earth day · time reads
+                    1 guy = 32 semesters = 1440 equinoxes ⭑ 1 equinox = 24 periods = 1 earth day ⭑ time reads
                     period:union:duon.trion
                 </span>
             </footer>

@@ -38,7 +38,7 @@ const righteous = localFont({
 export const metadata: Metadata = {
     title: {
         default: 'Final Frontier',
-        template: '%s · Final Frontier',
+        template: '%s ⭑ Final Frontier',
     },
     description: 'The canonical archive of the Final Frontier universe — campaigns, characters, and lore.',
 };

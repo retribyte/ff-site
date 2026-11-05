@@ -58,7 +58,7 @@ export default async function ArchivesPage() {
                             <div key={title} className={`${styles.strip} ${styles.unarchived}`} style={style}>
                                 <span className={styles.stripCode}>{title}</span>
                                 {subtitle && <span className={styles.stripTitle}>{subtitle}</span>}
-                                <span className='pixel-label'>unarchived · lost to time</span>
+                                <span className='pixel-label'>unarchived ⭑ lost to time</span>
                             </div>
                         );
                     }
@@ -74,7 +74,7 @@ export default async function ArchivesPage() {
                                     episodeCount > 0 && `${episodeCount} episode${episodeCount === 1 ? '' : 's'}`,
                                 ]
                                     .filter(Boolean)
-                                    .join(' · ') || '0 episodes'}
+                                    .join(' ⭑ ') || '0 episodes'}
                             </span>
                         </Link>
                     );
