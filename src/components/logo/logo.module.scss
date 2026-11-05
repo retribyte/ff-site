@@ -21,7 +21,8 @@
 .glowFar {
     fill: var(--logo-glow);
     stroke: var(--logo-glow);
-    stroke-linejoin: round;
+    stroke-linejoin: miter;
+    stroke-miterlimit: 8;
     mix-blend-mode: overlay;
     pointer-events: none;
 }

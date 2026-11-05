@@ -47,7 +47,7 @@
 
     background:
         var(--star-texture),
-        linear-gradient(160deg, color-mix(in srgb, var(--season) 38%, var(--surface)) 0%, var(--surface) 78%);
+        linear-gradient(160deg, color-mix(in srgb, var(--season) 50%, transparent) 0%, transparent 100%);
     background-size: 120px, auto;
     border: var(--px) solid color-mix(in srgb, var(--season) 55%, var(--border-loud));
     box-shadow: var(--px) var(--px) 0 0 var(--shadow);

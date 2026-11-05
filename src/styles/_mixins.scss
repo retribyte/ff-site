@@ -284,8 +284,10 @@
     }
 
     &:disabled {
-        opacity: 0.6;
-        cursor: default;
+        opacity: 0.5;
+        border-color: gray;
+        background: gray;
+        cursor: not-allowed;
     }
 }
 

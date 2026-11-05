@@ -3,7 +3,7 @@ import { FINAL_PATH, FRONTIER_PATH, LOGO_VIEWBOX } from './logoPaths';
 
 /** fflogo3.svg on the booru (post 1128). logoPaths.ts holds its letter outlines. */
 const LOGO_SRC =
-    'https://booru.vortox.space/_images/c1f2ec09e348f722b9247164b17baad8/1128%20-%20artist%3Aretribyte%20logo%20series%3Afinal_frontier%20star%20text.svg';
+    'https://booru.vortox.space/_images/a9d14ffbff5a09c6bf695baef4831d92/1128%20-%20artist%3Aretribyte%20logo%20meta%3Avector%20series%3Afinal_frontier%20star%20text.svg';
 
 // The cover art's glow (cover.psd / cover_ff4.psd) is two Photoshop Layer Style
 // strokes: Outside, white, blend mode Overlay, sized 10px (layer at 100%) and
