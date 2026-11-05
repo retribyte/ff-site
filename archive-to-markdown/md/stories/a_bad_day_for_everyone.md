@@ -71,7 +71,7 @@ Sanya dragged Emmett to the cockpit. She had never set the autopilot herself bef
 
 "[S-Sans… Sanya… My throat!]{Emmett Tawfeek}" Emmett croaked. Sanya ignored him, making her way to the meeting place. As she walked through the diner’s doors, she glanced over to the corner booth. Looking directly at her were all of the girls in the crew, along with a mystery woman. They waved frantically.
 
-"[Hello, Sanya!]{Iris}" exclaimed Iris.
+"[Hello, Sanya!]{Iris Bellatoria}" exclaimed Iris.
 
 "[Hey, plant]{Volentina Constantini}," said Valentina. The other girls greeted her as well, but those two voices in particular were the most prominent. They almost completely ignored the fact that Emmett was on a leash held by Sanya.
 
@@ -99,7 +99,7 @@ Sanya dragged Emmett to the cockpit. She had never set the autopilot herself bef
 
 After overhearing this line, Iris transforms into Emmett and leaves. She is very uncomfortable with the situation and wishes to leave. The transformed Iris met up with the real Emmett outside and held out her hand.
 
-"[I want to bake you into bread.]{Iris}"
+"[I want to bake you into bread.]{Iris Bellatoria}"
 
 “[NO! I DON’T WANNA BE BREAD! NO! NOOOO!!!]{Emmett Tawfeek}”
 

@@ -41,9 +41,9 @@ It is a rather large cage, with a padded floor and see-through glass walls. Unfo
 
 “[If Seth were a troll, his quirk would be Karkat's. Emmett would be either a lime blood or olive blood depending on time continuity. His typing quirk would be something along the lines of this: '}:< Yo mama!']{Zander}” Zander announced from the heavens above. Everyone was now pissed from the ping in the bottom-right of their peripheral vision.
 
-“[A. A. A. A. A. A.]{Iris}” Iris screamed, slowly. “[I’M SCREAMING VERY SLOWLY.]{Iris}”
+“[A. A. A. A. A. A.]{Iris Bellatoria}” Iris screamed, slowly. “[I’M SCREAMING VERY SLOWLY.]{Iris Bellatoria}”
 
-"[Where's my oven?]{Iris}" Tune in next week to find out where Iris's oven is.. "[I think Iris is the imposter. Bum.]{Emmett Flower}" Iris turned into the Hulk and destroyed the prison cell. In fact, she did so much damage that she destroyed the ship's hull, leaving all in the vacuum of turtles. All was lost.
+"[Where's my oven?]{Iris Bellatoria}" Tune in next week to find out where Iris's oven is.. "[I think Iris is the imposter. Bum.]{Emmett Flower}" Iris turned into the Hulk and destroyed the prison cell. In fact, she did so much damage that she destroyed the ship's hull, leaving all in the vacuum of turtles. All was lost.
 
 "[You were my brother Garrick! You were the chosen one!]{Victor Chomsky}" Garrick somehow had knowledge of this reference and reunited with his old pal.
 
@@ -53,7 +53,7 @@ It is a rather large cage, with a padded floor and see-through glass walls. Unfo
 
 "[An onion, wow]{Garrick}," remarked the ghost.
 
-"[Did you just try to turn me into garlic?]{Iris}" Chomsky frowned from his missed attack.
+"[Did you just try to turn me into garlic?]{Iris Bellatoria}" Chomsky frowned from his missed attack.
 
 Sanya plumped her phat asscheeks down on the floor, causing the whole ship to jolt from the massive weight. Suddenly, the propulsion began to fail, and the whole mothership went into freefall.
 

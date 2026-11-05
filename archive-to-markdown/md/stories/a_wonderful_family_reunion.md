@@ -9,41 +9,41 @@ format: prose
 
 It was pure silence, Zach and John glaring at each other from opposite seats on the ship. So many things they wanted to say to each other, but didn't know where to start. To be honest, Zach would love nothing more than to just kill this man in front of him right now, but he knows he can’t harm a white hair on his head. He has more problems than the GU can throw at him, so he’ll just sulk at his own expense. He wonders if John wants to kill him… it *has* been 4 years….
 
-“[Hey pilot! How much longer till we go back to Earth?]{John}” John yells at Sonichu, who Zach is sure is just loving this family drama.
+“[Hey pilot! How much longer till we go back to Earth?]{John Smith}” John yells at Sonichu, who Zach is sure is just loving this family drama.
 
 “[Just a few more minutes, your *Excellency*…]{Sonichu}” the yellow bastard says with a smile. Zach knows it’s mocking, but John just sighs.
 
-“[I need a drink…]{John}” he says, leaning his head in his hand.
+“[I need a drink…]{John Smith}” he says, leaning his head in his hand.
 
 “[And I need to get out of here.]{Zacharias Smith}” Zach states. John gives Zach the death glare that Zach has grown used to.
 
-“[Shut up, Zacharias.]{John}” John deadpanned.
+“[Shut up, Zacharias.]{John Smith}” John deadpanned.
 
 “[Make me, old man. The moment this ship lands, I’m out of here.]{Zacharias Smith}”
 
-“[After your little stunt 4 years ago, what makes you think you’ll just waltz right back out?]{John}” John sneers.
+“[After your little stunt 4 years ago, what makes you think you’ll just waltz right back out?]{John Smith}” John sneers.
 
 “[Since when were you so insistent that I stayed in your presence?]{Zacharias Smith}” Zach challenged.
 
-“[Since you left, all that I could think about was the numerous scandals that could occur! ‘Son of John Smith, delinquent?’, ‘Criminal turns out to be son of John Smith!’, ‘The Truth comes out. John Smith Abuse Allegations!’. My reputation is on the line and the last thing I need is my freak of an accident to be revealed to the public!]{John}” John vents. Zach scoffs.
+“[Since you left, all that I could think about was the numerous scandals that could occur! ‘Son of John Smith, delinquent?’, ‘Criminal turns out to be son of John Smith!’, ‘The Truth comes out. John Smith Abuse Allegations!’. My reputation is on the line and the last thing I need is my freak of an accident to be revealed to the public!]{John Smith}” John vents. Zach scoffs.
 
 “[Your reputation? Really? Last time I checked, since I left your reputation skyrocketed! For God’s sake, you got what you wanted! Why can’t you leave me alone for once!]{Zacharias Smith}” Zach sounds defeated, John smiles.
 
-“[Because of how close I was to failure, due to me divorcing that bitch-]{John}” Zach grabs John’s lapel.
+“[Because of how close I was to failure, due to me divorcing that bitch-]{John Smith}” Zach grabs John’s lapel.
 
 “[You have no right calling mom that! You were the reason she left and why I was stuck with you!]{Zacharias Smith}” Zach spat.
 
-“[But the public doesn’t know that and it should stay that way.]{John}” John states. Zach raises his fist, John raises an eyebrow. “[You’re going to hit me? Hah! Go ahead! Just know I have the best lawyers.]{John}” Zach *really* wants to just clock him, right in the jaw, but he doesn’t. He lets go of John with a shove. John straightens out his suit jacket.
+“[But the public doesn’t know that and it should stay that way.]{John Smith}” John states. Zach raises his fist, John raises an eyebrow. “[You’re going to hit me? Hah! Go ahead! Just know I have the best lawyers.]{John Smith}” Zach *really* wants to just clock him, right in the jaw, but he doesn’t. He lets go of John with a shove. John straightens out his suit jacket.
 
 “[And here we are! Home sweet home! Have fun you two!]{Sonichu}” Sonichu says with enthusiasm. Zach is tired of everything that is happening. John nods.
 
-“[Finally!]{John}” John says.
+“[Finally!]{John Smith}” John says.
 
-The ship lands just outside the mansion, the sun is setting. The hatch opens and the duo is greeted by three men in suits. They grab Zach and restrain him. “[Now then, when we land, you’ll be privately escorted to the most reserved part of the house. No windows, one way in, one way out, and only books and your thoughts to keep you entertained.]{John}”
+The ship lands just outside the mansion, the sun is setting. The hatch opens and the duo is greeted by three men in suits. They grab Zach and restrain him. “[Now then, when we land, you’ll be privately escorted to the most reserved part of the house. No windows, one way in, one way out, and only books and your thoughts to keep you entertained.]{John Smith}”
 
 “[I still don’t understand why I *must* still live with you if you want nothing to do with me…]{Zacharias Smith}” Zach says, a hint of confusion lacing his voice. John ignores this and just starts walking towards the mansion, with the men in suits dragging Zach along. They get into the foyer of the mansion when John stops, consequently causing the men in suits to stop behind him. John turns around and in a flash, punches Zach in the jaw. Zach makes no sound. John recomposes himself as he turns around again and takes a deep breath.
 
-“[*That* was for running away. You may not understand what it’s like to be paranoid, but the moment a *single* leak about the *possibility* of you being related to me gets out, I’ll be ruined.]{John}” John says with no hesitation. “[Now then, take him to the room, and out of my sight.]{John}” The men in suits nod in unison before dragging Zach off.
+“[*That* was for running away. You may not understand what it’s like to be paranoid, but the moment a *single* leak about the *possibility* of you being related to me gets out, I’ll be ruined.]{John Smith}” John says with no hesitation. “[Now then, take him to the room, and out of my sight.]{John Smith}” The men in suits nod in unison before dragging Zach off.
 
 4 days. 4 *days* of Zach being stuck in the room… he’s already read all the books twice. Every day, more men in suits came in to pin him as John came in after them and just hit Zach for no reason. His mental health seems to revert back to before he left. He ripped a strip off his bed sheets and used it as a blindfold, he doesn’t talk back as much anymore, using free paper sometimes to talk. He went to sleep on the 4th night, and he dreamt of his *real* family.
 
@@ -67,7 +67,7 @@ Zach shoves them off and punches one in the face and kicks another in the stomac
 
 “[Now then, here’s what I’m going to do and you are *not* going to interfere. I’m going to get off this God-forsaken planet and never return again. Because quite frankly, there’s no reason to stay here.]{Zacharias Smith}” John is about to interrupt but Zach just tightens his grip on the gun. “[Let me lay down the facts. I’ve been gone for *four* years. And in those four years you have gotten onto the GU Council, giving you more influential power and a fanbase who *adore* you. I have found a group that is more of a family than you ever could be. They let me be myself and if you haven’t noticed, my eyes and my voice are no longer hidden. And I *love* it that way. Hell, I found myself the greatest man out there and he doesn’t *care* why I hide my eyes or not talk. But now he thinks I’m dead because I got stuck with *you*. And in *all* that time, *no one* has questioned my family history and even if they did, no one would believe me. Now then, you are going to let me ‘waltz out of here’ and trust me, you won’t ever hear from me ever again.]{Zacharias Smith}” His voice is hoarse from not using it for a while. John just looks at Zach with no emotion. After several minutes John finally spoke.
 
-“[You have until sunrise to get off this planet. And if my men even *speculate* that you are still here, any hope of you leaving that room is *gone*.]{John}” he threatened, but Zach wasn’t fazed. He just points the gun at the man in the suit, who makes a sound of fear.
+“[You have until sunrise to get off this planet. And if my men even *speculate* that you are still here, any hope of you leaving that room is *gone*.]{John Smith}” he threatened, but Zach wasn’t fazed. He just points the gun at the man in the suit, who makes a sound of fear.
 
 “[Phone. *Now*.]{Zacharias Smith}” The man doesn’t hesitate before tossing his phone to Zach who catches it with his free hand. He then tosses the gun to the ground before turning around and leaving the mansion, not even sparing a last glance to John.
 

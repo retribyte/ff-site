@@ -71,11 +71,11 @@ On 1-22, 3020 GUY, disaster struck for the Vortox Pummelers. Deep within space, 
 
 "[Fuck! What the hell is this?]{Emmett Tawfeek}" Emmett swiftly dodged Dakari; the porcupine's quills surely would have killed him otherwise.
 
-"[Huh? Emmett, what did you do?]{Dakari}" Dakari was stuck upon a corkboard in their room.
+"[Huh? Emmett, what did you do?]{Dakari Vatssel}" Dakari was stuck upon a corkboard in their room.
 
 "[I didn't do this! Why is it so dark?]{Emmett Tawfeek}"
 
-"[Just turn the lights on, idiot!]{Dakari}" Dakari reached for the switch, unable to get to it from his position. Emmett lay prone on the wall, flipping the switch repeatedly.
+"[Just turn the lights on, idiot!]{Dakari Vatssel}" Dakari reached for the switch, unable to get to it from his position. Emmett lay prone on the wall, flipping the switch repeatedly.
 
 "[Guys, we're out of power in our—]{Emmett Tawfeek}" Emmett was interrupted by another jostle, this time lighter, but with a continuing vibration.
 
@@ -83,7 +83,7 @@ On 1-22, 3020 GUY, disaster struck for the Vortox Pummelers. Deep within space, 
 
 "[Yes, we have… Can you look outside for me?]{Emmett Tawfeek}" The goat kept his limbs flat on the wall in case of another flip. Coincidentally, the ship was hit again, pushing it upside down. Dakari fell off the corkboard, luckily nowhere near Emmett.
 
-"[I am not enjoying this…]{Dakari}" muttered the porcupine.
+"[I am not enjoying this…]{Dakari Vatssel}" muttered the porcupine.
 
 "[How about I just fuck your mom again?]{Seth Im'Kin'ki}" Seth sighed over the comms, really just annoyed at Emmett as he spoke.
 
@@ -103,9 +103,9 @@ On 1-22, 3020 GUY, disaster struck for the Vortox Pummelers. Deep within space, 
 
 "[We need to arm ourselves. We won't go down without a fight.]{Sanya Dreadflower}" Sanya was first to answer, as Seth was still trying to devise a plan of sorts.
 
-"[Wish I still had my ribbons]{Iris}," Iris sighed, pulling her dagger out of her skirt pocket. She began to regret giving those away; with so little control over her fire powers, there wasn’t much she could do. Emmett began to scale his wall, trying to reach his bed so he could grab his Maggo-Pistol.
+"[Wish I still had my ribbons]{Iris Bellatoria}," Iris sighed, pulling her dagger out of her skirt pocket. She began to regret giving those away; with so little control over her fire powers, there wasn’t much she could do. Emmett began to scale his wall, trying to reach his bed so he could grab his Maggo-Pistol.
 
-"[For the Vortox Pummelers!]{Dakari}" Dakari shouted, feeling patriotic as he took out his vials of lethal fluid. The other members of the crew interchangeably shouted "For the VP!" and "For Emmett!" as they began to arm up. As Emmett grabbed his pistol, Seth began a short speech.
+"[For the Vortox Pummelers!]{Dakari Vatssel}" Dakari shouted, feeling patriotic as he took out his vials of lethal fluid. The other members of the crew interchangeably shouted "For the VP!" and "For Emmett!" as they began to arm up. As Emmett grabbed his pistol, Seth began a short speech.
 
 "[My friends, it's been an honor to work with you for all of this time. I don't know what I'd do without Emmett, since he's like a son to me, and I don't know what I'd be without you guys to back me up.]{Seth Im'Kin'ki}" There were audible attempts to hold in laughter or interjections over the communicators as he finished this statement. "[However, we're fighting against innumerable odds here. And you guys know I can't gamble without me rigging something up. I don't have anything set up, so it's possible that some of you, if not all of you will die here. I don't mention me as I'm pretty much immortal. I will make sure to honor you guys if you die, but I will try my best to prevent it from happening to any of you. Just remember though, in my eyes, Emmett’s life comes before all of yours.]{Seth Im'Kin'ki}" There were mixed responses, with some feeling uneasy, others irritated, and still others hopeful. The ship suddenly stopped, and the hatch to the ship creaked open.
 
@@ -147,7 +147,7 @@ The commander and the two others were clearly not strong enough to burst through
 
 "[Emmett, are you there?]{Jessica}" muttered Jess, who apparently was knocked out, within the closet, and forgotten about by Emmett. Great boyfriend material, am I right? Emmett shook, causing the dresser to wobble ever so slightly. His cover was quickly blowing away, and Dakari was quick to notice this.
 
-"[Have some of this!]{Dakari}" Dakari threw a venom-serrated quill at the commander's head. However, his aim from behind the dresser was not so sharp, causing him to impale one of the other Llamanians. Butterfingers. The commander grabbed Dakari from behind the dresser, somehow not noticing the Squoatling next to him. All the porcupine could do was chuckle. "[No hard feelings, eh?]{Dakari}" He was immediately slammed to the ground, causing some of his quills to shoot out from his back and onto the floor. Just like the others, he was instantaneously knocked out. The other cloaked Llamanian opened the closet and was tackled by a fierce Ottori woman.
+"[Have some of this!]{Dakari Vatssel}" Dakari threw a venom-serrated quill at the commander's head. However, his aim from behind the dresser was not so sharp, causing him to impale one of the other Llamanians. Butterfingers. The commander grabbed Dakari from behind the dresser, somehow not noticing the Squoatling next to him. All the porcupine could do was chuckle. "[No hard feelings, eh?]{Dakari Vatssel}" He was immediately slammed to the ground, causing some of his quills to shoot out from his back and onto the floor. Just like the others, he was instantaneously knocked out. The other cloaked Llamanian opened the closet and was tackled by a fierce Ottori woman.
 
 "[Take this!]{Jessica}" She mauled his face with her claws, giving her time to take out a dagger and stab him repeatedly. The tackle, however, caused the Llamanian to land atop Emmett's arm, breaking it with the sheer force of steel hitting bone. Emmett cried loudly, unable to withstand this pain. As the Squoatling teared up, Jess was smacked off of the Llamanian corpse, breaking a few of her teeth as she fell to the floor.
 
@@ -241,7 +241,7 @@ Sanya awoke with a start. Her breath was jagged, and her body sore. Her head was
 
 "[They let you keep your satchel?]{Sanya Dreadflower}" This thought occurred to Sanya as she unwrapped the tight bandaging on her head.
 
-"[I mean, they let us keep our clothes, didn't they?]{Dakari}" Dakari spoke after lighting a VAPOrette. "[They aren't killing us immediately for a reason, y'know.]{Dakari}" Seth balled his hand in a fist.
+"[I mean, they let us keep our clothes, didn't they?]{Dakari Vatssel}" Dakari spoke after lighting a VAPOrette. "[They aren't killing us immediately for a reason, y'know.]{Dakari Vatssel}" Seth balled his hand in a fist.
 
 "[I knew I should've charged the RYNUS up before they boarded. That was like a tenth of its potential power.]{Seth Im'Kin'ki}"
 
@@ -255,11 +255,11 @@ Sanya awoke with a start. Her breath was jagged, and her body sore. Her head was
 
 "[Or what? You’ll airlock another person out of drunken rage?]{Sanya Dreadflower}"
 
-Dakari got up from the throw pillow he slept on. “[Guys, cool it. Our situation is shitty enough as it is, let’s not kill each other, too.]{Dakari}” Seth folds his arms, staring at Dakari with piercing eyes.
+Dakari got up from the throw pillow he slept on. “[Guys, cool it. Our situation is shitty enough as it is, let’s not kill each other, too.]{Dakari Vatssel}” Seth folds his arms, staring at Dakari with piercing eyes.
 
 "[You're not the leader of the VP, I, Seth Im'kink'i, am. Now get in your place hedgehog.]{Seth Im'Kin'ki}"
 
-"[What's a hedgehog?]{Dakari}" Before Seth could continue, Sanya butted in.
+"[What's a hedgehog?]{Dakari Vatssel}" Before Seth could continue, Sanya butted in.
 
 "[It was because of your leadership that we all got caught!]{Sanya Dreadflower}" Sanya was angry, not at Seth, but in general. She sighed worriedly. “[God, I hope Emmett is doing alright. There's no telling what they're doing to him.]{Sanya Dreadflower}" The group was quiet for a bit, thinking about their endangered friend. After a long silence, Garrick arose from his deep slumber.
 
@@ -273,27 +273,27 @@ Dakari got up from the throw pillow he slept on. “[Guys, cool it. Our situatio
 
 "[Ouchiwawa.]{Garrick}"
 
-"[You honestly think they'd just let you out that easily? These walls are made of some impenetrable material given our tools]{Dakari}," Dakari sighed. The walls were closing in on him, and he was masking his frustration with forced irritation.
+"[You honestly think they'd just let you out that easily? These walls are made of some impenetrable material given our tools]{Dakari Vatssel}," Dakari sighed. The walls were closing in on him, and he was masking his frustration with forced irritation.
 
 "[I don't see you doing anything about this, Mr. I Know Everything]{Sanya Dreadflower}," Sanya exhorted.
 
-"[There isn't much in the room for us to go off of. Our tools are useless here.]{Dakari}" He tried to stab into the wall with his kunai to no effect. Madness was slowly ensuing amongst the crew, and it was evident that morale was significantly low. There had never been a situation the Vortox Pummelers could not get out of, but this seemed to break the pattern.
+"[There isn't much in the room for us to go off of. Our tools are useless here.]{Dakari Vatssel}" He tried to stab into the wall with his kunai to no effect. Madness was slowly ensuing amongst the crew, and it was evident that morale was significantly low. There had never been a situation the Vortox Pummelers could not get out of, but this seemed to break the pattern.
 
-After a long, tension-filled silence, Iris woke up. She immediately seized in pain from the headbutt that knocked her out. Her head was also wrapped in bandages, and the sedative she was injected with was making her woozy. “[Ahh… where am I? What’s going on?]{Iris}” Iris rubbed her head, dazed.
+After a long, tension-filled silence, Iris woke up. She immediately seized in pain from the headbutt that knocked her out. Her head was also wrapped in bandages, and the sedative she was injected with was making her woozy. “[Ahh… where am I? What’s going on?]{Iris Bellatoria}” Iris rubbed her head, dazed.
 
 “[You got headbutted pretty hard, not to mention the…]{Garrick}” Garrick tilted over to see the mark on her temple. “[...branding. Guess they went too hard on the drug?]{Garrick}” Garrick winced.
 
-"[Where's Emmett?]{Iris}" The flamewitch peered about the cell, worried about her furry friend.
+"[Where's Emmett?]{Iris Bellatoria}" The flamewitch peered about the cell, worried about her furry friend.
 
 "[We’re in the dark here. Just sit tight and hold your head. We can't get answers right now.]{Garrick}" Garrick tried to console her, seeing as she was the most injured crewmate by far. The confinement and lack of info was causing Iris to freak out a bit.
 
-"[I hate small spaces like this; why couldn’t they have put us someplace bigger? Does—?]{Iris}" Iris flinched in pain, holding her head which had twinged painfully. "[Ow, *fuck—* I think I need medical attention. And to get off this ship. Maybe I can melt the wall?]{Iris}" Sanya looked at the elf-demon as if she was insane. She was injured badly and she was attempting to escape the inescapable. The floran sighed in response, folding her arms.
+"[I hate small spaces like this; why couldn’t they have put us someplace bigger? Does—?]{Iris Bellatoria}" Iris flinched in pain, holding her head which had twinged painfully. "[Ow, *fuck—* I think I need medical attention. And to get off this ship. Maybe I can melt the wall?]{Iris Bellatoria}" Sanya looked at the elf-demon as if she was insane. She was injured badly and she was attempting to escape the inescapable. The floran sighed in response, folding her arms.
 
 "[Hold your horses there, Iris. We'll probably get answers soon. Come over here and get some rest.]{Sanya Dreadflower}" As soon as Sanya mentioned this, an announcement over a lone intercom in the far corner blared throughout the room.
 
 "[SIT TIGHT, VORTOX PUMMELERS. THE REASONING WITH YOUR PRECIOUS CARGO IS ALMOST FINISHED.]{Mothership Intercom}" Seth raised an eyebrow, questioning the use of the term ‘precious cargo’ for a squoatling. Squoatlings were definitely rare, but not to be objectified. Especially if the object is your adopted child.
 
-"[So that's where our pilot is! About to be executed surely!]{Dakari}" Dakari threw his hands up and crossed his arms in frustration. Groans and moans spread throughout the room.
+"[So that's where our pilot is! About to be executed surely!]{Dakari Vatssel}" Dakari threw his hands up and crossed his arms in frustration. Groans and moans spread throughout the room.
 
 "[Who knew Emmett was such an integral part of this crew?]{Garrick}" Garrick mentioned this with a bit of sarcasm. It had occurred to him that over time, the bounty hunting crew had transformed into a Squoatling preservation party. "[Huh. It just occurred to me that—]{Garrick}" Sanya immediately glared at the poltergeist in annoyance.
 
@@ -403,7 +403,7 @@ The throned squoatling chuckled softly, tears flowing from his eyes without his 
 
 "[We both know your outbursts aren't that bad, Emmett]{Sanya Dreadflower}," muttered Sanya, who was leaning her head on his. This bit of compassion was uncomfortable to Emmett, as it was quite uncharacteristic. However, he remained still, letting her have whatever she wanted of him. "[Please don't leave us.]{Sanya Dreadflower}"
 
-"[With you gone, who's going to be our pilot, anyhow?]{Dakari}" Dakari, having not been as close to Emmett as the others were, was quite unfazed. Bounty hunter groups always changed in their rosters. It was a dangerous occupation, so what was the hold-up? Garrick glared at him, annoyed at Dakari’s failure to read the room.
+"[With you gone, who's going to be our pilot, anyhow?]{Dakari Vatssel}" Dakari, having not been as close to Emmett as the others were, was quite unfazed. Bounty hunter groups always changed in their rosters. It was a dangerous occupation, so what was the hold-up? Garrick glared at him, annoyed at Dakari’s failure to read the room.
 
 "[Sanya can manage piloting for us. She's been learning. But still, Emmett, you can't seriously be thinking you'll be in safe hands.]{Garrick}" Sanya was now squeezing the goat’s body a little too hard, so it was a bit difficult to speak with comfort.
 
@@ -435,11 +435,11 @@ The remaining crew followed through the long hallway until encountering a large,
 
 “[General Llod will be waiting for you all below.]{Llamanian Officer}” The officer opened the elevator’s doors and stood aside. [*She seriously creeps me out*]{Garrick}, Garrick thought to himself. Nonetheless, all the Pummelers entered the spacious elevator and began their descent.
 
-“[No one gonna talk about this? Why are we being dragged down to this guy’s evil lair?]{Dakari}” Dakari chimed in.
+“[No one gonna talk about this? Why are we being dragged down to this guy’s evil lair?]{Dakari Vatssel}” Dakari chimed in.
 
 “[Probably going to execute us]{Sanya Dreadflower},” Sanya peered over at Dakari. “[There’s no good reason why we’d be meeting a general.]{Sanya Dreadflower}”
 
-“[Why would they wait to kill us now, though? It must be something more important.]{Iris}” Iris tried to be hopeful, but she was a bit scared.
+“[Why would they wait to kill us now, though? It must be something more important.]{Iris Bellatoria}” Iris tried to be hopeful, but she was a bit scared.
 
 “[Agreed. We’re not here to be executed, they’re probably trying to get us to ‘join their cause’ or something.]{Garrick}” Garrick looked over at Jess and Volentina, who were visibly distraught about the situation.
 
@@ -473,7 +473,7 @@ The crew was awestruck. A war with the GU spells certain destruction for even th
 
 “[I do, and I also expect that you’ll succeed. The Llamanian Armada has had countless encounters with your group over the past few GUYs. We’ve seen your strength and coordination firsthand. Your assault on our mothership seventeen semesters ago was proof of your capabilities.]{General Llod}”
 
-“[We hired hundreds of mercenaries for that raid, and even then we barely managed to scrape out alive. We can’t take on the Galactic Union completely alone.]{Dakari}” Dakari made it out without a scratch, but that couldn’t be said for the others. Most of the mercs were lost trying to get the Pummelers into the mothership, not to mention the crew’s injuries.
+“[We hired hundreds of mercenaries for that raid, and even then we barely managed to scrape out alive. We can’t take on the Galactic Union completely alone.]{Dakari Vatssel}” Dakari made it out without a scratch, but that couldn’t be said for the others. Most of the mercs were lost trying to get the Pummelers into the mothership, not to mention the crew’s injuries.
 
 “[You won’t be taking anyone on alone. We have been planning this attack for GUYs trying to strategize exactly how we can take that post, and it’s finally time to put it into action. You will have the entire Llamanian military backing you up.]{General Llod}” General Llod yet again motioned for the hologram to change, and it zoomed to focus on a port located on the side of the base. “[The eight of you will be flown here and will dock. Security will be loose here since it’s used to receive shipments. Once your ship has landed, the operation will begin and you all are going to break through.]{General Llod}”
 
@@ -515,9 +515,9 @@ Garrick approached Chomsky from behind and patted him on the shoulder. The ghost
 
 Llod inputted a code into a holokeypad and triggered a mechanism to the group’s right. The adjacent wall lit up and revealed a massive armory, with compartments for each crew member. The wall was now covered with racks and shelves full of state-of-the-art gear.
 
-“[Whoa…]{Dakari}” gawked Dakari.
+“[Whoa…]{Dakari Vatssel}” gawked Dakari.
 
-“[Copy that]{Iris},” mumbled Iris. “[This is a step up for sure…]{Iris}”
+“[Copy that]{Iris Bellatoria},” mumbled Iris. “[This is a step up for sure…]{Iris Bellatoria}”
 
 “[As I stated before, the Armada has been planning this mission for a long time. We’ve prepared weapons and protection that are specially designed for each of you. We want the best possible outcome out of this. We’ve optimized each set of gear for your fighting style, body types, team synergy…]{General Llod}” Llod gestured to the display and furrowed his thick brow. “[You would not believe the recon we had to do to get this information.]{General Llod}”
 
@@ -533,7 +533,7 @@ Everyone seemed pleased with what they were presented with. Though no one truste
 
 “[I’m not a fan of our survival odds. But I have people to live for.]{Sanya Dreadflower}” Sanya muttered the second half under her breath.
 
-“[Hey, cheer up! We’ve gotten through worse than this before!]{Iris}” Iris cheered everyone on, despite the grim circumstances.
+“[Hey, cheer up! We’ve gotten through worse than this before!]{Iris Bellatoria}” Iris cheered everyone on, despite the grim circumstances.
 
 The group looked at one another, with some excited, some worried, some hopeful, and everywhere in between. It appeared that, despite the danger ahead, everyone was just as themselves as ever. With Emmett now in safety, the Vortox Pummelers’ longest and most important mission had come to a close. What was left for them now? Could they continue collecting bounties without their shining star? Would they? The thought crossed everyone’s minds, but ultimately, no one worried much about it. The Vortox Pummelers hadn’t gotten this far by fearing the future.
 

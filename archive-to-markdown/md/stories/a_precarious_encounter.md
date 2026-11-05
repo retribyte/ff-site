@@ -17,11 +17,11 @@ MaskedMasquerade™ turned out to be really difficult to find an on-the-spot hoo
 
 Right as the ship stopped at a motel, Emmett was putting on an Elven cycle helmet, a headgear that was gifted to him by Seth a while back. The helmet was of perfect size to him, and it looked extremely similar to a motorcycle helmet, aside from the obvious pointy ears on its sides. Before disembarking, he checked out the place through the window next to the entrance. He had an uneasy feeling, given the reputation of most space motels.
 
-"[Emmett, remind me, why are you naked again?]{Dakari}" Dakari was sitting behind him, almost laughing at Emmett's embarrassment.
+"[Emmett, remind me, why are you naked again?]{Dakari Vatssel}" Dakari was sitting behind him, almost laughing at Emmett's embarrassment.
 
 "[Thought everyone was asleep, including you]{Emmett Tawfeek}," Emmett muttered, covering his shame. He did not turn around yet, but he was clearly embarrassed.
 
-"[I heard a strange tune in the den, so I came out to investigate. Were you watching porn or something?]{Dakari}" Dakari put his watch to his mouth, ready to tell the others Emmett was leaving the ship. Emmett quickly pulled the stun gun that was duct-taped to the wall and he pointed it at Dakari.
+"[I heard a strange tune in the den, so I came out to investigate. Were you watching porn or something?]{Dakari Vatssel}" Dakari put his watch to his mouth, ready to tell the others Emmett was leaving the ship. Emmett quickly pulled the stun gun that was duct-taped to the wall and he pointed it at Dakari.
 
 "[Sorry, man, but I need this. You need more sleep, anyhow. It was a long mission yesterday.]{Emmett Tawfeek}" Right as Dakari started to squeal, Emmett pulled the trigger, temporarily paralyzing the ninja porcupine. Quickly, Emmett dropped the stun gun and opened the ship hatch, hoping no one would be on his trail.
 

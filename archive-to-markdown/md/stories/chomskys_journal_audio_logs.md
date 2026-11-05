@@ -241,19 +241,19 @@ I haven't been able to focus all week. I keep spilling chemicals. I called Emmet
 
 ## Conversation with Iris
 
-I: “[Hey Chomsky!]{Iris}”
+I: “[Hey Chomsky!]{Iris Bellatoria}”
 
 C: “[What? Oh. Hey.]{Victor Chomsky}”
 
-I: “[Is everything okay? You’ve been walking up and down this hallway for half an hour. We’re starting to worry about you.]{Iris}”
+I: “[Is everything okay? You’ve been walking up and down this hallway for half an hour. We’re starting to worry about you.]{Iris Bellatoria}”
 
 C: “[Pssh, whaaaat? I’m *fine.* Really. Just, uh, have a lot on my mind.]{Victor Chomsky}”
 
-I: “[Like what?]{Iris}”
+I: “[Like what?]{Iris Bellatoria}”
 
 C: “[Oh you know. Stuff.]{Victor Chomsky}”
 
-I: “[Well, if you say so. You should probably get a comb though. You’ve been running your hand through your hair and it’s sticking up all over the place.]{Iris}”
+I: “[Well, if you say so. You should probably get a comb though. You’ve been running your hand through your hair and it’s sticking up all over the place.]{Iris Bellatoria}”
 
 Luckily no one has pried too much in their questions. I don't think I could come up with a reasonable excuse. I mean how do you explain calmly that the largest powerhouse in the entire universe is going to blow us up?
 

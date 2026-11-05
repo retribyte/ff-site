@@ -11,19 +11,19 @@ Laziness. Blissful laziness. For the first time in what felt like forever, Emmet
 
 "[Want to watch something later?]{Emmett Tawfeek}" He was sitting on a sofa, browsing on his GU-sponsored incognito device. It was limiting, but it allowed him to use the holonet without divulging his existence. Squorchy was chopping up some berries, getting ready to prepare a stew of sorts.
 
-"[Tell me something interesting we haven't already watched, then I'll consider.]{Squorchy}" Squina, having overheard the two, came in from the den.
+"[Tell me something interesting we haven't already watched, then I'll consider.]{Squorchy Vurkallus}" Squina, having overheard the two, came in from the den.
 
-"[What about something actiony? I heard the V-Team sequel came out recently. What was it called... 'It's Pummelin' Time'?]{Squina}" Emmett shuddered. The GU was given records of the Vortox Pummelers' whereabouts and was starting to capitalize on them. He would have made a big deal over it, but he was legally dead.
+"[What about something actiony? I heard the V-Team sequel came out recently. What was it called... 'It's Pummelin' Time'?]{Squina Malreis}" Emmett shuddered. The GU was given records of the Vortox Pummelers' whereabouts and was starting to capitalize on them. He would have made a big deal over it, but he was legally dead.
 
-"[Don't think Scareye over here would like that very much. Though it could be funny to hear him get fussy over inaccuracies.]{Squorchy}" Before Emmett could voice his opinion, someone knocked on their front door. Immediately Squorchy took her cutting knife and moved to the door, looking through the peephole. Visitors were few and far between, and she never trusted their intentions.
+"[Don't think Scareye over here would like that very much. Though it could be funny to hear him get fussy over inaccuracies.]{Squorchy Vurkallus}" Before Emmett could voice his opinion, someone knocked on their front door. Immediately Squorchy took her cutting knife and moved to the door, looking through the peephole. Visitors were few and far between, and she never trusted their intentions.
 
 "[Squorch, you're going to get berry juice everywhere, calm down.]{Emmett Tawfeek}" Emmett got up and pushed her out of the way to her annoyance.
 
-"[It's the llamanians, I think. Be careful. I will stab them if they lay a finger on you.]{Squorchy}" He smiled coyly at her, putting a hoof on the door's lock.
+"[It's the llamanians, I think. Be careful. I will stab them if they lay a finger on you.]{Squorchy Vurkallus}" He smiled coyly at her, putting a hoof on the door's lock.
 
 "[You're cute when you're worried.]{Emmett Tawfeek}" Squorchy immediately acted disinterested, not wanting to look vulnerable.
 
-"[Just open the door already, Squoat.]{Squorchy}"
+"[Just open the door already, Squoat.]{Squorchy Vurkallus}"
 
 "[Alright, alright.]{Emmett Tawfeek}" One of the llamanians knocked on the door again, prompting Emmett to unlock and open it. In the snow stood two llamanian guests: a tall fellow adorned in a military uniform, with a decent amount of badges and medals, and a smaller, older one with three golden bands around his neck, signifying the leader of the Llamanian Republic.
 
@@ -31,7 +31,7 @@ Laziness. Blissful laziness. For the first time in what felt like forever, Emmet
 
 "[H-hey Los... Not so tight now...]{Emmett Tawfeek}" Squina came over to the front door and smiled, having remembered her husband's stories of his adventures on the Llamanian Mothership with Los.
 
-"[So this is Los! Charmed to meet you.]{Squina}" Los let Emmett down and shook her hoof, taking in the cozy environment of their estate.
+"[So this is Los! Charmed to meet you.]{Squina Malreis}" Los let Emmett down and shook her hoof, taking in the cozy environment of their estate.
 
 "[We've missed you, Emmett. Been worried sick.]{Llaray}" Republic leader Llaray entered the cabin and put a hand on Emmett's shoulder.
 
@@ -39,11 +39,11 @@ Laziness. Blissful laziness. For the first time in what felt like forever, Emmet
 
 "[No, no, I think your leaving was entirely justified. War team took advantage of you and the scouts couldn't get ahold of her in a reasonable timeframe.]{Llaray}" He pointed at Squorchy, who retreated to a corner, not particularly enjoying the presence of llamanians in her house. "[Just red tape. I hope you can forgive me.]{Llaray}"
 
-"[So you come to our house whenever it's snowing, when we're bound to not be busy, to do what exactly? Fondle my mate's balls with gratitude?]{Squorchy}" Squorchy set the knife down, despite looking irritated at their presence. Los smirked, looking over to Squorchy.
+"[So you come to our house whenever it's snowing, when we're bound to not be busy, to do what exactly? Fondle my mate's balls with gratitude?]{Squorchy Vurkallus}" Squorchy set the knife down, despite looking irritated at their presence. Los smirked, looking over to Squorchy.
 
 "[She's quite the keeper, isn't she, Emmett?]{Los}" Her husband could not help but snicker and walk over to her, putting an arm around her shoulder to try and comfort her.
 
-"[They did kind of get us a bigger home, Stronghorn. Lots of room for the family.]{Emmett Tawfeek}" Emmett was immediately elbowed, making him exhale audibly in surprise. She whispered in his ear, "[Don't call me that in front of guests, idiot. These guys killed our species. Never forget that.]{Squorchy}" Noticing the awkward tension, Llaray sat down in front of the two and leaned over.
+"[They did kind of get us a bigger home, Stronghorn. Lots of room for the family.]{Emmett Tawfeek}" Emmett was immediately elbowed, making him exhale audibly in surprise. She whispered in his ear, "[Don't call me that in front of guests, idiot. These guys killed our species. Never forget that.]{Squorchy Vurkallus}" Noticing the awkward tension, Llaray sat down in front of the two and leaned over.
 
 "[Anyhow, we're here to see the place. Have some housewarming gifts for you three and a job, if you're interested.]{Llaray}"
 
@@ -53,27 +53,27 @@ As the leader began to tell them about the beginnings of Project HORIZON, Los wa
 
 "[I heard good things about you two from Emmett, uh...]{Los}" Squina got some condiments out and started sprinkling them in.
 
-"[Na's fine. Thanks for being considerate.]{Squina}"
+"[Na's fine. Thanks for being considerate.]{Squina Malreis}"
 
 "[Yeah, after I learned his real name, he told me how you guys aren't exactly comfortable being called by your full names.]{Los}"
 
-"[It doesn't really matter to me, I was alone for so long I would've killed to be called anything.]{Squina}" She turned on the burner beneath the pot and grabbed some cracker-like snacks from the cupboard. "[Snacks?]{Squina}"
+"[It doesn't really matter to me, I was alone for so long I would've killed to be called anything.]{Squina Malreis}" She turned on the burner beneath the pot and grabbed some cracker-like snacks from the cupboard. "[Snacks?]{Squina Malreis}"
 
 "[No thanks, ate prior... So I heard there's going to be a new addition to the Tawfeek family...]{Los}" Squina looked down at herself and smiled softly, chewing on one of the hardtack snacks.
 
-"[Two actually. Squorch is also having one. Surprised he told you already. Wasn't too long ago we found out.]{Squina}" Los grabbed her hoof and grazed his thumb over it.
+"[Two actually. Squorch is also having one. Surprised he told you already. Wasn't too long ago we found out.]{Squina Malreis}" Los grabbed her hoof and grazed his thumb over it.
 
 "[He's really excited. It's a welcome change. Used to be all mopey sometimes, now I haven't really seen him like that. Since we've been in contact, we chat every now and then. He loves you so much.]{Los}" Los peered to the side as he mentioned this last part, which she noticed.
 
-"[You seem to care for him a lot.]{Squina}"
+"[You seem to care for him a lot.]{Squina Malreis}"
 
 "[Four GUYs is a long time, Na. Maybe I'm just jealous you guys get those sweet earrings to share with him and I don't.]{Los}" Squina twirled a digit in the loop in her ear, looking at it.
 
-"[I mean, it was pretty romantic how he proposed to me. He uh, heh, put his rod where I wanted him to after I beat him in a racing game and he bit my ear passionately.]{Squina}" Los was reasonably grossed out.
+"[I mean, it was pretty romantic how he proposed to me. He uh, heh, put his rod where I wanted him to after I beat him in a racing game and he bit my ear passionately.]{Squina Malreis}" Los was reasonably grossed out.
 
 "[Ew, TMI!]{Los}"
 
-"[What? It's Squoatling tradition!]{Squina}"
+"[What? It's Squoatling tradition!]{Squina Malreis}"
 
 ***
 
@@ -81,13 +81,13 @@ After a long-winded tale of the Llamanian war against the GU and how they are fa
 
 "[Now look, we're proposing one last-ditch effort to get an edge over the GU. There's a black hole in a section that's reportedly undocumented—legends say all who enter are sucked in. In that black hole, or that region, there is an artifact that supposedly can raise the dead and instantly kill the living.]{Llaray}" Squorchy was not amused by this monologue.
 
-"[Did you forget what we told you? Two of us are pregnant and one of us needs to stay here to ease that pain.]{Squorchy}" She playfully slapped Emmett's thigh, after which Emmett leaned his head on her shoulder.
+"[Did you forget what we told you? Two of us are pregnant and one of us needs to stay here to ease that pain.]{Squorchy Vurkallus}" She playfully slapped Emmett's thigh, after which Emmett leaned his head on her shoulder.
 
 "[Yeah, can't deprive me of being a father, Llaray.]{Emmett Tawfeek}" Llaray sighed, waiting patiently for their lovey-dovey antics to end.
 
 "[What I was trying to say, before I was interrupted, is that Seth is the perfect candidate for the mission. Unfortunately, our scouts have reported that he's gone down the deep end.]{Llaray}" Emmett stared at Llaray blankly, raising an eyebrow. "[More so than usual, I mean. I think he needs you as a buddy throughout the mission, or he's going to put the mission in jeopardy. Your job is just calling him every now and then at specific times and just talking to him. Making sure he's okay and telling him about your life. Whatever.]{Llaray}"
 
-"[What's in it for us if he accepts?]{Squorchy}" Llaray was noticeably starting to lose his patience; Squorchy was getting under his skin.
+"[What's in it for us if he accepts?]{Squorchy Vurkallus}" Llaray was noticeably starting to lose his patience; Squorchy was getting under his skin.
 
 "[Again, I was going to mention that if we are successful and you cooperate, we will annex Vortox and will build to your needs. We want the Squoatling population to flourish just as you do, and we will assist in your eventual genetic issues, given that there are only three of you.]{Llaray}" Emmett brushed his chin, flaying his goatee.
 
@@ -95,7 +95,7 @@ After a long-winded tale of the Llamanian war against the GU and how they are fa
 
 "[We will distribute him and his team communication devices as necessary throughout the period of the mission. All we need to do is install a wall-mounted device to make sure you're doing your job.]{Llaray}" Squorchy raised her eyebrows.
 
-"[Oh, so you can spy on us?]{Squorchy}"
+"[Oh, so you can spy on us?]{Squorchy Vurkallus}"
 
 "[What would we gain from spying on you? Overhearing your seasonal urges? We know how raunchy Squoatlings get. Not important to governing a llamanian populace.]{Llaray}" Squorchy sighed, prompting Emmett to squeeze her with a hug.
 
@@ -113,7 +113,7 @@ After helping with the stew, Los returned from the kitchen and sat down next to 
 
 "[Should've seen her last GUY. Completely different person. Really analytical and distant.]{Emmett Tawfeek}"
 
-"[Okay, she wasn't that bad. When I first met her, she was upset that I wasn't a dude, and she wanted to perform weird DNA experiments on me.]{Squorchy}"
+"[Okay, she wasn't that bad. When I first met her, she was upset that I wasn't a dude, and she wanted to perform weird DNA experiments on me.]{Squorchy Vurkallus}"
 
 "[That's our Squi.]{Emmett Tawfeek}" Emmett chuckled to himself as he signed some papers. Los muttered to himself, "[Weird]{Los}", and stared off at the holovision, which was not on.
 
@@ -125,7 +125,7 @@ After helping with the stew, Los returned from the kitchen and sat down next to 
 
 "[Times change, boys. People grow up, have families.]{Llaray}"
 
-"[And hopefully regret their actions on others.]{Squorchy}" Squorchy got up and left to chat with Squina. Llaray watched with remorse as she walked out the room, exhaling.
+"[And hopefully regret their actions on others.]{Squorchy Vurkallus}" Squorchy got up and left to chat with Squina. Llaray watched with remorse as she walked out the room, exhaling.
 
 "[Wish you the best of luck, Tawfeek. Hope she can one day forgive us as you have.]{Llaray}" Emmett gave Los a dig in the shoulder and hugged him tightly.
 
