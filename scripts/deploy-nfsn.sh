@@ -5,7 +5,8 @@
 #
 #   scripts/deploy-nfsn.sh
 #
-# Then restart the "ffsite" daemon in the NFSN site panel (Daemons).
+# It ends by restarting the "ffsite" daemon (the host's `nfsn` CLI) and waiting
+# until https://vortox.space/ answers again (~5 s of downtime).
 #
 # The build runs in a temporary git worktree with its own `npm ci`, so it never
 # touches this checkout's node_modules or a running dev server.
@@ -54,4 +55,11 @@ rsync -a --delete -e "$RSYNC_SSH" "$BUILD_DIR/.next-build/standalone/" "$SSH_TAR
 # runs as web and needs group read
 "${SSH[@]}" "chgrp -R web $DEST/app && chmod -R g+rX,o-rwx $DEST/app"
 
-echo "== deployed $REVISION; restart the ffsite daemon in the NFSN panel"
+echo "== restart ffsite"
+"${SSH[@]}" "nfsn stop-daemon ffsite > /dev/null; sleep 2; nfsn start-daemon ffsite > /dev/null"
+for _ in $(seq 1 30); do
+    [ "$(curl -s -o /dev/null -w '%{http_code}' https://vortox.space/)" = 200 ] && { echo "== deployed $REVISION, live"; exit 0; }
+    sleep 2
+done
+echo "deployed $REVISION, but https://vortox.space/ isn't answering 200; check /home/logs/daemon_ffsite.log" >&2
+exit 1
