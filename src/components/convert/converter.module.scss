@@ -52,18 +52,9 @@
     @include m.ghost-button(var(--accent-soft), 0.3rem 0.5rem);
 }
 
-.eraRow {
-    display: flex;
-
-    select {
-        @include m.form-field(1rem, 0.5rem 0.5rem, $focus: false);
-        cursor: pointer;
-    }
-}
-
 .fieldGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.6rem;
 }
 
@@ -73,6 +64,35 @@
     input {
         @include m.form-field(0.95rem, 0.5rem 0.5rem);
         width: 100%;
+    }
+
+    select {
+        @include m.form-field(0.95rem, 0.5rem 0.5rem, $focus: false);
+        width: 100%;
+        cursor: pointer;
+    }
+}
+
+.resultWrap {
+    position: relative;
+}
+
+.copyButton {
+    position: absolute;
+    top: 0rem;
+    right: 0.5rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    padding: 0.3rem;
+    color: var(--vm);
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    &:hover {
+        color: var(--text);
     }
 }
 
@@ -84,8 +104,8 @@
     background: color-mix(in srgb, var(--vm) 8%, var(--bg));
     border: 1px dashed color-mix(in srgb, var(--vm) 45%, var(--border-loud));
     border-radius: var(--radius);
-    padding: 0.75rem 1rem;
-    min-height: 2.9rem;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    min-height: 3rem;
     overflow-wrap: anywhere;
 
     &[data-error] {

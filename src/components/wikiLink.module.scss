@@ -1,5 +1,17 @@
 @use '../styles/mixins' as m;
 
 .wikiLink {
-    @include m.pixel-chip(var(--char), var(--char), var(--char));
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--char, var(--type, var(--link)));
+    border: 2px solid color-mix(in srgb, var(--char, var(--type, var(--link))) 60%, transparent);
+    border-radius: var(--radius);
+    padding: 0.25rem 0.5rem;
+    white-space: nowrap;
+    align-self: center;
+
+    &:hover {
+        background: color-mix(in srgb, var(--char, var(--type, var(--link))) 18%, transparent);
+    }
+    font-size: 1rem;
 }

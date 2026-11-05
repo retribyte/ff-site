@@ -13,6 +13,7 @@ import ThemedAvatar from '@/components/characters/ThemedAvatar';
 import ActionChip from '@/components/editor/ActionChip';
 import SpeakerAdmin from '@/components/characters/SpeakerAdmin';
 import WikiLink from '@/components/WikiLink';
+import UserLink from '@/components/UserLink';
 import { wikiFacts, type WikiFieldSpec } from '@/lib/wiki';
 import styles from './character.module.scss';
 import RichText from '@/components/RichText';
@@ -121,7 +122,9 @@ export default async function CharacterPage({ params }: Props) {
     // eslint-disable-next-line react-hooks/purity
     const sampleQuotes = [...teaserQuotes].sort(() => Math.random() - 0.5).slice(0, 3);
 
-    const facts = wikiFacts(character.wiki, CHARACTER_WIKI_ORDER);
+    const facts: [string, React.ReactNode][] = [];
+    if (character.creator) facts.push(['played by', <UserLink key='creator' username={character.creator.username} />]);
+    facts.push(...wikiFacts(character.wiki, CHARACTER_WIKI_ORDER, facts.map(([label]) => label)));
 
     return (
         <main className={styles.main} style={style}>

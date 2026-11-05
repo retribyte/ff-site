@@ -82,8 +82,8 @@ export default async function ArchivesPage() {
             </div>
 
             <p className={styles.pointer}>
-                <Link href='/stories/vm' className='pixel-label'>
-                    the Vortox Machina chronicle now lives in Stories →
+                <Link href='/' className='pixel-label'>
+                    {/* Here if we need it */}
                 </Link>
             </p>
         </main>

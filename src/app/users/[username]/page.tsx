@@ -5,6 +5,7 @@ import { api, ApiError } from '@/lib/api';
 import type { UserProfile } from '@/lib/types';
 import { booruPostUrl } from '@/lib/booru';
 import SignalLost from '@/components/SignalLost';
+import { compareCharacters } from '@/lib/characterSort';
 import CharacterCard from '@/components/characters/CharacterCard';
 import styles from './user.module.scss';
 import RichText from '@/components/RichText';
@@ -51,6 +52,9 @@ export default async function UserPage({ params }: Props) {
 
     const joined = new Date(profile.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
 
+    // Same order as /characters
+    const characters = [...profile.characters].sort(compareCharacters);
+
     return (
         <main className={styles.main}>
             <div className={styles.layout}>
@@ -68,7 +72,7 @@ export default async function UserPage({ params }: Props) {
                         <section className={styles.section}>
                             <h2 className={styles.sectionTitle}>Characters</h2>
                             <ul className={styles.characters}>
-                                {profile.characters.map((character) => (
+                                {characters.map((character) => (
                                     <li key={character.id}>
                                         <CharacterCard character={character} />
                                     </li>

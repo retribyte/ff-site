@@ -9,7 +9,7 @@ export default function WikiLink({ slug }: { slug: string }) {
             rel='noopener noreferrer'
             className={styles.wikiLink}
         >
-            wiki&nbsp;↗
+            View wiki article&nbsp;↗
         </a>
     );
 }

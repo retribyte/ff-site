@@ -23,7 +23,7 @@ export interface UserProfile extends PublicUser {
     iconBooruId: number | null;
     wikiUser: string | null;
     createdAt: string;
-    characters: { id: number; name: string; slug: string; image: string | null; color: string | null }[];
+    characters: { id: number; name: string; slug: string; image: string | null; color: string | null; seasons?: string[] }[];
     stories: { id: number; slug: string; title: string; publishedDate: string | null }[];
     _count: { messages: number; commentaries: number };
 }
@@ -37,6 +37,7 @@ export interface Character {
     blurb: string | null;
     slug: string;
     creator?: PublicUser;
+    seasons?: string[];
     personas?: Persona[];
     wiki?: WikiData | null;
 }

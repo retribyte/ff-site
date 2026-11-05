@@ -5,6 +5,7 @@ import { getSessionUser } from '@/lib/auth';
 import SignalLost from '@/components/SignalLost';
 import ActionChip from '@/components/editor/ActionChip';
 import CharacterIndex from '@/components/characters/CharacterIndex';
+import { compareCharacters } from '@/lib/characterSort';
 import styles from './characters.module.scss';
 
 export const metadata: Metadata = {
@@ -26,11 +27,8 @@ export default async function CharactersPage() {
         );
     }
 
-    // Portraited main cast up front, then the named masses, alphabetical within
-    const sorted = [...characters].sort((a, b) => {
-        const rank = (c: Character) => (c.image ? 0 : c.color ? 1 : 2);
-        return rank(a) - rank(b) || a.name.localeCompare(b.name);
-    });
+    // Portraited main cast up front (earliest season first), then the named masses
+    const sorted = [...characters].sort(compareCharacters);
 
     return (
         <main className={styles.main}>
