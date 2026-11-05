@@ -15,11 +15,11 @@ All in all, the directive was very vague... What—or who—could the crew possi
 _The crew's hanging about the station. Captain Llafay is still at the ship, and no one has seen Llawdon for a while._
 
 **Trey** _(31-May-22 06:05 PM)_
-_`Vec as Llafay Terrels`: Llafay's voice blares over the crew's comms._
+_`Vec as Llafay Terres`: Llafay's voice blares over the crew's comms._
 
 **Trey** _(31-May-22 06:05 PM)_ [981332541963395102]
 
-> `Vec as Llafay Terrels`: EDMIN KALVANZAS, REPORT TO THE SHIP IMMEDIATELY.
+> `Vec as Llafay Terres`: EDMIN KALVANZAS, REPORT TO THE SHIP IMMEDIATELY.
 
 **Vortox** _(31-May-22 06:05 PM)_ [981332701493735504]
 
@@ -41,11 +41,11 @@ _Seth squints at the one-eyed stranger next to him._
 
 **Trey** _(31-May-22 06:07 PM)_ [981333202167812136]
 
-> `Vec as Llafay Terrels`: We've gotten a new order from mission control. There's two people on this station you all need to track down.
+> `Vec as Llafay Terres`: We've gotten a new order from mission control. There's two people on this station you all need to track down.
 
 **Trey** _(31-May-22 06:07 PM)_ [981333224850612267]
 
-> `Vec as Llafay Terrels`: Recruits, I guess.
+> `Vec as Llafay Terres`: Recruits, I guess.
 
 **Maxwell** _(31-May-22 06:08 PM)_ [981333301283397682]
 
@@ -69,7 +69,7 @@ _Seth taps the nametag that has his full name on it._
 
 **Trey** _(31-May-22 06:09 PM)_ [981333581190279208]
 
-> `Vec as Llafay Terrels`: Don't know. But that's your problem.
+> `Vec as Llafay Terres`: Don't know. But that's your problem.
 
 **Sean** _(31-May-22 06:09 PM)_ [981333660827545630]
 
@@ -81,14 +81,14 @@ _Seth taps the nametag that has his full name on it._
 
 **Trey** _(31-May-22 06:10 PM)_ [981333816352309328]
 
-> `Vec as Llafay Terrels`: Keyword is "kraken", for some reason. Ask around if anyone recognizes that.
+> `Vec as Llafay Terres`: Keyword is "kraken", for some reason. Ask around if anyone recognizes that.
 
 **Maxwell** _(31-May-22 06:10 PM)_ [981333879807938601]
 
 > Kraken.
 
 **Trey** _(31-May-22 06:10 PM)_ [981333890054631494]
-_`Vec as Llafay Terrels`: Llafay leaves the hull, leaving Edmin alone._
+_`Vec as Llafay Terres`: Llafay leaves the hull, leaving Edmin alone._
 
 **Jonas** _(31-May-22 06:10 PM)_ [981333903673544734]
 
@@ -349,11 +349,11 @@ _Bellow and Zion look at the entrance area, seeing the massive crowd of people l
 > Ah.
 
 **Zander** _(31-May-22 06:20 PM)_ [981336480226082876]
-_`Vec as Llafay Terrels`: Llafay slumps over the bed he was resting upon, falling to the ground once again._
+_`Vec as Llafay Terres`: Llafay slumps over the bed he was resting upon, falling to the ground once again._
 
 **Zander** _(31-May-22 06:21 PM)_ [981336550388420631]
 
-> `Vec as Llafay Terrels`: Need to write... note...
+> `Vec as Llafay Terres`: Need to write... note...
 
 **Sean** _(31-May-22 06:20 PM)_ [981336504712462348]
 
@@ -450,7 +450,7 @@ _Zion, at the top of his lungs:_
 
 **Zander** _(31-May-22 06:24 PM)_ [981337453216534538]
 
-> `Vec as Llafay Terrels`: Damnit. Not enough time...
+> `Vec as Llafay Terres`: Damnit. Not enough time...
 
 **Jonas** _(31-May-22 06:24 PM)_ [981337518249222194]
 
@@ -745,7 +745,7 @@ _Morra shakes the hands of their new crewmates, nodding._
 > Wait, Seth...?
 
 **Zander** _(31-May-22 06:35 PM)_ [981340204134711337]
-_`Vec as Llafay Terrels`: Llafay finishes writing the note and drags himself to the armory, grabbing an LR-grade blaster._
+_`Vec as Llafay Terres`: Llafay finishes writing the note and drags himself to the armory, grabbing an LR-grade blaster._
 
 **Vortox** _(31-May-22 06:35 PM)_ [981340278239674409]
 
@@ -910,7 +910,7 @@ _Edmin pulls Dutch to his feet in a violently fast motion._
 </embed>
 
 **Zander** _(31-May-22 06:39 PM)_
-_`Vec as Llafay Terrels`: Llafay presses the blaster to his head and pulls the trigger._
+_`Vec as Llafay Terres`: Llafay presses the blaster to his head and pulls the trigger._
 
 **Maxwell** _(31-May-22 06:39 PM)_ [981341299108093982]
 
@@ -1250,7 +1250,7 @@ _Zion, stunned, picks up the note on top of Llafay's body._
 
 **Zander** _(31-May-22 06:51 PM)_ [981344166506287124]
 
-`Vec as Llafay Terrels`:
+`Vec as Llafay Terres`:
 <embed>
 <description>
 Zion,

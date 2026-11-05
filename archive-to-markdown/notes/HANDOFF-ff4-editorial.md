@@ -483,6 +483,7 @@ matter (`ff4-to-md.py`, `editorial/*.py`) are in the repo.
     - Ruling (2026-10-05): Zander's ep 1–2 Llafay is `Vec as Llafay Terrels`, never bare `Llafay Terrels`
       (meta cast ep 1 + ep 2 `Llafay` tags retagged; persona row id 7, named `Llafay Terres` in the DB;
       `ff4_set_personas.py` maps it). Eps 1–2 re-imported.
+    - Ruling (2026-11-05): the persona is spelled `Llafay Terres` ("Sergeant Terres" in ep 1): `Vec as Llafay Terres` in the meta cast and ep 2 tags.
   - Zander's clone PC is `Buzzcut` (character 1709) from ep 12 on. Pre-reveal ep 12 lines carry persona
     `Bee Emmett` (12). Never tag `Bee Emmett`; that's a distinct FF2 character (1700). See
     REVIEW-buzzcut-identity.md for the untagged-action list for eps 12-17. Tag Buzzcut's own

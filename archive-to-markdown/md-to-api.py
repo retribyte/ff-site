@@ -84,7 +84,7 @@ NAME_ALIASES = {
     "Zach": "Zacharias Smith",
     "Dutch": "Dutch Elkins",
     "Bellow": "Bellow Brightlight",
-    "Llafay": "Llafay Terrels",
+    "Llafay": "Llafay Terres",
     "Llawdon": "Llawdon Brandanowitz",
     "Zion": "Zion Daybreaker",
     # FF2 short forms (Matthias: a t!8ball line in ep 15; Bail: ep 5)
@@ -98,7 +98,10 @@ NAME_ALIASES = {
 
 # Characters that only ever exist as a persona of another: Llafay (FF4) never
 # appears alive -- every line credited to him is Vec wearing his corpse.
-CHARACTER_AS_PERSONA = {"Llafay Terrels": ("Vec", "Llafay Terres")}
+CHARACTER_AS_PERSONA = {
+    "Llafay Terres": ("Vec", "Llafay Terres"),
+    "Llafay Terrels": ("Vec", "Llafay Terres"),  # the old DB spelling
+}
 
 
 def fold_persona(speaker, persona):
