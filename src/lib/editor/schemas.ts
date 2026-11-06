@@ -4,7 +4,7 @@ import { decodeEntities } from '@/lib/html';
 // Schema-driven editing: every record type declares its fields once and the
 // RecordEditor renders/validates/submits any of them.
 
-export type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'color' | 'entity-ref' | 'entity-refs';
+export type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'color' | 'avatar' | 'entity-ref' | 'entity-refs';
 
 export interface FieldDef {
     name: string;
@@ -74,7 +74,7 @@ export const characterSchema: EntitySchema = {
     fields: [
         { name: 'name', label: 'name', kind: 'text', required: true },
         richTextField('blurb', 'blurb', { help: `short public bio shown on the dossier; ${RICH_TEXT_HELP}` }),
-        { name: 'image', label: 'avatar url', kind: 'text', placeholder: '/avatars/emmett.png' },
+        { name: 'image', label: 'avatar', kind: 'avatar', placeholder: '/avatars/emmett.png' },
         { name: 'color', label: 'theme color', kind: 'color' },
         SLUG_FIELD,
     ],

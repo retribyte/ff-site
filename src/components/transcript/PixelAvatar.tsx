@@ -115,7 +115,8 @@ export default function PixelAvatar({ src, name, color, size = 48 }: Props) {
                 height={0}
                 role='img'
                 aria-label={`${name} avatar`}
-                style={{ height: size, width: 'auto', maxWidth: size, imageRendering: 'pixelated' }}
+                // contain: a sprite wider than it is tall would otherwise stretch at maxWidth
+                style={{ height: size, width: 'auto', maxWidth: size, objectFit: 'contain', imageRendering: 'pixelated' }}
             />
         </span>
     );

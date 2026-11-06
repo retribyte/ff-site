@@ -11,6 +11,7 @@ import {
     type FieldDef,
     type FormValues,
 } from '@/lib/editor/schemas';
+import AvatarField from '@/components/characters/AvatarField';
 import DeleteControl from '@/components/DeleteControl';
 import styles from './recordEditor.module.scss';
 
@@ -222,6 +223,9 @@ function Field({
             );
             break;
         }
+        case 'avatar':
+            control = <AvatarField id={id} value={value} onChange={onChange} placeholder={field.placeholder} />;
+            break;
         case 'color':
             control = (
                 <span className={styles.colorRow}>

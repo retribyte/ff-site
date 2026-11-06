@@ -2,7 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import PixelAvatar from '@/components/transcript/PixelAvatar';
 import type { Character, NpcPersona } from '@/lib/types';
+import AvatarUploadButton from './AvatarUploadButton';
 import styles from './npcVoiceList.module.scss';
 
 interface Envelope<T> {
@@ -50,6 +52,27 @@ export default function NpcVoiceList({ npcs }: { npcs: NpcPersona[] }) {
         }
     };
 
+    const replaceImage = async (npc: NpcPersona, image: string) => {
+        setBusyId(npc.id);
+        setError(null);
+        try {
+            const res = await fetch(`/site/ff/personas/${npc.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image }),
+            });
+            const envelope = (await res.json().catch(() => null)) as Envelope<unknown> | null;
+            if (!res.ok || envelope?.status === 'error') {
+                throw new Error(envelope?.message ?? `HTTP ${res.status}`);
+            }
+            router.refresh();
+        } catch (err) {
+            setError(`${npc.name}: ${err instanceof Error ? err.message : 'the lore server is not answering'}`);
+        } finally {
+            setBusyId(null);
+        }
+    };
+
     return (
         <section className={styles.wrap}>
             <input
@@ -63,10 +86,18 @@ export default function NpcVoiceList({ npcs }: { npcs: NpcPersona[] }) {
             <ul className={styles.list}>
                 {shown.map((npc) => (
                     <li key={npc.id} className={styles.item}>
+                        {npc.image && <PixelAvatar src={npc.image} name={npc.name} color={npc.color ?? 'var(--text-muted)'} size={28} />}
                         <span className={styles.name}>{npc.name}</span>
                         <span className={styles.count}>
                             {npc.messageCount} {npc.messageCount === 1 ? 'line' : 'lines'}
                         </span>
+                        <AvatarUploadButton
+                            label={npc.image ? 'change image' : 'add image'}
+                            ariaLabel={`upload image for ${npc.name}`}
+                            disabled={busyId !== null}
+                            onPick={(image) => replaceImage(npc, image)}
+                            onError={(message) => setError(`${npc.name}: ${message}`)}
+                        />
                         <button
                             type='button'
                             className={armedId === npc.id ? styles.armed : styles.promote}

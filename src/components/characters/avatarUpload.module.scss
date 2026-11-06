@@ -1,0 +1,61 @@
+@use '../../styles/mixins' as m;
+
+.upload {
+    @include m.ghost-button;
+    position: relative;
+    flex-shrink: 0;
+
+    input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+    }
+
+    &:focus-within {
+        outline: 2px solid var(--accent-soft);
+    }
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.path {
+    @include m.form-field;
+    flex: 1;
+    width: auto;
+    min-width: 10rem;
+}
+
+.note {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.undo {
+    @include m.ghost-button;
+}
+
+.help {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.error {
+    @include m.pixel-error;
+}

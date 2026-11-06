@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import PixelAvatar from '@/components/transcript/PixelAvatar';
 import type { Persona } from '@/lib/types';
+import AvatarField from './AvatarField';
+import AvatarUploadButton from './AvatarUploadButton';
 import styles from './personaManager.module.scss';
 
 interface Envelope {
@@ -77,6 +80,28 @@ export default function PersonaManager({ characterId, initial }: { characterId: 
         }
     };
 
+    const replaceImage = async (id: number, image: string) => {
+        setBusy(true);
+        setError(null);
+        try {
+            const res = await fetch(`/site/ff/personas/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image }),
+            });
+            const envelope = (await res.json()) as Envelope;
+            if (!res.ok || envelope.status === 'error' || !envelope.data) {
+                setError(envelope.message ?? 'Upload failed');
+                return;
+            }
+            setPersonas((prev) => prev.map((p) => (p.id === id ? envelope.data! : p)));
+        } catch {
+            setError('The lore server is not answering');
+        } finally {
+            setBusy(false);
+        }
+    };
+
     const remove = async (id: number) => {
         setBusy(true);
         setError(null);
@@ -108,10 +133,21 @@ export default function PersonaManager({ characterId, initial }: { characterId: 
                 <ul className={styles.list}>
                     {personas.map((p) => (
                         <li key={p.id} className={styles.item}>
-                            <span className={styles.swatch} style={{ background: p.color ?? 'transparent' }} aria-hidden />
+                            {p.image ? (
+                                <PixelAvatar src={p.image} name={p.name ?? p.label ?? ''} color={p.color ?? 'var(--text-muted)'} size={28} />
+                            ) : (
+                                <span className={styles.swatch} style={{ background: p.color ?? 'transparent' }} aria-hidden />
+                            )}
                             <span className={styles.name}>{p.name ?? <em>{p.label ?? 'unnamed'}</em>}</span>
                             {p.name && p.label && <span className={styles.label}>{p.label}</span>}
                             <span className={styles.slug}>{p.slug ?? '—'}</span>
+                            <AvatarUploadButton
+                                label={p.image ? 'change image' : 'add image'}
+                                ariaLabel={`upload image for persona ${p.name ?? p.label ?? p.id}`}
+                                disabled={busy}
+                                onPick={(image) => replaceImage(p.id, image)}
+                                onError={setError}
+                            />
                             <button
                                 type='button'
                                 className={styles.remove}
@@ -151,17 +187,16 @@ export default function PersonaManager({ characterId, initial }: { characterId: 
                         disabled={busy}
                     />
                 </label>
-                <label className={styles.field}>
-                    <span className={styles.fieldLabel}>image URL</span>
-                    <input
-                        type='text'
+                <div className={`${styles.field} ${styles.imageField}`}>
+                    <span className={styles.fieldLabel}>image</span>
+                    <AvatarField
                         value={draft.image}
-                        onChange={(e) => setDraft((d) => ({ ...d, image: e.target.value }))}
+                        onChange={(image) => setDraft((d) => ({ ...d, image }))}
                         placeholder='(no image change)'
-                        aria-label='new persona image URL'
+                        ariaLabel='new persona image path'
                         disabled={busy}
                     />
-                </label>
+                </div>
                 <label className={styles.field}>
                     <span className={styles.fieldLabel}>color</span>
                     <span className={styles.colorRow}>
