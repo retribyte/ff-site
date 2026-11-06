@@ -26,8 +26,10 @@ The episode-import pipeline (Discord export → markdown → API JSON) lives in
 The live site is https://vortox.space, on NearlyFreeSpeech.NET (FreeBSD)
 behind Cloudflare. The setup is documented in ff-server's
 [`docs/deploy-nfsn.md`](../ff-server/docs/deploy-nfsn.md). Deploying an update,
-from a clean, committed, pushed checkout (needs the NFSN SSH key,
-`~/.ssh/booru` by default, or set `NFSN_KEY`):
+merging to `main` deploys automatically (GitHub Actions: lint, tests, typecheck
+and build, then `scripts/deploy-nfsn.sh`; see the runbook's "Deploying"). To
+deploy by hand, from a clean, committed, pushed checkout (needs the NFSN SSH
+key, `~/.ssh/booru` by default, or set `NFSN_KEY`):
 
 ```bash
 scripts/deploy-nfsn.sh
