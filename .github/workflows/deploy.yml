@@ -1,0 +1,64 @@
+name: CI / Deploy
+
+# PRs: lint, tests, typecheck. Push to main: the same, then deploy to NearlyFreeSpeech
+# with scripts/deploy-nfsn.sh (see ff-server/docs/deploy-nfsn.md).
+#
+# API CHANGES: ff-site talks to ff-server. If a PR needs a new API shape, merge
+# and deploy ff-server first, and keep the site working against both versions.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run lint
+      - run: npm test
+      - run: npx tsc --noEmit
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: /api
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    # One deploy at a time; a newer push waits rather than cancelling mid-upload
+    concurrency:
+      group: deploy-nfsn-ff-site
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: SSH key and pinned host key
+        env:
+          NFSN_DEPLOY_KEY: ${{ secrets.NFSN_DEPLOY_KEY }}
+          NFSN_KNOWN_HOSTS: ${{ secrets.NFSN_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$NFSN_DEPLOY_KEY" > ~/.ssh/nfsn_deploy
+          chmod 600 ~/.ssh/nfsn_deploy
+          printf '%s\n' "$NFSN_KNOWN_HOSTS" > ~/.ssh/known_hosts
+      - name: Deploy
+        env:
+          NFSN_SSH: ${{ vars.NFSN_SSH }}
+        run: |
+          export NFSN_KEY="$HOME/.ssh/nfsn_deploy"
+          [ -n "$NFSN_SSH" ] || unset NFSN_SSH
+          scripts/deploy-nfsn.sh

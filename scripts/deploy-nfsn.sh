@@ -36,8 +36,11 @@ git worktree add --detach -q "$BUILD_DIR" HEAD
 echo "== build $REVISION"
 (
     cd "$BUILD_DIR"
-    # shellcheck disable=SC1091
-    source "$HOME/.nvm/nvm.sh" > /dev/null && nvm use > /dev/null
+    # Locally, nvm picks the version from .nvmrc; CI has set up Node already
+    if [ -s "$HOME/.nvm/nvm.sh" ]; then
+        # shellcheck disable=SC1091
+        source "$HOME/.nvm/nvm.sh" > /dev/null && nvm use > /dev/null
+    fi
     npm ci --no-audit --no-fund --loglevel=error
     # Browser code calls the API same-origin; the site proxy sends /api to
     # ff-server. Server code gets API_URL at runtime from run.sh instead.
