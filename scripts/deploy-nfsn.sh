@@ -6,7 +6,8 @@
 #   scripts/deploy-nfsn.sh
 #
 # It ends by restarting the "ffsite" daemon (the host's `nfsn` CLI) and waiting
-# until the daemon answers again (~5 s of downtime).
+# until the daemon answers again (~5 s of downtime), then has the host load pages
+# through it.
 #
 # The build runs in a temporary git worktree with its own `npm ci`, so it never
 # touches this checkout's node_modules or a running dev server.
@@ -20,8 +21,10 @@ set -euo pipefail
 SSH_TARGET="${NFSN_SSH:-retri_vortox@ssh.nyc1.nearlyfreespeech.net}"
 KEY="${NFSN_KEY:-$HOME/.ssh/booru}"
 DEST=/home/protected/ff-site
-SSH=(ssh -i "$KEY" -o IdentitiesOnly=yes "$SSH_TARGET")
-RSYNC_SSH="ssh -i $KEY -o IdentitiesOnly=yes"
+SSH_OPTS="-i $KEY -o IdentitiesOnly=yes -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
+# shellcheck disable=SC2206 # the options are meant to split
+SSH=(ssh $SSH_OPTS "$SSH_TARGET")
+RSYNC_SSH="ssh $SSH_OPTS"
 
 cd "$(dirname "$0")/.."
 if [ -n "$(git status --porcelain)" ]; then
@@ -61,15 +64,49 @@ rsync -a --delete -e "$RSYNC_SSH" "$BUILD_DIR/.next-build/standalone/" "$SSH_TAR
 
 echo "== restart ffsite"
 "${SSH[@]}" "nfsn stop-daemon ffsite > /dev/null; sleep 2; nfsn start-daemon ffsite > /dev/null"
-# Check the daemon through the NFSN name, which skips Cloudflare (its bot checks
+# Is the daemon up? Ask through the NFSN name, which skips Cloudflare (its bot checks
 # challenge CI runners). The app answers there with a 308 to CANONICAL_HOST (or a
 # 200 if that's unset); a daemon that is down gives Apache's 502/503 instead.
 HEALTH_URL="${HEALTH_URL:-https://vortox.nfshost.com/}"
 code=000
+up=0
 for _ in $(seq 1 30); do
-    code="$(curl -s -o /dev/null -w '%{http_code}' "$HEALTH_URL")"
-    case "$code" in 200|308) echo "== deployed $REVISION, live"; exit 0;; esac
+    code="$(curl -s -o /dev/null --max-time 10 -w '%{http_code}' "$HEALTH_URL" || true)"
+    case "$code" in 200|308) up=1; break ;; esac
     sleep 2
 done
-echo "deployed $REVISION, but $HEALTH_URL answered $code (want 308); check /home/logs/daemon_ffsite.log" >&2
-exit 1
+if [ "$up" != 1 ]; then
+    echo "deployed $REVISION, but $HEALTH_URL answered $code (want 308); check /home/logs/daemon_ffsite.log" >&2
+    exit 1
+fi
+
+# That 308 comes before any page renders. Do pages render? Loopback from the daemon
+# machine (the jobs queue; SSH can't reach the daemons) skips the redirect.
+echo "== check pages"
+JOBS=/home/private/jobs
+JOB="health-site-$(date -u +%Y%m%d%H%M%S)-$REVISION"
+# .tmp, then rename: the runner only picks up complete *.sh files
+"${SSH[@]}" "cat > $JOBS/$JOB.tmp && mv $JOBS/$JOB.tmp $JOBS/$JOB.sh" <<'JOBEOF'
+fail=0
+for path in / /characters; do
+    code="$(curl -s -o /dev/null --max-time 20 -w '%{http_code}' "http://127.0.0.1:41731$path" || true)"
+    echo "$path -> $code"
+    [ "$code" = 200 ] || fail=1
+done
+exit $fail
+JOBEOF
+status=""
+for _ in $(seq 1 40); do       # the job starts within ~5 s
+    sleep 3
+    status="$("${SSH[@]}" "tail -1 $JOBS/done/$JOB.*.log 2>/dev/null" < /dev/null || true)"
+    case "$status" in "== exit"*) break ;; esac
+done
+"${SSH[@]}" "cat $JOBS/done/$JOB.*.log 2>/dev/null" < /dev/null || true
+case "$status" in
+    "== exit 0"*) echo "== deployed $REVISION, live" ;;
+    "== exit"*) echo "$REVISION IS LIVE, but its pages failed to load; check /home/logs/daemon_ffsite.log" >&2; exit 1 ;;
+    *)
+        "${SSH[@]}" "rm -f $JOBS/$JOB.sh" < /dev/null || true
+        echo "$REVISION is up, but its pages went unchecked (is the jobs daemon running?)" >&2
+        exit 1 ;;
+esac
