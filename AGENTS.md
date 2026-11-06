@@ -12,6 +12,7 @@ Next.js rebuild of the legacy `ff-site` React app. Lore archive + authoring UI f
 - **Node 22 via nvm required** (system node is 18). Run `nvm use` (there's an `.nvmrc`) before any npm/next command.
 - Two dev servers: ff-server API on **:3000** (`npm run dev` in `ff-server/`), this app on **:3001** (`npm run dev` here). `NEXT_PUBLIC_API_URL` points at the API (see `.env.example`).
 - ff-server's dev script runs `tsx watch` — it auto-restarts on save.
+- **Versions come from git tags** (footer + `/api/version`): put `[minor]` or `[major]` in a PR's title/description to cut a release when it merges; otherwise every merge is a patch. See `docs/versioning.md`.
 - Production builds use a separate distDir (`.next-build`) so `npm run build` can't corrupt a running dev server.
 
 ## Workspace

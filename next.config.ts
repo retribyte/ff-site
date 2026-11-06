@@ -1,6 +1,27 @@
+import { execFileSync } from 'node:child_process';
 import type { NextConfig } from 'next';
+import { parseDescribe } from './src/lib/version';
+
+// The site's version for the footer, from git tags (docs/versioning.md). Falls
+// back to "unknown" when there's no git or no tags (a shallow clone).
+function gitVersion() {
+    try {
+        const describe = execFileSync('git', ['describe', '--tags', '--long', '--dirty', '--match', 'v[0-9]*'], {
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'ignore'],
+        });
+        return parseDescribe(describe);
+    } catch {
+        return null;
+    }
+}
+const appVersion = gitVersion() ?? { version: 'unknown', commit: 'unknown' };
 
 const nextConfig: NextConfig = {
+    env: {
+        NEXT_PUBLIC_APP_VERSION: appVersion.version,
+        NEXT_PUBLIC_APP_COMMIT: appVersion.commit,
+    },
     // Keep `next build` output away from the dev server's .next — running a
     // build while dev is up otherwise clobbers dev manifests and the browser
     // reload-loops on stale chunk references.

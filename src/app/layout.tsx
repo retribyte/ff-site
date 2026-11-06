@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { SessionProvider } from '@/components/auth/SessionProvider';
 import PasswordChangeGate from '@/components/auth/PasswordChangeGate';
 import Navbar from '@/components/navbar/Navbar';
+import Footer from '@/components/footer/Footer';
 import './globals.scss';
 
 const geistSans = Geist({
@@ -70,6 +71,7 @@ export default function RootLayout({
                         <PasswordChangeGate />
                         <Navbar />
                         {children}
+                        <Footer />
                     </SessionProvider>
                 </ThemeProvider>
             </body>
