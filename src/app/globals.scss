@@ -95,8 +95,8 @@ pre {
 // Pixel-font microcopy label, e.g. "EST. GUY 14002" / "UNDER CONSTRUCTION"
 .pixel-label {
     font-family: var(--font-pixel);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    // letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-muted);
 }

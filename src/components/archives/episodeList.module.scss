@@ -41,6 +41,37 @@
     }
 }
 
+// Gap in the episode numbering: a jagged "signal broken" rule with a pixel label
+.gap {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.25rem 0;
+    color: var(--text-muted);
+    list-style: none;
+
+    :global(.pixel-label) {
+        white-space: nowrap;
+        color: var(--season);
+        font-size: 1rem;
+    }
+}
+
+.gapLine {
+    flex: 1;
+    height: 12px;
+    // Fades out toward the outer edge; the right-hand line (.gapLineEnd) mirrors it
+    background: linear-gradient(90deg, transparent, var(--season) 50%);
+    opacity: 0.5;
+    $zig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='12' viewBox='0 0 16 12' shape-rendering='crispEdges'%3E%3Cpolyline points='0,6 4,6 7,1 10,11 13,6 16,6' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+    -webkit-mask: $zig repeat-x center / 16px 12px;
+    mask: $zig repeat-x center / 16px 12px;
+}
+
+.gapLineEnd {
+    background: linear-gradient(270deg, transparent, var(--season) 50%);
+}
+
 .episodeNo {
     font-family: var(--font-display);
     font-size: 2rem;
