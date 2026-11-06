@@ -61,9 +61,9 @@ rsync -a --delete -e "$RSYNC_SSH" "$BUILD_DIR/.next-build/standalone/" "$SSH_TAR
 
 echo "== restart ffsite"
 "${SSH[@]}" "nfsn stop-daemon ffsite > /dev/null; sleep 2; nfsn start-daemon ffsite > /dev/null"
-# CI runs outside the US, so Cloudflare blocks it; CF_BYPASS_KEY (the x-image-key
+# CI runs outside the US, so Cloudflare blocks it; CF_BYPASS_KEY (the x-bypass-key
 # value its rules let through) gets the health check past
-CURL_AUTH=(); [ -n "${CF_BYPASS_KEY:-}" ] && CURL_AUTH=(-H "x-image-key: $CF_BYPASS_KEY")
+CURL_AUTH=(); [ -n "${CF_BYPASS_KEY:-}" ] && CURL_AUTH=(-H "x-bypass-key: $CF_BYPASS_KEY")
 code=000
 for _ in $(seq 1 30); do
     code="$(curl -s -o /dev/null -w '%{http_code}' "${CURL_AUTH[@]}" https://vortox.space/)"
