@@ -36,8 +36,9 @@ git worktree add --detach -q "$BUILD_DIR" HEAD
 echo "== build $REVISION"
 (
     cd "$BUILD_DIR"
-    # Locally, nvm picks the version from .nvmrc; CI has set up Node already
-    if [ -s "$HOME/.nvm/nvm.sh" ]; then
+    # Locally, nvm picks the version from .nvmrc; CI (which sets CI=true) has
+    # already set Node up, and the runner image's own nvm has no v22 in it
+    if [ -z "${CI:-}" ] && [ -s "$HOME/.nvm/nvm.sh" ]; then
         # shellcheck disable=SC1091
         source "$HOME/.nvm/nvm.sh" > /dev/null && nvm use > /dev/null
     fi
@@ -60,9 +61,11 @@ rsync -a --delete -e "$RSYNC_SSH" "$BUILD_DIR/.next-build/standalone/" "$SSH_TAR
 
 echo "== restart ffsite"
 "${SSH[@]}" "nfsn stop-daemon ffsite > /dev/null; sleep 2; nfsn start-daemon ffsite > /dev/null"
+code=000
 for _ in $(seq 1 30); do
-    [ "$(curl -s -o /dev/null -w '%{http_code}' https://vortox.space/)" = 200 ] && { echo "== deployed $REVISION, live"; exit 0; }
+    code="$(curl -s -o /dev/null -w '%{http_code}' https://vortox.space/)"
+    [ "$code" = 200 ] && { echo "== deployed $REVISION, live"; exit 0; }
     sleep 2
 done
-echo "deployed $REVISION, but https://vortox.space/ isn't answering 200; check /home/logs/daemon_ffsite.log" >&2
+echo "deployed $REVISION, but https://vortox.space/ answered $code, not 200; check /home/logs/daemon_ffsite.log" >&2
 exit 1
