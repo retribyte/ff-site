@@ -6,7 +6,7 @@
 #   scripts/deploy-nfsn.sh
 #
 # It ends by restarting the "ffsite" daemon (the host's `nfsn` CLI) and waiting
-# until https://vortox.space/ answers again (~5 s of downtime).
+# until the daemon answers again (~5 s of downtime).
 #
 # The build runs in a temporary git worktree with its own `npm ci`, so it never
 # touches this checkout's node_modules or a running dev server.
@@ -61,16 +61,15 @@ rsync -a --delete -e "$RSYNC_SSH" "$BUILD_DIR/.next-build/standalone/" "$SSH_TAR
 
 echo "== restart ffsite"
 "${SSH[@]}" "nfsn stop-daemon ffsite > /dev/null; sleep 2; nfsn start-daemon ffsite > /dev/null"
-# CI runs outside the US, so Cloudflare blocks it; CF_BYPASS_KEY (the x-bypass-key
-# value its rules let through) gets the health check past
-CF_BYPASS_KEY="$(printf %s "${CF_BYPASS_KEY:-}" | tr -d '[:space:]')"   # a pasted secret may carry a newline
-CURL_AUTH=(); [ -n "$CF_BYPASS_KEY" ] && CURL_AUTH=(-H "x-bypass-key: $CF_BYPASS_KEY")
+# Check the daemon through the NFSN name, which skips Cloudflare (its bot checks
+# challenge CI runners). The app answers there with a 308 to CANONICAL_HOST (or a
+# 200 if that's unset); a daemon that is down gives Apache's 502/503 instead.
+HEALTH_URL="${HEALTH_URL:-https://vortox.nfshost.com/}"
 code=000
 for _ in $(seq 1 30); do
-    code="$(curl -s -o /dev/null -w '%{http_code}' "${CURL_AUTH[@]}" https://vortox.space/)"
-    [ "$code" = 200 ] && { echo "== deployed $REVISION, live"; exit 0; }
+    code="$(curl -s -o /dev/null -w '%{http_code}' "$HEALTH_URL")"
+    case "$code" in 200|308) echo "== deployed $REVISION, live"; exit 0;; esac
     sleep 2
 done
-[ "$code" != 200 ] && curl -s -D - -o /dev/null "${CURL_AUTH[@]}" https://vortox.space/ | grep -iE '^(HTTP|server|cf-mitigated|cf-ray)' >&2
-echo "deployed $REVISION, but https://vortox.space/ answered $code, not 200; check /home/logs/daemon_ffsite.log" >&2
+echo "deployed $REVISION, but $HEALTH_URL answered $code (want 308); check /home/logs/daemon_ffsite.log" >&2
 exit 1
