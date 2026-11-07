@@ -2,7 +2,7 @@
 
 ff-site's version (`MAJOR.MINOR.PATCH`) comes from git tags, not `package.json`, and
 shows in the footer next to the API's. The scheme, how to bump minor/major with
-`[minor]` / `[major]` in a PR, and how it's computed are documented once, in
+`[minor]` / `[major]` in a PR (no marker: CI tags a patch, so every merge is one release), and how it's computed are documented once, in
 `ff-server/docs/versioning.md`. ff-site differences:
 
 - `next.config.ts` runs `git describe` at build time and inlines the result as
