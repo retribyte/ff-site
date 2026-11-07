@@ -146,7 +146,7 @@ export default function QuoteLog({ name, quotes }: { name: string; quotes: LogQu
             )}
 
             {transcriptQuotes.length > 0 && (
-                <QuoteSection title='Intercepted transmissions' quotes={transcriptQuotes} />
+                <QuoteSection title='Quotes' quotes={transcriptQuotes} />
             )}
             {storyQuotes.length > 0 && <QuoteSection title='Story appearances' quotes={storyQuotes} />}
         </div>

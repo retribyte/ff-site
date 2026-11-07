@@ -180,17 +180,17 @@
     }
 
     dt {
-        font-family: var(--font-pixel);
-        font-size: 0.62rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+        font-family: var(--font-prose);
+        font-size: 0.9rem;
+        // text-transform: uppercase;
+        // letter-spacing: 0.05em;
         color: var(--text-muted);
         align-self: center;
     }
 
     dd {
         margin: 0;
-        font-size: 0.92rem;
+        font-size: 0.9rem;
         overflow-wrap: anywhere;
     }
 }
@@ -200,7 +200,7 @@
 @mixin detail-layout {
     .layout {
         display: grid;
-        grid-template-columns: 1fr 19rem;
+        grid-template-columns: 1fr 20rem;
         gap: 2rem;
         align-items: start;
     }
