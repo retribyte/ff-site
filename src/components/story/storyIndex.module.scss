@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as m;
+
 // The story shelf — each card is tinted by the story's identity colors
 // (--story / --story-2, set inline).
 
@@ -71,7 +73,59 @@
 }
 
 .cardMeta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem 1rem;
     color: var(--text-muted);
+}
+
+// Tones, shared by the shelf filters and the card tags: a season's own color
+// is set inline as --tone; canon status uses these
+.filter,
+.tag {
+    &[data-tone='canon'] {
+        --tone: var(--text);
+    }
+
+    &[data-tone='noncanon'] {
+        --tone: var(--code-highlight);
+    }
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin: -0.75rem 0 0.5rem;
+}
+
+.filterGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.filter {
+    @include m.toggle-chip(var(--tone, var(--accent)));
+}
+
+.filterRule {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border-loud);
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.tag {
+    @include m.card-tag(var(--tone, var(--text-muted)));
 }
 
 .groupHeading {

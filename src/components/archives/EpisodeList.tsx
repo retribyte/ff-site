@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Fragment, useMemo, useState } from 'react';
-import { episodeSlug } from '@/lib/seasons';
+import { episodeNumberLabel, episodeSlug } from '@/lib/seasons';
 import IndexScan from '@/components/IndexScan';
 import styles from './episodeList.module.scss';
 
@@ -12,6 +12,7 @@ export interface IndexEpisode {
     summary: string | null;
     playedDate: string | null;
     slug: string;
+    reconstructed?: boolean;
 }
 
 function formatPlayedDate(iso: string): string {
@@ -75,9 +76,16 @@ export default function EpisodeList({ seasonSlug, episodes }: { seasonSlug: stri
                                     href={`/archives/${seasonSlug}/${episodeSlug(episode)}`}
                                     className={styles.episode}
                                 >
-                                    <span className={styles.episodeNo}>{String(episode.episode_no).padStart(2, '0')}</span>
+                                    <span className={styles.episodeNo}>
+                                        {episode.reconstructed
+                                            ? episodeNumberLabel(episode, episodes)
+                                            : String(episode.episode_no).padStart(2, '0')}
+                                    </span>
                                     <span className={styles.episodeBody}>
-                                        <span className={styles.episodeTitle}>{episode.title}</span>
+                                        <span className={styles.episodeTitle}>
+                                            {episode.title}
+                                            {episode.reconstructed && <span className={styles.tag}>reconstructed</span>}
+                                        </span>
                                         {episode.summary && <span className={styles.episodeSummary}>{episode.summary}</span>}
                                     </span>
                                     {episode.playedDate && (

@@ -18,7 +18,7 @@ export const dynamic = 'force-dynamic';
 const ROSTER = ['FF1', 'FF2', 'FF3', 'FF4'];
 // Story-only campaigns not ready for the archives roster yet (their season
 // pages still resolve; they're just not listed here).
-const HIDDEN = new Set(['T&L', 'FF5']);
+const HIDDEN = new Set(['T&L', 'FF5', 'VM']);
 
 export default async function ArchivesPage() {
     let seasons: Season[];

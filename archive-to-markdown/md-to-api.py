@@ -54,6 +54,10 @@ except ImportError:
     pass
 
 BLOCK_HEADER = re.compile(r"\*\*(.*?)\*\*\s+[_*]\((.*?)\)[_*]")
+# An undated header (reconstructed episodes have no real timestamps): the
+# whole line is just `**Account**`. Only counts when Account is a known
+# account in the season meta, so a bold-only content line is not a header.
+UNDATED_HEADER = re.compile(r"^\*\*([^*]+)\*\*$")
 EMBED_SPEAKER = re.compile(r"^`([^`]+)`:$")
 EMBED_OPEN = re.compile(r"^<([a-z]+)>$")
 EMBED_CLOSE = re.compile(r"^</([a-z]+)>$")
@@ -148,23 +152,34 @@ def cast_character(meta, player, episode_number):
 
 
 def parse_timestamp(raw):
+    if raw is None:
+        return None
     try:
         return datetime.strptime(raw, "%d-%b-%y %I:%M %p").isoformat()
     except ValueError:
         return None
 
 
-def split_blocks(lines):
-    """Group markdown lines into (author, timestamp, content-lines) blocks."""
+def split_blocks(lines, accounts=()):
+    """Group markdown lines into (author, timestamp, content-lines) blocks.
+
+    `accounts` are the season's known account names; a bare `**Name**` line
+    is an undated header only for one of them (date None)."""
     blocks = []
     current = None
     for line in lines:
         line = line.strip()
         header = BLOCK_HEADER.match(line)
-        if header:
+        undated = None if header else UNDATED_HEADER.match(line)
+        if undated and undated.group(1) not in accounts:
+            undated = None
+        if header or undated:
             if current:
                 blocks.append(current)
-            current = {"author": header.group(1), "date": header.group(2), "lines": []}
+            if header:
+                current = {"author": header.group(1), "date": header.group(2), "lines": []}
+            else:
+                current = {"author": undated.group(1), "date": None, "lines": []}
         elif line and line != "(edited)" and not line.startswith(MARKER_PREFIXES):
             if current is None:
                 sys.exit(f"Content before the first block header: {line!r}")
@@ -211,7 +226,7 @@ def classify_line(line, character, cast_names):
 
 def convert_file(md_file, meta, episode):
     with open(md_file, encoding="utf-8") as f:
-        blocks = split_blocks(f.readlines())
+        blocks = split_blocks(f.readlines(), meta.get("usernames", {}).keys())
 
     usernames = meta.get("usernames", {})
     bots = set(meta.get("bots", []))
@@ -318,6 +333,7 @@ def convert_file(md_file, meta, episode):
             "episode_no": int(episode["episode_number"]),
             "summary": episode.get("short_desc") or None,
             "playedDate": played_date,
+            "reconstructed": bool(episode.get("reconstructed")),
         },
         "messages": messages,
     }

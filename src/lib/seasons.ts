@@ -15,6 +15,7 @@ const KNOWN_SLUGS: Record<string, string> = {
     FF5: 'ff5',
     // Matches the wiki's campaign key (Character infobox `season`), not slugify()
     'T&L': 't&l',
+    VM: 'vm',
 };
 
 const DISPLAY_NAMES: Record<string, string> = {
@@ -24,10 +25,11 @@ const DISPLAY_NAMES: Record<string, string> = {
     ff4: 'Final Frontier 4',
     ff5: 'Final Frontier 5',
     't&l': 'Truth & Lies',
+    vm: 'Vortox Machina',
 };
 
 // Season slugs with dedicated color tokens in _tokens.scss ("ff2" → --ff2/--ff2-2)
-const THEMED_SLUGS = new Set(['ff1', 'ff2', 'ff3', 'ff4']);
+const THEMED_SLUGS = new Set(['ff1', 'ff2', 'ff3', 'ff4', 'vm']);
 
 /** Pre-migration hyphenated derivation — kept only to resolve legacy bookmarks. */
 function legacySeasonSlug(title: string): string {
@@ -82,6 +84,20 @@ export function seasonColors(title: string): { primary: string; secondary: strin
 // `slug` is optional here even though Episode.slug is required, so call sites
 // that only have {title, episode_no} (e.g. an unsaved import payload) still typecheck.
 type EpisodeSlugInput = Pick<Episode, 'title' | 'episode_no'> & Partial<Pick<Episode, 'slug'>>;
+
+type NumberLabelInput = Pick<Episode, 'episode_no'> & { reconstructed?: boolean };
+
+/**
+ * The number an episode is shown under. Reconstructed episodes (FF1's lost
+ * episodes, rewritten from memory) are stored before the archive with
+ * episode_no ≤ 0, so they show as "R1"…"Rn" in episode order instead of
+ * "-3" or "0". `seasonEpisodes` is the episode's whole season.
+ */
+export function episodeNumberLabel(episode: NumberLabelInput, seasonEpisodes: NumberLabelInput[]): string {
+    if (!episode.reconstructed) return String(episode.episode_no);
+    const rank = seasonEpisodes.filter((e) => e.reconstructed && e.episode_no < episode.episode_no).length + 1;
+    return `R${rank}`;
+}
 
 /** "shady_business" for /archives/ff2/shady_business — the API slug has no episode number. */
 export function episodeSlug(episode: EpisodeSlugInput): string {

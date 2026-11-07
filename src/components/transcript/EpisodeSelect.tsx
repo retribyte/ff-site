@@ -7,6 +7,8 @@ export interface EpisodeOption {
     value: string; // URL segment, e.g. "3_shady_business"
     label: string;
     episodeNo: number;
+    /** What the option shows as its number ("3", "R1") */
+    numberLabel: string;
 }
 
 export default function EpisodeSelect({
@@ -30,7 +32,7 @@ export default function EpisodeSelect({
         >
             {options.map((option) => (
                 <option key={option.value} value={option.value}>
-                    {option.episodeNo}. {option.label}
+                    {option.numberLabel}. {option.label}
                 </option>
             ))}
         </select>

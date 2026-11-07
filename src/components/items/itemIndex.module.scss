@@ -8,27 +8,7 @@
 
 .filter {
     // --type set per button to the item-type color
-    font-family: var(--font-pixel);
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    background: none;
-    border: 1px dashed transparent;
-    border-radius: var(--radius);
-    padding: 0.35rem 0.6rem;
-    cursor: pointer;
-
-    &:hover {
-        color: var(--text);
-        border-color: var(--border-loud);
-    }
-
-    &[data-active] {
-        color: var(--type, var(--text));
-        background: color-mix(in srgb, var(--type, var(--accent)) 12%, transparent);
-        border: 1px dashed color-mix(in srgb, var(--type, var(--accent)) 55%, var(--border-loud));
-    }
+    @include m.toggle-chip(var(--type, var(--accent)));
 }
 
 .grid {

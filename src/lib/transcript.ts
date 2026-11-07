@@ -27,6 +27,8 @@ export interface SlimMessage {
 export interface SpeakerInfo {
     name: string;
     color: string | null;
+    /** A character's light-mode override (see characterColor) */
+    colorLight?: string | null;
     image: string | null;
 }
 
@@ -61,6 +63,7 @@ export function slimTranscript(messages: Message[]): TranscriptData {
             characters[message.character.id] = {
                 name: message.character.name,
                 color: message.character.color,
+                colorLight: message.character.colorLight ?? null,
                 image: message.character.image,
             };
         }

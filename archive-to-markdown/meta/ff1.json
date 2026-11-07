@@ -49,7 +49,7 @@
     "personaTimeline": {
         "Grass Stalker": [
             {
-                "from_episode": 3,
+                "from_episode": -3,
                 "persona": "Emmett"
             }
         ],
@@ -61,6 +61,34 @@
         ]
     },
     "episodes": [
+        {
+            "title": "Pocket Girlfriend",
+            "file_name": "r1",
+            "episode_number": -3,
+            "short_desc": "Hunting a mushroom smuggler on a fungus moon, Seth wins a drow elf's heart in a minute flat, beats Matthias to her despite losing the arm wrestle, and stuffs her in his fannypack once she starts naming their kids.",
+            "reconstructed": true
+        },
+        {
+            "title": "Bazaar Blowout",
+            "file_name": "r2",
+            "episode_number": -2,
+            "short_desc": "A week later on a desert planet, Seth's forgotten girlfriend claws out of his fannypack for revenge, the fight spills onto a ship skimming the dunes with its ramp open, and Seth swallows a grenade, giving Emmett and Matthias their first look at his curse.",
+            "reconstructed": true
+        },
+        {
+            "title": "Long Live Russia",
+            "file_name": "r3",
+            "episode_number": -1,
+            "short_desc": "Called home to Apis, Emmett is turned away by a queen buried in new rules; Seth stirs the hive into revolt, Matthias finds the resistance, Emmett's missed shot kills Mouse, and the freed hive ties up its queen, elects Emmett and names itself Russia.",
+            "reconstructed": true
+        },
+        {
+            "title": "Repeat Offenders",
+            "file_name": "r4",
+            "episode_number": 0,
+            "short_desc": "Sent to steal a relic from a crumbling government bureau, Seth and Matthias bicker their way into a filthy jail cell three times over, until a fed-up Emmett blows up the whole building and Seth yoinks the relic from the rubble.",
+            "reconstructed": true
+        },
         {
             "title": "Honeymoon Over",
             "file_name": "3",

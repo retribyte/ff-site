@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { Story } from '@/lib/types';
 import {
+    formatWords,
     chapterNoFromSlug,
     chapterSlug,
     fetchAllLines,
@@ -82,7 +83,7 @@ export default async function StoryChapterPage({ params }: Props) {
 
             <header className={styles.header}>
                 <p className='pixel-label'>
-                    chapter {chapter.chapter_no} of {chapters.length} ⭑ {data.lines.length} lines
+                    chapter {chapter.chapter_no} of {chapters.length} ⭑ {formatWords(chapter.wordCount ?? 0)}
                 </p>
                 <h1 className={styles.chapterTitle}>{chapter.title ?? `Chapter ${chapter.chapter_no}`}</h1>
             </header>

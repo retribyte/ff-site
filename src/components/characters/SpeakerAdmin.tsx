@@ -2,7 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import type { Character } from '@/lib/types';
+import type { Character, Season } from '@/lib/types';
+import { seasonDisplayName, seasonOrder } from '@/lib/seasons';
 import styles from './speakerAdmin.module.scss';
 
 interface Envelope<T> {
@@ -15,13 +16,15 @@ interface Props {
     characterId: number;
     name: string;
     slug: string;
+    /** Titles of the campaigns an admin added the character to the cast of */
+    mainIn: string[];
 }
 
-type Action = 'rename' | 'merge' | 'demote';
+type Action = 'rename' | 'merge' | 'demote' | 'main';
 
-async function post<T>(path: string, body: unknown): Promise<T> {
+async function post<T>(path: string, body: unknown, method = 'POST'): Promise<T> {
     const res = await fetch(`/site/ff${path}`, {
-        method: 'POST',
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
     });
@@ -43,7 +46,7 @@ function seasonScope(text: string): { seasons: string[] } | undefined {
 // moves transcript lines, story lines and in-prose quotes together in one
 // transaction. Destructive actions take a second click instead of a browser
 // confirm() dialog.
-export default function SpeakerAdmin({ characterId, name, slug }: Props) {
+export default function SpeakerAdmin({ characterId, name, slug, mainIn }: Props) {
     const router = useRouter();
     const [action, setAction] = useState<Action | null>(null);
     const [armed, setArmed] = useState(false);
@@ -57,6 +60,8 @@ export default function SpeakerAdmin({ characterId, name, slug }: Props) {
     const [targetName, setTargetName] = useState('');
     const [asPersona, setAsPersona] = useState(false);
     const [seasons, setSeasons] = useState('');
+    const [allSeasons, setAllSeasons] = useState<string[] | null>(null);
+    const [mainPicks, setMainPicks] = useState<Set<string>>(() => new Set(mainIn));
 
     const target = characters?.find((c) => c.name.toLowerCase() === targetName.trim().toLowerCase() && c.id !== characterId) ?? null;
 
@@ -65,6 +70,25 @@ export default function SpeakerAdmin({ characterId, name, slug }: Props) {
         setArmed(false);
         setError(null);
         setResult(null);
+        if (next === 'main' && allSeasons === null) {
+            fetch('/site/ff/seasons')
+                .then((res) => res.json())
+                .then((envelope: Envelope<Season[]>) =>
+                    setAllSeasons(
+                        (envelope.data ?? [])
+                            .map((s) => s.title)
+                            .sort((a, b) => {
+                                const [ra, ka] = seasonOrder(a);
+                                const [rb, kb] = seasonOrder(b);
+                                return ra - rb || ka.localeCompare(kb);
+                            })
+                    )
+                )
+                .catch(() => {
+                    setAllSeasons([]);
+                    setError('Could not load campaigns');
+                });
+        }
         if (next === 'merge' && characters === null) {
             fetch('/site/ff/characters')
                 .then((res) => res.json())
@@ -76,6 +100,21 @@ export default function SpeakerAdmin({ characterId, name, slug }: Props) {
     };
 
     const run = async () => {
+        // Not destructive, so no second click
+        if (action === 'main') {
+            setBusy(true);
+            setError(null);
+            try {
+                await post<Character>(`/characters/${characterId}/main-in`, { seasons: [...mainPicks] }, 'PUT');
+                setResult('Saved.');
+                router.refresh();
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'The lore server is not answering');
+            } finally {
+                setBusy(false);
+            }
+            return;
+        }
         if (!armed) {
             setArmed(true);
             return;
@@ -126,21 +165,25 @@ export default function SpeakerAdmin({ characterId, name, slug }: Props) {
     const ready =
         !busy &&
         (action === 'rename' ? newName.trim() !== '' && (newName.trim() !== name || newSlug.trim() !== slug) : true) &&
-        (action === 'merge' ? target !== null : true);
+        (action === 'merge' ? target !== null : true) &&
+        (action === 'main'
+            ? allSeasons !== null && (mainPicks.size !== mainIn.length || mainIn.some((t) => !mainPicks.has(t)))
+            : true);
 
     const runLabel = {
         rename: armed ? 'confirm rename' : 'rename',
         merge: armed ? `confirm: move lines to ${target?.name ?? '…'}` : 'merge',
         demote: armed ? `confirm: ${name} becomes an NPC` : 'demote to NPC',
+        main: 'save',
     };
 
     return (
         <section className={styles.panel} aria-label='Speaker admin'>
             <div className={styles.tabs}>
                 <span className='pixel-label'>admin</span>
-                {(['rename', 'merge', 'demote'] as const).map((a) => (
+                {(['rename', 'merge', 'demote', 'main'] as const).map((a) => (
                     <button key={a} type='button' className={styles.tab} aria-pressed={action === a} onClick={() => choose(a)} disabled={busy}>
-                        {a === 'merge' ? 'merge into…' : a === 'demote' ? 'demote to NPC' : 'rename'}
+                        {a === 'merge' ? 'merge into…' : a === 'demote' ? 'demote to NPC' : a === 'main' ? 'add to cast…' : 'rename'}
                     </button>
                 ))}
             </div>
@@ -198,6 +241,37 @@ export default function SpeakerAdmin({ characterId, name, slug }: Props) {
                         {name}&rsquo;s lines become an NPC voice of the same name (joining one that already exists). Moving every line
                         deletes the character; it can be promoted back from the NPC voices list.
                     </p>
+                </div>
+            )}
+
+            {action === 'main' && (
+                <div className={styles.form}>
+                    <p className={styles.help}>
+                        Each campaign&rsquo;s player characters are found from its transcripts (every player&rsquo;s most
+                        active character per episode). {`Tick a campaign to add ${name} by hand, `}
+                        for a story-only campaign (no transcripts) or one the transcripts miss.
+                    </p>
+                    {allSeasons === null ? (
+                        <p className={styles.help}>loading…</p>
+                    ) : (
+                        allSeasons.map((title) => (
+                            <label key={title} className={styles.check}>
+                                <input
+                                    type='checkbox'
+                                    checked={mainPicks.has(title)}
+                                    onChange={() => {
+                                        const next = new Set(mainPicks);
+                                        if (next.has(title)) next.delete(title);
+                                        else next.add(title);
+                                        setMainPicks(next);
+                                        setResult(null);
+                                    }}
+                                    disabled={busy}
+                                />
+                                {seasonDisplayName(title)}
+                            </label>
+                        ))
+                    )}
                 </div>
             )}
 

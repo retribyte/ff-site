@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { api, apiPaged } from '@/lib/api';
 import type { Character, Item, Season, Episode, MessageType } from '@/lib/types';
-import { episodesByTitle, lineUrl } from '@/lib/seasons';
+import { episodeNumberLabel, episodesByTitle, lineUrl } from '@/lib/seasons';
 import { storyQuoteUrl } from '@/lib/stories';
 import { messageSnippet, embedLast } from '@/lib/search';
 import { Highlighted } from '@/components/transcript/ScanBar';
@@ -63,6 +63,7 @@ export default async function SearchPage({ searchParams }: Props) {
     let messagesResult: { data: MessageHit[]; total: number; page: number; limit: number };
     let storyLinesResult: { data: StoryLineHit[]; total: number; page: number; limit: number };
     let episodeMap: Map<string, Episode>;
+    let seasonList: Season[];
 
     try {
         const qs = encodeURIComponent(query);
@@ -78,6 +79,7 @@ export default async function SearchPage({ searchParams }: Props) {
         messagesResult = messagesRes;
         storyLinesResult = storyLinesRes;
         episodeMap = episodesByTitle(seasons);
+        seasonList = seasons;
     } catch {
         return (
             <main className={styles.main}>
@@ -99,6 +101,9 @@ export default async function SearchPage({ searchParams }: Props) {
     if (messagesPage) urlParams.set('messagesPage', messagesPage);
     if (storyLinesPage) urlParams.set('storyLinesPage', storyLinesPage);
 
+    // An episode's whole season, for numbering its reconstructed episodes R1…Rn
+    const seasonEpisodes = (ep: Episode) => seasonList.find((x) => x.title === ep.seasonTitle)?.episodes ?? [];
+
     return (
         <main className={styles.main}>
             <header className={styles.header}>
@@ -115,7 +120,7 @@ export default async function SearchPage({ searchParams }: Props) {
                         {characters.map((c) => (
                             <li key={c.id}>
                                 <CharacterCard
-                                    character={{ id: c.id, name: c.name, color: c.color, image: c.image, slug: c.slug }}
+                                    character={{ id: c.id, name: c.name, color: c.color, colorLight: c.colorLight ?? null, image: c.image, slug: c.slug }}
                                 />
                             </li>
                         ))}
@@ -146,7 +151,7 @@ export default async function SearchPage({ searchParams }: Props) {
                             const text = messageSnippet(m.text, m.type, query);
                             const snippet = (
                                 <>
-                                    <span className={styles.rowMeta}>{m.episodeNo}-{m.episodeTitle}</span>{' '}
+                                    <span className={styles.rowMeta}>{episode ? episodeNumberLabel(episode, seasonEpisodes(episode)) : m.episodeNo}-{m.episodeTitle}</span>{' '}
                                     <Highlighted text={text} query={query} />
                                 </>
                             );

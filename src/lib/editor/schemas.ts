@@ -22,6 +22,10 @@ export interface FieldDef {
     read?: (record: Record<string, unknown>) => unknown;
     /** custom form-value → payload write (default: by-kind conversion) */
     write?: (value: string) => unknown;
+    /** color: the theme this color is for. Left empty, the editor shows the
+     *  color the site will use there (derived from the other theme's color)
+     *  as a suggestion; a value overrides it. */
+    theme?: 'dark' | 'light';
     /** input pattern + message shown when it doesn't match */
     pattern?: { regex: string; message: string };
     /** when the form value is empty, omit the key from the payload entirely
@@ -75,7 +79,8 @@ export const characterSchema: EntitySchema = {
         { name: 'name', label: 'name', kind: 'text', required: true },
         richTextField('blurb', 'blurb', { help: `short public bio shown on the dossier; ${RICH_TEXT_HELP}` }),
         { name: 'image', label: 'avatar', kind: 'avatar', placeholder: '/avatars/emmett.png' },
-        { name: 'color', label: 'theme color', kind: 'color' },
+        { name: 'color', label: 'color (dark mode)', kind: 'color', theme: 'dark' },
+        { name: 'colorLight', label: 'color (light mode)', kind: 'color', theme: 'light' },
         SLUG_FIELD,
     ],
 };

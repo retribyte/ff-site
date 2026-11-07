@@ -42,8 +42,13 @@ function SessionArea() {
                 )}
                 <span className={styles.sessionName}>{user.username}</span>
             </Link>
-            <button type='button' className={styles.logout} onClick={() => void logout()} title='Log out'>
-                ⏻
+            <button type='button' className={styles.logout} onClick={() => void logout()} title='Log out' aria-label='Log out'>
+                {/* An SVG, not the ⏻ character: that glyph comes from whatever
+                    fallback font the OS has, and some redraw it offset on hover */}
+                <svg viewBox='0 0 16 16' width='15' height='15' aria-hidden fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='square'>
+                    <path d='M8 1.5v6' />
+                    <path d='M4.6 3.6a5.5 5.5 0 1 0 6.8 0' />
+                </svg>
             </button>
         </span>
     );
@@ -53,7 +58,11 @@ export default function Navbar() {
     const pathname = usePathname();
     const { colorMode, toggleColorMode } = useTheme();
     const { user } = useSession();
-    const navLinks = user ? [...links, { href: '/import', label: 'Import' }] : links;
+    const navLinks = [
+        ...links,
+        ...(user ? [{ href: '/import', label: 'Import' }] : []),
+        ...(user?.role === 'ADMIN' ? [{ href: '/admin', label: 'Admin' }] : []),
+    ];
     // The small-screen menu remembers the page it was opened on, so any
     // navigation (link, search result, back button) closes it without an effect
     const [menuOpenAt, setMenuOpenAt] = useState<string | null>(null);

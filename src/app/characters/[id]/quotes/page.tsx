@@ -5,9 +5,10 @@ import { api, ApiError } from '@/lib/api';
 import type { CharacterQuotes, Character } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
 import { lineUrl } from '@/lib/seasons';
-import { quotedSpanText, storyQuoteUrl } from '@/lib/stories';
+import { averageWords, countWords, quotedSpanText, storyQuoteUrl } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
+import QuoteLog, { type LogQuote } from '@/components/characters/QuoteLog';
 import styles from './quotes.module.scss';
 
 interface Props {
@@ -42,12 +43,37 @@ export default async function CharacterQuotesPage({ params }: Props) {
     }
 
     const style = {
-        '--char-dark': characterColor(character.name, character.color, 'dark'),
-        '--char-light': characterColor(character.name, character.color, 'light'),
+        '--char-dark': characterColor(character.name, character.color, 'dark', character.colorLight ?? null),
+        '--char-light': characterColor(character.name, character.color, 'light', character.colorLight ?? null),
     } as React.CSSProperties;
 
-    const { messages, storyQuotes } = quotes;
-    const total = messages.length + storyQuotes.length;
+    // Only what the log shows and filters on goes to the client
+    const log: LogQuote[] = [
+        ...quotes.messages.map((m) => ({
+            key: `m-${m.episodeTitle}-${m.messageNo}`,
+            source: 'transcript' as const,
+            season: m.episode?.seasonTitle ?? null,
+            story: null,
+            text: m.text,
+            href: m.episode ? lineUrl(m.episode, m.messageNo) : null,
+            context: m.episode ? `${m.episode.seasonTitle} ⭑ ${m.episodeTitle} ⭑ line ${m.messageNo}` : '',
+            words: countWords(m.text),
+        })),
+        ...quotes.storyQuotes.map((q) => {
+            // A segmented paragraph quotes only this character's spans
+            const text = quotedSpanText(q, character.id);
+            return {
+                key: `s-${q.id}`,
+                source: 'story' as const,
+                season: q.storySeason ?? null,
+                story: { slug: q.storySlug, title: q.storyTitle },
+                text,
+                href: storyQuoteUrl(q),
+                context: `${q.storyTitle} ⭑ ch. ${q.chapterNo} ⭑ line ${q.line_no}`,
+                words: countWords(text),
+            };
+        }),
+    ];
 
     return (
         <main className={styles.main} style={style}>
@@ -60,69 +86,20 @@ export default async function CharacterQuotesPage({ params }: Props) {
                     src={character.image}
                     name={character.name}
                     color={character.color}
+                    colorLight={character.colorLight ?? null}
                     size={64}
                 />
                 <div>
                     <h1 className={styles.title}>Quote log</h1>
                     <p className='pixel-label'>
-                        {total} recorded quote{total === 1 ? '' : 's'} from {character.name}
+                        {log.length.toLocaleString('en-US')} recorded quote{log.length === 1 ? '' : 's'} from{' '}
+                        {character.name}
+                        {log.length > 0 && <> ⭑ {averageWords(log)} words on average</>}
                     </p>
                 </div>
             </header>
 
-            {total === 0 && (
-                <p className='pixel-label' style={{ textAlign: 'center', padding: '3rem 0' }}>
-                    no quotes on record
-                </p>
-            )}
-
-            {messages.length > 0 && (
-                <section className={styles.section}>
-                    <h2 className={styles.sectionTitle}>Intercepted transmissions</h2>
-                    <ol className={styles.quotes}>
-                        {messages.map((quote) => (
-                            <li key={`${quote.episodeTitle}-${quote.messageNo}`} className={styles.quote}>
-                                <span className={styles.quoteMark} aria-hidden>
-                                    “
-                                </span>
-                                <blockquote>
-                                    <p>{quote.text}</p>
-                                    {quote.episode && (
-                                        <footer>
-                                            <Link href={lineUrl(quote.episode, quote.messageNo)}>
-                                                {quote.episode.seasonTitle} ⭑ {quote.episodeTitle} ⭑ line {quote.messageNo}
-                                            </Link>
-                                        </footer>
-                                    )}
-                                </blockquote>
-                            </li>
-                        ))}
-                    </ol>
-                </section>
-            )}
-
-            {storyQuotes.length > 0 && (
-                <section className={styles.section}>
-                    <h2 className={styles.sectionTitle}>Story appearances</h2>
-                    <ol className={styles.quotes}>
-                        {storyQuotes.map((quote) => (
-                            <li key={quote.id} className={styles.quote}>
-                                <span className={styles.quoteMark} aria-hidden>
-                                    “
-                                </span>
-                                <blockquote>
-                                    <p>{quotedSpanText(quote, character.id)}</p>
-                                    <footer>
-                                        <Link href={storyQuoteUrl(quote)}>
-                                            {quote.storyTitle} ⭑ ch. {quote.chapterNo} ⭑ line {quote.line_no}
-                                        </Link>
-                                    </footer>
-                                </blockquote>
-                            </li>
-                        ))}
-                    </ol>
-                </section>
-            )}
+            <QuoteLog name={character.name} quotes={log} />
         </main>
     );
 }

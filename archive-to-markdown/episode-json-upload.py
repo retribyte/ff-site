@@ -97,7 +97,8 @@ def main():
             seasons.add(season)
         ep = p["episode"]
         call("POST", "/episodes", {"title": title, "seasonTitle": season, "episode_no": ep["episode_no"],
-                                   "summary": ep.get("summary") or None, "playedDate": ep.get("playedDate")}, tok)
+                                   "summary": ep.get("summary") or None, "playedDate": ep.get("playedDate"),
+                                   "reconstructed": bool(ep.get("reconstructed"))}, tok)
         rows = []
         for m in p["messages"]:
             cid = chars.get(m["character"]) if m["character"] else None

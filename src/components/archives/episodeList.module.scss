@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as m;
+
 .episodes {
     list-style: none;
     margin: 0;
@@ -122,4 +124,11 @@
     .episode {
         transition: none;
     }
+}
+
+// "reconstructed": rewritten from memory, not recovered from the archive
+.tag {
+    @include m.card-tag(var(--code-highlight));
+    margin-left: 0.6rem;
+    vertical-align: middle;
 }

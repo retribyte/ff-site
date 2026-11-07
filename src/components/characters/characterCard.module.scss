@@ -11,3 +11,12 @@
     text-shadow: 1px 1px 0 var(--shadow);
     overflow-wrap: anywhere;
 }
+
+// What the index is sorted by (quote count, first appearance)
+.cardNote {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}

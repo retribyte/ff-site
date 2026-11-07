@@ -23,7 +23,7 @@ export interface UserProfile extends PublicUser {
     iconBooruId: number | null;
     wikiUser: string | null;
     createdAt: string;
-    characters: { id: number; name: string; slug: string; image: string | null; color: string | null; seasons?: string[] }[];
+    characters: { id: number; name: string; slug: string; image: string | null; color: string | null; colorLight?: string | null; seasons?: string[]; quoteCount?: number }[];
     stories: { id: number; slug: string; title: string; publishedDate: string | null }[];
     _count: { messages: number; commentaries: number };
 }
@@ -33,13 +33,24 @@ export interface Character {
     name: string;
     creatorId: number;
     image: string | null;
+    /** Dark-mode color; resolve display colors with characterColor() */
     color: string | null;
+    /** Light-mode override; null = derived from `color` */
+    colorLight?: string | null;
     blurb: string | null;
     slug: string;
     creator?: PublicUser;
     seasons?: string[];
+    /** GET /characters only: QUOTE messages plus story lines spoken */
+    quoteCount?: number;
+    /** GET /characters only: words across those quotes (in a story paragraph, only the character's own spans) */
+    quoteWordCount?: number;
+    /** GET /characters only: first appearance per campaign */
+    appearances?: CharacterAppearance[];
     personas?: Persona[];
     wiki?: WikiData | null;
+    /** Campaigns an admin added this character to the cast of (see SeasonCast) */
+    mainIn?: Pick<Season, 'title' | 'slug'>[];
 }
 
 // A record's row from the wiki's Bucket store, cached server-side
@@ -75,11 +86,41 @@ export interface NpcPersona extends Persona {
     messageCount: number;
 }
 
+/**
+ * Where a character first turns up in one campaign: an episode and message,
+ * or (both null) only in a story. `season: null` = a story outside any campaign.
+ */
+export interface CharacterAppearance {
+    season: string | null;
+    episodeNo: number | null;
+    messageNo: number | null;
+    /** From a reconstructed episode: only when the campaign has no archived one with this character */
+    reconstructed?: boolean;
+}
+
+export type SeasonKind = 'MAINLINE' | 'SIDE' | 'PLANNED';
+
 export interface Season {
     title: string;
     slug: string;
+    kind?: SeasonKind;
     episodes?: Episode[];
     stories?: Pick<Story, 'slug' | 'title' | 'blurb' | 'themeColor' | 'themeColor2'>[];
+}
+
+/** GET /seasons/:season/cast: a campaign's player characters (see ff-server getSeasonCast) */
+export interface SeasonCast {
+    season: string;
+    /** Most messages in the campaign first */
+    characters: (Pick<Character, 'id' | 'name' | 'slug' | 'image' | 'color' | 'colorLight'> & {
+        messageCount: number;
+        /** Episodes it was its player's most active character in */
+        topEpisodes: number;
+        /** Added by an admin (Character.mainIn) rather than found from the transcripts */
+        manual: boolean;
+    })[];
+    /** Episode title -> ids of the characters that led it, most messages first */
+    byEpisode: Record<string, number[]>;
 }
 
 export interface Episode {
@@ -89,6 +130,8 @@ export interface Episode {
     summary: string | null;
     playedDate: string | null;
     slug: string;
+    /** Rewritten from memory, not recovered from logs (FF1's lost episodes) */
+    reconstructed?: boolean;
     messages?: Message[];
 }
 
@@ -136,8 +179,12 @@ export interface Story {
     themeColor: string | null;
     themeColor2: string | null;
     format: StoryFormat;
+    /** false = outside the universe's continuity (a joke, a what-if) */
+    canon: boolean;
     seasonTitle?: string | null;
-    season?: Pick<Season, 'title' | 'slug'> | null;
+    season?: Pick<Season, 'title' | 'slug' | 'kind'> | null;
+    /** GET /stories and /stories/:slug: words of prose (not breaks or pictures) */
+    wordCount?: number;
     authors?: PublicUser[];
     chapters?: StoryChapter[];
 }
@@ -149,6 +196,7 @@ export interface StoryChapter {
     title: string | null;
     lines?: StoryLine[];
     _count?: { lines: number };
+    wordCount?: number;
 }
 
 export interface StoryLine {
@@ -186,6 +234,8 @@ export interface StoryQuote {
     segments: StorySegment[] | null;
     storySlug: string;
     storyTitle: string;
+    /** The story's season title, or null when it's filed under none */
+    storySeason?: string | null;
     chapterNo: number;
 }
 
@@ -206,4 +256,45 @@ export interface Item {
     slug: string;
     creator?: PublicUser;
     wiki?: WikiData | null;
+}
+
+export type JobStatus = 'RUNNING' | 'SUCCEEDED' | 'FAILED';
+
+/** One run of an admin job (GET /admin/job-runs; `log` only on a single run or a run's response) */
+export interface JobRun {
+    id: number;
+    job: string;
+    dryRun: boolean;
+    status: JobStatus;
+    summary: string | null;
+    log?: string;
+    startedAt: string;
+    finishedAt: string | null;
+    user: { id: number; username: string } | null;
+}
+
+/** GET /admin/jobs: a maintenance job and its latest run */
+export interface AdminJob {
+    name: string;
+    title: string;
+    description: string;
+    lastRun: JobRun | null;
+}
+
+/** POST /admin/episode-import/preview: what importing these episodes would do */
+export interface EpisodeImportPlan {
+    episodes: {
+        title: string;
+        seasonTitle: string;
+        episodeNo: number;
+        reconstructed: boolean;
+        messages: number;
+        newSeason: boolean;
+        conflicts: string[];
+    }[];
+    missingPlayers: string[];
+    newNpcVoices: string[];
+    newPersonas: { character: string; name: string }[];
+    caseMatches: { speaker: string; character: string }[];
+    ok: boolean;
 }

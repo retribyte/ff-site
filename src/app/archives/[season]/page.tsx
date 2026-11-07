@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
-import type { Character, Season } from '@/lib/types';
+import type { Character, Season, SeasonCast } from '@/lib/types';
 import { findSeasonBySlug, seasonColors, seasonDisplayName } from '@/lib/seasons';
 import { storyGroupId } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
 import EpisodeList from '@/components/archives/EpisodeList';
 import PersonaStampPanel from '@/components/transcript/PersonaStampPanel';
+import CastAvatar from '@/components/characters/CastAvatar';
 import styles from './season.module.scss';
 
 interface Props {
@@ -50,13 +51,18 @@ export default async function SeasonPage({ params }: Props) {
     // fetching every episode's messages) — offer every character instead,
     // same fallback the plan calls for. A failed fetch just empties the
     // picker rather than taking down the whole season page.
-    const characters = await api<Character[]>('/characters').catch(() => []);
+    const [characters, cast] = await Promise.all([
+        api<Character[]>('/characters').catch(() => []),
+        // A failed fetch just leaves out the roster
+        api<SeasonCast>(`/seasons/${encodeURIComponent(season.slug)}/cast`).catch(() => null),
+    ]);
     const characterOptions = [...characters]
         .map((c) => ({ id: c.id, name: c.name }))
         .sort((a, b) => a.name.localeCompare(b.name));
 
     const episodes = [...(season.episodes ?? [])].sort((a, b) => a.episode_no - b.episode_no);
     const stories = season.stories ?? [];
+    const playerCharacters = cast?.characters ?? [];
     const colors = seasonColors(season.title);
     const style = {
         '--season': colors.primary,
@@ -87,6 +93,22 @@ export default async function SeasonPage({ params }: Props) {
                 </p>
             </header>
 
+            {playerCharacters.length > 0 && (
+                <section className={styles.cast} aria-labelledby='player-characters'>
+                    <h2 id='player-characters' className={styles.castHeading}>
+                        Player characters
+                    </h2>
+                    {/* most active first; each episode page shows the ones that led it */}
+                    <ul className={styles.castAvatars}>
+                        {playerCharacters.map((c) => (
+                            <li key={c.id}>
+                                <CastAvatar character={c} />
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+
             {episodes.length > 0 && (
                 <PersonaStampPanel scope='season' scopeTitle={season.title} characters={characterOptions} />
             )}
@@ -100,6 +122,7 @@ export default async function SeasonPage({ params }: Props) {
                         summary: e.summary,
                         playedDate: e.playedDate,
                         slug: e.slug,
+                        reconstructed: e.reconstructed,
                     }))}
                 />
             )}

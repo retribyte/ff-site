@@ -1,7 +1,7 @@
 import { seasonColors } from './seasons';
 import { apiRaw } from './api';
 import type { SpeakerInfo } from './transcript';
-import type { Character, StoryChapter, StoryFormat, StoryLine, StoryLineType, StoryQuote, StorySegment } from './types';
+import type { Character, SeasonKind, StoryChapter, StoryFormat, StoryLine, StoryLineType, StoryQuote, StorySegment } from './types';
 
 // Slim shapes for the story reader — the API includes full character objects
 // on every line; we send an id-keyed lookup table to the client instead.
@@ -58,9 +58,9 @@ export function slimStoryChapter(
 ): StoryData {
     const characters: StoryData['characters'] = {};
 
-    const addCharacter = (c: Pick<Character, 'id' | 'name' | 'color' | 'image'>) => {
+    const addCharacter = (c: Pick<Character, 'id' | 'name' | 'color' | 'colorLight' | 'image'>) => {
         if (!(c.id in characters)) {
-            characters[c.id] = { name: c.name, color: c.color, image: c.image };
+            characters[c.id] = { name: c.name, color: c.color, colorLight: c.colorLight ?? null, image: c.image };
         }
     };
 
@@ -167,6 +167,35 @@ export function storyColors(story: {
     // No colors of its own — wear its campaign's (falls back to the accent too)
     if (story.season) return seasonColors(story.season.title);
     return { primary: 'var(--accent)', secondary: 'var(--accent-soft)' };
+}
+
+export type StoryBranch = 'mainline' | 'spinoff';
+
+/**
+ * Which branch of the universe a story belongs to: a mainline campaign's
+ * (FF1–FF5; a PLANNED season is a mainline campaign not played yet) or a
+ * spin-off's (a SIDE campaign such as Truth & Lies or Vortox Machina). A story
+ * filed under no campaign stands on its own, so it counts as a spin-off.
+ */
+export function storyBranch(season: { kind?: SeasonKind } | null | undefined): StoryBranch {
+    return season?.kind === 'MAINLINE' || season?.kind === 'PLANNED' ? 'mainline' : 'spinoff';
+}
+
+/** Words in a piece of text: runs of non-whitespace (the same rule ff-server's word counts use). */
+export function countWords(text: string): number {
+    return text.split(/\s+/).filter(Boolean).length;
+}
+
+/** Mean words per item, to one decimal ("9.4"); "0" for none. */
+export function averageWords(items: { words: number }[]): string {
+    if (items.length === 0) return '0';
+    const avg = items.reduce((sum, item) => sum + item.words, 0) / items.length;
+    return avg.toLocaleString('en-US', { maximumFractionDigits: 1 });
+}
+
+/** "54,833 words" */
+export function formatWords(count: number): string {
+    return `${count.toLocaleString('en-US')} word${count === 1 ? '' : 's'}`;
 }
 
 /** Anchor id for a /stories shelf section, e.g. "Final Frontier 3" → "final-frontier-3". */

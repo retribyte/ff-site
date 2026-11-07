@@ -19,6 +19,8 @@ Markdown format (see README, "Stories"):
     season: FF3                        optional season title or slug (campaign);
                                        its colors apply when themeColor is unset
     format: prose                      optional, 'script' (default) or 'prose'
+    canon: no                          optional, 'yes' (default) or 'no': a
+                                       story outside continuity (a joke, a what-if)
     ---
 
     # Chapter 1: The Signal            "# Chapter N[: Title]" starts a chapter;
@@ -91,6 +93,7 @@ HEADING_RE = re.compile(r"^##\s+(.+?)\s*$")
 # straight out of the web importer's docx converter
 IMAGE_RE = re.compile(r"^\s*!\[([^\]\n]*)\]\((booru|docx):(\d+)\)\s*$")
 VALID_FORMATS = {"script", "prose"}
+CANON_VALUES = {"yes": True, "true": True, "no": False, "false": False}
 
 
 # ---------- parsing ----------
@@ -336,6 +339,11 @@ def convert(md_path):
         sys.exit(f"error: format must be one of {sorted(VALID_FORMATS)}, got {meta.get('format')!r}")
     if fmt == "prose":
         story["format"] = "PROSE"
+    if meta.get("canon"):
+        canon = meta["canon"].strip().lower()
+        if canon not in CANON_VALUES:
+            sys.exit(f"error: canon must be one of ['yes', 'no'], got {meta['canon']!r}")
+        story["canon"] = CANON_VALUES[canon]
 
     authors = [a.strip() for a in (meta.get("authors") or meta.get("author") or "").split(",") if a.strip()]
     return {"story": story, "authors": authors, "chapters": parse_body(body)}

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { api } from '@/lib/api';
 import type { Story } from '@/lib/types';
-import { storyColors } from '@/lib/stories';
-import { seasonDisplayName, seasonOrder } from '@/lib/seasons';
+import { storyBranch, storyColors } from '@/lib/stories';
+import { seasonColors, seasonDisplayName, seasonOrder } from '@/lib/seasons';
 import SignalLost from '@/components/SignalLost';
 import StoryIndex, { type IndexStory } from '@/components/story/StoryIndex';
 import styles from './stories.module.scss';
@@ -14,6 +14,9 @@ export const metadata: Metadata = {
 
 // Story data comes from the live API — render per-request, not at build time
 export const dynamic = 'force-dynamic';
+
+// Heading for stories filed under no campaign (sorted after every campaign)
+const NO_CAMPAIGN = 'Other stories';
 
 export default async function StoriesPage() {
     let stories: Story[];
@@ -27,13 +30,12 @@ export default async function StoriesPage() {
         );
     }
 
-    // Stories without a campaign (VM) go first as an unheaded shelf, then campaign order.
+    // Mainline campaigns in order, then the spin-offs (T&L, VM), then no campaign
+    const branchRank = (s: Story) => (s.season ? (storyBranch(s.season) === 'mainline' ? 0 : 1) : 2);
     const sorted = [...stories].sort((a, b) => {
-        const noneA = a.season ? 1 : 0;
-        const noneB = b.season ? 1 : 0;
         const [ra, ka] = seasonOrder(a.season?.title);
         const [rb, kb] = seasonOrder(b.season?.title);
-        return noneA - noneB || ra - rb || ka.localeCompare(kb) || a.title.localeCompare(b.title);
+        return branchRank(a) - branchRank(b) || ra - rb || ka.localeCompare(kb) || a.title.localeCompare(b.title);
     });
 
     const indexStories: IndexStory[] = sorted.map((s) => ({
@@ -43,10 +45,11 @@ export default async function StoriesPage() {
         authorNames: (s.authors ?? []).map((a) => a.username),
         publishedDate: s.publishedDate,
         chapterCount: s.chapters?.length ?? 0,
-        lineCount: (s.chapters ?? []).reduce((sum, c) => sum + (c._count?.lines ?? 0), 0),
+        wordCount: s.wordCount ?? 0,
         colors: storyColors(s),
-        // No-campaign stories form an unheaded shelf (sorted first, above the campaign sections)
-        group: s.season ? seasonDisplayName(s.season.title) : null,
+        group: s.season ? seasonDisplayName(s.season.title) : NO_CAMPAIGN,
+        season: s.season ? { code: s.season.title, color: seasonColors(s.season.title).primary } : null,
+        canon: s.canon ?? true,
     }));
 
     return (

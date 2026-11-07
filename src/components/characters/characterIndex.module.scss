@@ -1,5 +1,45 @@
 @use '../../styles/mixins' as m;
 
+.options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin: -0.75rem 0 1.25rem;
+}
+
+.sortField {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sortSelect {
+    @include m.pixel-select;
+    padding: 0.35rem 0.5rem;
+}
+
+.option {
+    @include m.toggle-chip;
+}
+
+.direction {
+    @include m.ghost-button(var(--text), 0.68rem);
+}
+
+.optionHint {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.groupHeading {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 2rem 0 1rem;
+}
+
 .grid {
     @include m.auto-grid(10.5rem);
 }

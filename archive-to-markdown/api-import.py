@@ -201,7 +201,7 @@ def main():
         if season not in {s["title"] for s in api.call("GET", "/seasons")}:
             api.call("POST", "/seasons", {"title": season})
         body = {"title": title, "seasonTitle": season, "episode_no": no}
-        for key in ("summary", "playedDate"):
+        for key in ("summary", "playedDate", "reconstructed"):
             if p["episode"].get(key):
                 body[key] = p["episode"][key]
         api.call("POST", "/episodes", body)

@@ -423,3 +423,79 @@
         background: var(--highlight);
     }
 }
+
+// Toggle chip for index filters (itemIndex type filters, storyIndex shelf
+// filters, characterIndex options): quiet at rest, tinted by $tint when on.
+// "On" is [data-active] or aria-pressed="true".
+@mixin toggle-chip($tint: var(--accent)) {
+    font-family: var(--font-pixel);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background: none;
+    border: 1px dashed transparent;
+    border-radius: var(--radius);
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--text);
+        border-color: var(--border-loud);
+    }
+
+    &[data-active],
+    &[aria-pressed='true'] {
+        color: $tint;
+        background: color-mix(in srgb, #{$tint} 12%, transparent);
+        border: 1px dashed color-mix(in srgb, #{$tint} 55%, var(--border-loud));
+    }
+}
+
+// Static pixel tag: story card tags, the "reconstructed" episode tag.
+@mixin card-tag($tint) {
+    font-family: var(--font-pixel);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: $tint;
+    background: color-mix(in srgb, #{$tint} 10%, transparent);
+    border: 1px solid color-mix(in srgb, #{$tint} 45%, var(--border-loud));
+    border-radius: var(--radius);
+    padding: 0.25rem 0.4rem;
+    white-space: nowrap;
+}
+
+// ── Navbar icon buttons ─────────────────────────────────────────────────
+// The square buttons in the navbar: search, log out, theme, mobile menu.
+// Odd on purpose: the navbar's content area is 53px (--navbar-height 56px
+// minus its 3px border), so an odd size centers on a whole pixel. An even
+// one sits on a half pixel, and browsers can snap it differently once its
+// hover state repaints.
+$nav-button-size: 33px;
+
+@mixin nav-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: $nav-button-size;
+    height: $nav-button-size;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border-loud);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition:
+        background 0.18s ease-out,
+        color 0.18s ease-out;
+
+    &:hover,
+    &:focus-visible {
+        background: var(--highlight);
+    }
+}
