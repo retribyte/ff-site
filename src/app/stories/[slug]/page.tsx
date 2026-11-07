@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Fragment } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
@@ -11,7 +10,7 @@ import ChoiceJump from '@/components/story/ChoiceJump';
 import styles from './story-page.module.scss';
 import DeleteStoryButton from '@/components/story/DeleteStoryButton';
 import StoryShelfControl from '@/components/story/StoryShelfControl';
-import UserLink from '@/components/UserLink';
+import StoryByline from '@/components/story/StoryByline';
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -69,6 +68,7 @@ export default async function StoryPage({ params }: Props) {
 
                 <header className={styles.header}>
                     <h1 className={styles.title}>{story.title}</h1>
+                    <StoryByline authors={story.authors} />
                     <p className='pixel-label'>
                         {formatWords(story.wordCount ?? 0)}
                         {choices.length > 0 && <> ⭑ {choices.length} choices</>}
@@ -96,21 +96,11 @@ export default async function StoryPage({ params }: Props) {
             </nav>
 
             <header className={styles.header}>
+                <h1 className={styles.title}>{story.title}</h1>
+                <StoryByline authors={story.authors} />
                 <p className='pixel-label'>
                     {chapters.length} chapters ⭑ {formatWords(story.wordCount ?? 0)}
-                    {story.authors && story.authors.length > 0 && (
-                        <>
-                            {' ⭑ by '}
-                            {story.authors.map((a, i) => (
-                                <Fragment key={a.id}>
-                                    {i > 0 && ', '}
-                                    <UserLink username={a.username} />
-                                </Fragment>
-                            ))}
-                        </>
-                    )}
                 </p>
-                <h1 className={styles.title}>{story.title}</h1>
                 {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
                 <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
                 <StoryShelfControl slug={story.slug} canon={story.canon ?? true} seasonTitle={story.season?.title ?? null} />

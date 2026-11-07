@@ -14,6 +14,7 @@ import {
 import SignalLost from '@/components/SignalLost';
 import StoryReader from '@/components/story/StoryReader';
 import ChoiceJump from '@/components/story/ChoiceJump';
+import StoryByline from '@/components/story/StoryByline';
 import styles from '../story-page.module.scss';
 
 interface Props {
@@ -82,10 +83,11 @@ export default async function StoryChapterPage({ params }: Props) {
             </nav>
 
             <header className={styles.header}>
+                <h1 className={styles.chapterTitle}>{chapter.title ?? `Chapter ${chapter.chapter_no}`}</h1>
+                <StoryByline authors={story.authors} />
                 <p className='pixel-label'>
                     chapter {chapter.chapter_no} of {chapters.length} ⭑ {formatWords(chapter.wordCount ?? 0)}
                 </p>
-                <h1 className={styles.chapterTitle}>{chapter.title ?? `Chapter ${chapter.chapter_no}`}</h1>
             </header>
 
             <StoryReader data={data} authorIds={(story.authors ?? []).map((a) => a.id)} />
