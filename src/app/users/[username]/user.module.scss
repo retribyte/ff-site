@@ -25,6 +25,17 @@
     padding: 0.2rem 0.5rem;
 }
 
+// Same chip shape as the role one, muted: it's a status, not a title
+.inactiveChip {
+    color: var(--text-muted);
+    border-color: var(--border-loud);
+}
+
+// Beside the admin chip when both show
+.roleChip + .inactiveChip {
+    margin-left: 0.5rem;
+}
+
 .bio {
     font-family: var(--font-prose);
     font-size: 1.05rem;

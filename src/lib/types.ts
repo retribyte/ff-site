@@ -23,6 +23,8 @@ export interface UserProfile extends PublicUser {
     iconBooruId: number | null;
     wikiUser: string | null;
     createdAt: string;
+    /** Still on the seeded/reset password: has never signed in as themselves */
+    inactive: boolean;
     characters: { id: number; name: string; slug: string; image: string | null; color: string | null; colorLight?: string | null; seasons?: string[]; quoteCount?: number }[];
     stories: { id: number; slug: string; title: string; publishedDate: string | null }[];
     _count: { messages: number; commentaries: number };
