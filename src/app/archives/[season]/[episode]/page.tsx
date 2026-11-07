@@ -5,6 +5,7 @@ import { api } from '@/lib/api';
 import type { Message, Season, SeasonCast } from '@/lib/types';
 import { episodeNumberLabel, episodeSlug, findEpisodeBySlug, findSeasonBySlug, seasonColors } from '@/lib/seasons';
 import { fetchAllMessages, slimTranscript } from '@/lib/transcript';
+import { recordView } from '@/lib/views';
 import SignalLost from '@/components/SignalLost';
 import TranscriptReader from '@/components/transcript/TranscriptReader';
 import EpisodeSelect from '@/components/transcript/EpisodeSelect';
@@ -60,6 +61,7 @@ export default async function EpisodePage({ params }: Props) {
     const season = findSeasonBySlug(seasons, seasonParam)!;
     const episodes = [...(season.episodes ?? [])].sort((a, b) => a.episode_no - b.episode_no);
     const episode = findEpisodeBySlug(episodes, episodeParam)!;
+    if (episode.slug) await recordView('episode', episode.slug);
     const index = episodes.indexOf(episode);
     const prev = index > 0 ? episodes[index - 1] : null;
     const next = index < episodes.length - 1 ? episodes[index + 1] : null;

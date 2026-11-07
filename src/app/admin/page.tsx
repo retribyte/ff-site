@@ -8,6 +8,7 @@ import EpisodeImportPanel from '@/components/admin/EpisodeImportPanel';
 import MaintenanceJobs from '@/components/admin/MaintenanceJobs';
 import JobHistory from '@/components/admin/JobHistory';
 import LogPanel from '@/components/admin/LogPanel';
+import ViewsPanel from '@/components/admin/ViewsPanel';
 import styles from './admin.module.scss';
 
 export const metadata: Metadata = {
@@ -47,6 +48,7 @@ export default async function AdminPage() {
             <EpisodeImportPanel />
             <MaintenanceJobs jobs={jobs} />
             <JobHistory runs={runs} />
+            <ViewsPanel />
             <LogPanel />
         </main>
     );

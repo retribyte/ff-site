@@ -318,6 +318,16 @@ export interface LogEntry {
     [field: string]: unknown;
 }
 
+/** GET /admin/views: page views of one episode or story over a window */
+export interface ViewTotal {
+    kind: 'EPISODE' | 'STORY';
+    slug: string;
+    title: string;
+    /** Signed-in views */
+    member: number;
+    anonymous: number;
+}
+
 /** GET /admin/jobs: a maintenance job and its latest run */
 export interface AdminJob {
     name: string;
