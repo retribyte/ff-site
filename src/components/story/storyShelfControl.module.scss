@@ -1,8 +1,15 @@
 @use '../../styles/mixins' as m;
 
 .toggle {
-    @include m.ghost-button;
-    margin-top: 0.5rem;
+    // Same size as DeleteControl's button so the two sit evenly side by side
+    @include m.ghost-button(var(--text-muted), 0.68rem, 0.5rem 0.7rem);
+}
+
+.panelRow {
+    // Own row beneath the button row (the parent is a wrapping flex container)
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .panel {
@@ -11,7 +18,6 @@
     align-items: flex-end;
     justify-content: center;
     gap: 0.75rem 1rem;
-    margin-top: 0.75rem;
     padding: 0.75rem 1rem;
     background: var(--surface);
     border: 1px dashed var(--border-loud);
@@ -38,10 +44,6 @@
 .actions {
     display: flex;
     gap: 0.5rem;
-
-    .toggle {
-        margin-top: 0;
-    }
 }
 
 .save {
