@@ -26,10 +26,12 @@ export default function Footer() {
 
     return (
         <footer className={styles.footer}>
-            <span title={`ff-site commit ${siteCommit}`}>Site {site}</span>
-            <span aria-hidden> · </span>
-            <span title={api ? `ff-server commit ${api.commit}` : undefined}>
-                API {api === undefined ? '…' : (api?.version ?? 'unreachable')}
+            <span className='pixel-label'>est. 981 GUY ★ best viewed on any holodevice</span>
+            <br />
+            <span className='pixel-label' title={`ff-site commit ${siteCommit}`}>Site v{site}</span>
+            <span className='pixel-label' aria-hidden> / </span>
+            <span className='pixel-label' title={api ? `ff-server commit ${api.commit}` : undefined}>
+                API v{api === undefined ? '…' : (api?.version ?? 'unreachable')}
             </span>
         </footer>
     );

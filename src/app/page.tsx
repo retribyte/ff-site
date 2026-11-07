@@ -109,10 +109,6 @@ export default async function Home() {
                     </a>
                 ))}
             </section>
-
-            <footer className={styles.footer}>
-                <span className='pixel-label'>est. 981 GUY ⭑ best viewed in any browser</span>
-            </footer>
         </main>
     );
 }
