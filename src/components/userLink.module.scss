@@ -7,3 +7,22 @@
         color: var(--link-hover);
     }
 }
+
+// With an avatar: only the name carries the underline
+.withIcon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    text-decoration: none;
+    vertical-align: middle;
+
+    .name {
+        text-decoration: underline dotted;
+        text-underline-offset: 0.2em;
+    }
+}
+
+.icon {
+    flex: none;
+    object-fit: cover;
+}

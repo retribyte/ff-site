@@ -246,6 +246,37 @@ export interface CharacterQuotes {
     storyQuotes: StoryQuote[];
 }
 
+/** An episode line a character speaks, as a link target (GET /characters/:id/appearances) */
+export interface AppearanceEpisode {
+    title: string;
+    slug: string;
+    episodeNo: number;
+    messageNo: number;
+    reconstructed: boolean;
+}
+
+/** Response shape of GET /characters/:id/appearances */
+export interface CharacterAppearances {
+    /** One per campaign the character speaks in (any message type) */
+    campaigns: {
+        season: string;
+        slug: string;
+        kind: SeasonKind;
+        episodes: number;
+        /** Episodes in the whole campaign */
+        seasonEpisodes: number;
+        messages: number;
+        /** Archived episodes before reconstructed ones */
+        first: AppearanceEpisode;
+        last: AppearanceEpisode;
+    }[];
+    /** Up to 6, most shared episodes + stories first */
+    costars: (Pick<Character, 'id' | 'name' | 'slug' | 'image' | 'color' | 'colorLight'> & {
+        episodes: number;
+        stories: number;
+    })[];
+}
+
 export interface Item {
     id: number;
     name: string;

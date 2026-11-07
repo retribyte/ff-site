@@ -74,7 +74,7 @@ export default async function ItemPage({ params }: Props) {
     const meta = ITEM_TYPE_META[item.itemType];
 
     const facts: [string, React.ReactNode][] = [['type', meta.label]];
-    if (item.creator) facts.push(['recorded by', <UserLink key='creator' username={item.creator.username} />]);
+    if (item.creator) facts.push(['recorded by', <UserLink key='creator' username={item.creator.username} icon={item.creator.icon} />]);
 
     facts.push(...wikiFacts(item.wiki, ITEM_WIKI_ORDER, facts.map(([label]) => label)));
 

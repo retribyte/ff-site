@@ -1,0 +1,113 @@
+@use '../../styles/mixins' as m;
+
+// Inherits --char from the character page root
+
+// Section heading + reroll button on one line; the heading's dashed rule
+// stretches between them
+.head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    > :first-child {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+// Line heights pinned here so a one-line card's height is known in CSS:
+// padding + one quote line + footer margin + one footer line
+$line: 1.55;
+$quote-lines: 4; // longer quotes are clamped (the full log has the rest)
+$gap: 1rem;
+$row: calc(1.5rem + #{$line} * 1rem + 0.35rem + #{$line} * 0.62rem);
+$box: calc(3 * #{$row} + 2 * #{$gap} + #{$line} * 1rem);
+// A phone column wraps most quotes to two or three lines: more slack there
+$box-narrow: calc(3 * #{$row} + 2 * #{$gap} + 4 * #{$line} * 1rem);
+
+// Wrapping rows: each quote starts at its natural (unwrapped) width and grows
+// to fill its row, so short quotes share a row and a long one takes the whole
+// width (wrapping only when it's wider than the column).
+//
+// The box is three one-line rows tall plus one quote line of slack (so a
+// single two-line quote doesn't cost a whole row), all 9 quotes are laid out from the
+// first paint (server HTML included), and overflow is clipped. QuoteTeaser
+// then hides whole rows that don't fit, which never moves the rows above.
+// JS-less visitors get no quotes here; the full quote log still works.
+// [data-fixed] (a rerollable hand) holds that height so the page below never
+// moves on a reroll; a small fixed set just caps at it.
+.quotes {
+    @include m.quote-list;
+    position: relative; // offsetTop is measured against the list
+    flex-flow: row wrap;
+    align-content: flex-start;
+    gap: $gap;
+    overflow: hidden;
+    max-height: $box;
+    margin-bottom: 0.75rem;
+
+    &[data-fixed] {
+        height: $box;
+    }
+
+    @media (max-width: 600px) {
+        max-height: $box-narrow;
+
+        &[data-fixed] {
+            height: $box-narrow;
+        }
+    }
+
+    // Until QuoteTeaser has fitted the rows with web fonts loaded: the space
+    // is held but nothing shows, so fallback-font wrapping never flashes
+    &:not([data-fitted]) {
+        visibility: hidden;
+    }
+
+    &[data-fitted] {
+        animation: quotes-in 0.2s ease-out;
+
+        @media (prefers-reduced-motion: reduce) {
+            animation: none;
+        }
+    }
+}
+
+@keyframes quotes-in {
+    from {
+        opacity: 0;
+    }
+}
+
+.quote {
+    @include m.quote-item;
+    flex: 1 1 auto;
+    max-width: 100%;
+
+    // quote-item's display: flex would otherwise beat the hidden attribute
+    &[hidden] {
+        display: none;
+    }
+
+    blockquote p {
+        line-height: $line;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: $quote-lines;
+        line-clamp: $quote-lines;
+        overflow: hidden;
+    }
+
+    blockquote footer {
+        line-height: $line;
+    }
+}
+
+.quoteMark {
+    @include m.quote-mark;
+}
+
+.reroll {
+    @include m.ghost-button;
+    flex: none;
+}

@@ -2,16 +2,17 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
-import type { CharacterQuotes, Character } from '@/lib/types';
+import type { CharacterAppearances, CharacterQuotes, Character } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
 import { personaHasName } from '@/lib/personaIdentity';
-import { lineUrl } from '@/lib/seasons';
+import { lineUrl, seasonColors, seasonDisplayName, seasonOrder, seasonSlug } from '@/lib/seasons';
 import { quotedSpanText, storyQuoteUrl } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
 import { getSessionUser } from '@/lib/auth';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
 import ActionChip from '@/components/editor/ActionChip';
 import SpeakerAdmin from '@/components/characters/SpeakerAdmin';
+import QuoteTeaser from '@/components/characters/QuoteTeaser';
 import WikiLink from '@/components/WikiLink';
 import UserLink from '@/components/UserLink';
 import { wikiFacts, type WikiFieldSpec } from '@/lib/wiki';
@@ -49,6 +50,66 @@ interface Props {
     params: Promise<{ id: string }>;
 }
 
+// Quotes per hand (QuoteTeaser shows the ones that fit in its rows), and how
+// many the reroll button cycles through
+const TEASER_COUNT = 9;
+const TEASER_POOL = 63;
+
+const numberFormat = new Intl.NumberFormat('en-US');
+
+function plural(n: number, word: string, many = `${word}s`): string {
+    return `${numberFormat.format(n)} ${n === 1 ? word : many}`;
+}
+
+function shuffled<T>(items: T[]): T[] {
+    const out = [...items];
+    for (let i = out.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+}
+
+/** One story the character speaks in, gathered from its story quotes */
+interface StoryAppearance {
+    slug: string;
+    title: string;
+    season: string | null;
+    lines: number;
+    chapters: Set<number>;
+    first: { storySlug: string; chapterNo: number; line_no: number };
+}
+
+function storyAppearances(quotes: CharacterQuotes['storyQuotes']): StoryAppearance[] {
+    const bySlug = new Map<string, StoryAppearance>();
+    for (const q of quotes) {
+        let story = bySlug.get(q.storySlug);
+        if (!story) {
+            story = { slug: q.storySlug, title: q.storyTitle, season: q.storySeason ?? null, lines: 0, chapters: new Set(), first: q };
+            bySlug.set(q.storySlug, story);
+        }
+        story.lines += 1;
+        story.chapters.add(q.chapterNo);
+        if (q.chapterNo < story.first.chapterNo || (q.chapterNo === story.first.chapterNo && q.line_no < story.first.line_no)) {
+            story.first = q;
+        }
+    }
+    return [...bySlug.values()].sort((a, b) => {
+        const [ra, ka] = seasonOrder(a.season);
+        const [rb, kb] = seasonOrder(b.season);
+        return ra - rb || ka.localeCompare(kb) || a.title.localeCompare(b.title);
+    });
+}
+
+function episodeLabel(episode: { episodeNo: number; title: string; reconstructed: boolean }): React.ReactNode {
+    return (
+        <>
+            <span className={styles.episodeNo}>{episode.reconstructed ? 'reconstructed' : `ep ${episode.episodeNo}`}</span>
+            {episode.title}
+        </>
+    );
+}
+
 async function getCharacter(param: string): Promise<Character | null> {
     try {
         return await api<Character>(`/characters/${param}`);
@@ -73,10 +134,14 @@ export default async function CharacterPage({ params }: Props) {
 
     let character: Character | null;
     let quotes: CharacterQuotes = { messages: [], storyQuotes: [] };
+    let appearances: CharacterAppearances = { campaigns: [], costars: [] };
     try {
         character = await getCharacter(idParam);
         if (character) {
-            quotes = await api<CharacterQuotes>(`/characters/${character.id}/quotes`).catch(() => quotes);
+            [quotes, appearances] = await Promise.all([
+                api<CharacterQuotes>(`/characters/${character.id}/quotes`).catch(() => quotes),
+                api<CharacterAppearances>(`/characters/${character.id}/appearances`).catch(() => appearances),
+            ]);
         }
     } catch {
         return (
@@ -107,23 +172,38 @@ export default async function CharacterPage({ params }: Props) {
             // Name-less personas (look-only) carry no lore-relevant name, so
             // they're skipped here — only named personas earn "(as X)".
             context: m.episode
-                ? `${m.episode.seasonTitle} ⭑ ${m.episodeTitle}${personaHasName(m.persona) ? ` (as ${m.persona!.name})` : ''}`
+                ? `${m.episode.seasonTitle} — ${m.episodeTitle}${personaHasName(m.persona) ? ` (as ${m.persona!.name})` : ''}`
                 : undefined,
         })),
         ...quotes.storyQuotes.map((q) => ({
             key: `story-${q.id}`,
             text: quotedSpanText(q, character.id),
             href: storyQuoteUrl(q),
-            context: `${q.storyTitle} ⭑ ch. ${q.chapterNo}`,
+            context: `${q.storyTitle} — ch. ${q.chapterNo}`,
         })),
     ];
     // Fresh random intercepts on every visit — intentional impurity on a
-    // dynamic server-rendered route (nothing rehydrates against it).
-    // eslint-disable-next-line react-hooks/purity
-    const sampleQuotes = [...teaserQuotes].sort(() => Math.random() - 0.5).slice(0, 3);
+    // dynamic server-rendered route. QuoteTeaser takes this order as its
+    // initial state, so hydration matches whatever the server picked.
+    const quotePool = shuffled(teaserQuotes).slice(0, TEASER_POOL);
+
+    // Campaigns: the ones it speaks in, plus story-only campaigns an admin
+    // cast it in (no transcript, so no stats)
+    const mainIn = new Set((character.mainIn ?? []).map((s) => s.title));
+    const campaignRows = [
+        ...appearances.campaigns,
+        ...(character.mainIn ?? [])
+            .filter((s) => !appearances.campaigns.some((c) => c.season === s.title))
+            .map((s) => ({ season: s.title, slug: s.slug, castOnly: true as const })),
+    ].sort((a, b) => {
+        const [ra, ka] = seasonOrder(a.season);
+        const [rb, kb] = seasonOrder(b.season);
+        return ra - rb || ka.localeCompare(kb);
+    });
+    const stories = storyAppearances(quotes.storyQuotes);
 
     const facts: [string, React.ReactNode][] = [];
-    if (character.creator) facts.push(['played by', <UserLink key='creator' username={character.creator.username} />]);
+    if (character.creator) facts.push(['played by', <UserLink key='creator' username={character.creator.username} icon={character.creator.icon} />]);
     facts.push(...wikiFacts(character.wiki, CHARACTER_WIKI_ORDER, facts.map(([label]) => label)));
 
     return (
@@ -170,27 +250,139 @@ export default async function CharacterPage({ params }: Props) {
 
                     {teaserQuotes.length > 0 && (
                         <section className={styles.section}>
-                            <h2 className={styles.sectionTitle}>Intercepted transmissions</h2>
-                            <ul className={styles.quotes}>
-                                {sampleQuotes.map((quote) => (
-                                    <li key={quote.key} className={styles.quote}>
-                                        <span className={styles.quoteMark} aria-hidden>
-                                            “
-                                        </span>
-                                        <blockquote>
-                                            <p>{quote.text}</p>
-                                            {quote.href && (
-                                                <footer>
-                                                    <Link href={quote.href}>{quote.context}</Link>
-                                                </footer>
-                                            )}
-                                        </blockquote>
+                            <QuoteTeaser
+                                pool={quotePool}
+                                count={TEASER_COUNT}
+                                title='Intercepted transmissions'
+                                titleClassName={styles.sectionTitle}
+                            />
+                            <Link href={`/characters/${character.slug}/quotes`} className={styles.quotesLink}>
+                                full quote log ({numberFormat.format(teaserQuotes.length)}) →
+                            </Link>
+                        </section>
+                    )}
+
+                    {campaignRows.length > 0 && (
+                        <section className={styles.section}>
+                            <h2 className={styles.sectionTitle}>Episode appearances</h2>
+                            <ul className={styles.record}>
+                                {campaignRows.map((row) => (
+                                    <li
+                                        key={row.season}
+                                        className={styles.recordRow}
+                                        style={{ '--season': seasonColors(row.season).primary } as React.CSSProperties}
+                                    >
+                                        <div className={styles.recordHead}>
+                                            <Link href={`/archives/${row.slug ?? seasonSlug(row.season)}`} className={styles.recordTitle}>
+                                                {seasonDisplayName(row.season)}
+                                            </Link>
+                                            {mainIn.has(row.season) && <span className={styles.recordTag}>main cast</span>}
+                                        </div>
+                                        {'castOnly' in row ? (
+                                            <p className={styles.recordStats}>story-only campaign</p>
+                                        ) : (
+                                            <>
+                                                <p className={styles.recordStats}>
+                                                    {numberFormat.format(row.episodes)} of {plural(row.seasonEpisodes, 'episode')},{' '}
+                                                    {plural(row.messages, 'message')}
+                                                </p>
+                                                <dl className={styles.recordLinks}>
+                                                    <div>
+                                                        <dt>first seen</dt>
+                                                        <dd>
+                                                            <Link
+                                                                href={lineUrl(
+                                                                    { title: row.first.title, slug: row.first.slug, episode_no: row.first.episodeNo, seasonTitle: row.season },
+                                                                    row.first.messageNo
+                                                                )}
+                                                            >
+                                                                {episodeLabel(row.first)}
+                                                            </Link>
+                                                        </dd>
+                                                    </div>
+                                                    {row.last.title !== row.first.title && (
+                                                        <div>
+                                                            <dt>last seen</dt>
+                                                            <dd>
+                                                                <Link
+                                                                    href={lineUrl(
+                                                                        { title: row.last.title, slug: row.last.slug, episode_no: row.last.episodeNo, seasonTitle: row.season },
+                                                                        row.last.messageNo
+                                                                    )}
+                                                                >
+                                                                    {episodeLabel(row.last)}
+                                                                </Link>
+                                                            </dd>
+                                                        </div>
+                                                    )}
+                                                </dl>
+                                            </>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
-                            <Link href={`/characters/${character.slug}/quotes`} className={styles.quotesLink}>
-                                full quote log ({teaserQuotes.length}) →
-                            </Link>
+                        </section>
+                    )}
+
+                    {stories.length > 0 && (
+                        <section className={styles.section}>
+                            <h2 className={styles.sectionTitle}>Story appearances</h2>
+                            <ul className={styles.record}>
+                                {stories.map((story) => (
+                                    <li
+                                        key={story.slug}
+                                        className={styles.recordRow}
+                                        style={{ '--season': story.season ? seasonColors(story.season).primary : 'var(--accent)' } as React.CSSProperties}
+                                    >
+                                        <div className={styles.recordHead}>
+                                            <Link href={`/stories/${story.slug}`} className={styles.recordTitle}>
+                                                {story.title}
+                                            </Link>
+                                            {story.season && <span className={styles.recordTag}>{story.season}</span>}
+                                        </div>
+                                        <p className={styles.recordStats}>
+                                            {plural(story.lines, 'line')} across {plural(story.chapters.size, 'chapter')}
+                                        </p>
+                                        <dl className={styles.recordLinks}>
+                                            <div>
+                                                <dt>first line</dt>
+                                                <dd>
+                                                    <Link href={storyQuoteUrl(story.first)}>
+                                                        chapter {story.first.chapterNo}, line {story.first.line_no}
+                                                    </Link>
+                                                </dd>
+                                            </div>
+                                        </dl>
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    )}
+
+                    {appearances.costars.length > 0 && (
+                        <section className={styles.section}>
+                            <h2 className={styles.sectionTitle}>Frequent co-stars</h2>
+                            <ul className={styles.costars}>
+                                {appearances.costars.map((c) => (
+                                    <li key={c.id}>
+                                        <Link
+                                            href={`/characters/${c.slug}`}
+                                            className={styles.costar}
+                                            style={
+                                                {
+                                                    '--co-dark': characterColor(c.name, c.color, 'dark', c.colorLight),
+                                                    '--co-light': characterColor(c.name, c.color, 'light', c.colorLight),
+                                                } as React.CSSProperties
+                                            }
+                                        >
+                                            <ThemedAvatar src={c.image} name={c.name} color={c.color} colorLight={c.colorLight} size={42} />
+                                            <span className={styles.costarName}>{c.name}</span>
+                                            {c.episodes > 0 && <span className={styles.costarStats}>{plural(c.episodes, 'episode')}</span>}
+                                            {c.stories > 0 && <span className={styles.costarStats}>{plural(c.stories, 'story', 'stories')}</span>}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
                         </section>
                     )}
 
