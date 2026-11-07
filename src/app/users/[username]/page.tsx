@@ -62,6 +62,14 @@ export default async function UserPage({ params }: Props) {
                 <article className={styles.article}>
                     <h1 className={styles.name}>{profile.username}</h1>
                     {profile.role === 'ADMIN' && <p className={styles.roleChip}>archive admin</p>}
+                    {profile.inactive && (
+                        <p
+                            className={`${styles.roleChip} ${styles.inactiveChip}`}
+                            title='Still on the starting password, so they have never signed in'
+                        >
+                            inactive account
+                        </p>
+                    )}
 
                     {profile.bio ? (
                         <RichText html={profile.bio} className={styles.bio} />

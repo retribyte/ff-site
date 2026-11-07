@@ -23,6 +23,8 @@ export interface UserProfile extends PublicUser {
     iconBooruId: number | null;
     wikiUser: string | null;
     createdAt: string;
+    /** Still on the seeded/reset password: has never signed in as themselves */
+    inactive: boolean;
     characters: { id: number; name: string; slug: string; image: string | null; color: string | null; colorLight?: string | null; seasons?: string[]; quoteCount?: number }[];
     stories: { id: number; slug: string; title: string; publishedDate: string | null }[];
     _count: { messages: number; commentaries: number };
@@ -302,6 +304,28 @@ export interface JobRun {
     startedAt: string;
     finishedAt: string | null;
     user: { id: number; username: string } | null;
+}
+
+/** One ff-server log entry (GET /admin/logs); other fields depend on `event` */
+export interface LogEntry {
+    time: string;
+    level: 'debug' | 'info' | 'warn' | 'error';
+    event: string;
+    msg?: string;
+    reqId?: string;
+    userId?: number;
+    username?: string;
+    [field: string]: unknown;
+}
+
+/** GET /admin/views: page views of one episode or story over a window */
+export interface ViewTotal {
+    kind: 'EPISODE' | 'STORY';
+    slug: string;
+    title: string;
+    /** Signed-in views */
+    member: number;
+    anonymous: number;
 }
 
 /** GET /admin/jobs: a maintenance job and its latest run */

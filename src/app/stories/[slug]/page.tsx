@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { Story } from '@/lib/types';
 import { chapterSlug, countVoices, fetchAllLines, formatWords, slimStoryChapter, storyColors } from '@/lib/stories';
+import { recordView } from '@/lib/views';
 import SignalLost from '@/components/SignalLost';
 import StoryReader from '@/components/story/StoryReader';
 import ChoiceJump from '@/components/story/ChoiceJump';
@@ -43,6 +44,8 @@ export default async function StoryPage({ params }: Props) {
             </main>
         );
     }
+
+    await recordView('story', slug);
 
     const chapters = [...(story.chapters ?? [])].sort((a, b) => a.chapter_no - b.chapter_no);
     const colors = storyColors(story);

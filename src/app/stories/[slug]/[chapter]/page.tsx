@@ -11,6 +11,7 @@ import {
     slimStoryChapter,
     storyColors,
 } from '@/lib/stories';
+import { recordView } from '@/lib/views';
 import SignalLost from '@/components/SignalLost';
 import StoryReader from '@/components/story/StoryReader';
 import ChoiceJump from '@/components/story/ChoiceJump';
@@ -59,6 +60,8 @@ export default async function StoryChapterPage({ params }: Props) {
 
     // Single-chapter stories read inline on the story page — keep one canonical URL
     if (chapters.length === 1) redirect(`/stories/${slug}`);
+
+    await recordView('story', slug);
 
     const chapter = chapters[index];
     const prev = index > 0 ? chapters[index - 1] : null;

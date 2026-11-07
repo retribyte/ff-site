@@ -11,9 +11,18 @@
     margin: 0 auto;
 }
 
-// One addressable line of the story; anchor button lives in the margin
+// One addressable line of the story; anchor button lives in the margin.
+// content-visibility: auto implies paint containment, which clips anything
+// outside the box (the margin button, the highlight outline) and makes it
+// unclickable, so the line pads out to cover them and cancels it with a
+// negative margin: the text doesn't move.
+$line-pad: 0.4rem; // covers the highlight outline (1px + 4px offset)
+$anchor-gutter: 2.6rem; // the anchor's width plus its gap, on wide screens
+
 .line {
     position: relative;
+    padding: $line-pad $line-pad $line-pad $anchor-gutter;
+    margin: (-$line-pad) (-$line-pad) (-$line-pad) (-$anchor-gutter);
 
     content-visibility: auto;
     contain-intrinsic-size: auto 4rem;
@@ -30,7 +39,13 @@
         padding: 0 2px;
     }
 
-    &[data-target] {
+    // The deep-link highlight hugs the text, not the padded box
+    &[data-target]::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        pointer-events: none;
+        inset: $line-pad $line-pad $line-pad $anchor-gutter;
         background: color-mix(in srgb, var(--story) 14%, transparent);
         outline: 1px solid color-mix(in srgb, var(--story) 45%, transparent);
         outline-offset: 4px;
@@ -211,8 +226,8 @@
 
 .anchor {
     position: absolute;
-    top: 0;
-    left: -2.1rem;
+    top: $line-pad;
+    left: calc($anchor-gutter - 2.1rem);
     width: 1.5rem;
     height: 1.5rem;
     opacity: 0;
@@ -237,13 +252,19 @@
 
 @media (max-width: 860px) {
     // No margin room on small screens — tuck the anchor inside, top-right
+    .line {
+        padding-left: $line-pad;
+        margin-left: -$line-pad;
+    }
+
     .anchor {
         left: auto;
-        right: 0;
+        right: $line-pad;
         opacity: 0.45;
     }
 
-    .line[data-target] {
+    .line[data-target]::before {
+        left: $line-pad;
         outline-offset: 2px;
     }
 }
