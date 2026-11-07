@@ -72,20 +72,8 @@
     }
 }
 
-.quotes {
-    @include m.quote-list;
-    margin-bottom: 0.75rem;
-}
-
-.quote {
-    @include m.quote-item;
-}
-
-.quoteMark {
-    @include m.quote-mark;
-}
-
 .quotesLink {
+    margin-left: 0.75rem;
     font-family: var(--font-pixel);
     font-size: 0.7rem;
     text-transform: uppercase;
@@ -96,6 +84,117 @@
     &:hover {
         color: var(--link-hover);
     }
+}
+
+// ── Service record / story appearances ───────────────────────────────────
+// One row per campaign or story, striped in the season's color (--season)
+.record {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.recordRow {
+    background: color-mix(in srgb, var(--season) 6%, var(--surface));
+    border-left: var(--px) solid var(--season);
+    padding: 0.65rem 1rem;
+}
+
+.recordHead {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.recordTitle {
+    @include m.plain-link(var(--text));
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+}
+
+.recordTag {
+    @include m.card-tag(var(--season));
+}
+
+.recordStats {
+    margin: 0.3rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+
+    a {
+        @include m.plain-link;
+    }
+}
+
+.recordLinks {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.2rem 0.75rem;
+    margin: 0.45rem 0 0;
+    font-size: 0.92rem;
+
+    div {
+        display: contents;
+    }
+
+    dt {
+        font-family: var(--font-pixel);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        align-self: center;
+    }
+
+    dd {
+        margin: 0;
+        min-width: 0;
+    }
+
+    // "ep 4" set apart from the episode title by type, not a separator glyph
+    .episodeNo {
+        font-family: var(--font-pixel);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-right: 0.5rem;
+    }
+
+    a {
+        @include m.plain-link;
+    }
+}
+
+// ── Co-stars ─────────────────────────────────────────────────────────────
+.costars {
+    @include m.auto-grid(9rem, 0.75rem);
+}
+
+.costar {
+    // Each card's own character color, both theme variants set inline
+    --co: var(--co-dark);
+
+    @include m.tinted-card(var(--co));
+}
+
+:global([data-theme='light']) .costar {
+    --co: var(--co-light);
+}
+
+.costarName {
+    font-family: var(--font-display);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.costarStats {
+    font-family: var(--font-pixel);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
 }
 
 // ── Infobox (wiki portable-infobox, reborn) ──────────────────────────────
