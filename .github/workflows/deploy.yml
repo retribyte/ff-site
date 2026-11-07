@@ -27,13 +27,42 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm run lint
       - run: npm test
+      - run: scripts/test-tag-release.sh
       - run: npx tsc --noEmit
       - run: npm run build
         env:
           NEXT_PUBLIC_API_URL: /api
 
-  deploy:
+  # Main only, before the deploy so the build sees the tag: a merged PR whose title
+  # or description says [minor] or [major] gets the next release tag. Anything else
+  # is a patch, which `git describe` counts on its own. See ff-server/docs/versioning.md.
+  version:
     needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # push the tag
+      pull-requests: read
+    concurrency:
+      group: tag-release-ff-site
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # the tags
+      - name: Tag a release if the merged PR asks for one
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # The PR that produced this commit (empty for a direct push)
+          PR_TEXT="$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" \
+            --jq '[.[] | select(.merged_at != null)][0] // empty | "\(.title)\n\n\(.body // "")"')"
+          export PR_TEXT
+          scripts/tag-release.sh
+
+  deploy:
+    needs: [test, version]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
@@ -44,6 +73,8 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # tags, for the version in the build (next.config.ts)
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
