@@ -58,7 +58,11 @@ export default function Navbar() {
     const pathname = usePathname();
     const { colorMode, toggleColorMode } = useTheme();
     const { user } = useSession();
-    const navLinks = user ? [...links, { href: '/import', label: 'Import' }] : links;
+    const navLinks = [
+        ...links,
+        ...(user ? [{ href: '/import', label: 'Import' }] : []),
+        ...(user?.role === 'ADMIN' ? [{ href: '/admin', label: 'Admin' }] : []),
+    ];
     // The small-screen menu remembers the page it was opened on, so any
     // navigation (link, search result, back button) closes it without an effect
     const [menuOpenAt, setMenuOpenAt] = useState<string | null>(null);

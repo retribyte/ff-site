@@ -1,0 +1,188 @@
+@use '../../styles/mixins' as m;
+
+// The /admin page's panels: episode import, maintenance jobs, history.
+
+// Status colors, mixed toward the text color so they stay readable in both themes
+$good: color-mix(in srgb, var(--ff3) 65%, var(--text));
+$bad: color-mix(in srgb, var(--ff1) 70%, var(--text));
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0 0 2rem;
+    padding: 1.25rem;
+    border: 1px dashed var(--border-loud);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+}
+
+.panelTitle {
+    margin: 0;
+}
+
+.help {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.note {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.good {
+    color: $good;
+}
+
+.bad {
+    color: $bad;
+}
+
+.error {
+    @include m.pixel-error;
+}
+
+.errors {
+    @include m.reset-list;
+    color: $bad;
+    font-size: 0.85rem;
+}
+
+.fileInput {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    max-width: 100%;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.ghost {
+    @include m.ghost-button;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+}
+
+.go {
+    @include m.ghost-button(var(--text), 0.65rem, 0.45rem 0.7rem);
+    border-style: solid;
+    border-color: var(--accent);
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+}
+
+.tag {
+    @include m.card-tag(var(--code-highlight));
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+// Scrolls sideways on a phone instead of widening the page
+.table {
+    display: block;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+
+    th {
+        font-family: var(--font-pixel);
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        text-align: left;
+        font-weight: normal;
+    }
+
+    th,
+    td {
+        padding: 0.4rem 0.75rem 0.4rem 0;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+    }
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.status {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+
+    &[data-status='SUCCEEDED'] {
+        color: $good;
+    }
+
+    &[data-status='FAILED'] {
+        color: $bad;
+    }
+
+    &[data-status='RUNNING'] {
+        color: var(--code-highlight);
+    }
+}
+
+.result {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.resultLine {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.log {
+    margin: 0;
+    max-height: 18rem;
+    overflow: auto;
+    padding: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.jobs {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.job {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.jobHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.lastRun {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}

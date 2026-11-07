@@ -257,3 +257,44 @@ export interface Item {
     creator?: PublicUser;
     wiki?: WikiData | null;
 }
+
+export type JobStatus = 'RUNNING' | 'SUCCEEDED' | 'FAILED';
+
+/** One run of an admin job (GET /admin/job-runs; `log` only on a single run or a run's response) */
+export interface JobRun {
+    id: number;
+    job: string;
+    dryRun: boolean;
+    status: JobStatus;
+    summary: string | null;
+    log?: string;
+    startedAt: string;
+    finishedAt: string | null;
+    user: { id: number; username: string } | null;
+}
+
+/** GET /admin/jobs: a maintenance job and its latest run */
+export interface AdminJob {
+    name: string;
+    title: string;
+    description: string;
+    lastRun: JobRun | null;
+}
+
+/** POST /admin/episode-import/preview: what importing these episodes would do */
+export interface EpisodeImportPlan {
+    episodes: {
+        title: string;
+        seasonTitle: string;
+        episodeNo: number;
+        reconstructed: boolean;
+        messages: number;
+        newSeason: boolean;
+        conflicts: string[];
+    }[];
+    missingPlayers: string[];
+    newNpcVoices: string[];
+    newPersonas: { character: string; name: string }[];
+    caseMatches: { speaker: string; character: string }[];
+    ok: boolean;
+}
