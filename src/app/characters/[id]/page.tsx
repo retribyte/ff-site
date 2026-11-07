@@ -253,7 +253,7 @@ export default async function CharacterPage({ params }: Props) {
                             <QuoteTeaser
                                 pool={quotePool}
                                 count={TEASER_COUNT}
-                                title='Intercepted transmissions'
+                                title='Quotes'
                                 titleClassName={styles.sectionTitle}
                             />
                             <Link href={`/characters/${character.slug}/quotes`} className={styles.quotesLink}>

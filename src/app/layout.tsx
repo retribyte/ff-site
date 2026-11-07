@@ -39,9 +39,9 @@ const righteous = localFont({
 export const metadata: Metadata = {
     title: {
         default: 'Final Frontier',
-        template: '%s ⭑ Final Frontier',
+        template: '%s - Final Frontier',
     },
-    description: 'The canonical archive of the Final Frontier universe — campaigns, characters, and lore.',
+    description: 'The archive of the Final Frontier universe: campaigns, characters, and more.',
 };
 
 // Runs before paint so the persisted theme applies without a flash.
