@@ -62,55 +62,65 @@ export default function StoryShelfControl({
         }
     };
 
-    if (!open) {
-        return (
-            <button type='button' className={styles.toggle} onClick={() => setOpen(true)}>
+    return (
+        <>
+            <button type='button' className={styles.toggle} aria-expanded={open} onClick={() => setOpen((o) => !o)}>
                 shelf settings
             </button>
-        );
-    }
-
-    return (
-        <div className={styles.panel}>
-            <label className={styles.field}>
-                <span className='pixel-label'>campaign</span>
-                <select value={season} onChange={(e) => setSeason(e.target.value)} disabled={busy || !seasons}>
-                    <option value=''>none</option>
-                    {/* the current campaign stays listed while the list loads */}
-                    {(seasons ?? (seasonTitle ? [seasonTitle] : [])).map((title) => (
-                        <option key={title} value={title}>
-                            {seasonDisplayName(title)}
-                        </option>
-                    ))}
-                </select>
-            </label>
-            <label className={styles.check}>
-                <input type='checkbox' checked={isCanon} onChange={(e) => setCanon(e.target.checked)} disabled={busy} />
-                <span className='pixel-label'>canon</span>
-            </label>
-            <div className={styles.actions}>
-                <button type='button' className={styles.save} onClick={save} disabled={busy || !changed}>
-                    {busy ? 'saving…' : 'save'}
-                </button>
-                <button
-                    type='button'
-                    className={styles.toggle}
-                    onClick={() => {
-                        setOpen(false);
-                        setSeason(seasonTitle ?? '');
-                        setCanon(canon);
-                        setError(null);
-                    }}
-                    disabled={busy}
-                >
-                    cancel
-                </button>
-            </div>
-            {error && (
-                <p className={styles.error} role='alert'>
-                    ✖ {error}
-                </p>
+            {open && (
+                <div className={styles.panelRow}>
+                    <div className={styles.panel}>
+                        <label className={styles.field}>
+                            <span className='pixel-label'>campaign</span>
+                            <select
+                                value={season}
+                                onChange={(e) => setSeason(e.target.value)}
+                                disabled={busy || !seasons}
+                            >
+                                <option value=''>none</option>
+                                {/* the current campaign stays listed while the list loads */}
+                                {(seasons ?? (seasonTitle ? [seasonTitle] : [])).map((title) => (
+                                    <option key={title} value={title}>
+                                        {seasonDisplayName(title)}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                        <label className={styles.check}>
+                            <input
+                                type='checkbox'
+                                checked={isCanon}
+                                onChange={(e) => setCanon(e.target.checked)}
+                                disabled={busy}
+                            />
+                            <span className='pixel-label'>canon</span>
+                        </label>
+                        <div className={styles.actions}>
+                            <button type='button' className={styles.save} onClick={save} disabled={busy || !changed}>
+                                {busy ? 'saving…' : 'save'}
+                            </button>
+                            <button
+                                type='button'
+                                className={styles.toggle}
+                                onClick={() => {
+                                    setOpen(false);
+                                    setSeason(seasonTitle ?? '');
+                                    setCanon(canon);
+                                    setError(null);
+                                }}
+                                disabled={busy}
+                            >
+                                cancel
+                            </button>
+                        </div>
+                        {error && (
+                            <p className={styles.error} role='alert'>
+                                ✖ {error}
+                            </p>
+                        )}
+                    </div>
+                </div>
             )}
-        </div>
+        </>
     );
 }

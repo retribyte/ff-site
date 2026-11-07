@@ -75,8 +75,10 @@ export default async function StoryPage({ params }: Props) {
                         {voices > 0 && <> ⭑ {voices} voices</>}
                     </p>
                     {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
-                    <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
-                    <StoryShelfControl slug={story.slug} canon={story.canon ?? true} seasonTitle={story.season?.title ?? null} />
+                    <div className={styles.adminActions}>
+                        <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
+                        <StoryShelfControl slug={story.slug} canon={story.canon ?? true} seasonTitle={story.season?.title ?? null} />
+                    </div>
                 </header>
 
                 <StoryReader data={data} canDelete authorIds={(story.authors ?? []).map((a) => a.id)} />
@@ -102,8 +104,10 @@ export default async function StoryPage({ params }: Props) {
                     {chapters.length} chapters ⭑ {formatWords(story.wordCount ?? 0)}
                 </p>
                 {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
-                <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
-                <StoryShelfControl slug={story.slug} canon={story.canon ?? true} seasonTitle={story.season?.title ?? null} />
+                <div className={styles.adminActions}>
+                    <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
+                    <StoryShelfControl slug={story.slug} canon={story.canon ?? true} seasonTitle={story.season?.title ?? null} />
+                </div>
             </header>
 
             <ol className={styles.toc}>
