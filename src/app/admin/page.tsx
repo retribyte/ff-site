@@ -7,6 +7,7 @@ import SignalLost from '@/components/SignalLost';
 import EpisodeImportPanel from '@/components/admin/EpisodeImportPanel';
 import MaintenanceJobs from '@/components/admin/MaintenanceJobs';
 import JobHistory from '@/components/admin/JobHistory';
+import LogPanel from '@/components/admin/LogPanel';
 import styles from './admin.module.scss';
 
 export const metadata: Metadata = {
@@ -41,11 +42,12 @@ export default async function AdminPage() {
         <main className={styles.main}>
             <header className={styles.header}>
                 <h1>Admin</h1>
-                <p className='pixel-label'>jobs that change the archive</p>
+                <p className='pixel-label'>jobs that change the archive, and what the server has been up to</p>
             </header>
             <EpisodeImportPanel />
             <MaintenanceJobs jobs={jobs} />
             <JobHistory runs={runs} />
+            <LogPanel />
         </main>
     );
 }

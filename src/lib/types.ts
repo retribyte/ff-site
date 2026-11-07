@@ -304,6 +304,18 @@ export interface JobRun {
     user: { id: number; username: string } | null;
 }
 
+/** One ff-server log entry (GET /admin/logs); other fields depend on `event` */
+export interface LogEntry {
+    time: string;
+    level: 'debug' | 'info' | 'warn' | 'error';
+    event: string;
+    msg?: string;
+    reqId?: string;
+    userId?: number;
+    username?: string;
+    [field: string]: unknown;
+}
+
 /** GET /admin/jobs: a maintenance job and its latest run */
 export interface AdminJob {
     name: string;
