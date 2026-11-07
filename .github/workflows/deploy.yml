@@ -33,9 +33,9 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: /api
 
-  # Main only, before the deploy so the build sees the tag: a merged PR whose title
-  # or description says [minor] or [major] gets the next release tag. Anything else
-  # is a patch, which `git describe` counts on its own. See ff-server/docs/versioning.md.
+  # Main only, before the deploy so the build sees the tag: every merge gets the next
+  # release tag, a minor or major one if the PR's title or description says [minor] or
+  # [major], otherwise a patch. See ff-server/docs/versioning.md.
   version:
     needs: test
     if: github.ref == 'refs/heads/main'
