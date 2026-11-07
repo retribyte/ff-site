@@ -51,3 +51,5 @@ next-env.d.ts
 vortox-wiki.css
 archive-to-markdown/__pycache__/
 /.claude/
+# database dumps (hold account data)
+*.dump

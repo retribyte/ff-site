@@ -1,0 +1,60 @@
+@use '../../styles/mixins' as m;
+
+// --char (the character's color) is set by the quote log page
+
+.stats {
+    margin: 0.75rem 0 0;
+}
+
+.sourceSelect {
+    @include m.pixel-select;
+    padding: 0.35rem 0.5rem;
+    min-width: 0;
+    // leaves the search input most of the bar on a phone
+    max-width: min(12rem, 40%);
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: -0.75rem 0 0.5rem;
+}
+
+.filter {
+    // --tone set inline to the season's color
+    @include m.toggle-chip(var(--tone, var(--accent)));
+}
+
+.section {
+    margin-top: 2rem;
+}
+
+.sectionTitle {
+    font-size: 1.3rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    &::after {
+        content: '';
+        flex: 1;
+        border-top: 1px dashed color-mix(in srgb, var(--char) 45%, var(--border-loud));
+    }
+}
+
+.quotes {
+    @include m.quote-list;
+}
+
+.quote {
+    @include m.quote-item;
+
+    content-visibility: auto;
+    contain-intrinsic-size: auto 5rem;
+}
+
+.quoteMark {
+    @include m.quote-mark;
+}

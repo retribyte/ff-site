@@ -31,7 +31,7 @@ export default async function ItemsPage() {
     return (
         <main className={styles.main}>
             <header className={styles.header}>
-                <h1>Recovered Effects</h1>
+                <h1>Items</h1>
                 <p className='pixel-label'>{items.length} lore entries in the vault</p>
                 {user && <ActionChip href='/items/new' label='+ log a recovered effect' />}
             </header>

@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { Story } from '@/lib/types';
-import { chapterSlug, countVoices, fetchAllLines, slimStoryChapter, storyColors } from '@/lib/stories';
+import { chapterSlug, countVoices, fetchAllLines, formatWords, slimStoryChapter, storyColors } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
 import StoryReader from '@/components/story/StoryReader';
 import ChoiceJump from '@/components/story/ChoiceJump';
 import styles from './story-page.module.scss';
 import DeleteStoryButton from '@/components/story/DeleteStoryButton';
+import StoryShelfControl from '@/components/story/StoryShelfControl';
 import UserLink from '@/components/UserLink';
 
 interface Props {
@@ -69,12 +70,13 @@ export default async function StoryPage({ params }: Props) {
                 <header className={styles.header}>
                     <h1 className={styles.title}>{story.title}</h1>
                     <p className='pixel-label'>
-                        {data.lines.length} lines
+                        {formatWords(story.wordCount ?? 0)}
                         {choices.length > 0 && <> ⭑ {choices.length} choices</>}
                         {voices > 0 && <> ⭑ {voices} voices</>}
                     </p>
                     {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
-                <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
+                    <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
+                    <StoryShelfControl slug={story.slug} canon={story.canon ?? true} seasonTitle={story.season?.title ?? null} />
                 </header>
 
                 <StoryReader data={data} canDelete authorIds={(story.authors ?? []).map((a) => a.id)} />
@@ -87,8 +89,6 @@ export default async function StoryPage({ params }: Props) {
     }
 
     // Multi-chapter stories get a table of contents
-    const lineTotal = chapters.reduce((sum, c) => sum + (c._count?.lines ?? 0), 0);
-
     return (
         <main className={styles.main} style={style}>
             <nav className={styles.breadcrumb}>
@@ -97,7 +97,7 @@ export default async function StoryPage({ params }: Props) {
 
             <header className={styles.header}>
                 <p className='pixel-label'>
-                    {chapters.length} chapters ⭑ {lineTotal} lines
+                    {chapters.length} chapters ⭑ {formatWords(story.wordCount ?? 0)}
                     {story.authors && story.authors.length > 0 && (
                         <>
                             {' ⭑ by '}
@@ -113,6 +113,7 @@ export default async function StoryPage({ params }: Props) {
                 <h1 className={styles.title}>{story.title}</h1>
                 {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
                 <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
+                <StoryShelfControl slug={story.slug} canon={story.canon ?? true} seasonTitle={story.season?.title ?? null} />
             </header>
 
             <ol className={styles.toc}>
@@ -122,7 +123,7 @@ export default async function StoryPage({ params }: Props) {
                             <span className={styles.tocNo}>{chapter.chapter_no}</span>
                             <span className={styles.tocTitle}>{chapter.title ?? `Chapter ${chapter.chapter_no}`}</span>
                             <span className={styles.tocMeta}>
-                                {chapter._count?.lines ?? 0} line{(chapter._count?.lines ?? 0) === 1 ? '' : 's'}
+                                {formatWords(chapter.wordCount ?? 0)}
                             </span>
                         </Link>
                     </li>

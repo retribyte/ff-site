@@ -92,8 +92,8 @@ export default async function CharacterPage({ params }: Props) {
 
     // Both theme variants go on the page root; CSS picks per data-theme
     const style = {
-        '--char-dark': characterColor(character.name, character.color, 'dark'),
-        '--char-light': characterColor(character.name, character.color, 'light'),
+        '--char-dark': characterColor(character.name, character.color, 'dark', character.colorLight ?? null),
+        '--char-light': characterColor(character.name, character.color, 'light', character.colorLight ?? null),
     } as React.CSSProperties;
 
     // Transcript messages and story-embedded dialogue have no shared sort
@@ -194,7 +194,14 @@ export default async function CharacterPage({ params }: Props) {
                         </section>
                     )}
 
-                    {user?.role === 'ADMIN' && <SpeakerAdmin characterId={character.id} name={character.name} slug={character.slug} />}
+                    {user?.role === 'ADMIN' && (
+                        <SpeakerAdmin
+                            characterId={character.id}
+                            name={character.name}
+                            slug={character.slug}
+                            mainIn={(character.mainIn ?? []).map((s) => s.title)}
+                        />
+                    )}
                 </article>
 
                 <aside className={`pixel-panel ${styles.infobox}`}>
@@ -203,6 +210,7 @@ export default async function CharacterPage({ params }: Props) {
                             src={character.image}
                             name={character.name}
                             color={character.color}
+                            colorLight={character.colorLight ?? null}
                             size={96}
                         />
                     </div>

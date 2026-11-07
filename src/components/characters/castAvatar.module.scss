@@ -1,0 +1,43 @@
+// A roster avatar with its name in a tooltip (data-name), shown on hover and
+// on keyboard focus so it isn't mouse-only. --char is set inline.
+.avatar {
+    position: relative;
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+
+    &:hover,
+    &:focus-visible {
+        background: color-mix(in srgb, var(--char) 14%, transparent);
+        border-color: color-mix(in srgb, var(--char) 45%, var(--border-loud));
+    }
+
+    &::after {
+        content: attr(data-name);
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 3;
+        white-space: nowrap;
+        pointer-events: none;
+        font-family: var(--font-pixel);
+        font-size: 0.65rem;
+        line-height: 1;
+        color: color-mix(in srgb, var(--char) var(--tint-ink), var(--text));
+        background: var(--surface);
+        border: 1px solid color-mix(in srgb, var(--char) 45%, var(--border-loud));
+        border-radius: var(--radius);
+        box-shadow: 2px 2px 0 0 var(--shadow);
+        padding: 0.3rem 0.45rem;
+        // out of layout until shown: a hidden tooltip near the right edge
+        // would still widen the page on a phone
+        display: none;
+    }
+
+    &:hover::after,
+    &:focus-visible::after {
+        display: block;
+    }
+}

@@ -5,7 +5,7 @@ import { api, ApiError } from '@/lib/api';
 import type { UserProfile } from '@/lib/types';
 import { booruPostUrl } from '@/lib/booru';
 import SignalLost from '@/components/SignalLost';
-import { compareCharacters } from '@/lib/characterSort';
+import { compareByQuotes } from '@/lib/characterSort';
 import CharacterCard from '@/components/characters/CharacterCard';
 import ResetPasswordControl from '@/components/users/ResetPasswordControl';
 import styles from './user.module.scss';
@@ -53,8 +53,8 @@ export default async function UserPage({ params }: Props) {
 
     const joined = new Date(profile.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
 
-    // Same order as /characters
-    const characters = [...profile.characters].sort(compareCharacters);
+    // Same default order as /characters: most quoted first
+    const characters = [...profile.characters].sort(compareByQuotes);
 
     return (
         <main className={styles.main}>

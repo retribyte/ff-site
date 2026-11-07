@@ -1,25 +1,37 @@
 import { seasonOrder } from './seasons';
+import type { CharacterAppearance } from './types';
 
-type Sortable = {
-    name: string;
-    image: string | null;
-    color: string | null;
-    seasons?: string[];
-};
-
-// Earliest season a character speaks in, by campaign order (FF1 before FF2…).
-function firstSeason(seasons: string[] | undefined): readonly [number, string] {
-    const orders = (seasons ?? []).map(seasonOrder);
-    if (orders.length === 0) return seasonOrder(null);
-    return orders.reduce((a, b) => (a[0] - b[0] || a[1].localeCompare(b[1]) <= 0 ? a : b));
+/**
+ * Most quoted first, then by name: the default character order (/characters,
+ * a player's profile). How much a character speaks is the archive's best
+ * measure of who the leads are; there's no "main character" field.
+ */
+export function compareByQuotes(
+    a: { name: string; quoteCount?: number },
+    b: { name: string; quoteCount?: number }
+): number {
+    return (b.quoteCount ?? 0) - (a.quoteCount ?? 0) || a.name.localeCompare(b.name);
 }
 
 /**
- * Portraited first, then color-only, then the rest; within each group by the
- * season of first appearance, then alphabetical.
+ * Compares two appearances in reading order: campaign order (seasonOrder),
+ * then episode, then message. A story-only appearance (no episode) sorts
+ * after the campaign's episodes, since a story has no place among them.
  */
-export function compareCharacters(a: Sortable, b: Sortable): number {
-    const rank = (c: Sortable) => (c.image ? 0 : c.color ? 1 : 2);
-    const [sa, sb] = [firstSeason(a.seasons), firstSeason(b.seasons)];
-    return rank(a) - rank(b) || sa[0] - sb[0] || sa[1].localeCompare(sb[1]) || a.name.localeCompare(b.name);
+export function compareAppearances(a: CharacterAppearance, b: CharacterAppearance): number {
+    const [ra, ka] = seasonOrder(a.season);
+    const [rb, kb] = seasonOrder(b.season);
+    const last = Number.POSITIVE_INFINITY;
+    return (
+        ra - rb ||
+        ka.localeCompare(kb) ||
+        (a.episodeNo ?? last) - (b.episodeNo ?? last) ||
+        (a.messageNo ?? last) - (b.messageNo ?? last)
+    );
+}
+
+/** A character's earliest appearance across every campaign, or null if it has none on record. */
+export function firstAppearance(appearances: CharacterAppearance[] | undefined): CharacterAppearance | null {
+    if (!appearances || appearances.length === 0) return null;
+    return appearances.reduce((a, b) => (compareAppearances(a, b) <= 0 ? a : b));
 }

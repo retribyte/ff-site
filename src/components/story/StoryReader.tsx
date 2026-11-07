@@ -57,10 +57,12 @@ type NameHandler = (lineNo: number, segment: number | null, el: HTMLElement) => 
 function voiceColor(
     characterId: number | null,
     name: string,
-    character: { color?: string | null } | null,
+    character: { color?: string | null; colorLight?: string | null } | null,
     colorMode: ColorMode,
 ): string {
-    return characterId === null ? 'var(--text-muted)' : characterColor(name, character?.color ?? null, colorMode);
+    return characterId === null
+        ? 'var(--text-muted)'
+        : characterColor(name, character?.color ?? null, colorMode, character?.colorLight ?? null);
 }
 
 // An NPC voice has no character page, so its name is a tooltip instead

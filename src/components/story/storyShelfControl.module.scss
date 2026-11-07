@@ -1,0 +1,59 @@
+@use '../../styles/mixins' as m;
+
+.toggle {
+    @include m.ghost-button;
+    margin-top: 0.5rem;
+}
+
+.panel {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.75rem 1rem;
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px dashed var(--border-loud);
+    border-radius: var(--radius);
+}
+
+.field {
+    @include m.field-stack;
+    text-align: left;
+
+    select {
+        @include m.pixel-select;
+    }
+}
+
+.check {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding-bottom: 0.45rem;
+    cursor: pointer;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+
+    .toggle {
+        margin-top: 0;
+    }
+}
+
+.save {
+    @include m.ghost-button(var(--text));
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+}
+
+.error {
+    @include m.pixel-error;
+    flex-basis: 100%;
+}

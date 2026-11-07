@@ -136,7 +136,18 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
     // their own -- table talk, bare commands) reads in one neutral grey;
     // a bot keeps its user color (FF 8 Ball's purple, which FF4's Vortox is merged into)
     const isPlayerVoice = !character && !persona && !rawColor;
-    const color = isPlayerVoice ? 'var(--text-muted)' : characterColor(speaker, rawColor, colorMode);
+    // The color fallbacks (the legacy color table, the name hash) key on the
+    // character's own name, not the persona's: Grass Stalker's FF1 "Emmett"
+    // persona would otherwise borrow Emmett Tawfeek's green from the table
+    const color = isPlayerVoice
+        ? 'var(--text-muted)'
+        : characterColor(
+              character?.name ?? speaker,
+              rawColor,
+              colorMode,
+              // a persona's own color wins in both themes; otherwise the character's light override
+              persona?.color ? null : (character?.colorLight ?? null)
+          );
 
     const isTarget =
         targetNo !== null && block.messages.some((m) => m.no === targetNo);

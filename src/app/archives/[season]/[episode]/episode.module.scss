@@ -31,6 +31,16 @@
     max-width: 40rem;
 }
 
+// The player characters that led this episode, under the summary
+.cast {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+    margin: 0.75rem 0 0 -3px; // lines the first sprite up with the text (CastAvatar pads 3px)
+    padding: 0;
+}
+
 .pager {
     display: flex;
     justify-content: space-between;
@@ -43,4 +53,17 @@
         @include m.pixel-nav-link;
         max-width: 45%;
     }
+}
+
+// Note under the title of a reconstructed episode
+.reconstructed {
+    margin: 0.5rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.tag {
+    @include m.card-tag(var(--code-highlight));
+    margin-right: 0.4rem;
+    vertical-align: middle;
 }

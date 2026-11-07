@@ -67,6 +67,7 @@ interface ImportPayload {
         themeColor2?: string;
         season?: string;
         format?: string;
+        canon?: boolean;
     };
     authors?: string[];
     author?: string | null; // payloads converted before co-authorship
@@ -474,6 +475,7 @@ export default function StoryImporter() {
                         themeColor2: payload.story.themeColor2 ?? undefined,
                         season: payload.story.season ?? undefined,
                         format: payload.story.format ?? undefined,
+                        canon: typeof payload.story.canon === 'boolean' ? payload.story.canon : undefined,
                         authorIds,
                     },
                     chapters,
@@ -569,6 +571,10 @@ export default function StoryImporter() {
                         <div>
                             <dt>format</dt>
                             <dd>{payload.story.format === 'PROSE' ? 'prose (novel-style)' : 'script'}</dd>
+                        </div>
+                        <div>
+                            <dt>continuity</dt>
+                            <dd>{payload.story.canon === false ? 'non-canon' : 'canon'}</dd>
                         </div>
                         {payload.story.publishedDate && (
                             <div>

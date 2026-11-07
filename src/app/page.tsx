@@ -2,31 +2,34 @@ import Link from 'next/link';
 import Logo from '@/components/logo/Logo';
 import { api } from '@/lib/api';
 import type { Story } from '@/lib/types';
-import { seasonColors, seasonOrder, seasonSlug } from '@/lib/seasons';
+import { seasonColors, seasonOrder } from '@/lib/seasons';
+import { storyBranch } from '@/lib/stories';
 import styles from './page.module.scss';
 
-// The Stories door counts the live shelf — render per-request, not at build time
+// The Stories door lists the live shelf's seasons — render per-request, not at build time
 export const dynamic = 'force-dynamic';
 
-/** Stories per campaign, in campaign order; stories with no campaign (VM) aren't counted. */
-async function storyCampaigns(): Promise<{ title: string; count: number; color: string }[]> {
+/**
+ * The seasons on the story shelf, in the shelf's order: mainline seasons,
+ * then spin-offs (T&L, VM). Stories filed under no season get no chip.
+ */
+async function storySeasons(): Promise<{ title: string; color: string }[]> {
     let stories: Story[];
     try {
         stories = await api<Story[]>('/stories');
     } catch {
-        return []; // API down: the door still renders, just without counts
+        return []; // API down: the door still renders, just without chips
     }
-    const counts = new Map<string, number>();
-    for (const s of stories) {
-        if (s.season) counts.set(s.season.title, (counts.get(s.season.title) ?? 0) + 1);
-    }
-    return [...counts]
-        .sort(([a], [b]) => {
-            const [ra, ka] = seasonOrder(a);
-            const [rb, kb] = seasonOrder(b);
-            return ra - rb || ka.localeCompare(kb);
+    const seasons = new Map<string, Story['season']>();
+    for (const s of stories) if (s.season) seasons.set(s.season.title, s.season);
+    const rank = (season: Story['season']) => (storyBranch(season) === 'mainline' ? 0 : 1);
+    return [...seasons.values()]
+        .sort((a, b) => {
+            const [ra, ka] = seasonOrder(a!.title);
+            const [rb, kb] = seasonOrder(b!.title);
+            return rank(a) - rank(b) || ra - rb || ka.localeCompare(kb);
         })
-        .map(([title, count]) => ({ title, count, color: seasonColors(title).primary }));
+        .map((season) => ({ title: season!.title, color: seasonColors(season!.title).primary }));
 }
 
 const seasons = [
@@ -49,7 +52,7 @@ const sisterSites = [
 ];
 
 export default async function Home() {
-    const campaigns = await storyCampaigns();
+    const storyChips = await storySeasons();
 
     return (
         <main className={styles.main}>
@@ -76,10 +79,9 @@ export default async function Home() {
                     <h2>Stories</h2>
                     <p>Short stories and the Vortox Machina chronicle.</p>
                     <ul className={styles.seasonChips}>
-                        <li style={{ color: 'var(--vm)' }}>VM</li>
-                        {campaigns.map((c) => (
+                        {storyChips.map((c) => (
                             <li key={c.title} style={{ color: c.color }}>
-                                {c.count}×{seasonSlug(c.title).toUpperCase()}
+                                {c.title}
                             </li>
                         ))}
                     </ul>

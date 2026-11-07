@@ -1,7 +1,8 @@
-import characterColors from '@/data/characterColors.json';
+import legacyColors from '@/data/characterColors.json';
 import type { ColorMode } from '@/components/theme/ThemeProvider';
+import { suggestColorFor } from './colorContrast';
 
-const COLORS = characterColors as { dark: Record<string, string>; light: Record<string, string> };
+const COLORS = legacyColors as { dark: Record<string, string>; light: Record<string, string> };
 
 // Deterministic fallback color from a name (ported from the legacy site),
 // so uncolored NPCs like "Toll Station Operator" still get a stable identity.
@@ -19,13 +20,34 @@ export function stringToColor(input: string): string {
 }
 
 /**
- * Resolve a character's display color.
- * DB color holds the dark-mode color; the legacy color table supplies
- * hand-tuned light-mode variants for the main cast.
+ * Resolve a character's display color for a theme. `color` is the dark-mode
+ * color, `colorLight` an optional light-mode override. Each theme takes its
+ * own color first, then the legacy color table, then a version of the other
+ * theme's color made readable (suggestColorFor), so a character colored for
+ * one theme never shows a washed-out color in the other. With no color at
+ * all, the name hash stands in (made readable too).
  */
-export function characterColor(name: string, color: string | null, mode: ColorMode): string {
+export function characterColor(
+    name: string,
+    color: string | null,
+    mode: ColorMode,
+    colorLight: string | null = null
+): string {
     if (mode === 'light') {
-        return COLORS.light[name] ?? color ?? stringToColor(name);
+        return (
+            colorLight ??
+            COLORS.light[name] ??
+            suggestColorFor(color ?? COLORS.dark[name] ?? stringToColor(name), 'light')
+        );
     }
-    return color ?? COLORS.dark[name] ?? stringToColor(name);
+    return color ?? COLORS.dark[name] ?? suggestColorFor(colorLight ?? stringToColor(name), 'dark');
+}
+
+/** Both themes' colors for a character: what the editor suggests and the site shows. */
+export function characterThemeColors(
+    name: string,
+    color: string | null,
+    colorLight: string | null
+): { dark: string; light: string } {
+    return { dark: characterColor(name, color, 'dark', colorLight), light: characterColor(name, color, 'light', colorLight) };
 }

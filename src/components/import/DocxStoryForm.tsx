@@ -23,7 +23,7 @@ interface Analysis {
 }
 
 export interface ConvertedStory {
-    story: Record<string, string>;
+    story: Record<string, string | boolean>;
     authors: string[];
     chapters: unknown[];
 }
@@ -104,6 +104,7 @@ export default function DocxStoryForm({
     const [blurb, setBlurb] = useState('');
     const [formatChoice, setFormat] = useState<'prose' | 'script' | null>(null);
     const [season, setSeason] = useState('');
+    const [nonCanon, setNonCanon] = useState(false);
     const [authors, setAuthors] = useState('');
     const [published, setPublished] = useState('');
     // Picks made in this form: color -> character name, NARRATION, SEVERAL_NPCS
@@ -214,6 +215,7 @@ export default function DocxStoryForm({
         if (slug.trim()) meta.slug = slug.trim();
         if (blurb.trim()) meta.blurb = blurb.trim();
         if (season) meta.season = season;
+        if (nonCanon) meta.canon = false;
         if (authors.trim()) meta.authors = authors.trim();
         if (published) meta.published = published;
         try {
@@ -311,6 +313,16 @@ export default function DocxStoryForm({
                                 script — each line of dialogue is its own paragraph
                             </label>
                         </fieldset>
+                        <label className={`${styles.radio} ${styles.fieldWide}`}>
+                            <input
+                                id='docx-noncanon'
+                                type='checkbox'
+                                checked={nonCanon}
+                                onChange={(e) => setNonCanon(e.target.checked)}
+                                disabled={locked}
+                            />
+                            non-canon — outside the universe&rsquo;s continuity (a joke, a what-if)
+                        </label>
                     </div>
 
                     <h3 className='pixel-label'>who is each color?</h3>

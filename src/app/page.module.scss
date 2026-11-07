@@ -100,11 +100,22 @@
     margin: 0;
     padding: 0;
 
+    // One box size for every chip: a dashed border spaces its dashes to fit
+    // each side, so a narrower code (FF1's thin "1") would otherwise draw a
+    // different pattern and read as a taller outline. Whole-pixel height
+    // keeps the edges off fractional pixels.
     li {
         font-family: var(--font-pixel);
         font-size: 0.7rem;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-width: 2.75rem;
+        height: 26px;
+        padding: 0 0.5rem;
         border: 1px dashed currentColor;
-        padding: 0.2rem 0.5rem;
     }
 }
 

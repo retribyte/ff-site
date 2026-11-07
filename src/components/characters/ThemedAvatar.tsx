@@ -10,13 +10,15 @@ export default function ThemedAvatar({
     src,
     name,
     color,
+    colorLight = null,
     size,
 }: {
     src: string | null;
     name: string;
     color: string | null;
+    colorLight?: string | null;
     size?: number;
 }) {
     const { colorMode } = useTheme();
-    return <PixelAvatar src={src} name={name} color={characterColor(name, color, colorMode)} size={size} />;
+    return <PixelAvatar src={src} name={name} color={characterColor(name, color, colorMode, colorLight)} size={size} />;
 }

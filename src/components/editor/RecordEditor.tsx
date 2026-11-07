@@ -12,6 +12,8 @@ import {
     type FormValues,
 } from '@/lib/editor/schemas';
 import AvatarField from '@/components/characters/AvatarField';
+import { characterThemeColors } from '@/lib/characterColors';
+import { BACKGROUNDS, MIN_CONTRAST, minContrast } from '@/lib/colorContrast';
 import DeleteControl from '@/components/DeleteControl';
 import styles from './recordEditor.module.scss';
 
@@ -132,6 +134,7 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
                     key={field.name}
                     field={field}
                     value={values[field.name]}
+                    values={values}
                     onChange={(v) => set(field.name, v)}
                     refOptions={field.ref ? (refOptions[field.ref.path] ?? []) : []}
                 />
@@ -153,14 +156,19 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
     );
 }
 
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
+
 function Field({
     field,
     value,
+    values,
     onChange,
     refOptions,
 }: {
     field: FieldDef;
     value: string;
+    /** every field's value, for fields that depend on others (a theme color's suggestion) */
+    values: FormValues;
     onChange: (value: string) => void;
     refOptions: { id: number; label: string }[];
 }) {
@@ -227,6 +235,10 @@ function Field({
             control = <AvatarField id={id} value={value} onChange={onChange} placeholder={field.placeholder} />;
             break;
         case 'color':
+            if (field.theme) {
+                control = <ThemeColorControl id={id} field={field} theme={field.theme} value={value} values={values} onChange={onChange} />;
+                break;
+            }
             control = (
                 <span className={styles.colorRow}>
                     <input
@@ -276,5 +288,91 @@ function Field({
             {control}
             {field.help && <span className={styles.help}>{field.help}</span>}
         </div>
+    );
+}
+
+/**
+ * One theme's color of a character (schemas.ts `theme`). Empty, it shows the
+ * color the site will use (characterThemeColors) as "auto", with a button to
+ * start from it. Set, it's an override, checked for readability against that
+ * theme's backgrounds. The light field also previews the name in both themes.
+ */
+function ThemeColorControl({
+    id,
+    field,
+    theme,
+    value,
+    values,
+    onChange,
+}: {
+    id: string;
+    field: FieldDef;
+    theme: 'dark' | 'light';
+    value: string;
+    values: FormValues;
+    onChange: (value: string) => void;
+}) {
+    const name = values.name?.trim() || 'Name';
+    const valid = (v: string | undefined) => (v && HEX_COLOR.test(v) ? v : null);
+    const resolved = characterThemeColors(name, valid(values.color), valid(values.colorLight));
+    const other = theme === 'dark' ? 'light' : 'dark';
+    const otherSet = valid(theme === 'dark' ? values.colorLight : values.color) !== null;
+    const contrast = valid(value) ? minContrast(value, theme) : null;
+
+    return (
+        <span className={styles.themeColor}>
+            {value === '' ? (
+                <span className={styles.colorRow}>
+                    <span className={styles.swatch} style={{ background: resolved[theme] }} aria-hidden />
+                    <span className={styles.auto}>
+                        auto <code>{resolved[theme]}</code>
+                        <span className={styles.help}>
+                            {otherSet ? ` from the ${other}-mode color` : ' from the name'}
+                        </span>
+                    </span>
+                    <button type='button' className={styles.miniButton} onClick={() => onChange(resolved[theme])}>
+                        customize
+                    </button>
+                </span>
+            ) : (
+                <span className={styles.colorRow}>
+                    <input
+                        type='color'
+                        aria-label={`${field.label} picker`}
+                        value={valid(value) ?? resolved[theme]}
+                        onChange={(e) => onChange(e.target.value)}
+                    />
+                    <input
+                        id={id}
+                        type='text'
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        placeholder='#62DE2C'
+                        pattern='#[0-9a-fA-F]{6}'
+                    />
+                    <button type='button' className={styles.miniButton} onClick={() => onChange('')}>
+                        use auto
+                    </button>
+                </span>
+            )}
+            {contrast !== null && contrast < MIN_CONTRAST && (
+                <span className={styles.warning}>
+                    hard to read in {theme} mode ({contrast.toFixed(1)}:1; text needs {MIN_CONTRAST}:1). Auto would be{' '}
+                    <code>{characterThemeColors(name, theme === 'dark' ? null : valid(values.color), theme === 'light' ? null : valid(values.colorLight))[theme]}</code>.
+                </span>
+            )}
+            {theme === 'light' && (
+                <span className={styles.preview} aria-label='Preview in both themes'>
+                    {(['dark', 'light'] as const).map((mode) => (
+                        <span key={mode} className={styles.previewTile} style={{ background: BACKGROUNDS[mode][1] }}>
+                            <span style={{ color: resolved[mode] }}>{name}</span>
+                            <span className={styles.previewMode} style={{ color: resolved[mode] }}>
+                                {mode} mode
+                            </span>
+                        </span>
+                    ))}
+                </span>
+            )}
+        </span>
     );
 }
