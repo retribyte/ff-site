@@ -345,6 +345,18 @@ export interface EpisodeImportPlan {
         reconstructed: boolean;
         messages: number;
         newSeason: boolean;
+        /** update: replaces the archive's episode with that season and number; unchanged: skipped */
+        action: 'new' | 'update' | 'unchanged';
+        changes: {
+            unchanged: number;
+            edited: number;
+            added: number;
+            removed: number;
+            notesKept: number;
+            /** notes whose message was removed, moved to the nearest kept one */
+            notesMoved: number;
+            renamedFrom: string | null;
+        } | null;
         conflicts: string[];
     }[];
     missingPlayers: string[];

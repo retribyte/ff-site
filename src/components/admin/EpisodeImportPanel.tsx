@@ -7,6 +7,28 @@ import { adminCall } from './adminApi';
 import RunResult from './RunResult';
 import styles from './admin.module.scss';
 
+type PlannedEpisode = EpisodeImportPlan['episodes'][number];
+
+/** The preview's verdict on one episode. */
+function check(e: PlannedEpisode): string {
+    if (e.conflicts.length) return e.conflicts.join('; ');
+    if (e.action === 'new') return 'new';
+    if (e.action === 'unchanged' || !e.changes) return 'unchanged, skipped';
+    const c = e.changes;
+    const parts = [`${c.edited} edited`, `${c.added} added`, `${c.removed} removed`];
+    const notes = c.notesKept + c.notesMoved;
+    if (notes) parts.push(`${notes} note${notes === 1 ? '' : 's'} kept${c.notesMoved ? ` (${c.notesMoved} moved to a nearby message)` : ''}`);
+    if (c.renamedFrom) parts.push(`renamed from '${c.renamedFrom}'`);
+    return `update: ${parts.join(', ')}`;
+}
+
+/** "import 2 new, update 1": what the button will do. */
+function importLabel(episodes: PlannedEpisode[]): string {
+    const count = (action: PlannedEpisode['action']) => episodes.filter((e) => e.action === action).length;
+    const parts = [count('new') && `import ${count('new')} new`, count('update') && `update ${count('update')}`].filter(Boolean);
+    return parts.length ? parts.join(', ') : 'nothing to import';
+}
+
 interface LoadedFile {
     name: string;
     payload: { seasonTitle: string; episode: { title: string; episode_no: number }; messages: unknown[] };
@@ -31,7 +53,7 @@ async function readFiles(list: FileList): Promise<{ files: LoadedFile[]; errors:
     return { files, errors };
 }
 
-// Import new episodes from md-to-api.py's JSON: preview, then a dry run or the import.
+// Import or update episodes from md-to-api.py's JSON: preview, then a dry run or the import.
 export default function EpisodeImportPanel() {
     const router = useRouter();
     const [files, setFiles] = useState<LoadedFile[]>([]);
@@ -42,6 +64,7 @@ export default function EpisodeImportPanel() {
     const [run, setRun] = useState<JobRun | null>(null);
 
     const episodes = () => files.map((f) => f.payload);
+    const actionable = plan?.episodes.some((e) => e.action !== 'unchanged') ?? false;
 
     const choose = async (list: FileList | null) => {
         setPlan(null);
@@ -91,9 +114,10 @@ export default function EpisodeImportPanel() {
                 Episode import
             </h2>
             <p className={styles.help}>
-                New episodes only, from <code>md-to-api.py</code>&rsquo;s JSON (<code>archive-to-markdown/api/&lt;season&gt;/</code>).
-                Everything selected imports together or not at all. Re-importing an existing episode is still done with{' '}
-                <code>api-import.py --replace</code>.
+                Episodes from <code>md-to-api.py</code>&rsquo;s JSON (<code>archive-to-markdown/api/&lt;season&gt;/</code>).
+                One whose season and number are already in the archive is updated in place: commentary notes follow their
+                messages and persona stamps stay. Unchanged ones are skipped. Everything selected imports together or not at
+                all.
             </p>
             <input
                 type='file'
@@ -134,8 +158,8 @@ export default function EpisodeImportPanel() {
                                         {e.newSeason && <span className={styles.tag}>new season</span>}
                                     </td>
                                     <td>{e.messages.toLocaleString('en-US')}</td>
-                                    <td className={e.conflicts.length ? styles.bad : styles.good}>
-                                        {e.conflicts.length ? e.conflicts.join('; ') : 'ready'}
+                                    <td className={e.conflicts.length ? styles.bad : e.action === 'unchanged' ? undefined : styles.good}>
+                                        {check(e)}
                                     </td>
                                 </tr>
                             ))}
@@ -162,11 +186,11 @@ export default function EpisodeImportPanel() {
                     )}
 
                     <div className={styles.actions}>
-                        <button type='button' className={styles.ghost} onClick={() => void start(true)} disabled={busy || !plan.ok}>
+                        <button type='button' className={styles.ghost} onClick={() => void start(true)} disabled={busy || !plan.ok || !actionable}>
                             dry run
                         </button>
-                        <button type='button' className={styles.go} onClick={() => void start(false)} disabled={busy || !plan.ok}>
-                            {busy ? 'importing…' : `import ${plan.episodes.length} episode${plan.episodes.length === 1 ? '' : 's'}`}
+                        <button type='button' className={styles.go} onClick={() => void start(false)} disabled={busy || !plan.ok || !actionable}>
+                            {busy ? 'importing…' : importLabel(plan.episodes)}
                         </button>
                     </div>
                 </>
