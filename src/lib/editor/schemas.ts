@@ -77,7 +77,7 @@ export const characterSchema: EntitySchema = {
     indexPath: '/characters',
     fields: [
         { name: 'name', label: 'name', kind: 'text', required: true },
-        richTextField('blurb', 'blurb', { help: `short public bio shown on the dossier; ${RICH_TEXT_HELP}` }),
+        richTextField('blurb', 'blurb', { help: `short public bio shown on the character index — ${RICH_TEXT_HELP}` }),
         { name: 'image', label: 'avatar', kind: 'avatar', placeholder: '/avatars/emmett.png' },
         { name: 'color', label: 'color (dark mode)', kind: 'color', theme: 'dark' },
         { name: 'colorLight', label: 'color (light mode)', kind: 'color', theme: 'light' },

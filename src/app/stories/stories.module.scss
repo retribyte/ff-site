@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as m;
+
 .main {
     padding: 1.5rem 1.25rem 3rem;
     max-width: 60rem;
@@ -15,4 +17,12 @@
         margin: 0;
         font-size: clamp(1.8rem, 4vw, 2.6rem);
     }
+}
+
+.upload {
+    // Same look as the story page's "shelf settings" button
+    @include m.ghost-button(var(--text-muted), 0.68rem, 0.5rem 0.7rem);
+    margin-left: auto;
+    align-self: center;
+    text-decoration: none;
 }

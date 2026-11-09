@@ -60,8 +60,9 @@ export function minContrast(hex: string, mode: ThemeMode): number {
 // ---- OKLab / OKLCH (Björn Ottosson's matrices) ----
 
 type Lch = [number, number, number]; // L 0..1, C, h radians
+type Lab = [number, number, number]; // L 0..1, a, b
 
-function rgbToOklch(rgb: Rgb): Lch {
+function rgbToOklab(rgb: Rgb): Lab {
     const [r, g, b] = rgb.map(toLinear);
     const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
     const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
@@ -69,8 +70,31 @@ function rgbToOklch(rgb: Rgb): Lch {
     const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
     const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
     const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+    return [L, A, B];
+}
+
+function rgbToOklch(rgb: Rgb): Lch {
+    const [L, A, B] = rgbToOklab(rgb);
     return [L, Math.hypot(A, B), Math.atan2(B, A)];
 }
+
+/**
+ * Perceptual distance between two colors: Euclidean distance in OKLab
+ * (about 0.02 is a just-noticeable difference). Infinity for a bad hex.
+ */
+export function colorDistance(a: string, b: string): number {
+    const [ra, rb] = [parseHex(a), parseHex(b)];
+    if (!ra || !rb) return Infinity;
+    const [la, lb] = [rgbToOklab(ra), rgbToOklab(rb)];
+    return Math.hypot(la[0] - lb[0], la[1] - lb[1], la[2] - lb[2]);
+}
+
+/**
+ * Two character colors closer than this are hard to tell apart as name text.
+ * Calibrated on the cast: #ff5e00 vs Los #ED583B is 0.062, KYL300 #a66ade vs
+ * Wes #BB54FF 0.074, Jim #4B8BBE vs Zion #3aa5bd 0.075 -- all too close.
+ */
+export const SIMILAR_COLOR_DISTANCE = 0.08;
 
 /** OKLCH -> linear sRGB, unclamped (may be out of gamut). */
 function oklchToLinear([L, C, h]: Lch): Rgb {
