@@ -15,6 +15,7 @@ import AvatarField from '@/components/characters/AvatarField';
 import { characterThemeColors } from '@/lib/characterColors';
 import { BACKGROUNDS, MIN_CONTRAST, minContrast } from '@/lib/colorContrast';
 import DeleteControl from '@/components/DeleteControl';
+import SimilarColors, { useColoredCharacters, type ColoredCharacter } from './SimilarColors';
 import styles from './recordEditor.module.scss';
 
 interface Props {
@@ -70,6 +71,8 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
     const [error, setError] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
     const refOptions = useRefOptions(schema.fields);
+    const themeColorFields = schema.fields.filter((f) => f.kind === 'color' && f.theme);
+    const cast = useColoredCharacters(themeColorFields.length > 0, recordId);
 
     const set = (name: string, value: string) => setValues((prev) => ({ ...prev, [name]: value }));
 
@@ -129,16 +132,21 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
 
     return (
         <form className={`pixel-panel ${styles.editor}`} onSubmit={submit}>
-            {schema.fields.map((field) => (
-                <Field
-                    key={field.name}
-                    field={field}
-                    value={values[field.name]}
-                    values={values}
-                    onChange={(v) => set(field.name, v)}
-                    refOptions={field.ref ? (refOptions[field.ref.path] ?? []) : []}
-                />
-            ))}
+            {schema.fields.map((field) =>
+                field.kind === 'color' && field.theme ? (
+                    field === themeColorFields[0] && (
+                        <ThemeColorsControl key='theme-colors' fields={themeColorFields} values={values} onChange={set} cast={cast} />
+                    )
+                ) : (
+                    <Field
+                        key={field.name}
+                        field={field}
+                        value={values[field.name]}
+                        onChange={(v) => set(field.name, v)}
+                        refOptions={field.ref ? (refOptions[field.ref.path] ?? []) : []}
+                    />
+                )
+            )}
 
             {error && (
                 <p className={styles.error} role='alert'>
@@ -161,14 +169,11 @@ const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 function Field({
     field,
     value,
-    values,
     onChange,
     refOptions,
 }: {
     field: FieldDef;
     value: string;
-    /** every field's value, for fields that depend on others (a theme color's suggestion) */
-    values: FormValues;
     onChange: (value: string) => void;
     refOptions: { id: number; label: string }[];
 }) {
@@ -235,10 +240,7 @@ function Field({
             control = <AvatarField id={id} value={value} onChange={onChange} placeholder={field.placeholder} />;
             break;
         case 'color':
-            if (field.theme) {
-                control = <ThemeColorControl id={id} field={field} theme={field.theme} value={value} values={values} onChange={onChange} />;
-                break;
-            }
+            // theme colors render as a pair in ThemeColorsControl
             control = (
                 <span className={styles.colorRow}>
                     <input
@@ -292,87 +294,97 @@ function Field({
 }
 
 /**
- * One theme's color of a character (schemas.ts `theme`). Empty, it shows the
- * color the site will use (characterThemeColors) as "auto", with a button to
- * start from it. Set, it's an override, checked for readability against that
- * theme's backgrounds. The light field also previews the name in both themes.
+ * A character's two theme colors (schemas.ts `theme`), side by side: a dark
+ * column and a light column. An empty color means "auto": the inputs show
+ * what the site will use (characterThemeColors) until a color is typed or
+ * picked, and a set color has a "use auto" button to go back. Each column
+ * previews the name on its theme, flags hard-to-read overrides, and lists
+ * characters with a similar color there (SimilarColors).
  */
-function ThemeColorControl({
-    id,
-    field,
-    theme,
-    value,
+function ThemeColorsControl({
+    fields,
     values,
     onChange,
+    cast,
 }: {
-    id: string;
-    field: FieldDef;
-    theme: 'dark' | 'light';
-    value: string;
+    fields: FieldDef[];
     values: FormValues;
-    onChange: (value: string) => void;
+    onChange: (name: string, value: string) => void;
+    cast: ColoredCharacter[];
 }) {
     const name = values.name?.trim() || 'Name';
     const valid = (v: string | undefined) => (v && HEX_COLOR.test(v) ? v : null);
     const resolved = characterThemeColors(name, valid(values.color), valid(values.colorLight));
-    const other = theme === 'dark' ? 'light' : 'dark';
-    const otherSet = valid(theme === 'dark' ? values.colorLight : values.color) !== null;
-    const contrast = valid(value) ? minContrast(value, theme) : null;
+    const columns = (['dark', 'light'] as const)
+        .map((theme) => ({ theme, field: fields.find((f) => f.theme === theme) }))
+        .filter((c): c is { theme: 'dark' | 'light'; field: FieldDef } => c.field !== undefined);
 
     return (
-        <span className={styles.themeColor}>
-            {value === '' ? (
-                <span className={styles.colorRow}>
-                    <span className={styles.swatch} style={{ background: resolved[theme] }} aria-hidden />
-                    <span className={styles.auto}>
-                        auto <code>{resolved[theme]}</code>
-                        <span className={styles.help}>
-                            {otherSet ? ` from the ${other}-mode color` : ' from the name'}
-                        </span>
-                    </span>
-                    <button type='button' className={styles.miniButton} onClick={() => onChange(resolved[theme])}>
-                        customize
-                    </button>
-                </span>
-            ) : (
-                <span className={styles.colorRow}>
-                    <input
-                        type='color'
-                        aria-label={`${field.label} picker`}
-                        value={valid(value) ?? resolved[theme]}
-                        onChange={(e) => onChange(e.target.value)}
-                    />
-                    <input
-                        id={id}
-                        type='text'
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                        placeholder='#62DE2C'
-                        pattern='#[0-9a-fA-F]{6}'
-                    />
-                    <button type='button' className={styles.miniButton} onClick={() => onChange('')}>
-                        use auto
-                    </button>
-                </span>
-            )}
-            {contrast !== null && contrast < MIN_CONTRAST && (
-                <span className={styles.warning}>
-                    hard to read in {theme} mode ({contrast.toFixed(1)}:1; text needs {MIN_CONTRAST}:1). Auto would be{' '}
-                    <code>{characterThemeColors(name, theme === 'dark' ? null : valid(values.color), theme === 'light' ? null : valid(values.colorLight))[theme]}</code>.
-                </span>
-            )}
-            {theme === 'light' && (
-                <span className={styles.preview} aria-label='Preview in both themes'>
-                    {(['dark', 'light'] as const).map((mode) => (
-                        <span key={mode} className={styles.previewTile} style={{ background: BACKGROUNDS[mode][1] }}>
-                            <span style={{ color: resolved[mode] }}>{name}</span>
-                            <span className={styles.previewMode} style={{ color: resolved[mode] }}>
-                                {mode} mode
+        <div className={`${styles.field} ${styles.themeColors}`}>
+            {columns.map(({ theme, field }) => {
+                const id = `field-${field.name}`;
+                const value = values[field.name];
+                const other = theme === 'dark' ? 'light' : 'dark';
+                const otherSet = valid(theme === 'dark' ? values.colorLight : values.color) !== null;
+                const contrast = valid(value) ? minContrast(value, theme) : null;
+                return (
+                    <div key={theme} className={styles.themeColumn}>
+                        <div className={styles.slot}>
+                            <label htmlFor={id} className='pixel-label'>
+                                {field.label}
+                            </label>
+                        </div>
+                        <div className={styles.slot}>
+                            <span className={styles.colorRow}>
+                                <input
+                                    type='color'
+                                    aria-label={`${field.label} picker`}
+                                    value={valid(value) ?? resolved[theme]}
+                                    onChange={(e) => onChange(field.name, e.target.value)}
+                                    style={{ background: BACKGROUNDS[theme][1] }}
+                                />
+                                <input
+                                    id={id}
+                                    type='text'
+                                    value={value}
+                                    onChange={(e) => onChange(field.name, e.target.value)}
+                                    placeholder={resolved[theme]}
+                                    pattern='#[0-9a-fA-F]{6}'
+                                />
                             </span>
-                        </span>
-                    ))}
-                </span>
-            )}
-        </span>
+                        </div>
+                        <div className={styles.slot}>
+                            <span className={styles.previewTile} style={{ background: BACKGROUNDS[theme][1] }}>
+                                <span style={{ color: resolved[theme] }}>{name}</span>
+                                <span className={styles.previewMode} style={{ color: resolved[theme] }}>
+                                    talks in {theme} mode
+                                </span>
+                            </span>
+                        </div>
+                        <div className={`${styles.slot} ${styles.row}`}>
+                            {contrast !== null && contrast < MIN_CONTRAST && (
+                                <span className={styles.warning}>
+                                    hard to read ({contrast.toFixed(1)}:1 &lt; {MIN_CONTRAST}:1)
+                                </span>
+                            )}
+                            {value === '' ? (
+                                <span className={styles.help}>
+                                    auto, {otherSet ? `from the ${other}-mode color` : 'from the name'}
+                                </span>
+                            ) : (
+                                <button type='button' className={styles.miniButton} onClick={() => onChange(field.name, '')}>
+                                    use auto
+                                </button>
+                            )}
+                        </div>
+                        <div className={styles.slot}>
+                        </div>
+                        <div className={styles.slot}>
+                            <SimilarColors theme={theme} color={resolved[theme]} cast={cast} />
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
     );
 }

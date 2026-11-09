@@ -61,13 +61,13 @@ export default async function UserPage({ params }: Props) {
             <div className={styles.layout}>
                 <article className={styles.article}>
                     <h1 className={styles.name}>{profile.username}</h1>
-                    {profile.role === 'ADMIN' && <p className={styles.roleChip}>archive admin</p>}
+                    {profile.role === 'ADMIN' && <p className={styles.roleChip}>admin</p>}
                     {profile.inactive && (
                         <p
                             className={`${styles.roleChip} ${styles.inactiveChip}`}
                             title='Still on the starting password, so they have never signed in'
                         >
-                            inactive account
+                            inactive
                         </p>
                     )}
 

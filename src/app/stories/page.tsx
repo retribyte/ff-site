@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { api } from '@/lib/api';
 import type { Story } from '@/lib/types';
 import { storyBranch, storyColors } from '@/lib/stories';
@@ -57,6 +58,9 @@ export default async function StoriesPage() {
             <div className={styles.header}>
                 <h1>Stories</h1>
                 <span className='pixel-label'>{stories.length} on the shelf</span>
+                <Link href='/import' className={styles.upload}>
+                    upload
+                </Link>
             </div>
 
             <StoryIndex stories={indexStories} />
