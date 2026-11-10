@@ -160,3 +160,45 @@
 .groupHeading {
     margin: 2rem 0 0;
 }
+
+// Narrow screens: the avatars join the title row instead of a side column, so
+// the blurb gets the card's full width. The wrappers dissolve (display:
+// contents) so title, blurb, meta, avatars and tags all lay out on the card's grid.
+@media (max-width: 600px) {
+    .card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            'title cast'
+            'blurb blurb'
+            'meta tags';
+        align-items: start;
+        gap: 0.5rem 0.75rem;
+    }
+
+    .cardMain,
+    .cardSide {
+        display: contents;
+    }
+
+    .cardTitle {
+        grid-area: title;
+    }
+
+    .cardBlurb {
+        grid-area: blurb;
+    }
+
+    .cardMeta {
+        grid-area: meta;
+    }
+
+    .cast {
+        grid-area: cast;
+    }
+
+    .tags {
+        grid-area: tags;
+        align-self: end;
+    }
+}
