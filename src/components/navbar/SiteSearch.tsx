@@ -8,6 +8,7 @@ import { episodesByTitle, lineUrl } from '@/lib/seasons';
 import { storyQuoteUrl } from '@/lib/stories';
 import { characterColor } from '@/lib/characterColors';
 import { messageSnippet, embedLast } from '@/lib/search';
+import { htmlToPlainText } from '@/lib/html';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { Highlighted } from '@/components/transcript/ScanBar';
@@ -131,7 +132,8 @@ export default function SiteSearch() {
         (results.characters.length > 0 ||
             results.items.length > 0 ||
             results.messages.length > 0 ||
-            results.storyLines.length > 0);
+            results.storyLines.length > 0 ||
+            (results.commentaries?.length ?? 0) > 0);
 
     const sortedMessages = results 
     ? [...results.messages]
@@ -279,6 +281,35 @@ export default function SiteSearch() {
                                             <span className={styles.rowMeta}>chapter {sl.chapterNo}</span>
                                             <span className={styles.rowSnippet}>
                                                 <Highlighted text={sl.text} query={debouncedQuery} />
+                                            </span>
+                                        </Link>
+                                    ))}
+                                </section>
+                            )}
+
+                            {(results.commentaries?.length ?? 0) > 0 && (
+                                <section className={styles.section}>
+                                    <span className={styles.sectionLabel}>commentary</span>
+                                    {results.commentaries.map((c) => (
+                                        <Link
+                                            key={`note-${c.id}`}
+                                            href={lineUrl(
+                                                {
+                                                    title: c.episodeTitle,
+                                                    episode_no: c.episodeNo,
+                                                    slug: c.episodeSlug ?? undefined,
+                                                    seasonTitle: c.seasonTitle,
+                                                },
+                                                c.messageNo
+                                            )}
+                                            className={styles.row}
+                                            onClick={close}
+                                        >
+                                            <span className={styles.rowMeta}>
+                                                {c.episodeTitle}, {c.author}
+                                            </span>
+                                            <span className={styles.rowSnippet}>
+                                                <Highlighted text={htmlToPlainText(c.content)} query={debouncedQuery} />
                                             </span>
                                         </Link>
                                     ))}

@@ -98,6 +98,12 @@
 .chip {
     @include m.toggle-chip;
     text-decoration: none;
+
+
+    &[data-active],
+    &[aria-pressed='true'] {
+        color: var(--text);
+    }
 }
 
 // A season's chip lights in its own color while included; a left-out season

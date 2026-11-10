@@ -12,3 +12,10 @@ export function decodeEntities(html: string): string {
         return NAMED[entity.toLowerCase()] ?? match;
     });
 }
+
+/** Stored rich text as one plain line (tags dropped, entities decoded), for snippets. */
+export function htmlToPlainText(html: string): string {
+    return decodeEntities(html.replace(/<[^>]*>/g, ' '))
+        .replace(/\s+/g, ' ')
+        .trim();
+}

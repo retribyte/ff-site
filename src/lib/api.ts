@@ -123,6 +123,17 @@ export interface SearchResults {
     // body, rather than the raw JSON string, for non-EMBED types.
     messages: { episodeTitle: string; episodeNo: number; messageNo: number; text: string; type: MessageType }[];
     storyLines: { storySlug: string; chapterNo: number; lineNo: number; text: string }[];
+    // Lowest priority: only filled when other matches leave slots free (see ff-server searchAll)
+    commentaries: {
+        id: number;
+        content: string;
+        author: string;
+        episodeTitle: string;
+        episodeNo: number;
+        episodeSlug: string | null;
+        seasonTitle: string;
+        messageNo: number;
+    }[];
 }
 
 export async function searchSite(q: string, options: RequestOptions = {}): Promise<SearchResults> {

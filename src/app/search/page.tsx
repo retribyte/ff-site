@@ -5,6 +5,7 @@ import type { Character, Item, Season, Episode, MessageType } from '@/lib/types'
 import { episodeNumberLabel, episodesByTitle, lineUrl, seasonColors, seasonOrder, seasonSlug } from '@/lib/seasons';
 import { storyQuoteUrl } from '@/lib/stories';
 import { messageSnippet, embedLast } from '@/lib/search';
+import { htmlToPlainText } from '@/lib/html';
 import { Highlighted } from '@/components/transcript/ScanBar';
 import CharacterCard from '@/components/characters/CharacterCard';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
@@ -86,20 +87,6 @@ interface Props {
 function pageParam(value: string | undefined): number {
     const parsed = value ? parseInt(value, 10) : 1;
     return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
-}
-
-// Note text is sanitized HTML with entities encoded: plain text for a snippet
-function plainText(html: string): string {
-    return html
-        .replace(/<[^>]*>/g, ' ')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&#x27;|&#39;/g, "'")
-        .replace(/&amp;/g, '&')
-        .replace(/\s+/g, ' ')
-        .trim();
 }
 
 function matches(n: number): string {
@@ -431,7 +418,7 @@ export default async function SearchPage({ searchParams }: Props) {
                     <p className='pixel-label'>{matches(commentariesResult.total)}</p>
                     <ul className={styles.rowList}>
                         {commentariesResult.data.map((c) => (
-                            <li key={c.id}>
+                            <li key={c.id} style={{ '--tint': seasonColors(c.seasonTitle).primary } as React.CSSProperties}>
                                 <Link
                                     href={lineUrl(
                                         {
@@ -449,7 +436,7 @@ export default async function SearchPage({ searchParams }: Props) {
                                         {episodeLabel(c.episodeTitle, c.episodeNo)}, line {c.messageNo}, {c.author}
                                     </span>
                                     <span className={styles.rowText}>
-                                        <Highlighted text={plainText(c.content)} query={query} />
+                                        <Highlighted text={htmlToPlainText(c.content)} query={query} />
                                     </span>
                                 </Link>
                             </li>
