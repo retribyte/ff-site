@@ -1,0 +1,65 @@
+@use '../../styles/mixins' as m;
+
+// --tint comes from the page (season color on an episode, accent elsewhere)
+
+.list {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.group {
+    padding: 0.65rem 0.9rem;
+    background: color-mix(in srgb, var(--tint, var(--accent)) 6%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--tint, var(--accent)) 22%, var(--border));
+    border-left: var(--px) solid var(--tint, var(--accent));
+}
+
+.where {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+}
+
+.lineLink {
+    @include m.pixel-nav-link(var(--tint, var(--accent-soft)));
+}
+
+.speaker {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.excerpt {
+    margin: 0.3rem 0 0;
+    font-family: var(--font-prose);
+    font-style: italic;
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
+}
+
+.notes {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.55rem;
+    padding-top: 0.55rem;
+    border-top: 1px dashed color-mix(in srgb, var(--tint, var(--accent)) 30%, var(--border));
+}
+
+.author {
+    font-family: var(--font-pixel);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+.content {
+    margin-top: 0.15rem;
+}

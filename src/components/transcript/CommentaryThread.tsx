@@ -119,8 +119,11 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
                 data-empty={notes.length === 0 || undefined}
                 onClick={() => setOpen(!open)}
                 aria-expanded={open}
+                // The rail beside a line is narrow: just the count, spelled out for hover and screen readers
+                aria-label={notes.length > 0 ? `${notes.length} note${notes.length === 1 ? '' : 's'}` : 'add a note'}
+                title={notes.length > 0 ? `${notes.length} note${notes.length === 1 ? '' : 's'}` : 'add a note'}
             >
-                ✎ {notes.length > 0 ? `${notes.length} note${notes.length === 1 ? '' : 's'}` : ''}
+                ✎{notes.length > 0 ? ` ${notes.length}` : ''}
             </button>
 
             {open && (

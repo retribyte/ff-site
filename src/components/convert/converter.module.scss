@@ -85,7 +85,7 @@
     display: grid;
     place-items: center;
     padding: 0.3rem;
-    color: var(--vm);
+    color: var(--gold);
     background: transparent;
     border: 0;
     border-radius: var(--radius);
@@ -100,9 +100,9 @@
     display: block;
     font-family: var(--font-mono);
     font-size: 1rem;
-    color: var(--vm);
-    background: color-mix(in srgb, var(--vm) 8%, var(--bg));
-    border: 1px dashed color-mix(in srgb, var(--vm) 45%, var(--border-loud));
+    color: var(--gold);
+    background: color-mix(in srgb, var(--gold) 8%, var(--bg));
+    border: 1px dashed color-mix(in srgb, var(--gold) 45%, var(--border-loud));
     border-radius: var(--radius);
     padding: 0.75rem 2.5rem 0.75rem 1rem;
     min-height: 3rem;
