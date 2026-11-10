@@ -2,7 +2,6 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from '@/components/auth/SessionProvider';
 import type { NpcRun } from '@/lib/stories';
 import type { StorySegment } from '@/lib/types';
 import styles from './story.module.scss';
@@ -10,7 +9,7 @@ import styles from './story.module.scss';
 // Names one NPC voice quote in the reader (PATCH /stories/:slug/voices), and
 // optionally the next few unnamed ones in the chapter, since an NPC usually
 // talks for a stretch of a scene. Only the story's authors and admins see it.
-// Admins can instead link the quote to a real character from the archive: it
+// They can instead link the quote to a real character from the archive: it
 // stops being an NPC voice (ff-server records that in the admin History).
 
 type Updated = { lineNo: number; speaker: string | null; segments: StorySegment[] | null };
@@ -46,8 +45,6 @@ export default function VoiceNamePopover({
     const [error, setError] = useState<string | null>(null);
     const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
     const router = useRouter();
-    const { user } = useSession();
-    const isAdmin = user?.role === 'ADMIN';
     const [linkCharacter, setLinkCharacter] = useState(false);
     const [characters, setCharacters] = useState<{ id: number; name: string }[] | null>(null);
 
@@ -177,27 +174,23 @@ export default function VoiceNamePopover({
                     <option key={n} value={n} />
                 ))}
             </datalist>
-            {isAdmin && (
-                <>
-                    <label className={styles.namePopoverCheck}>
-                        <input
-                            type='checkbox'
-                            checked={linkCharacter}
-                            onChange={(e) => {
-                                setLinkCharacter(e.target.checked);
-                                setError(null);
-                            }}
-                            disabled={busy}
-                        />
-                        a character in the archive (admin; it stops being an NPC voice)
-                    </label>
-                    <datalist id='story-character-names'>
-                        {(characters ?? []).map((c) => (
-                            <option key={c.id} value={c.name} />
-                        ))}
-                    </datalist>
-                </>
-            )}
+            <label className={styles.namePopoverCheck}>
+                <input
+                    type='checkbox'
+                    checked={linkCharacter}
+                    onChange={(e) => {
+                        setLinkCharacter(e.target.checked);
+                        setError(null);
+                    }}
+                    disabled={busy}
+                />
+                a character in the archive (it stops being an NPC voice)
+            </label>
+            <datalist id='story-character-names'>
+                {(characters ?? []).map((c) => (
+                    <option key={c.id} value={c.name} />
+                ))}
+            </datalist>
             {nextUnnamed.length > 0 && (
                 <label className={styles.namePopoverNext}>
                     also the next
