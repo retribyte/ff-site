@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import StoryReader from '@/components/story/StoryReader';
-import { storyColors, type SlimLine, type StoryData } from '@/lib/stories';
+import { storyColors, type PersonaInfo, type SlimLine, type StoryData } from '@/lib/stories';
 import type { SpeakerInfo } from '@/lib/transcript';
 import type { StoryFormat, StoryLineType, StorySegment } from '@/lib/types';
 import styles from './storyImporter.module.scss';
@@ -16,7 +16,8 @@ export interface PreviewLine {
     type: string;
     text: string;
     characterId?: number;
-    speaker?: string;
+    personaId?: number;
+    speaker?: string; // an NPC by name
     npcVoice?: boolean;
     segments?: StorySegment[];
     booruId?: number; // IMAGE
@@ -33,6 +34,7 @@ function chapterData(
     format: StoryFormat,
     chapter: PreviewChapter,
     characters: Record<number, SpeakerInfo>,
+    personas: Record<number, PersonaInfo>,
     images: Record<number, string>
 ): StoryData {
     const lines: SlimLine[] = chapter.lines.map((line, index) => ({
@@ -40,12 +42,14 @@ function chapterData(
         type: line.type as StoryLineType,
         text: line.text,
         characterId: line.characterId ?? null,
+        personaId: line.personaId ?? null,
         speaker: line.speaker ?? null,
-        npcVoice: line.npcVoice ?? false,
+        // a voice with no character is an NPC (named or not)
+        npcVoice: !!line.npcVoice || (line.characterId === undefined && !!line.speaker),
         segments: line.segments ?? null,
         imageUrl: line.booruId !== undefined ? (images[line.booruId] ?? null) : null,
     }));
-    return { storySlug: slug, chapterNo: chapter.chapter_no, format, lines, characters };
+    return { storySlug: slug, chapterNo: chapter.chapter_no, format, lines, characters, personas };
 }
 
 const chapterName = (chapter: PreviewChapter) =>
@@ -59,6 +63,7 @@ export default function StoryPreview({
     season,
     chapters,
     characters,
+    personas,
     images,
 }: {
     slug: string;
@@ -68,6 +73,7 @@ export default function StoryPreview({
     season?: string;
     chapters: PreviewChapter[];
     characters: Record<number, SpeakerInfo>;
+    personas: Record<number, PersonaInfo>;
     /** booru post -> what to show for it (the doc's own picture, or the post's file URL) */
     images: Record<number, string>;
 }) {
@@ -111,7 +117,7 @@ export default function StoryPreview({
                 </p>
                 <StoryReader
                     key={chapter.chapter_no}
-                    data={chapterData(slug, format, chapter, characters, images)}
+                    data={chapterData(slug, format, chapter, characters, personas, images)}
                     preview
                 />
             </div>

@@ -86,6 +86,8 @@ export interface NpcPersona extends Persona {
     name: string;
     characterId: null;
     messageCount: number;
+    /** story lines and in-paragraph quotes it voices */
+    storyQuoteCount?: number;
 }
 
 /**
@@ -162,11 +164,21 @@ export interface Commentary {
     creator?: PublicUser;
 }
 
+/** The persona voicing a story line or segment, as ff-server serves it inline */
+export type StoryPersona = Pick<Persona, 'id' | 'name' | 'image' | 'color' | 'characterId' | 'slug'>;
+
+// A story voice follows the message rule: characterId alone, characterId +
+// one of its personas, or an NPC persona alone (characterId null). In an
+// import draft, `speaker` names an NPC persona instead (found or created on
+// upload), and `npc` with no name is an NPC voice still to be named.
 export interface StorySegment {
     text: string;
     characterId?: number | null;
+    personaId?: number | null;
+    persona?: StoryPersona | null;
+    /** Draft: an NPC by name. Served: the NPC persona's name (derived, deprecated) */
     speaker?: string | null;
-    /** An NPC voice: `speaker` is its name, absent while unnamed (still dialogue, not narration) */
+    /** An NPC voice */
     npc?: boolean;
     italic?: boolean;
     bold?: boolean;
@@ -210,8 +222,10 @@ export interface StoryLine {
     type: StoryLineType;
     text: string;
     characterId: number | null;
-    speaker: string | null; // display-name fallback when no Character row exists
-    npcVoice?: boolean; // DIALOGUE: an NPC voice, named by `speaker` or unnamed (null)
+    personaId?: number | null; // one of the character's personas, or an NPC persona alone
+    persona?: StoryPersona | null;
+    speaker: string | null; // the NPC persona's name (derived by the server; deprecated)
+    npcVoice?: boolean; // voiced by an NPC persona (derived by the server; deprecated)
     segments?: StorySegment[] | null; // sub-paragraph dialogue spans (NARRATION only); concat === text
     booruId?: number | null; // IMAGE: the booru post holding the picture (text is its alt text)
     imageUrl?: string | null; // IMAGE: that post's file URL (load it through imageSrc)
@@ -234,6 +248,8 @@ export interface StoryQuote {
     type: StoryLineType;
     text: string;
     characterId: number | null;
+    personaId?: number | null;
+    persona?: StoryPersona | null;
     speaker: string | null;
     segments: StorySegment[] | null;
     storySlug: string;

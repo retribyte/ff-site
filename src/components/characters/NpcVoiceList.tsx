@@ -90,6 +90,7 @@ export default function NpcVoiceList({ npcs }: { npcs: NpcPersona[] }) {
                         <span className={styles.name}>{npc.name}</span>
                         <span className={styles.count}>
                             {npc.messageCount} {npc.messageCount === 1 ? 'line' : 'lines'}
+                            {npc.storyQuoteCount ? `, ${npc.storyQuoteCount} story ${npc.storyQuoteCount === 1 ? 'quote' : 'quotes'}` : ''}
                         </span>
                         <AvatarUploadButton
                             label={npc.image ? 'change image' : 'add image'}

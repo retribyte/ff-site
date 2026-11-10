@@ -7,8 +7,8 @@ import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
 import { imageSrc } from '@/lib/images';
-import { collectVoices, npcRuns, type NpcRun, type SlimLine, type StoryData } from '@/lib/stories';
-import type { StorySegment } from '@/lib/types';
+import { collectPersonas, collectVoices, npcRuns, slimLine, storyVoice, type NpcRun, type SlimLine, type StoryData, type StoryVoice } from '@/lib/stories';
+import type { StoryLine, StorySegment } from '@/lib/types';
 import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
 import PixelAvatar from '@/components/transcript/PixelAvatar';
 import DeleteStoryButton from './DeleteStoryButton';
@@ -56,18 +56,28 @@ type NameHandler = (lineNo: number, segment: number | null, el: HTMLElement) => 
 // speaking, TRANSCRIPT is an in-universe recording fragment, BREAK is a
 // scene break.
 
-// Voices with no linked character (an ambiguous "?", a ship's computer) aren't
-// anyone with a color of their own, so they read in neutral grey.
-function voiceColor(
-    characterId: number | null,
-    name: string,
-    character: { color?: string | null; colorLight?: string | null } | null,
-    colorMode: ColorMode,
-): string {
-    return characterId === null
-        ? 'var(--text-muted)'
-        : characterColor(name, character?.color ?? null, colorMode, character?.colorLight ?? null);
+/** The character and persona tables a voice is looked up in */
+type Lookup = Pick<StoryData, 'characters' | 'personas'>;
+
+// A voice reads in its persona's color, else its character's. The color
+// fallbacks key on the character's own name, never the persona's (as in
+// transcripts). NPC voices (no character) read in neutral grey unless their
+// persona has a color of its own.
+function voiceColor(voice: StoryVoice, colorMode: ColorMode): string {
+    const own = voice.persona?.color ?? null;
+    if (voice.characterId !== null) {
+        return characterColor(
+            voice.character?.name ?? voice.name,
+            own ?? voice.character?.color ?? null,
+            colorMode,
+            own ? null : (voice.character?.colorLight ?? null)
+        );
+    }
+    return own ? characterColor(voice.name, own, colorMode, null) : 'var(--text-muted)';
 }
+
+/** The avatar a voice shows: its persona's, else its character's */
+const voiceImage = (voice: StoryVoice) => voice.persona?.image ?? voice.character?.image ?? null;
 
 // An NPC voice has no character page, so its name is a tooltip instead
 // (`help` cursor). Story authors and admins can click one to name it.
@@ -119,31 +129,32 @@ function NpcRunText({
 // prose-format dialogue line. Links to the character page when one is linked.
 function DialogueRun({
     text,
-    characterId,
-    speaker,
-    characters,
+    voice,
     colorMode,
     query,
     className,
-    npc = false,
     onName,
 }: {
     text: string;
-    characterId: number | null;
-    speaker: string | null;
-    characters: StoryData['characters'];
+    voice: StoryVoice;
     colorMode: ColorMode;
     query: string | null;
     className: string;
-    npc?: boolean;
     onName?: (el: HTMLElement) => void;
 }) {
-    const character = characterId !== null ? characters[characterId] : null;
-    const name = character?.name ?? speaker ?? '?';
-    const color = voiceColor(characterId, name, character, colorMode);
-    const style = { '--char': color } as React.CSSProperties;
-    if (npc) {
-        return <NpcRunText text={text} speaker={speaker} query={query} className={className} style={style} onName={onName} />;
+    const { name, characterId, character } = voice;
+    const style = { '--char': voiceColor(voice, colorMode) } as React.CSSProperties;
+    if (voice.npc) {
+        return (
+            <NpcRunText
+                text={text}
+                speaker={name === 'unnamed' ? null : name}
+                query={query}
+                className={className}
+                style={style}
+                onName={onName}
+            />
+        );
     }
     const inner = <Highlighted text={text} query={query} />;
     return characterId !== null ? (
@@ -162,29 +173,26 @@ function DialogueRun({
 // Segment texts concatenate verbatim to line.text; the markup is presentational.
 function Segment({
     seg,
-    characters,
+    lookup,
     colorMode,
     query,
     onName,
 }: {
     seg: StorySegment;
-    characters: StoryData['characters'];
+    lookup: Lookup;
     colorMode: ColorMode;
     query: string | null;
     onName?: (el: HTMLElement) => void;
 }) {
-    const hasVoice = seg.characterId != null || !!seg.speaker || !!seg.npc;
-    let node: React.ReactNode = hasVoice ? (
+    const voice = storyVoice(seg, lookup);
+    let node: React.ReactNode = voice ? (
         <DialogueRun
             text={seg.text}
-            characterId={seg.characterId ?? null}
-            speaker={seg.speaker ?? null}
-            characters={characters}
+            voice={voice}
             colorMode={colorMode}
             query={query}
             className={styles.dialogueSpan}
-            npc={!!seg.npc}
-            onName={seg.npc ? onName : undefined}
+            onName={voice.npc ? onName : undefined}
         />
     ) : (
         <Highlighted text={seg.text} query={query} />
@@ -194,19 +202,24 @@ function Segment({
     return <>{node}</>;
 }
 
-function speakerHeads(line: SlimLine, characters: StoryData['characters']) {
-    const ids: number[] = [];
-    const add = (id: number | null | undefined, npc?: boolean) => {
-        if (id != null && !npc && characters[id] && !ids.includes(id)) ids.push(id);
+// The avatars in a line's left rail: each character speaking in it (as the
+// persona it speaks as), and each NPC that has an avatar of its own.
+function speakerHeads(line: SlimLine, lookup: Lookup) {
+    const heads: { key: string; voice: StoryVoice }[] = [];
+    const add = (voice: StoryVoice | null) => {
+        if (!voice) return;
+        if (voice.characterId !== null ? !voice.character : !voice.persona?.image) return;
+        const key = voice.characterId !== null ? `c${voice.characterId}:${voice.personaId ?? ''}` : `p${voice.personaId}`;
+        if (!heads.some((h) => h.key === key)) heads.push({ key, voice });
     };
-    if (line.type === 'DIALOGUE') add(line.characterId, line.npcVoice);
-    else if (line.type === 'NARRATION') line.segments?.forEach((seg) => add(seg.characterId, seg.npc));
-    return ids.map((id) => ({ id, character: characters[id] }));
+    if (line.type === 'DIALOGUE') add(storyVoice({ ...line, npc: line.npcVoice }, lookup));
+    else if (line.type === 'NARRATION') line.segments?.forEach((seg) => add(storyVoice(seg, lookup)));
+    return heads;
 }
 
 const Line = memo(function Line({
     line,
-    characters,
+    lookup,
     colorMode,
     query,
     highlighted,
@@ -214,7 +227,7 @@ const Line = memo(function Line({
     onName,
 }: {
     line: SlimLine;
-    characters: StoryData['characters'];
+    lookup: Lookup;
     colorMode: ColorMode;
     query: string | null;
     highlighted: boolean;
@@ -232,7 +245,7 @@ const Line = memo(function Line({
         });
     };
 
-    const heads = speakerHeads(line, characters);
+    const heads = speakerHeads(line, lookup);
 
     let content: React.ReactNode;
     switch (line.type) {
@@ -245,10 +258,10 @@ const Line = memo(function Line({
             );
             break;
         case 'DIALOGUE': {
-            const character = line.characterId !== null ? characters[line.characterId] : null;
-            const name = character?.name ?? line.speaker ?? '?';
-            const color = voiceColor(line.characterId, name, character, colorMode);
-            const nameLine = line.npcVoice && onName ? (el: HTMLElement) => onName(line.no, null, el) : undefined;
+            const voice = storyVoice({ ...line, npc: line.npcVoice }, lookup) ?? storyVoice({ speaker: '?' }, lookup)!;
+            const { name, character } = voice;
+            const color = voiceColor(voice, colorMode);
+            const nameLine = voice.npc && onName ? (el: HTMLElement) => onName(line.no, null, el) : undefined;
             // Novel-style: colored prose, no "Name:" prefix — speaker read from
             // color + tooltip + the voice legend.
             if (format === 'PROSE') {
@@ -256,13 +269,10 @@ const Line = memo(function Line({
                     <p className={styles.dialogueProse}>
                         <DialogueRun
                             text={line.text}
-                            characterId={line.characterId}
-                            speaker={line.speaker}
-                            characters={characters}
+                            voice={voice}
                             colorMode={colorMode}
                             query={query}
                             className={styles.dialogueSpan}
-                            npc={line.npcVoice}
                             onName={nameLine}
                         />
                     </p>
@@ -275,11 +285,11 @@ const Line = memo(function Line({
                         <CharacterLink characterId={line.characterId} slug={character?.slug} className={styles.dialogueName}>
                             {name}:
                         </CharacterLink>
-                    ) : line.npcVoice ? (
+                    ) : voice.npc ? (
                         <>
                             <NpcRunText
-                                text={line.speaker ?? 'unnamed'}
-                                speaker={line.speaker}
+                                text={name}
+                                speaker={name === 'unnamed' ? null : name}
                                 query={null}
                                 className={styles.dialogueName}
                                 style={{}}
@@ -345,7 +355,7 @@ const Line = memo(function Line({
                             <Segment
                                 key={i}
                                 seg={seg}
-                                characters={characters}
+                                lookup={lookup}
                                 colorMode={colorMode}
                                 query={query}
                                 onName={onName ? (el) => onName(line.no, i, el) : undefined}
@@ -371,16 +381,26 @@ const Line = memo(function Line({
         >
             {heads.length > 0 && (
                 <div className={styles.heads}>
-                    {heads.map(({ id, character }) => (
-                        <CharacterLink key={id} characterId={id} slug={character.slug} className={styles.head} title={character.name}>
-                            <PixelAvatar
-                                src={character.image}
-                                name={character.name}
-                                color={voiceColor(id, character.name, character, colorMode)}
-                                size={32}
-                            />
-                        </CharacterLink>
-                    ))}
+                    {heads.map(({ key, voice }) => {
+                        const avatar = (
+                            <PixelAvatar src={voiceImage(voice)} name={voice.name} color={voiceColor(voice, colorMode)} size={32} />
+                        );
+                        return voice.characterId !== null ? (
+                            <CharacterLink
+                                key={key}
+                                characterId={voice.characterId}
+                                slug={voice.character?.slug}
+                                className={styles.head}
+                                title={voice.name}
+                            >
+                                {avatar}
+                            </CharacterLink>
+                        ) : (
+                            <span key={key} className={styles.head} title={voice.name}>
+                                {avatar}
+                            </span>
+                        );
+                    })}
                 </div>
             )}
             {content}
@@ -422,16 +442,22 @@ export default function StoryReader({
     const searchParams = useSearchParams();
     const canNameVoices = !preview && !!user && (user.role === 'ADMIN' || authorIds.includes(user.id));
 
-    // NPC names given in this visit, by line number; reset on another chapter
+    // Voices changed in this visit, by line number (and the NPC personas they
+    // now use); reset on another chapter
     const chapterKey = `${data.storySlug}#${data.chapterNo}`;
-    const [named, setNamed] = useState<{ key: string; lines: Record<number, Pick<SlimLine, 'speaker' | 'segments'>> }>({
+    const [named, setNamed] = useState<{ key: string; lines: Record<number, SlimLine>; personas: StoryData['personas'] }>({
         key: chapterKey,
         lines: {},
+        personas: {},
     });
     const lines = useMemo(() => {
         const overrides = named.key === chapterKey ? named.lines : {};
-        return data.lines.map((line) => (overrides[line.no] ? { ...line, ...overrides[line.no] } : line));
+        return data.lines.map((line) => overrides[line.no] ?? line);
     }, [data.lines, named, chapterKey]);
+    const lookup = useMemo<Lookup>(
+        () => ({ characters: data.characters, personas: named.key === chapterKey ? { ...data.personas, ...named.personas } : data.personas }),
+        [data.characters, data.personas, named, chapterKey]
+    );
     const runs = useMemo(() => npcRuns(lines), [lines]);
     const [editing, setEditing] = useState<Editing | null>(null);
 
@@ -447,12 +473,16 @@ export default function StoryReader({
 
     const closeNamer = useCallback(() => setEditing(null), []);
 
-    const applyUpdated = (updated: { lineNo: number; speaker: string | null; segments: StorySegment[] | null }[]) =>
+    const applyUpdated = (updated: StoryLine[]) =>
         setNamed((prev) => {
-            const base = prev.key === chapterKey ? prev.lines : {};
-            const next = { ...base };
-            for (const u of updated) next[u.lineNo] = { speaker: u.speaker, segments: u.segments };
-            return { key: chapterKey, lines: next };
+            const same = prev.key === chapterKey;
+            const next = { ...(same ? prev.lines : {}) };
+            const personas = { ...(same ? prev.personas : {}) };
+            for (const u of updated) {
+                next[u.line_no] = slimLine(u);
+                collectPersonas(u, personas);
+            }
+            return { key: chapterKey, lines: next, personas };
         });
 
     const lineParam = searchParams.get('line');
@@ -467,7 +497,7 @@ export default function StoryReader({
 
     // Novel-style stories don't print speaker names inline, so a legend keys
     // the dialogue colors to their characters.
-    const voices = data.format === 'PROSE' ? collectVoices({ ...data, lines }) : [];
+    const voices = data.format === 'PROSE' ? collectVoices({ ...data, ...lookup, lines }) : [];
 
     return (
         <PreviewContext.Provider value={preview}>
@@ -476,15 +506,13 @@ export default function StoryReader({
                 {voices.length > 0 && (
                     <ul className={styles.legend} aria-label='Voices in this chapter'>
                         {voices.map((voice) => {
-                            const character = voice.characterId !== null ? data.characters[voice.characterId] : null;
-                            const color = voiceColor(voice.characterId, voice.name, character, colorMode);
-                            const style = { '--char': color } as React.CSSProperties;
+                            const style = { '--char': voiceColor(voice, colorMode) } as React.CSSProperties;
                             return (
-                                <li key={voice.name}>
+                                <li key={`${voice.characterId ?? 'npc'}:${voice.personaId ?? voice.name}`}>
                                     {voice.characterId !== null ? (
                                         <CharacterLink
                                             characterId={voice.characterId}
-                                            slug={character?.slug}
+                                            slug={voice.character?.slug}
                                             className={styles.legendChip}
                                             style={style}
                                         >
@@ -505,7 +533,7 @@ export default function StoryReader({
                         <Line
                             key={line.no}
                             line={line}
-                            characters={data.characters}
+                            lookup={lookup}
                             colorMode={colorMode}
                             query={scan.activeQuery}
                             highlighted={line.no === targetNo || line.no === scan.currentMatchNo}
@@ -522,7 +550,9 @@ export default function StoryReader({
                         run={editing.run}
                         anchor={editing.anchor}
                         runs={runs}
-                        suggestions={voices.filter((v) => v.characterId === null).map((v) => v.name)}
+                        suggestions={collectVoices({ ...data, ...lookup, lines })
+                            .filter((v) => v.characterId === null)
+                            .map((v) => v.name)}
                         onSaved={applyUpdated}
                         onClose={closeNamer}
                     />

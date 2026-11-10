@@ -51,9 +51,9 @@ interface Remembered {
 
 const NARRATION = '__narration__';
 const OTHER = '__other__';
-// Several NPCs share this color, so each span imports as an unnamed NPC voice
-// ("?" to the converter: [spoken]{?}). Name them in the importer's modal, or
-// later in the story reader.
+// Several NPCs share this color, so each span converts as an unnamed NPC voice
+// ("?" to the converter: [spoken]{?}), which the importer's namer must name
+// (or give to a character) before upload.
 const SEVERAL_NPCS = '__npcs__';
 // The house color for "whichever NPC is talking"
 const NPC_GRAY = '#666666';
@@ -362,7 +362,7 @@ export default function DocxStoryForm({
                                             <option value=''>— choose —</option>
                                             <option value={NARRATION}>narration (not a voice)</option>
                                             <option value={SEVERAL_NPCS}>several NPCs (name each line)</option>
-                                            <option value={OTHER}>a name not in the archive…</option>
+                                            <option value={OTHER}>an NPC (a name not in the archive)…</option>
                                             {characterNames.map((n) => (
                                                 <option key={n} value={n}>
                                                     {n}
@@ -371,8 +371,8 @@ export default function DocxStoryForm({
                                         </select>
                                         {pickFor(c.color) === SEVERAL_NPCS && (
                                             <span className={styles.pickHint}>
-                                                imports unnamed: name the lines after converting, or later while
-                                                reading
+                                                name each line after converting (every one needs a name, or a
+                                                character, before upload)
                                             </span>
                                         )}
                                         {pickFor(c.color) === OTHER && (
@@ -380,7 +380,7 @@ export default function DocxStoryForm({
                                                 aria-label={`display name for ${c.color}`}
                                                 value={otherNameFor(c.color)}
                                                 onChange={(e) => setOtherNames((prev) => ({ ...prev, [c.color]: e.target.value }))}
-                                                placeholder='display name'
+                                                placeholder='NPC name'
                                                 disabled={locked}
                                             />
                                         )}

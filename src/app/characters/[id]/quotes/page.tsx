@@ -6,7 +6,7 @@ import type { CharacterQuotes, Character } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
 import { personaHasName } from '@/lib/personaIdentity';
 import { lineUrl } from '@/lib/seasons';
-import { averageWords, countWords, quotedSpanText, storyQuoteUrl } from '@/lib/stories';
+import { averageWords, countWords, quotePersonaName, quotedSpanText, storyQuoteUrl } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
 import QuoteLog, { type LogQuote } from '@/components/characters/QuoteLog';
@@ -66,6 +66,7 @@ export default async function CharacterQuotesPage({ params }: Props) {
         ...quotes.storyQuotes.map((q) => {
             // A segmented paragraph quotes only this character's spans
             const text = quotedSpanText(q, character.id);
+            const as = quotePersonaName(q, character.id);
             return {
                 key: `s-${q.id}`,
                 source: 'story' as const,
@@ -73,7 +74,7 @@ export default async function CharacterQuotesPage({ params }: Props) {
                 story: { slug: q.storySlug, title: q.storyTitle },
                 text,
                 href: storyQuoteUrl(q),
-                context: `${q.storyTitle} — ch. ${q.chapterNo}, line ${q.line_no}`,
+                context: `${q.storyTitle} — ch. ${q.chapterNo}${as ? ` (as ${as})` : ''}, line ${q.line_no}`,
                 words: countWords(text),
             };
         }),
