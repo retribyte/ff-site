@@ -195,7 +195,7 @@
 .embed {
     background: color-mix(in srgb, var(--char) 10%, var(--surface-2));
     // Discord's embed color if the embed has its own; otherwise the speaker's
-    // (for the bot, its user color: FF 8 Ball's purple)
+    // (for the bot, its user color: the 8 Ball's purple)
     border-left: var(--px) solid var(--embed-color, var(--char));
     padding: 0.5rem 0.8rem;
     display: flex;

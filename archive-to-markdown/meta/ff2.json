@@ -4,8 +4,8 @@
         "Bagelwrecker": "Sean",
         "Brakia": "Brody",
         "Enchantingtable2013": "Maxwell",
-        "Tatsumaki": "FF 8 Ball",
-        "Magic8Ball": "FF 8 Ball",
+        "Tatsumaki": "8 Ball",
+        "Magic8Ball": "8 Ball",
         "ProfessorTree": "Silas",
         "Santa is Dead": "Jonas",
         "PlasmaPerson": "Jonas",
@@ -18,7 +18,7 @@
         "Deyner": "Deyner"
     },
     "bots": [
-        "FF 8 Ball"
+        "8 Ball"
     ],
     "cast": {
         "Zander": {

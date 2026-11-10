@@ -134,7 +134,7 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
     const { speaker, color: rawColor, avatarSrc } = resolvePersonaIdentity(persona, character, player);
     // A player speaking as themselves (no character, no persona, no color of
     // their own -- table talk, bare commands) reads in one neutral grey;
-    // a bot keeps its user color (FF 8 Ball's purple, which FF4's Vortox is merged into)
+    // a bot keeps its user color (the 8 Ball's purple, which FF4's Vortox is merged into)
     const isPlayerVoice = !character && !persona && !rawColor;
     // The color fallbacks (the legacy color table, the name hash) key on the
     // character's own name, not the persona's: Grass Stalker's FF1 "Emmett"
@@ -173,7 +173,7 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
             <div className={styles.blockBody}>
                 <div className={styles.blockHeader}>
                     {characterId !== null ? (
-                        <Link href={`/characters/${characterId}`} className={styles.speaker}>
+                        <Link href={`/characters/${character?.slug ?? characterId}`} className={styles.speaker}>
                             {speaker}
                         </Link>
                     ) : (

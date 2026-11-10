@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import PixelAvatar from '@/components/transcript/PixelAvatar';
 import type { Persona } from '@/lib/types';
+import { isValidSlug, slugify } from '@/lib/slug';
 import AvatarField from './AvatarField';
 import AvatarUploadButton from './AvatarUploadButton';
 import styles from './personaManager.module.scss';
@@ -18,9 +19,18 @@ interface Draft {
     label: string;
     image: string;
     color: string;
+    /** Typed by hand; empty means "follow the name" (see autoSlug) */
+    slug: string;
 }
 
-const EMPTY_DRAFT: Draft = { name: '', label: '', image: '', color: '' };
+const EMPTY_DRAFT: Draft = { name: '', label: '', image: '', color: '', slug: '' };
+
+// Same default ff-server's createPersona derives: <character>_<persona name>.
+// Name-less personas get no slug (no URL identity).
+function autoSlug(characterName: string, name: string): string {
+    const nameSlug = slugify(name);
+    return nameSlug ? `${slugify(characterName)}_${nameSlug}` : '';
+}
 
 // A persona must set at least one of name/image/color, and needs a label
 // when it sets no name (so a name-less row stays distinguishable in this
@@ -33,6 +43,8 @@ function validateDraft(draft: Draft): string | null {
     const hasColor = draft.color.trim() !== '';
     if (!hasName && !hasImage && !hasColor) return 'set a name, image, or color';
     if (!hasName && !hasLabel) return 'a label is required when no name is set';
+    if (hasName && draft.slug.trim() && !isValidSlug(draft.slug.trim()))
+        return 'slug: lowercase letters, digits and single underscores only';
     return null;
 }
 
@@ -42,7 +54,15 @@ function validateDraft(draft: Draft): string | null {
 // EDITOR_SCHEMAS/RecordEditor field model — this is a small self-contained
 // client component: it owns its own list state and talks to the API
 // directly through the /site/ff/ proxy, same pattern as CommentaryThread.
-export default function PersonaManager({ characterId, initial }: { characterId: number; initial: Persona[] }) {
+export default function PersonaManager({
+    characterId,
+    characterName,
+    initial,
+}: {
+    characterId: number;
+    characterName: string;
+    initial: Persona[];
+}) {
     const [personas, setPersonas] = useState<Persona[]>(initial);
     const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
     const [error, setError] = useState<string | null>(null);
@@ -50,6 +70,9 @@ export default function PersonaManager({ characterId, initial }: { characterId: 
 
     const validationError = validateDraft(draft);
     const isDraftEmpty = !draft.name.trim() && !draft.label.trim() && !draft.image.trim() && !draft.color.trim();
+    // The slug follows the name until it's typed over; clearing it goes back to following
+    const suggestedSlug = autoSlug(characterName, draft.name);
+    const effectiveSlug = draft.name.trim() ? draft.slug.trim() || suggestedSlug : '';
 
     const add = async () => {
         if (isDraftEmpty || validationError) return;
@@ -61,6 +84,7 @@ export default function PersonaManager({ characterId, initial }: { characterId: 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: draft.name.trim() || undefined,
+                    slug: effectiveSlug || undefined,
                     label: draft.label.trim() || undefined,
                     image: draft.image.trim() || undefined,
                     color: draft.color.trim() || undefined,
@@ -177,14 +201,14 @@ export default function PersonaManager({ characterId, initial }: { characterId: 
                     />
                 </label>
                 <label className={styles.field}>
-                    <span className={styles.fieldLabel}>label</span>
+                    <span className={styles.fieldLabel}>slug</span>
                     <input
                         type='text'
-                        value={draft.label}
-                        onChange={(e) => setDraft((d) => ({ ...d, label: e.target.value }))}
-                        placeholder='admin-facing handle'
-                        aria-label='new persona label'
-                        disabled={busy}
+                        value={draft.slug || suggestedSlug}
+                        onChange={(e) => setDraft((d) => ({ ...d, slug: e.target.value }))}
+                        placeholder='made from the name'
+                        aria-label='new persona slug'
+                        disabled={busy || !draft.name.trim()}
                     />
                 </label>
                 <div className={`${styles.field} ${styles.imageField}`}>
@@ -197,6 +221,17 @@ export default function PersonaManager({ characterId, initial }: { characterId: 
                         disabled={busy}
                     />
                 </div>
+                <label className={styles.field}>
+                    <span className={styles.fieldLabel}>label</span>
+                    <input
+                        type='text'
+                        value={draft.label}
+                        onChange={(e) => setDraft((d) => ({ ...d, label: e.target.value }))}
+                        placeholder='admin-facing handle'
+                        aria-label='new persona label'
+                        disabled={busy}
+                    />
+                </label>
                 <label className={styles.field}>
                     <span className={styles.fieldLabel}>color</span>
                     <span className={styles.colorRow}>

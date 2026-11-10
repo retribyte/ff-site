@@ -53,7 +53,10 @@ export default async function EditorPage({ kind, recordParam }: { kind: EditorKi
             </header>
             <RecordEditor kind={kind} record={record} recordId={recordId} />
             {kind === 'character' && isEdit && (
-                <PersonaManager characterId={recordId!} initial={(record!.personas as Persona[] | undefined) ?? []} />
+                <PersonaManager
+                    characterId={recordId!}
+                    characterName={String(record!.name ?? '')}
+                    initial={(record!.personas as Persona[] | undefined) ?? []} />
             )}
         </main>
     );

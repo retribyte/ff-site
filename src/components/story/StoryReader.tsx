@@ -21,12 +21,15 @@ const PreviewContext = createContext(false);
 
 function CharacterLink({
     characterId,
+    slug,
     className,
     style,
     title,
     children,
 }: {
     characterId: number;
+    /** Links use the slug; the id is only a fallback for a character without one */
+    slug?: string;
     className: string;
     style?: React.CSSProperties;
     title?: string;
@@ -38,7 +41,7 @@ function CharacterLink({
             {children}
         </span>
     ) : (
-        <Link href={`/characters/${characterId}`} className={className} style={style} title={title}>
+        <Link href={`/characters/${slug ?? characterId}`} className={className} style={style} title={title}>
             {children}
         </Link>
     );
@@ -143,7 +146,7 @@ function DialogueRun({
     }
     const inner = <Highlighted text={text} query={query} />;
     return characterId !== null ? (
-        <CharacterLink characterId={characterId} className={className} style={style} title={name}>
+        <CharacterLink characterId={characterId} slug={character?.slug} className={className} style={style} title={name}>
             {inner}
         </CharacterLink>
     ) : (
@@ -256,7 +259,7 @@ const Line = memo(function Line({
             content = (
                 <p className={styles.dialogue} style={{ '--char': color } as React.CSSProperties}>
                     {line.characterId !== null ? (
-                        <CharacterLink characterId={line.characterId} className={styles.dialogueName}>
+                        <CharacterLink characterId={line.characterId} slug={character?.slug} className={styles.dialogueName}>
                             {name}:
                         </CharacterLink>
                     ) : line.npcVoice ? (
@@ -449,6 +452,7 @@ export default function StoryReader({
                                     {voice.characterId !== null ? (
                                         <CharacterLink
                                             characterId={voice.characterId}
+                                            slug={character?.slug}
                                             className={styles.legendChip}
                                             style={style}
                                         >
