@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import IndexScan from '@/components/IndexScan';
+import { useTheme } from '@/components/theme/ThemeProvider';
+import PixelAvatar from '@/components/transcript/PixelAvatar';
+import { characterColor } from '@/lib/characterColors';
 import { formatWords, storyGroupId } from '@/lib/stories';
 import styles from './storyIndex.module.scss';
 
@@ -20,7 +23,12 @@ export interface IndexStory {
     /** The story's season: its code ("FF3", "T&L") and identity color; null = no season */
     season: { code: string; color: string } | null;
     canon: boolean;
+    /** Every character featured in the story, most lines first */
+    cast: { id: number; name: string; image: string | null; color: string | null; colorLight?: string | null }[];
 }
+
+// Featured characters shown on a card (the API sends the whole cast, most lines first)
+const CAST_SHOWN = 9;
 
 type Continuity = 'canon' | 'noncanon';
 
@@ -40,6 +48,7 @@ function toggled<T>(set: Set<T>, value: T): Set<T> {
 }
 
 export default function StoryIndex({ stories }: { stories: IndexStory[] }) {
+    const { colorMode } = useTheme();
     const [query, setQuery] = useState('');
     // Seasons switched off (so a season that shows up later starts switched on)
     const [hiddenSeasons, setHiddenSeasons] = useState<Set<string>>(() => new Set());
@@ -147,14 +156,31 @@ export default function StoryIndex({ stories }: { stories: IndexStory[] }) {
                                     className={styles.card}
                                     style={{ '--story': s.colors.primary, '--story-2': s.colors.secondary } as React.CSSProperties}
                                 >
-                                    <span className={styles.cardTitle}>{s.title}</span>
-                                    {s.blurb && <span className={styles.cardBlurb}>{s.blurb}</span>}
-                                    <span className={styles.cardMeta}>
-                                        <span className='pixel-label'>
-                                            {s.chapterCount > 1 && <>{s.chapterCount} chapters, </>}
-                                            {formatWords(s.wordCount)}
-                                            {s.authorNames.length > 0 && <> &mdash; by {s.authorNames.join(', ')}</>}
+                                    <span className={styles.cardMain}>
+                                        <span className={styles.cardTitle}>{s.title}</span>
+                                        {s.blurb && <span className={styles.cardBlurb}>{s.blurb}</span>}
+                                        <span className={styles.cardMeta}>
+                                            <span className='pixel-label'>
+                                                {s.chapterCount > 1 && <>{s.chapterCount} chapters, </>}
+                                                {formatWords(s.wordCount)}
+                                                {s.authorNames.length > 0 && <> &mdash; by {s.authorNames.join(', ')}</>}
+                                            </span>
                                         </span>
+                                    </span>
+                                    <span className={styles.cardSide}>
+                                        {s.cast.length > 0 && (
+                                            <span className={styles.cast}>
+                                                {s.cast.slice(0, CAST_SHOWN).map((character) => (
+                                                    <PixelAvatar
+                                                        key={character.id}
+                                                        src={character.image}
+                                                        name={character.name}
+                                                        color={characterColor(character.name, character.color, colorMode, character.colorLight ?? null)}
+                                                        size={28}
+                                                    />
+                                                ))}
+                                            </span>
+                                        )}
                                         <span className={styles.tags}>
                                             {s.season && (
                                                 <span

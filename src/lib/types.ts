@@ -187,6 +187,8 @@ export interface Story {
     season?: Pick<Season, 'title' | 'slug' | 'kind'> | null;
     /** GET /stories and /stories/:slug: words of prose (not breaks or pictures) */
     wordCount?: number;
+    /** GET /stories only: every character featured, by story lines, most lines first */
+    cast?: (Pick<Character, 'id' | 'name' | 'slug' | 'image' | 'color' | 'colorLight'> & { lines: number })[];
     authors?: PublicUser[];
     chapters?: StoryChapter[];
 }

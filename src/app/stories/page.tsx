@@ -51,6 +51,7 @@ export default async function StoriesPage() {
         group: s.season ? seasonDisplayName(s.season.title) : NO_CAMPAIGN,
         season: s.season ? { code: s.season.title, color: seasonColors(s.season.title).primary } : null,
         canon: s.canon ?? true,
+        cast: s.cast ?? [],
     }));
 
     return (
