@@ -20,6 +20,7 @@ import styles from '../story-page.module.scss';
 
 interface Props {
     params: Promise<{ slug: string; chapter: string }>;
+    searchParams: Promise<{ line?: string | string[] }>;
 }
 
 // Content comes from the live API — render per-request, not at build time
@@ -38,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 }
 
-export default async function StoryChapterPage({ params }: Props) {
+export default async function StoryChapterPage({ params, searchParams }: Props) {
     const { slug, chapter: chapterSegment } = await params;
 
     let story: Story;
@@ -59,7 +60,12 @@ export default async function StoryChapterPage({ params }: Props) {
     if (chapterNo === null || index === -1) notFound();
 
     // Single-chapter stories read inline on the story page — keep one canonical URL
-    if (chapters.length === 1) redirect(`/stories/${slug}`);
+    if (chapters.length === 1) {
+        // Keep a ?line=N deep link: the reader on the story page scrolls to it
+        const { line } = await searchParams;
+        const lineNo = Array.isArray(line) ? line[0] : line;
+        redirect(`/stories/${slug}${lineNo && /^\d+$/.test(lineNo) ? `?line=${lineNo}` : ''}`);
+    }
 
     await recordView('story', slug);
 

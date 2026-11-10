@@ -29,7 +29,7 @@ const DISPLAY_NAMES: Record<string, string> = {
 };
 
 // Season slugs with dedicated color tokens in _tokens.scss ("ff2" → --ff2/--ff2-2)
-const THEMED_SLUGS = new Set(['ff1', 'ff2', 'ff3', 'ff4', 'vm']);
+const THEMED_SLUGS = new Set(['ff1', 'ff2', 'ff3', 'ff4', 't&l', 'vm']);
 
 /** Pre-migration hyphenated derivation — kept only to resolve legacy bookmarks. */
 function legacySeasonSlug(title: string): string {
@@ -76,7 +76,9 @@ export function seasonOrder(title: string | undefined | null): readonly [number,
 export function seasonColors(title: string): { primary: string; secondary: string } {
     const slug = seasonSlug(title);
     if (THEMED_SLUGS.has(slug)) {
-        return { primary: `var(--${slug})`, secondary: `var(--${slug}-2)` };
+        // Escape characters a custom-property name can't hold raw: "t&l" -> --t\&l (as in _tokens.scss)
+        const name = slug.replace(/[^a-z0-9_-]/g, (c) => `\\${c}`);
+        return { primary: `var(--${name})`, secondary: `var(--${name}-2)` };
     }
     return { primary: 'var(--accent)', secondary: 'var(--accent-soft)' };
 }
