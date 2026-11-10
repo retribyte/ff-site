@@ -28,8 +28,9 @@
 
 .card {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 1rem;
     padding: 1rem 1.3rem;
     text-decoration: none;
 
@@ -55,6 +56,33 @@
             var(--star-texture),
             linear-gradient(160deg, color-mix(in srgb, var(--story) 24%, var(--surface)) var(--percentage), var(--surface) calc(var(--percentage) + 72%));
     }
+}
+
+.cardMain {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+}
+
+// Really small right column: featured-character avatars above the tags
+.cardSide {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex: none;
+}
+
+.cast {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    // three 28px avatars per row, so six make two tidy rows
+    max-width: calc(3 * 28px + 2 * 0.25rem);
 }
 
 .cardTitle {
@@ -121,6 +149,7 @@
 .tags {
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 0.35rem;
 }
 
