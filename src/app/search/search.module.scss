@@ -20,6 +20,8 @@
 
 .section {
     margin-top: 2rem;
+    // jump-bar links land below the sticky navbar
+    scroll-margin-top: calc(var(--navbar-height) + 1rem);
 
     h2 {
         font-size: 1.1rem;
@@ -49,6 +51,14 @@
         color: var(--text);
     }
 
+    // a result: season tag, where, speaker icon, then the matching text
+    .row {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.55rem;
+        min-width: 0;
+    }
+
     mark {
         background-color: var(--accent);
         color: var(--text);
@@ -61,4 +71,125 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-muted);
+}
+
+// ── Sort and season controls ───────────────────────────────────────────
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    padding: 0.75rem 1rem;
+    border: 1px dashed var(--border-loud);
+    border-radius: var(--radius);
+}
+
+.controlRow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+
+    > :global(.pixel-label) {
+        min-width: 4.5rem;
+    }
+}
+
+.chip {
+    @include m.toggle-chip;
+    text-decoration: none;
+}
+
+// A season's chip lights in its own color while included; a left-out season
+// goes quiet and struck through
+.seasonChip {
+    @include m.toggle-chip(var(--tint));
+    text-decoration: line-through;
+
+    &[data-active] {
+        text-decoration: none;
+    }
+}
+
+.reset {
+    @include m.ghost-button(var(--text-muted), 0.62rem);
+    text-decoration: none;
+    margin-left: 0.4rem;
+}
+
+.controlHint {
+    margin: 0;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+// ── Section jump bar ────────────────────────────────────────────────────
+.jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+    font-family: var(--font-pixel);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    a {
+        color: var(--link);
+        text-decoration: none;
+
+        &:hover {
+            color: var(--link-hover);
+        }
+    }
+}
+
+.jumpCount {
+    color: var(--text-muted);
+}
+
+.jumpEmpty {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+// ── Result rows ─────────────────────────────────────────────────────────
+.seasonTag {
+    @include m.card-tag(var(--tint));
+    flex: none;
+    margin-top: 0.2rem; // centers on the first line of a long result
+}
+
+.rowMeta {
+    flex: none;
+    margin-top: 0.3rem;
+    max-width: 16rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.speakerIcon {
+    flex: none;
+    display: inline-flex;
+}
+
+.rowText {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+    .rowList .row {
+        flex-wrap: wrap;
+    }
+
+    .rowMeta {
+        max-width: none;
+        flex: 1;
+    }
+
+    .rowText {
+        flex-basis: 100%;
+    }
 }
