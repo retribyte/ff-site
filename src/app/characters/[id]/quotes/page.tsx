@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
     try {
         const character = await api<Character>(`/characters/${id}`);
-        return { title: `${character.name} ⭑ Quotes` };
+        return { title: `${character.name}'s Quotes` };
     } catch {
         return { title: 'Quotes' };
     }
@@ -59,7 +59,7 @@ export default async function CharacterQuotesPage({ params }: Props) {
             href: m.episode ? lineUrl(m.episode, m.messageNo) : null,
             // Named personas show as "(as X)", as on the character page; look-only ones don't
             context: m.episode
-                ? `${m.episode.seasonTitle} ⭑ ${m.episodeTitle}${personaHasName(m.persona) ? ` (as ${m.persona!.name})` : ''} ⭑ line ${m.messageNo}`
+                ? `${m.episode.seasonTitle} — ${m.episodeTitle}${personaHasName(m.persona) ? ` (as ${m.persona!.name})` : ''}, line ${m.messageNo}`
                 : '',
             words: countWords(m.text),
         })),
@@ -73,7 +73,7 @@ export default async function CharacterQuotesPage({ params }: Props) {
                 story: { slug: q.storySlug, title: q.storyTitle },
                 text,
                 href: storyQuoteUrl(q),
-                context: `${q.storyTitle} ⭑ ch. ${q.chapterNo} ⭑ line ${q.line_no}`,
+                context: `${q.storyTitle} — ch. ${q.chapterNo}, line ${q.line_no}`,
                 words: countWords(text),
             };
         }),

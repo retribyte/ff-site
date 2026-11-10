@@ -31,7 +31,7 @@ export function parseArkabilar(input: string): number | null {
 const TIME_RE = '(\\d{1,2}):(\\d{1,2}):(\\d{1,2})(?:[.,](\\d+))?';
 
 /**
- * Parses what the GU→… output shows, e.g. "Turkal, 4 of 2, 3022 GUY ⭑ 10:54:28.09"
+ * Parses what the GU→… output shows, e.g. "Turkal, 4 of 2, 3022 GUY ⁄ 10:54:28.09"
  * (weekday and time optional; semester may be a number or Arkabilar name;
  * "4-2-3022" dashed form also accepted).
  */

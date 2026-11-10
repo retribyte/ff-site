@@ -585,7 +585,7 @@ export default function StoryImporter() {
                         <div>
                             <dt>content</dt>
                             <dd>
-                                {payload.chapters.length} chapter{payload.chapters.length === 1 ? '' : 's'} ·{' '}
+                                {payload.chapters.length} chapter{payload.chapters.length === 1 ? '' : 's'},{' '}
                                 {lineTotal} line{lineTotal === 1 ? '' : 's'}
                             </dd>
                         </div>

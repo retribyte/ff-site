@@ -81,7 +81,7 @@ function appearanceNote(a: CharacterAppearance | null, grouped: boolean): string
     if (!a) return null;
     const where = a.episodeNo === null ? 'story' : a.reconstructed ? 'reconstructed ep' : `ep ${a.episodeNo}`;
     if (grouped) return where;
-    return a.season ? `${a.season} ⭑ ${where}` : where;
+    return a.season ? `${a.season} — ${where}` : where;
 }
 
 export default function CharacterIndex({ characters }: { characters: IndexCharacter[] }) {

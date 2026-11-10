@@ -53,3 +53,4 @@ archive-to-markdown/__pycache__/
 /.claude/
 # database dumps (hold account data)
 *.dump
+/archive-to-markdown/html/

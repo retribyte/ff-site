@@ -151,9 +151,9 @@ export default function StoryIndex({ stories }: { stories: IndexStory[] }) {
                                     {s.blurb && <span className={styles.cardBlurb}>{s.blurb}</span>}
                                     <span className={styles.cardMeta}>
                                         <span className='pixel-label'>
-                                            {s.chapterCount > 1 && <>{s.chapterCount} chapters ⭑ </>}
+                                            {s.chapterCount > 1 && <>{s.chapterCount} chapters, </>}
                                             {formatWords(s.wordCount)}
-                                            {s.authorNames.length > 0 && <> ⭑ by {s.authorNames.join(', ')}</>}
+                                            {s.authorNames.length > 0 && <> &mdash; by {s.authorNames.join(', ')}</>}
                                         </span>
                                         <span className={styles.tags}>
                                             {s.season && (

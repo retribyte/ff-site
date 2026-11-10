@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         const no = chapterNoFromSlug(chapter);
         const match = story.chapters?.find((c) => c.chapter_no === no);
         const chapterName = match?.title ?? (no !== null ? `Chapter ${no}` : null);
-        return { title: chapterName ? `${story.title} ⭑ ${chapterName}` : story.title };
+        return { title: chapterName ? `${story.title} - ${chapterName}` : story.title };
     } catch {
         return { title: 'Stories' };
     }

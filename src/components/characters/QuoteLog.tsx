@@ -15,7 +15,7 @@ export interface LogQuote {
     season: string | null;
     story: { slug: string; title: string } | null;
     text: string;
-    /** Deep link to the line, and its "FF2 ⭑ Episode ⭑ line 4" label */
+    /** Deep link to the line, and its "FF2 — Episode, line 4" label */
     href: string | null;
     context: string;
     words: number;
@@ -133,7 +133,7 @@ export default function QuoteLog({ name, quotes }: { name: string; quotes: LogQu
 
                     {narrowed && visible.length > 0 && (
                         <p className={`pixel-label ${styles.stats}`}>
-                            {visible.length.toLocaleString('en-US')} shown ⭑ {averageWords(visible)} words on average
+                            {visible.length.toLocaleString('en-US')} shown &mdash; {averageWords(visible)} words on average
                         </p>
                     )}
                 </>
