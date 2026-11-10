@@ -12,8 +12,7 @@ $bad: color-mix(in srgb, var(--ff1) 70%, var(--text));
     gap: 0.75rem;
     margin: 0 0 2rem;
     padding: 1.25rem;
-    border: 1px dashed var(--border-loud);
-    border-radius: var(--radius);
+    border: var(--px) solid var(--border-loud);
     background: var(--surface-2);
 }
 
@@ -228,5 +227,24 @@ $bad: color-mix(in srgb, var(--ff1) 70%, var(--text));
 
     &[data-level='debug'] {
         color: var(--text-muted);
+    }
+}
+
+// Story voices panel: from / to / scope fields in a wrapping row
+.voiceForm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    margin: 0.75rem 0;
+}
+
+.voiceField {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 14rem;
+
+    select + input {
+        margin-top: 0.1rem;
     }
 }

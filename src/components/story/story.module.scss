@@ -340,6 +340,19 @@ $anchor-gutter: 2.6rem; // the anchor rail's width plus its gap, on wide screens
     }
 }
 
+.namePopoverCheck {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+
+    input {
+        margin-top: 0.15rem;
+    }
+}
+
 .namePopoverError {
     @include m.pixel-error(0.62rem);
 }
