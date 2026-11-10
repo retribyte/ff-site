@@ -22,12 +22,12 @@ const AREAS = [
 const SHOWN = new Set(['time', 'level', 'event', 'msg', 'reqId', 'userId', 'username', 'method', 'url', 'status', 'ms', 'stack']);
 
 function detail(e: LogEntry): string {
-    if (e.event === 'http') return `${e.method} ${e.url} → ${e.status} · ${e.ms}ms`;
+    if (e.event === 'http') return `${e.method} ${e.url} → ${e.status} in ${e.ms}ms`;
     const rest = Object.entries(e)
         .filter(([k]) => !SHOWN.has(k))
         .map(([k, v]) => `${k}=${typeof v === 'object' ? JSON.stringify(v) : String(v)}`)
         .join(' ');
-    return [e.msg, rest].filter(Boolean).join(' · ');
+    return [e.msg, rest].filter(Boolean).join(', ');
 }
 
 function formatTime(iso: string): string {

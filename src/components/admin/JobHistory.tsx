@@ -49,7 +49,7 @@ export default function JobHistory({ runs }: { runs: JobRun[] }) {
                                     <td>{run.job}</td>
                                     <td>
                                         <span className={styles.status} data-status={run.status}>
-                                            {run.dryRun ? `dry run · ${run.status.toLowerCase()}` : run.status.toLowerCase()}
+                                            {run.dryRun ? `dry run, ${run.status.toLowerCase()}` : run.status.toLowerCase()}
                                         </span>{' '}
                                         {run.summary}
                                     </td>

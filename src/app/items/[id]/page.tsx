@@ -10,6 +10,7 @@ import SignalLost from '@/components/SignalLost';
 import ActionChip from '@/components/editor/ActionChip';
 import WikiLink from '@/components/WikiLink';
 import { wikiFacts, type WikiFieldSpec } from '@/lib/wiki';
+import OwnerControl from '@/components/admin/OwnerControl';
 import styles from './itemDetail.module.scss';
 import UserLink from '@/components/UserLink';
 import RichText from '@/components/RichText';
@@ -91,6 +92,11 @@ export default async function ItemPage({ params }: Props) {
                         <WikiLink slug={item.slug} />
                         {canEdit && <ActionChip href={`/items/${item.slug}/edit`} label='edit ✎' />}
                     </div>
+                    {user?.role === 'ADMIN' && (
+                        <div className={styles.adminActions}>
+                            <OwnerControl kind='item' id={item.id} ownerIds={[item.creatorId]} />
+                        </div>
+                    )}
                     <p className={styles.typeLine}>
                         <span className={styles.typeChip}>
                             {meta.glyph} {meta.label}

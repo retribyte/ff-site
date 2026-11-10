@@ -7,7 +7,7 @@ export default function RunResult({ run }: { run: JobRun }) {
         <div className={styles.result} data-status={run.status}>
             <p className={styles.resultLine}>
                 <span className={styles.status} data-status={run.status}>
-                    {run.dryRun ? `dry run · ${run.status.toLowerCase()}` : run.status.toLowerCase()}
+                    {run.dryRun ? `dry run, ${run.status.toLowerCase()}` : run.status.toLowerCase()}
                 </span>{' '}
                 {run.summary}
             </p>

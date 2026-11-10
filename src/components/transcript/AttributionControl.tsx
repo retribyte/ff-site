@@ -106,8 +106,8 @@ export default function AttributionControl({ episodeTitle, characterId, characte
         }
     };
 
-    /** The {characterId, personaId} to write, creating a new NPC voice first if that's the choice. */
-    const resolveAttribution = async (): Promise<{ characterId: number | null; personaId: number | null }> => {
+    /** The new voice, as POST /admin/messages/reassign takes it (a new NPC voice is created there, in the same transaction). */
+    const resolveAttribution = (): { characterId: number | null; personaId: number | null; newNpcName?: string } => {
         if (choice.startsWith('c:')) {
             const id = choice.slice(2);
             return { characterId, personaId: id === '' ? null : Number(id) };
@@ -119,34 +119,27 @@ export default function AttributionControl({ episodeTitle, characterId, characte
         }
         const name = newNpcName.trim();
         if (!name) throw new Error('Name the new NPC voice');
-        const res = await fetch('/site/ff/personas', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name }),
-        });
-        const envelope = (await res.json().catch(() => null)) as Envelope<Persona> | null;
-        if (!res.ok || envelope?.status === 'error' || !envelope?.data) {
-            throw new Error(envelope?.message ?? `HTTP ${res.status} creating the NPC voice`);
-        }
-        return { characterId: null, personaId: envelope.data.id };
+        return { characterId: null, personaId: null, newNpcName: name };
     };
 
+    // One request for the whole block: all lines change together or none do,
+    // and the change is a row in the admin History (job "message-reassign")
     const apply = async () => {
         setBusy(true);
         setError(null);
         try {
-            const body = JSON.stringify(await resolveAttribution());
-            const nos = target === 'block' ? blockNos : [anchorNo];
-            for (const no of nos) {
-                const res = await fetch(`/site/ff/episodes/${encodeURIComponent(episodeTitle)}/messages/${no}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body,
-                });
-                const envelope = (await res.json().catch(() => null)) as Envelope<unknown> | null;
-                if (!res.ok || envelope?.status === 'error') {
-                    throw new Error(envelope?.message ?? `HTTP ${res.status} on line ${no}`);
-                }
+            const res = await fetch('/site/ff/admin/messages/reassign', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    episodeTitle,
+                    messageNos: target === 'block' ? blockNos : [anchorNo],
+                    ...resolveAttribution(),
+                }),
+            });
+            const envelope = (await res.json().catch(() => null)) as Envelope<unknown> | null;
+            if (!res.ok || envelope?.status === 'error') {
+                throw new Error(envelope?.message ?? `HTTP ${res.status}`);
             }
             setOpen(false);
             // Attribution changes affect block grouping/speaker/color, all

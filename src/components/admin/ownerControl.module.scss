@@ -1,0 +1,94 @@
+@use '../../styles/mixins' as m;
+
+// Same shape as StoryShelfControl, so the two sit together on a story page
+
+.toggle {
+    @include m.ghost-button(var(--text-muted), 0.68rem, 0.5rem 0.7rem);
+}
+
+.panelRow {
+    // Own row beneath the button row (the parent is a wrapping flex container)
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.panel {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px dashed var(--border-loud);
+    border-radius: var(--radius);
+}
+
+.field {
+    @include m.field-stack;
+    text-align: left;
+
+    select {
+        @include m.pixel-select;
+    }
+}
+
+.authors {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.author {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.3rem 0.2rem 0.5rem;
+    font-size: 0.85rem;
+    border: 1px solid var(--border-loud);
+    border-radius: var(--radius);
+
+    button {
+        background: none;
+        border: 0;
+        color: var(--text-muted);
+        cursor: pointer;
+
+        &:hover:not(:disabled) {
+            color: var(--text);
+        }
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+    }
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.save {
+    @include m.ghost-button(var(--text));
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+}
+
+.help {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.error {
+    @include m.pixel-error;
+    flex-basis: 100%;
+}
