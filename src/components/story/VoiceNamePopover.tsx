@@ -136,12 +136,13 @@ export default function VoiceNamePopover({
             });
             const envelope = (await res.json().catch(() => null)) as { status?: string; message?: string; data?: Updated[] } | null;
             if (!res.ok || envelope?.status === 'error') throw new Error(envelope?.message ?? `HTTP ${res.status}`);
-            if (linkedCharacter) {
-                // The line now belongs to a character (color, link, legend): re-render from the server
-                router.refresh();
-            } else {
-                onSaved(envelope?.data ?? []);
-            }
+            // The reader keeps the lines changed in this visit, so it always
+            // gets the new ones: a line renamed earlier would otherwise go on
+            // showing that name over whatever the server sends next.
+            onSaved(envelope?.data ?? []);
+            // A character's line also needs that character (color, link,
+            // legend), which only the server render carries
+            if (linkedCharacter) router.refresh();
             onClose();
         } catch (err) {
             setError(err instanceof Error ? err.message : 'The lore server is not answering.');
