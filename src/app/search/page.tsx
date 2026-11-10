@@ -336,10 +336,10 @@ export default async function SearchPage({ searchParams }: Props) {
                                     name={m.characterName}
                                     color={m.personaColor ?? m.characterColor}
                                     colorLight={m.personaColor ? null : m.characterColorLight}
-                                    size={22}
+                                    size={32}
                                 />
                             ) : (
-                                <ThemedAvatar src={m.playerIcon} name={speaker} color={m.playerColor} size={22} />
+                                <ThemedAvatar src={m.playerIcon} name={speaker} color={m.playerColor} size={32} />
                             );
                             const row = (
                                 <>

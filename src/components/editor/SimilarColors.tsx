@@ -98,7 +98,7 @@ export default function SimilarColors({
                         title={`${c.name}: ${c.resolved[theme]} (distance ${distance.toFixed(3)})`}
                         style={{ background: BACKGROUNDS[theme][1] }}
                     >
-                        <ThemedAvatar src={c.image} name={c.name} color={c.color} colorLight={c.colorLight} size={24} />
+                        <ThemedAvatar src={c.image} name={c.name} color={c.color} colorLight={c.colorLight} size={32} />
                         <span
                             className={styles.similarSwatch}
                             aria-label={`${theme} mode ${c.resolved[theme]}`}

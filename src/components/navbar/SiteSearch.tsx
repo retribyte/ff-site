@@ -204,8 +204,8 @@ export default function SiteSearch() {
                                             <PixelAvatar
                                                 src={c.image}
                                                 name={c.name}
-                                                color={characterColor(c.name, null, colorMode)}
-                                                size={22}
+                                                color={characterColor(c.name, c.color, colorMode, c.colorLight)}
+                                                size={32}
                                             />
                                             <span>{c.name}</span>
                                         </Link>

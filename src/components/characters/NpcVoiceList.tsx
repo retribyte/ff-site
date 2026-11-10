@@ -86,7 +86,7 @@ export default function NpcVoiceList({ npcs }: { npcs: NpcPersona[] }) {
             <ul className={styles.list}>
                 {shown.map((npc) => (
                     <li key={npc.id} className={styles.item}>
-                        {npc.image && <PixelAvatar src={npc.image} name={npc.name} color={npc.color ?? 'var(--text-muted)'} size={28} />}
+                        {npc.image && <PixelAvatar src={npc.image} name={npc.name} color={npc.color ?? 'var(--text-muted)'} size={32} />}
                         <span className={styles.name}>{npc.name}</span>
                         <span className={styles.count}>
                             {npc.messageCount} {npc.messageCount === 1 ? 'line' : 'lines'}

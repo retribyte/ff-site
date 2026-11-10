@@ -375,7 +375,7 @@ export default async function CharacterPage({ params }: Props) {
                                                 } as React.CSSProperties
                                             }
                                         >
-                                            <ThemedAvatar src={c.image} name={c.name} color={c.color} colorLight={c.colorLight} size={42} />
+                                            <ThemedAvatar src={c.image} name={c.name} color={c.color} colorLight={c.colorLight} size={48} />
                                             <span className={styles.costarName}>{c.name}</span>
                                             {c.episodes > 0 && <span className={styles.costarStats}>{plural(c.episodes, 'episode')}</span>}
                                             {c.stories > 0 && <span className={styles.costarStats}>{plural(c.stories, 'story', 'stories')}</span>}

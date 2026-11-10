@@ -10,6 +10,7 @@ import { imageSrc } from '@/lib/images';
 import { collectVoices, npcRuns, type NpcRun, type SlimLine, type StoryData } from '@/lib/stories';
 import type { StorySegment } from '@/lib/types';
 import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
+import PixelAvatar from '@/components/transcript/PixelAvatar';
 import DeleteStoryButton from './DeleteStoryButton';
 import VoiceNamePopover from './VoiceNamePopover';
 import styles from './story.module.scss';
@@ -193,6 +194,16 @@ function Segment({
     return <>{node}</>;
 }
 
+function speakerHeads(line: SlimLine, characters: StoryData['characters']) {
+    const ids: number[] = [];
+    const add = (id: number | null | undefined, npc?: boolean) => {
+        if (id != null && !npc && characters[id] && !ids.includes(id)) ids.push(id);
+    };
+    if (line.type === 'DIALOGUE') add(line.characterId, line.npcVoice);
+    else if (line.type === 'NARRATION') line.segments?.forEach((seg) => add(seg.characterId, seg.npc));
+    return ids.map((id) => ({ id, character: characters[id] }));
+}
+
 const Line = memo(function Line({
     line,
     characters,
@@ -220,6 +231,8 @@ const Line = memo(function Line({
             setTimeout(() => setCopied(false), 1200);
         });
     };
+
+    const heads = speakerHeads(line, characters);
 
     let content: React.ReactNode;
     switch (line.type) {
@@ -350,7 +363,26 @@ const Line = memo(function Line({
     }
 
     return (
-        <div id={`m-${line.no}`} className={styles.line} data-target={highlighted || undefined}>
+        <div
+            id={`m-${line.no}`}
+            className={styles.line}
+            data-target={highlighted || undefined}
+            style={{ '--heads': heads.length } as React.CSSProperties}
+        >
+            {heads.length > 0 && (
+                <div className={styles.heads}>
+                    {heads.map(({ id, character }) => (
+                        <CharacterLink key={id} characterId={id} slug={character.slug} className={styles.head} title={character.name}>
+                            <PixelAvatar
+                                src={character.image}
+                                name={character.name}
+                                color={voiceColor(id, character.name, character, colorMode)}
+                                size={32}
+                            />
+                        </CharacterLink>
+                    ))}
+                </div>
+            )}
             {content}
             {!preview && (
                 <button

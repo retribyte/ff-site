@@ -81,8 +81,8 @@
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.25rem;
-    // three 28px avatars per row, so six make two tidy rows
-    max-width: calc(3 * 28px + 2 * 0.25rem);
+    // three 32px avatars per row, so six make two tidy rows
+    max-width: calc(3 * 32px + 2 * 0.25rem);
 }
 
 .cardTitle {

@@ -31,7 +31,7 @@ export default function AvatarField({
     return (
         <span className={styles.field}>
             <span className={styles.row}>
-                {value && <PixelAvatar src={value} name='?' color='var(--text-muted)' size={40} />}
+                {value && <PixelAvatar src={value} name='?' color='var(--text-muted)' size={48} />}
                 <AvatarUploadButton
                     disabled={disabled}
                     onPick={(dataUrl) => {

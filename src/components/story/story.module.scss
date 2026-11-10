@@ -19,14 +19,20 @@
 // negative margin: the text doesn't move.
 $line-pad: 0.4rem; // covers the highlight outline (1px + 4px offset)
 $anchor-gutter: 2.6rem; // the anchor rail's width plus its gap, on wide screens
+$head-gutter: 2.6rem; // the speaker-heads rail on the left, mirroring the anchor rail
+$head-size: 2rem; // a 32px PixelAvatar
+$head-gap: 0.25rem;
 
 .line {
     position: relative;
-    padding: $line-pad $anchor-gutter $line-pad $line-pad;
-    margin: (-$line-pad) (-$anchor-gutter) (-$line-pad) (-$line-pad);
+    padding: $line-pad $anchor-gutter $line-pad $head-gutter;
+    margin: (-$line-pad) (-$anchor-gutter) (-$line-pad) (-$head-gutter);
 
     content-visibility: auto;
     contain-intrinsic-size: auto 4rem;
+    // --heads is the number of stacked speaker heads: a short line grows to
+    // hold them all, since the rail is clipped by the line's paint containment
+    min-height: calc(var(--heads, 0) * #{$head-size + $head-gap} + #{$line-pad * 2});
 
     p {
         margin: 0;
@@ -46,7 +52,7 @@ $anchor-gutter: 2.6rem; // the anchor rail's width plus its gap, on wide screens
         position: absolute;
         z-index: -1;
         pointer-events: none;
-        inset: $line-pad $anchor-gutter $line-pad $line-pad;
+        inset: $line-pad $anchor-gutter $line-pad $head-gutter;
         background: color-mix(in srgb, var(--story) 14%, transparent);
         outline: 1px solid color-mix(in srgb, var(--story) 45%, transparent);
         outline-offset: 4px;
@@ -55,6 +61,25 @@ $anchor-gutter: 2.6rem; // the anchor rail's width plus its gap, on wide screens
     &:hover .anchor,
     &:focus-within .anchor {
         opacity: 1;
+    }
+}
+
+// Speaker heads: a rail in the left margin, opposite the anchor button's
+.heads {
+    position: absolute;
+    top: $line-pad;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $head-gap;
+}
+
+.head {
+    display: flex;
+    line-height: 0;
+
+    &:hover {
+        background: none;
     }
 }
 
@@ -257,6 +282,8 @@ $anchor-gutter: 2.6rem; // the anchor rail's width plus its gap, on wide screens
     .line {
         padding-right: 2.1rem;
         margin-right: -$line-pad;
+        // the heads rail likewise takes a column of the text width
+        margin-left: -$line-pad;
     }
 
     .anchor {
