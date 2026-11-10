@@ -5,10 +5,35 @@ import type { JobRun } from '@/lib/types';
 import { adminCall, formatWhen } from './adminApi';
 import styles from './admin.module.scss';
 
-// Recent job runs, newest first; a run's log loads when it's opened.
-export default function JobHistory({ runs }: { runs: JobRun[] }) {
+const PAGE = 25; // the admin page loads this many; "show older" adds pages of the same size
+
+// Recent job runs, newest first; a run's log loads when it's opened. Older
+// runs page in below (GET /admin/job-runs?before=<oldest shown id>).
+export default function JobHistory({ runs: latest }: { runs: JobRun[] }) {
     const [open, setOpen] = useState<number | null>(null);
     const [logs, setLogs] = useState<Record<number, string>>({});
+    const [older, setOlder] = useState<JobRun[]>([]);
+    const [more, setMore] = useState(latest.length >= PAGE);
+    const [loadingOlder, setLoadingOlder] = useState(false);
+    const [olderError, setOlderError] = useState<string | null>(null);
+    // the page refreshes `latest` after a new run; older pages stay, minus any overlap
+    const runs = [...latest, ...older.filter((o) => !latest.some((l) => l.id === o.id))];
+
+    const showOlder = async () => {
+        const oldest = runs[runs.length - 1];
+        if (!oldest) return;
+        setLoadingOlder(true);
+        setOlderError(null);
+        try {
+            const page = await adminCall<JobRun[]>(`job-runs?limit=${PAGE}&before=${oldest.id}`);
+            setOlder((o) => [...o, ...page]);
+            setMore(page.length === PAGE);
+        } catch (err) {
+            setOlderError(err instanceof Error ? err.message : 'Could not load older runs');
+        } finally {
+            setLoadingOlder(false);
+        }
+    };
 
     const toggle = async (id: number) => {
         if (open === id) return setOpen(null);
@@ -49,7 +74,7 @@ export default function JobHistory({ runs }: { runs: JobRun[] }) {
                                     <td>{run.job}</td>
                                     <td>
                                         <span className={styles.status} data-status={run.status}>
-                                            {run.dryRun ? `dry run · ${run.status.toLowerCase()}` : run.status.toLowerCase()}
+                                            {run.dryRun ? `dry run, ${run.status.toLowerCase()}` : run.status.toLowerCase()}
                                         </span>{' '}
                                         {run.summary}
                                     </td>
@@ -76,6 +101,16 @@ export default function JobHistory({ runs }: { runs: JobRun[] }) {
                         ))}
                     </tbody>
                 </table>
+            )}
+            {more && (
+                <button type='button' className={styles.ghost} onClick={() => void showOlder()} disabled={loadingOlder}>
+                    {loadingOlder ? 'loading…' : 'show older runs'}
+                </button>
+            )}
+            {olderError && (
+                <p className={styles.error} role='alert'>
+                    ✖ {olderError}
+                </p>
             )}
         </section>
     );

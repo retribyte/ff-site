@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { CharacterQuotes, Character } from '@/lib/types';
 import { characterColor } from '@/lib/characterColors';
+import { personaHasName } from '@/lib/personaIdentity';
 import { lineUrl } from '@/lib/seasons';
 import { averageWords, countWords, quotedSpanText, storyQuoteUrl } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
     try {
         const character = await api<Character>(`/characters/${id}`);
-        return { title: `${character.name} ⭑ Quotes` };
+        return { title: `${character.name}'s Quotes` };
     } catch {
         return { title: 'Quotes' };
     }
@@ -56,7 +57,10 @@ export default async function CharacterQuotesPage({ params }: Props) {
             story: null,
             text: m.text,
             href: m.episode ? lineUrl(m.episode, m.messageNo) : null,
-            context: m.episode ? `${m.episode.seasonTitle} ⭑ ${m.episodeTitle} ⭑ line ${m.messageNo}` : '',
+            // Named personas show as "(as X)", as on the character page; look-only ones don't
+            context: m.episode
+                ? `${m.episode.seasonTitle} — ${m.episodeTitle}${personaHasName(m.persona) ? ` (as ${m.persona!.name})` : ''}, line ${m.messageNo}`
+                : '',
             words: countWords(m.text),
         })),
         ...quotes.storyQuotes.map((q) => {
@@ -69,7 +73,7 @@ export default async function CharacterQuotesPage({ params }: Props) {
                 story: { slug: q.storySlug, title: q.storyTitle },
                 text,
                 href: storyQuoteUrl(q),
-                context: `${q.storyTitle} ⭑ ch. ${q.chapterNo} ⭑ line ${q.line_no}`,
+                context: `${q.storyTitle} — ch. ${q.chapterNo}, line ${q.line_no}`,
                 words: countWords(text),
             };
         }),

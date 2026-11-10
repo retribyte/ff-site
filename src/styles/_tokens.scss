@@ -22,6 +22,10 @@
     --accent: #5d4be5;
     --accent-soft: #9582ee;
     --accent-2: #f39e3b;
+    // Gold highlights (warnings, results, artifacts): VM's old season colors, kept
+    // when VM moved to teal. Use these, not --vm, for anything that isn't VM.
+    --gold: #e8b23b;
+    --gold-2: #d3612c;
     // Logo glow: a white Overlay stroke (see components/logo), so it brightens
     // whatever is behind it rather than painting white
     --logo-glow: #fff;

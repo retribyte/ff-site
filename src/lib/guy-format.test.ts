@@ -19,7 +19,7 @@ describe('Arkabilar', () => {
 
 describe('parseGuyString', () => {
     it('parses the converter output', () => {
-        expect(parseGuyString('Turkal, 4 of 2, 3022 GUY ⭑ 10:54:28.09')).toEqual({
+        expect(parseGuyString('Turkal, 4 of 2, 3022 GUY ⁄ 10:54:28.09')).toEqual({
             year: 3022, semester: 2, equinox: 4, period: 10, union: 54, duon: 28, trion: 9,
         });
     });

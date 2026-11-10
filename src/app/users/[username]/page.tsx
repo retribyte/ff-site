@@ -11,6 +11,24 @@ import ResetPasswordControl from '@/components/users/ResetPasswordControl';
 import styles from './user.module.scss';
 import RichText from '@/components/RichText';
 import { imageSrc } from '@/lib/images';
+import NoteList, { messageExcerpt, type NoteGroup } from '@/components/commentary/NoteList';
+import { lineUrl } from '@/lib/seasons';
+import type { MessageType } from '@/lib/types';
+
+// GET /users/:id/commentaries: a note with its line and episode
+interface UserNote {
+    id: number;
+    content: string;
+    messageNo: number;
+    message: {
+        type: MessageType;
+        text: string;
+        character: { name: string } | null;
+        persona: { name: string | null } | null;
+        player: { username: string } | null;
+        episode: { title: string; slug: string | null; episode_no: number; seasonTitle: string };
+    };
+}
 
 interface Props {
     params: Promise<{ username: string }>;
@@ -40,8 +58,13 @@ export default async function UserPage({ params }: Props) {
     const { username } = await params;
 
     let profile: UserProfile | null;
+    let notes: UserNote[] = [];
     try {
         profile = await getProfile(decodeURIComponent(username));
+        if (profile) {
+            // A failed fetch just leaves the notes section out
+            notes = await api<UserNote[]>(`/users/${profile.id}/commentaries`, { cache: 'no-store' }).catch(() => []);
+        }
     } catch {
         return (
             <main className={styles.main}>
@@ -87,6 +110,13 @@ export default async function UserPage({ params }: Props) {
                                     </li>
                                 ))}
                             </ul>
+                        </section>
+                    )}
+
+                    {notes.length > 0 && (
+                        <section className={styles.section}>
+                            <h2 className={styles.sectionTitle}>Commentary</h2>
+                            <NoteList groups={noteGroups(notes)} showAuthors={false} />
                         </section>
                     )}
 
@@ -166,4 +196,29 @@ export default async function UserPage({ params }: Props) {
             </div>
         </main>
     );
+}
+
+// One group per line, newest note first (the API's order); a user's notes on
+// the same line sit together
+function noteGroups(notes: UserNote[]): NoteGroup[] {
+    const groups = new Map<string, NoteGroup>();
+    for (const n of notes) {
+        const ep = n.message.episode;
+        const key = `${ep.title}#${n.messageNo}`;
+        let g = groups.get(key);
+        if (!g) {
+            const persona = n.message.persona?.name;
+            g = {
+                key,
+                href: lineUrl({ title: ep.title, episode_no: ep.episode_no, slug: ep.slug ?? undefined, seasonTitle: ep.seasonTitle }, n.messageNo),
+                where: `${ep.seasonTitle} ${ep.title}, line ${n.messageNo}`,
+                speaker: persona || n.message.character?.name || n.message.player?.username || null,
+                excerpt: messageExcerpt(n.message.type, n.message.text),
+                notes: [],
+            };
+            groups.set(key, g);
+        }
+        g.notes.push({ id: n.id, author: '', html: n.content });
+    }
+    return [...groups.values()];
 }

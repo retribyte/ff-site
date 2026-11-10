@@ -12,13 +12,13 @@
         "Platinum_Pathos": "Rashidi",
         "Zvirym Vallaheim": "Thinh",
         "Junnn": "Jun",
-        "Magic 8 Bot": "FF 8 Ball",
-        "Magic8Ball": "FF 8 Ball",
-        "pbot": "FF 8 Ball",
-        "RPBot": "FF 8 Ball"
+        "Magic 8 Bot": "8 Ball",
+        "Magic8Ball": "8 Ball",
+        "pbot": "8 Ball",
+        "RPBot": "8 Ball"
     },
     "bots": [
-        "FF 8 Ball"
+        "8 Ball"
     ],
     "cast": {
         "Zander": {

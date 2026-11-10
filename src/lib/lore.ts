@@ -4,7 +4,7 @@ import type { EightBallAnswerType, ItemType } from './types';
 export const ITEM_TYPE_META: Record<ItemType, { label: string; color: string; glyph: string }> = {
     WEAPON: { label: 'weapon', color: 'var(--ff1)', glyph: '⚔' },
     EQUIPMENT: { label: 'equipment', color: 'var(--ff2)', glyph: '⚙' },
-    ARTIFACT: { label: 'artifact', color: 'var(--vm)', glyph: '◈' },
+    ARTIFACT: { label: 'artifact', color: 'var(--gold)', glyph: '◈' },
     OTHER: { label: 'other', color: 'var(--accent)', glyph: '✦' },
 };
 
@@ -12,5 +12,5 @@ export const ITEM_TYPE_META: Record<ItemType, { label: string; color: string; gl
 export const EIGHTBALL_TYPE_META: Record<EightBallAnswerType, { label: string; color: string }> = {
     YES: { label: 'affirmative', color: 'var(--ff3)' },
     NO: { label: 'negative', color: 'var(--ff1)' },
-    MAYBE: { label: 'uncertain', color: 'var(--vm)' },
+    MAYBE: { label: 'uncertain', color: 'var(--gold)' },
 };

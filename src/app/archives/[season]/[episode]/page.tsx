@@ -11,6 +11,8 @@ import TranscriptReader from '@/components/transcript/TranscriptReader';
 import EpisodeSelect from '@/components/transcript/EpisodeSelect';
 import PersonaStampPanel from '@/components/transcript/PersonaStampPanel';
 import CastAvatar from '@/components/characters/CastAvatar';
+import NoteList, { messageExcerpt, type NoteGroup } from '@/components/commentary/NoteList';
+import { personaHasName } from '@/lib/personaIdentity';
 import styles from './episode.module.scss';
 
 interface Props {
@@ -78,6 +80,20 @@ export default async function EpisodePage({ params }: Props) {
         .map(([id, info]) => ({ id: Number(id), name: info.name }))
         .sort((a, b) => a.name.localeCompare(b.name));
 
+    // Every commentary note in the episode, line by line, listed above the transcript
+    const noteGroups: NoteGroup[] = messages
+        .filter((m) => (m.commentaries?.length ?? 0) > 0)
+        .map((m) => ({
+            key: String(m.messageNo),
+            href: `?line=${m.messageNo}`,
+            jump: true,
+            where: `line ${m.messageNo}`,
+            speaker: personaHasName(m.persona) ? m.persona!.name : (m.character?.name ?? m.player?.username ?? null),
+            excerpt: messageExcerpt(m.type, m.text),
+            notes: m.commentaries!.map((c) => ({ id: c.id, author: c.creator?.username ?? 'unknown', html: c.content })),
+        }));
+    const noteCount = noteGroups.reduce((n, g) => n + g.notes.length, 0);
+
     return (
         <main className={styles.main} style={{ '--season': colors.primary } as React.CSSProperties}>
             <nav className={styles.breadcrumb}>
@@ -128,6 +144,16 @@ export default async function EpisodePage({ params }: Props) {
                     </ul>
                 )}
             </header>
+
+            {noteCount > 0 && (
+                <details className={styles.notes}>
+                    <summary className={styles.notesSummary}>
+                        <span className='pixel-label'>commentary</span> {noteCount} note{noteCount === 1 ? '' : 's'} on{' '}
+                        {noteGroups.length} line{noteGroups.length === 1 ? '' : 's'}
+                    </summary>
+                    <NoteList groups={noteGroups} />
+                </details>
+            )}
 
             <PersonaStampPanel scope='episode' scopeTitle={episodeTitle} characters={speakingCharacters} />
 

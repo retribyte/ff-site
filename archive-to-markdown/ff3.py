@@ -18,9 +18,9 @@ player_list = {
     "!Nick Prime!": "Nick",  # Mr.WobblyShark (Nick, Lodas in FF2), guest in FF3 ep 5
     "ScootyDooty": "Preston",
     "Hunter": "Hunter",
-    "Tatsu": "FF 8 Ball",
+    "Tatsu": "8 Ball",
     "Æsir": "Charles",
-    "FF 8Ball": "FF 8 Ball",
+    "FF 8Ball": "8 Ball",
 }
 
 # Discord nicknames aren't unique — GheeseEmpty (Maxwell) was also nicknamed

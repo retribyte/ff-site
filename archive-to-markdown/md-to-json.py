@@ -69,7 +69,7 @@ def get_player_from_username(username):
         case "Enchantingtable2013":
             return "Maxwell"
         case "Tatsumaki" | "Magic8Ball":
-            return "FF 8 Ball"
+            return "8 Ball"
         case "ProfessorTree":
             return "Silas"
         case "Santa is Dead" | "PlasmaPerson":
@@ -191,7 +191,7 @@ def process_block(block, episode_number):
 def process_line(line, player, character):
     # Line categories: bot_response, commmand, quote, action, embed, other
     # Bot Response Case
-    if player == "FF 8 Ball":
+    if player == "8 Ball":
         return {"type": "bot_response", "text": line}, character
     # Quote Case
     elif line.startswith(">"):

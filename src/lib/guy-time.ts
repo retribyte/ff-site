@@ -151,5 +151,5 @@ export function formatEarthDateTime(date: Date): string {
     const time = `${p2(date.getUTCHours())}:${p2(date.getUTCMinutes())}:${p2(date.getUTCSeconds())}.${String(
         date.getUTCMilliseconds()
     ).padStart(3, '0')}`;
-    return `${formatEarthDate(date)}, ${time} UTC`;
+    return `${formatEarthDate(date)} ⁄ ${time} UTC`;
 }

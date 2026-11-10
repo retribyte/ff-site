@@ -134,7 +134,7 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
     const { speaker, color: rawColor, avatarSrc } = resolvePersonaIdentity(persona, character, player);
     // A player speaking as themselves (no character, no persona, no color of
     // their own -- table talk, bare commands) reads in one neutral grey;
-    // a bot keeps its user color (FF 8 Ball's purple, which FF4's Vortox is merged into)
+    // a bot keeps its user color (the 8 Ball's purple, which FF4's Vortox is merged into)
     const isPlayerVoice = !character && !persona && !rawColor;
     // The color fallbacks (the legacy color table, the name hash) key on the
     // character's own name, not the persona's: Grass Stalker's FF1 "Emmett"
@@ -163,52 +163,55 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
     };
 
     return (
-        <li
-            className={styles.block}
-            style={{ '--char': color } as React.CSSProperties}
-            data-target={isTarget || hasCurrentMatch || undefined}
-        >
-            <PixelAvatar src={avatarSrc} name={speaker} color={color} />
+        <li className={styles.row} style={{ '--char': color } as React.CSSProperties}>
+            <div className={styles.block} data-target={isTarget || hasCurrentMatch || undefined}>
+                <PixelAvatar src={avatarSrc} name={speaker} color={color} />
 
-            <div className={styles.blockBody}>
-                <div className={styles.blockHeader}>
-                    {characterId !== null ? (
-                        <Link href={`/characters/${characterId}`} className={styles.speaker}>
-                            {speaker}
-                        </Link>
-                    ) : (
-                        <span className={styles.speaker}>{speaker}</span>
-                    )}
-                    {(character || persona) && player && speaker !== player.name && (
-                        <span className={styles.playedBy}>{player.name}</span>
-                    )}
-                    {block.timestamp && (
-                        <time className={styles.timestamp} dateTime={block.timestamp}>
-                            {formatTimestamp(block.timestamp, localTime)}
-                        </time>
-                    )}
+                <div className={styles.blockBody}>
+                    <div className={styles.blockHeader}>
+                        {characterId !== null ? (
+                            <Link href={`/characters/${character?.slug ?? characterId}`} className={styles.speaker}>
+                                {speaker}
+                            </Link>
+                        ) : (
+                            <span className={styles.speaker}>{speaker}</span>
+                        )}
+                        {(character || persona) && player && speaker !== player.name && (
+                            <span className={styles.playedBy}>{player.name}</span>
+                        )}
+                        {block.timestamp && (
+                            <time className={styles.timestamp} dateTime={block.timestamp}>
+                                {formatTimestamp(block.timestamp, localTime)}
+                            </time>
+                        )}
+                    </div>
+                    {block.messages.map((message, i) => {
+                        // A different player voicing the same character: name them
+                        // in the avatar gutter beside their lines
+                        const prevPlayerId = i === 0 ? block.playerId : block.messages[i - 1].playerId;
+                        const otherPlayer = message.playerId !== prevPlayerId ? players[message.playerId] : null;
+                        return (
+                            <div key={message.no} id={`m-${message.no}`}>
+                                {otherPlayer && <span className={styles.playerTag}>{otherPlayer.name}</span>}
+                                <MessageLine message={message} query={query}>
+                                </MessageLine>
+                            </div>
+                        );
+                    })}
                 </div>
-                {block.messages.map((message, i) => {
-                    // A different player voicing the same character: name them
-                    // in the avatar gutter beside their lines
-                    const prevPlayerId = i === 0 ? block.playerId : block.messages[i - 1].playerId;
-                    const otherPlayer = message.playerId !== prevPlayerId ? players[message.playerId] : null;
-                    return (
-                        <div key={message.no} id={`m-${message.no}`}>
-                            {otherPlayer && <span className={styles.playerTag}>{otherPlayer.name}</span>}
-                            <MessageLine message={message} query={query}>
-                            </MessageLine>
-                        </div>
-                    );
-                })}
             </div>
 
+            {/* A rail beside the block, top to bottom: link, personas (admin), notes */}
             <div className={styles.blockActions}>
-                <CommentaryThread
-                    episodeTitle={episodeTitle}
-                    messageNo={block.key}
-                    initial={block.messages[0].commentaries}
-                />
+                <button
+                    type='button'
+                    className={styles.anchor}
+                    onClick={copyAnchor}
+                    aria-label={`Copy link to line ${block.key}`}
+                    title='Copy link to this line'
+                >
+                    {copied ? '✓' : '#'}
+                </button>
                 {user?.role === 'ADMIN' && (
                     <AttributionControl
                         episodeTitle={episodeTitle}
@@ -219,15 +222,11 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
                         currentPersonaId={block.personaId}
                     />
                 )}
-                <button
-                    type='button'
-                    className={styles.anchor}
-                    onClick={copyAnchor}
-                    aria-label={`Copy link to line ${block.key}`}
-                    title='Copy link to this line'
-                >
-                    {copied ? '✓' : '#'}
-                </button>
+                <CommentaryThread
+                    episodeTitle={episodeTitle}
+                    messageNo={block.key}
+                    initial={block.messages[0].commentaries}
+                />
             </div>
         </li>
     );

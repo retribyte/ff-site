@@ -392,6 +392,7 @@ export default async function CharacterPage({ params }: Props) {
                             name={character.name}
                             slug={character.slug}
                             mainIn={(character.mainIn ?? []).map((s) => s.title)}
+                            creatorId={character.creatorId}
                         />
                     )}
                 </article>

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { Character, Season } from '@/lib/types';
 import { seasonDisplayName, seasonOrder } from '@/lib/seasons';
+import OwnerControl from '@/components/admin/OwnerControl';
 import styles from './speakerAdmin.module.scss';
 
 interface Envelope<T> {
@@ -18,9 +19,11 @@ interface Props {
     slug: string;
     /** Titles of the campaigns an admin added the character to the cast of */
     mainIn: string[];
+    /** The player who plays the character (Character.creatorId) */
+    creatorId: number;
 }
 
-type Action = 'rename' | 'merge' | 'demote' | 'main';
+type Action = 'rename' | 'merge' | 'demote' | 'main' | 'owner';
 
 async function post<T>(path: string, body: unknown, method = 'POST'): Promise<T> {
     const res = await fetch(`/site/ff${path}`, {
@@ -46,7 +49,7 @@ function seasonScope(text: string): { seasons: string[] } | undefined {
 // moves transcript lines, story lines and in-prose quotes together in one
 // transaction. Destructive actions take a second click instead of a browser
 // confirm() dialog.
-export default function SpeakerAdmin({ characterId, name, slug, mainIn }: Props) {
+export default function SpeakerAdmin({ characterId, name, slug, mainIn, creatorId }: Props) {
     const router = useRouter();
     const [action, setAction] = useState<Action | null>(null);
     const [armed, setArmed] = useState(false);
@@ -175,15 +178,24 @@ export default function SpeakerAdmin({ characterId, name, slug, mainIn }: Props)
         merge: armed ? `confirm: move lines to ${target?.name ?? '…'}` : 'merge',
         demote: armed ? `confirm: ${name} becomes an NPC` : 'demote to NPC',
         main: 'save',
+        owner: 'save',
     };
 
     return (
         <section className={styles.panel} aria-label='Speaker admin'>
             <div className={styles.tabs}>
                 <span className='pixel-label'>admin</span>
-                {(['rename', 'merge', 'demote', 'main'] as const).map((a) => (
+                {(['rename', 'merge', 'demote', 'main', 'owner'] as const).map((a) => (
                     <button key={a} type='button' className={styles.tab} aria-pressed={action === a} onClick={() => choose(a)} disabled={busy}>
-                        {a === 'merge' ? 'merge into…' : a === 'demote' ? 'demote to NPC' : a === 'main' ? 'add to cast…' : 'rename'}
+                        {a === 'merge'
+                            ? 'merge into…'
+                            : a === 'demote'
+                              ? 'demote to NPC'
+                              : a === 'main'
+                                ? 'add to cast…'
+                                : a === 'owner'
+                                  ? 'played by…'
+                                  : 'rename'}
                     </button>
                 ))}
             </div>
@@ -275,7 +287,14 @@ export default function SpeakerAdmin({ characterId, name, slug, mainIn }: Props)
                 </div>
             )}
 
-            {action && (
+            {action === 'owner' && (
+                <div className={styles.form}>
+                    {/* saves itself (POST /admin/owner, logged in the admin History) */}
+                    <OwnerControl kind='character' id={characterId} ownerIds={[creatorId]} inline />
+                </div>
+            )}
+
+            {action && action !== 'owner' && (
                 <div className={styles.actions}>
                     <button type='button' className={armed ? styles.danger : styles.go} onClick={run} disabled={!ready}>
                         {busy ? '…' : runLabel[action]}

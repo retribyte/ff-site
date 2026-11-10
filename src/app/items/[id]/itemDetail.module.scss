@@ -21,6 +21,14 @@
     flex-wrap: wrap;
 }
 
+// Admin tools under the name (owner), a wrapping row like a story page's
+.adminActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
 .name {
     margin: 0;
     @include m.glow-heading(var(--type));
