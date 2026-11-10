@@ -100,7 +100,7 @@
     position: relative;
 
     background: color-mix(in srgb, var(--char) 6%, var(--surface));
-    border: 1px solid color-mix(in srgb, var(--char) 22%, var(--border));
+    border: 1px solid color-mix(in srgb, var(--char) 25%, var(--border));
     border-left: var(--px) solid var(--char);
     box-shadow: 2px 2px 0 0 var(--shadow);
 
@@ -243,7 +243,7 @@
 // ── Block action tray (commentary thread + anchor copy button) ───────────
 .blockActions {
     // Fixed width so every block's right edge lines up down the transcript
-    flex: 0 0 2.25rem;
+    flex: 0 0 1rem;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -251,15 +251,15 @@
 }
 
 .anchor {
-    width: 100%;
+    width: 1.5rem;
     height: 1.5rem;
     opacity: 0;
     font-family: var(--font-pixel);
     font-size: 0.75rem;
     line-height: 1;
     color: var(--char);
-    background: var(--surface-2);
-    border: 1px solid color-mix(in srgb, var(--char) 45%, var(--border-loud));
+    background: color-mix(in srgb, var(--char) 6%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--char) 25%, var(--border-loud));
     border-radius: var(--radius);
     cursor: pointer;
     transition: opacity 0.12s ease-out;
@@ -280,13 +280,13 @@
 }
 
 .attributionTrigger {
-    width: 100%;
+    width: 1.5rem;
     height: 1.5rem;
     opacity: 0;
     font-size: 0.75rem;
     line-height: 1;
-    background: var(--surface-2);
-    border: 1px solid color-mix(in srgb, var(--char) 45%, var(--border-loud));
+    background: color-mix(in srgb, var(--char) 6%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--char) 25%, var(--border-loud));
     border-radius: var(--radius);
     cursor: pointer;
     transition: opacity 0.12s ease-out;

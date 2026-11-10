@@ -146,7 +146,7 @@ export default async function EpisodePage({ params }: Props) {
             </header>
 
             {noteCount > 0 && (
-                <details className={styles.notes} open>
+                <details className={styles.notes}>
                     <summary className={styles.notesSummary}>
                         <span className='pixel-label'>commentary</span> {noteCount} note{noteCount === 1 ? '' : 's'} on{' '}
                         {noteGroups.length} line{noteGroups.length === 1 ? '' : 's'}

@@ -11,18 +11,19 @@
     margin: 0 auto;
 }
 
-// One addressable line of the story; anchor button lives in the margin.
+// One addressable line of the story; its anchor button sits in a rail in the
+// right margin, as the episode reader's actions do.
 // content-visibility: auto implies paint containment, which clips anything
 // outside the box (the margin button, the highlight outline) and makes it
 // unclickable, so the line pads out to cover them and cancels it with a
 // negative margin: the text doesn't move.
 $line-pad: 0.4rem; // covers the highlight outline (1px + 4px offset)
-$anchor-gutter: 2.6rem; // the anchor's width plus its gap, on wide screens
+$anchor-gutter: 2.6rem; // the anchor rail's width plus its gap, on wide screens
 
 .line {
     position: relative;
-    padding: $line-pad $line-pad $line-pad $anchor-gutter;
-    margin: (-$line-pad) (-$line-pad) (-$line-pad) (-$anchor-gutter);
+    padding: $line-pad $anchor-gutter $line-pad $line-pad;
+    margin: (-$line-pad) (-$anchor-gutter) (-$line-pad) (-$line-pad);
 
     content-visibility: auto;
     contain-intrinsic-size: auto 4rem;
@@ -45,7 +46,7 @@ $anchor-gutter: 2.6rem; // the anchor's width plus its gap, on wide screens
         position: absolute;
         z-index: -1;
         pointer-events: none;
-        inset: $line-pad $line-pad $line-pad $anchor-gutter;
+        inset: $line-pad $anchor-gutter $line-pad $line-pad;
         background: color-mix(in srgb, var(--story) 14%, transparent);
         outline: 1px solid color-mix(in srgb, var(--story) 45%, transparent);
         outline-offset: 4px;
@@ -169,7 +170,7 @@ $anchor-gutter: 2.6rem; // the anchor's width plus its gap, on wide screens
     border-radius: var(--radius);
 
     &:hover {
-        background: color-mix(in srgb, var(--char) 22%, var(--surface-2));
+        background: color-mix(in srgb, var(--char) 25%, var(--surface-2));
         color: color-mix(in srgb, var(--char) var(--tint-ink), var(--text));
     }
 }
@@ -227,7 +228,7 @@ $anchor-gutter: 2.6rem; // the anchor's width plus its gap, on wide screens
 .anchor {
     position: absolute;
     top: $line-pad;
-    left: calc($anchor-gutter - 2.1rem);
+    right: calc($anchor-gutter - 2.1rem);
     width: 1.5rem;
     height: 1.5rem;
     opacity: 0;
@@ -251,20 +252,20 @@ $anchor-gutter: 2.6rem; // the anchor's width plus its gap, on wide screens
 }
 
 @media (max-width: 860px) {
-    // No margin room on small screens — tuck the anchor inside, top-right
+    // No margin room on small screens: the rail takes a narrow column of the
+    // text width instead, so the anchor never covers words
     .line {
-        padding-left: $line-pad;
-        margin-left: -$line-pad;
+        padding-right: 2.1rem;
+        margin-right: -$line-pad;
     }
 
     .anchor {
-        left: auto;
         right: $line-pad;
         opacity: 0.45;
     }
 
     .line[data-target]::before {
-        left: $line-pad;
+        right: 2.1rem;
         outline-offset: 2px;
     }
 }

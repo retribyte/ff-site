@@ -103,7 +103,7 @@
 @mixin page-main($width: var(--content-width)) {
     max-width: $width;
     margin: 0 auto;
-    padding: 1.5rem 1.25rem 3rem;
+    padding: 1.5rem 1rem 3rem;
 }
 
 // Plain (non-underlined) link that warms to --link-hover.
