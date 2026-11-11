@@ -80,6 +80,7 @@ ACTION_LINE = re.compile(r"^[_*](.+)[_*]$")
 NAME_ALIASES = {
     "Emmett": "Emmett Tawfeek",
     "Seth": "Seth Im'Kin'ki",
+    "Wemmfort": "Wemmfort Jogganson",
     "Chomsky": "Victor Chomsky",
     "Sanya": "Sanya Dreadflower",
     "Mateo": "Mateo Krovak",
