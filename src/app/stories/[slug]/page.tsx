@@ -12,6 +12,7 @@ import styles from './story-page.module.scss';
 import DeleteStoryButton from '@/components/story/DeleteStoryButton';
 import StoryShelfControl from '@/components/story/StoryShelfControl';
 import StoryByline from '@/components/story/StoryByline';
+import StoryPublishedDate from '@/components/story/StoryPublishedDate';
 import OwnerControl from '@/components/admin/OwnerControl';
 
 interface Props {
@@ -78,6 +79,7 @@ export default async function StoryPage({ params }: Props) {
                         {choices.length > 0 && <> ⭑ {choices.length} choices</>}
                         {voices > 0 && <> ⭑ {voices} voices</>}
                     </p>
+                    <StoryPublishedDate slug={story.slug} publishedDate={story.publishedDate} authorIds={(story.authors ?? []).map((a) => a.id)} />
                     {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
                     <div className={styles.adminActions}>
                         <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
@@ -108,6 +110,7 @@ export default async function StoryPage({ params }: Props) {
                 <p className='pixel-label'>
                     {chapters.length} chapters ⭑ {formatWords(story.wordCount ?? 0)}
                 </p>
+                <StoryPublishedDate slug={story.slug} publishedDate={story.publishedDate} authorIds={(story.authors ?? []).map((a) => a.id)} />
                 {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
                 <div className={styles.adminActions}>
                     <DeleteStoryButton slug={story.slug} redirectTo='/stories' />

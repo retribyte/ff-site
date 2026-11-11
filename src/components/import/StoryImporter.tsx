@@ -6,6 +6,7 @@ import { useSession } from '@/components/auth/SessionProvider';
 import DeleteControl from '@/components/DeleteControl';
 import DocxStoryForm, { type DocxPicture, type ImportMeta } from './DocxStoryForm';
 import { BOORU_URL } from '@/lib/booru';
+import { formatDateOnly } from '@/lib/dates';
 import { imageSrc } from '@/lib/images';
 import NpcVoiceNamer, { npcFragments, type AssignedVoice } from './NpcVoiceNamer';
 import StoryPreview, { type PreviewChapter, type PreviewLine } from './StoryPreview';
@@ -607,7 +608,8 @@ export default function StoryImporter() {
             await ff(`/stories/${encodeURIComponent(slug)}/import`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chapters: resolvedChapters, importMeta }),
+                // publishedDate only when the draft names one: absent keeps the story's own
+                body: JSON.stringify({ chapters: resolvedChapters, importMeta, publishedDate: payload.story.publishedDate ?? undefined }),
             });
             setPhase({ step: 'success', count: lineTotal, href: `/stories/${slug}`, replaced: true });
         } catch (error) {
@@ -687,7 +689,7 @@ export default function StoryImporter() {
                         {payload.story.publishedDate && (
                             <div>
                                 <dt>published</dt>
-                                <dd>{new Date(payload.story.publishedDate).toDateString()}</dd>
+                                <dd>{formatDateOnly(payload.story.publishedDate) ?? payload.story.publishedDate}</dd>
                             </div>
                         )}
                         <div>
