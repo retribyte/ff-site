@@ -155,11 +155,13 @@ export interface Message {
     commentaries?: Commentary[];
 }
 
+/** A margin note: on a transcript message, or (message fields null) on a story line */
 export interface Commentary {
     id: number;
     creatorId: number;
-    messageEpisodeTitle: string;
-    messageNo: number;
+    messageEpisodeTitle: string | null;
+    messageNo: number | null;
+    storyLineId?: number | null;
     content: string;
     creator?: PublicUser;
 }
@@ -230,6 +232,8 @@ export interface StoryLine {
     booruId?: number | null; // IMAGE: the booru post holding the picture (text is its alt text)
     imageUrl?: string | null; // IMAGE: that post's file URL (load it through imageSrc)
     character?: Character;
+    /** margin notes on the line (the chapter reader's reads only) */
+    commentaries?: { id: number; content: string; creatorId: number; creator?: { username: string } }[];
 }
 
 export interface EightBallAnswer {

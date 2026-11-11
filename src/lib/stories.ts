@@ -1,6 +1,6 @@
 import { seasonColors } from './seasons';
 import { apiRaw } from './api';
-import type { SpeakerInfo } from './transcript';
+import type { SlimCommentary, SpeakerInfo } from './transcript';
 import type { Character, SeasonKind, StoryChapter, StoryFormat, StoryLine, StoryLineType, StoryPersona, StoryQuote, StorySegment } from './types';
 
 // Slim shapes for the story reader — the API includes full character objects
@@ -18,6 +18,8 @@ export interface SlimLine {
     npcVoice: boolean; // DIALOGUE: an NPC voice
     segments: StorySegment[] | null; // sub-paragraph dialogue spans, or null for plain lines
     imageUrl: string | null; // IMAGE: the picture (a booru file URL, or a data: URL in an import preview)
+    /** margin notes on the line, oldest first (none in an import preview) */
+    notes: SlimCommentary[];
 }
 
 /** How a persona presents a story voice: each field overrides the character's when set */
@@ -89,6 +91,12 @@ export function slimLine(l: StoryLine): SlimLine {
         npcVoice: npc,
         segments: l.segments ? l.segments.map(slimSegment) : null,
         imageUrl: l.imageUrl ?? null,
+        notes: (l.commentaries ?? []).map((c) => ({
+            id: c.id,
+            content: c.content,
+            creatorId: c.creatorId,
+            creatorName: c.creator?.username ?? '',
+        })),
     };
 }
 
@@ -294,21 +302,25 @@ export function storyQuoteUrl(quote: Pick<StoryQuote, 'storySlug' | 'chapterNo' 
 }
 
 /**
- * One NPC voice quote in the reader: a whole npcVoice DIALOGUE line
- * (`segments: null`), or a run of adjacent `npc` segments in a paragraph — one
- * span that emphasis split into pieces. Named together, as one voice.
+ * One voice's quote in the reader: a whole DIALOGUE line (`segments: null`),
+ * or a run of adjacent segments in a paragraph with the same voice (one span
+ * that emphasis split into pieces). Re-voiced together, as one quote. An NPC
+ * run has `characterId` null and its name (or null, unnamed) in `speaker`; a
+ * character's run has the character and, when it speaks as one, the persona.
  */
-export interface NpcRun {
+export interface VoiceRun {
     lineNo: number;
     segments: number[] | null;
     speaker: string | null;
+    characterId: number | null;
+    personaId: number | null;
 }
 
 /** Every NPC voice quote in a chapter, in reading order. */
-export function npcRuns(lines: SlimLine[]): NpcRun[] {
-    const runs: NpcRun[] = [];
+export function npcRuns(lines: SlimLine[]): VoiceRun[] {
+    const runs: VoiceRun[] = [];
     for (const line of lines) {
-        if (line.npcVoice) runs.push({ lineNo: line.no, segments: null, speaker: line.speaker });
+        if (line.npcVoice) runs.push({ lineNo: line.no, segments: null, speaker: line.speaker, characterId: null, personaId: null });
         const segs = line.segments ?? [];
         let start = -1;
         for (let i = 0; i <= segs.length; i++) {
@@ -316,9 +328,36 @@ export function npcRuns(lines: SlimLine[]): NpcRun[] {
             if (npc && start < 0) start = i;
             if (!npc && start >= 0) {
                 const indexes = Array.from({ length: i - start }, (_, k) => start + k);
-                runs.push({ lineNo: line.no, segments: indexes, speaker: segs[start].speaker ?? null });
+                runs.push({ lineNo: line.no, segments: indexes, speaker: segs[start].speaker ?? null, characterId: null, personaId: null });
                 start = -1;
             }
+        }
+    }
+    return runs;
+}
+
+/** Every quote a character speaks in a chapter (as itself or a persona), in reading order. */
+export function characterRuns(lines: SlimLine[]): VoiceRun[] {
+    const runs: VoiceRun[] = [];
+    for (const line of lines) {
+        if (line.type === 'DIALOGUE' && line.characterId !== null) {
+            runs.push({ lineNo: line.no, segments: null, speaker: null, characterId: line.characterId, personaId: line.personaId });
+        }
+        const segs = line.segments ?? [];
+        let start = -1;
+        for (let i = 0; i <= segs.length; i++) {
+            const same =
+                start >= 0 &&
+                i < segs.length &&
+                (segs[i].characterId ?? null) === (segs[start].characterId ?? null) &&
+                (segs[i].personaId ?? null) === (segs[start].personaId ?? null);
+            if (start >= 0 && !same) {
+                const seg = segs[start];
+                const indexes = Array.from({ length: i - start }, (_, k) => start + k);
+                runs.push({ lineNo: line.no, segments: indexes, speaker: null, characterId: seg.characterId!, personaId: seg.personaId ?? null });
+                start = -1;
+            }
+            if (start < 0 && i < segs.length && (segs[i].characterId ?? null) !== null) start = i;
         }
     }
     return runs;

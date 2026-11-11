@@ -7,12 +7,13 @@ import { useSession } from '@/components/auth/SessionProvider';
 import { useTheme, type ColorMode } from '@/components/theme/ThemeProvider';
 import { characterColor } from '@/lib/characterColors';
 import { imageSrc } from '@/lib/images';
-import { collectPersonas, collectVoices, npcRuns, slimLine, storyVoice, type NpcRun, type SlimLine, type StoryData, type StoryVoice } from '@/lib/stories';
+import { characterRuns, collectPersonas, collectVoices, npcRuns, slimLine, storyVoice, type SlimLine, type StoryData, type StoryVoice, type VoiceRun } from '@/lib/stories';
 import type { StoryLine, StorySegment } from '@/lib/types';
 import { Highlighted, ScanBar, scrollToMessage, useScan } from '@/components/transcript/ScanBar';
 import PixelAvatar from '@/components/transcript/PixelAvatar';
 import DeleteStoryButton from './DeleteStoryButton';
-import VoiceNamePopover from './VoiceNamePopover';
+import VoiceNamePopover, { choiceKey, type VoiceChoice } from './VoiceNamePopover';
+import CommentaryThread, { notesUrl } from '@/components/transcript/CommentaryThread';
 import styles from './story.module.scss';
 
 // An import preview (`/import`, before publishing): character names don't
@@ -48,8 +49,8 @@ function CharacterLink({
     );
 }
 
-/** Opens the namer for the NPC quote at this line (and segment, for a span), anchored to `el`. */
-type NameHandler = (lineNo: number, segment: number | null, el: HTMLElement) => void;
+/** Opens the voice popover for a line, anchored to its rail button `el`. */
+type VoiceHandler = (lineNo: number, el: HTMLElement) => void;
 
 // Stories read as prose: NARRATION is narrator voice, ACTION is a command the
 // protagonist (or the readers, in a CYOA) chose, DIALOGUE is a character
@@ -80,47 +81,27 @@ function voiceColor(voice: StoryVoice, colorMode: ColorMode): string {
 const voiceImage = (voice: StoryVoice) => voice.persona?.image ?? voice.character?.image ?? null;
 
 // An NPC voice has no character page, so its name is a tooltip instead
-// (`help` cursor). Story authors and admins can click one to name it.
+// (`help` cursor). Naming one is the line rail's 🎭 button.
 function NpcRunText({
     text,
     speaker,
     query,
     className,
     style,
-    onName,
 }: {
     text: string;
     speaker: string | null;
     query: string | null;
     className: string;
     style: React.CSSProperties;
-    onName?: (el: HTMLElement) => void;
 }) {
-    const inner = <Highlighted text={text} query={query} />;
-    const classes = `${className} ${styles.npcVoice} ${speaker ? '' : styles.npcUnnamed} ${onName ? styles.npcEditable : ''}`;
-    if (!onName) {
-        return (
-            <span className={classes} style={style} title={speaker ?? 'An unnamed NPC'}>
-                {inner}
-            </span>
-        );
-    }
     return (
         <span
-            role='button'
-            tabIndex={0}
-            className={classes}
+            className={`${className} ${styles.npcVoice} ${speaker ? '' : styles.npcUnnamed}`}
             style={style}
-            title={speaker ? `${speaker} (click to rename)` : "Who's speaking? Click to name this NPC"}
-            onClick={(e) => onName(e.currentTarget)}
-            onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onName(e.currentTarget);
-                }
-            }}
+            title={speaker ?? 'An unnamed NPC'}
         >
-            {inner}
+            <Highlighted text={text} query={query} />
         </span>
     );
 }
@@ -133,14 +114,12 @@ function DialogueRun({
     colorMode,
     query,
     className,
-    onName,
 }: {
     text: string;
     voice: StoryVoice;
     colorMode: ColorMode;
     query: string | null;
     className: string;
-    onName?: (el: HTMLElement) => void;
 }) {
     const { name, characterId, character } = voice;
     const style = { '--char': voiceColor(voice, colorMode) } as React.CSSProperties;
@@ -152,7 +131,6 @@ function DialogueRun({
                 query={query}
                 className={className}
                 style={style}
-                onName={onName}
             />
         );
     }
@@ -176,13 +154,11 @@ function Segment({
     lookup,
     colorMode,
     query,
-    onName,
 }: {
     seg: StorySegment;
     lookup: Lookup;
     colorMode: ColorMode;
     query: string | null;
-    onName?: (el: HTMLElement) => void;
 }) {
     const voice = storyVoice(seg, lookup);
     let node: React.ReactNode = voice ? (
@@ -192,7 +168,6 @@ function Segment({
             colorMode={colorMode}
             query={query}
             className={styles.dialogueSpan}
-            onName={voice.npc ? onName : undefined}
         />
     ) : (
         <Highlighted text={seg.text} query={query} />
@@ -224,7 +199,9 @@ const Line = memo(function Line({
     query,
     highlighted,
     format,
-    onName,
+    notesUrl,
+    onVoice,
+    voiceOpen,
 }: {
     line: SlimLine;
     lookup: Lookup;
@@ -232,10 +209,21 @@ const Line = memo(function Line({
     query: string | null;
     highlighted: boolean;
     format: StoryData['format'];
-    onName?: NameHandler;
+    /** where the line's margin notes are added (none in an import preview) */
+    notesUrl?: string;
+    /** opens the voice popover for this line: set when the viewer may change one of its voices */
+    onVoice?: VoiceHandler;
+    /** that popover is open for this line */
+    voiceOpen: boolean;
 }) {
     const [copied, setCopied] = useState(false);
     const preview = useContext(PreviewContext);
+    const { user } = useSession();
+    // The rail's buttons: link, voices (if the viewer may change them), notes
+    // (when it has some, or the viewer can add one). On wide screens they wrap
+    // within the line's height; on small ones the line grows to hold them all
+    const notesShown = !!notesUrl && (line.notes.length > 0 || !!user);
+    const railAll = 1 + (onVoice ? 1 : 0) + (notesShown ? 1 : 0);
 
     const copyAnchor = () => {
         const url = `${window.location.origin}${window.location.pathname}?line=${line.no}`;
@@ -261,7 +249,6 @@ const Line = memo(function Line({
             const voice = storyVoice({ ...line, npc: line.npcVoice }, lookup) ?? storyVoice({ speaker: '?' }, lookup)!;
             const { name, character } = voice;
             const color = voiceColor(voice, colorMode);
-            const nameLine = voice.npc && onName ? (el: HTMLElement) => onName(line.no, null, el) : undefined;
             // Novel-style: colored prose, no "Name:" prefix — speaker read from
             // color + tooltip + the voice legend.
             if (format === 'PROSE') {
@@ -273,7 +260,6 @@ const Line = memo(function Line({
                             colorMode={colorMode}
                             query={query}
                             className={styles.dialogueSpan}
-                            onName={nameLine}
                         />
                     </p>
                 );
@@ -293,7 +279,6 @@ const Line = memo(function Line({
                                 query={null}
                                 className={styles.dialogueName}
                                 style={{}}
-                                onName={nameLine}
                             />
                             :
                         </>
@@ -358,7 +343,6 @@ const Line = memo(function Line({
                                 lookup={lookup}
                                 colorMode={colorMode}
                                 query={query}
-                                onName={onName ? (el) => onName(line.no, i, el) : undefined}
                             />
                         ))}
                     </p>
@@ -377,7 +361,8 @@ const Line = memo(function Line({
             id={`m-${line.no}`}
             className={styles.line}
             data-target={highlighted || undefined}
-            style={{ '--heads': heads.length } as React.CSSProperties}
+            data-voices={onVoice ? true : undefined}
+            style={{ '--heads': heads.length, '--rail-all': railAll } as React.CSSProperties}
         >
             {heads.length > 0 && (
                 <div className={styles.heads}>
@@ -405,23 +390,65 @@ const Line = memo(function Line({
             )}
             {content}
             {!preview && (
-                <button
-                    type='button'
-                    className={styles.anchor}
-                    onClick={copyAnchor}
-                    aria-label={`Copy link to line ${line.no}`}
-                    title='Copy link to this line'
-                >
-                    {copied ? '✓' : '#'}
-                </button>
+                // The line's action rail, as beside a transcript block: link,
+                // voices (who may change them), margin notes
+                <div className={styles.lineActions}>
+                    <button
+                        type='button'
+                        className={styles.anchor}
+                        onClick={copyAnchor}
+                        aria-label={`Copy link to line ${line.no}`}
+                        title='Copy link to this line'
+                    >
+                        {copied ? '✓' : '#'}
+                    </button>
+                    {onVoice && (
+                        <button
+                            type='button'
+                            className={styles.voiceButton}
+                            onClick={(e) => onVoice(line.no, e.currentTarget)}
+                            aria-expanded={voiceOpen}
+                            aria-label={`Change who speaks in line ${line.no}`}
+                            title="Change who's speaking"
+                        >
+                            🎭
+                        </button>
+                    )}
+                    {notesUrl && <CommentaryThread notesUrl={notesUrl} initial={line.notes} />}
+                </div>
             )}
         </div>
     );
 });
 
+/** A quote in a line as the popover's quote picker lists it: who speaks it, and how it starts. */
+function voiceChoice(run: VoiceRun, line: SlimLine, lookup: Lookup): VoiceChoice {
+    const text = run.segments === null ? line.text : run.segments.map((i) => line.segments?.[i]?.text ?? '').join('');
+    const excerpt = text.replace(/\s+/g, ' ').trim();
+    const short = excerpt.length > 40 ? `${excerpt.slice(0, 39).trimEnd()}…` : excerpt;
+    if (run.characterId === null) {
+        return { key: choiceKey(run), run, label: `${run.speaker ?? 'unnamed NPC'}: “${short}”` };
+    }
+    const fragment = run.segments === null ? line : line.segments?.[run.segments[0]];
+    const voice = fragment ? storyVoice(fragment, lookup) : null;
+    const characterName = voice?.character?.name ?? voice?.name ?? '';
+    const label = voice?.persona?.name && voice.persona.name !== characterName ? `${characterName} as ${voice.persona.name}` : characterName;
+    return {
+        key: choiceKey(run),
+        run,
+        label: `${label}: “${short}”`,
+        current: { label, name: characterName, href: `/characters/${voice?.character?.slug ?? run.characterId}` },
+    };
+}
+
 interface Editing {
-    run: NpcRun;
+    lineNo: number;
+    run: VoiceRun;
     anchor: HTMLElement;
+    /** a character's quote: who speaks it now, and its page */
+    current?: { label: string; name: string; href: string };
+    /** every quote in the line the viewer may re-voice, to switch between */
+    choices: VoiceChoice[];
 }
 
 export default function StoryReader({
@@ -441,6 +468,8 @@ export default function StoryReader({
     const { user } = useSession();
     const searchParams = useSearchParams();
     const canNameVoices = !preview && !!user && (user.role === 'ADMIN' || authorIds.includes(user.id));
+    // a quote a character already speaks: admins only (ff-server enforces it too)
+    const canRevoiceCharacters = !preview && user?.role === 'ADMIN';
 
     // Voices changed in this visit, by line number (and the NPC personas they
     // now use); reset on another chapter
@@ -459,17 +488,47 @@ export default function StoryReader({
         [data.characters, data.personas, named, chapterKey]
     );
     const runs = useMemo(() => npcRuns(lines), [lines]);
+    const charRuns = useMemo(() => characterRuns(lines), [lines]);
     const [editing, setEditing] = useState<Editing | null>(null);
 
-    const openNamer = useCallback<NameHandler>(
-        (lineNo, segment, el) => {
-            const run = runs.find(
-                (r) => r.lineNo === lineNo && (segment === null ? r.segments === null : r.segments?.includes(segment))
-            );
-            if (run) setEditing({ run, anchor: el });
+    // The quotes in a line the viewer may re-voice: NPC ones for the story's
+    // authors and admins, characters' for admins, in reading order
+    const choicesFor = useCallback(
+        (lineNo: number): VoiceChoice[] => {
+            const line = lines.find((l) => l.no === lineNo);
+            if (!line) return [];
+            const mine = [
+                ...(canNameVoices ? runs : []),
+                ...(canRevoiceCharacters ? charRuns : []),
+            ].filter((r) => r.lineNo === lineNo);
+            mine.sort((a, b) => (a.segments?.[0] ?? -1) - (b.segments?.[0] ?? -1));
+            return mine.map((run) => voiceChoice(run, line, lookup));
         },
-        [runs]
+        [lines, runs, charRuns, canNameVoices, canRevoiceCharacters, lookup]
     );
+    const voiceLines = useMemo(() => {
+        const set = new Set<number>();
+        if (canNameVoices) runs.forEach((r) => set.add(r.lineNo));
+        if (canRevoiceCharacters) charRuns.forEach((r) => set.add(r.lineNo));
+        return set;
+    }, [runs, charRuns, canNameVoices, canRevoiceCharacters]);
+
+    const openVoice = useCallback<VoiceHandler>(
+        (lineNo, el) => {
+            setEditing((prev) => {
+                if (prev?.lineNo === lineNo) return null; // the button again closes it
+                const choices = choicesFor(lineNo);
+                if (choices.length === 0) return null;
+                return { lineNo, anchor: el, choices, run: choices[0].run, current: choices[0].current };
+            });
+        },
+        [choicesFor]
+    );
+    const chooseQuote = (key: string) =>
+        setEditing((prev) => {
+            const choice = prev?.choices.find((c) => c.key === key);
+            return prev && choice ? { ...prev, run: choice.run, current: choice.current } : prev;
+        });
 
     const closeNamer = useCallback(() => setEditing(null), []);
 
@@ -538,7 +597,9 @@ export default function StoryReader({
                             query={scan.activeQuery}
                             highlighted={line.no === targetNo || line.no === scan.currentMatchNo}
                             format={data.format}
-                            onName={canNameVoices ? openNamer : undefined}
+                            notesUrl={preview ? undefined : notesUrl({ storySlug: data.storySlug, chapterNo: data.chapterNo, lineNo: line.no })}
+                            onVoice={voiceLines.has(line.no) ? openVoice : undefined}
+                            voiceOpen={editing?.lineNo === line.no}
                         />
                     ))}
                 </div>
@@ -549,7 +610,11 @@ export default function StoryReader({
                         chapterNo={data.chapterNo}
                         run={editing.run}
                         anchor={editing.anchor}
-                        runs={runs}
+                        runs={editing.run.characterId !== null ? charRuns : runs}
+                        current={editing.current}
+                        choices={editing.choices}
+                        chosen={choiceKey(editing.run)}
+                        onChoose={chooseQuote}
                         suggestions={collectVoices({ ...data, ...lookup, lines })
                             .filter((v) => v.characterId === null)
                             .map((v) => v.name)}

@@ -48,6 +48,7 @@ function chapterData(
         npcVoice: !!line.npcVoice || (line.characterId === undefined && !!line.speaker),
         segments: line.segments ?? null,
         imageUrl: line.booruId !== undefined ? (images[line.booruId] ?? null) : null,
+        notes: [], // not on the server yet
     }));
     return { storySlug: slug, chapterNo: chapter.chapter_no, format, lines, characters, personas };
 }

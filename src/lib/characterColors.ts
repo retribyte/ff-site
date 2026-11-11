@@ -19,6 +19,11 @@ export function stringToColor(input: string): string {
     return color;
 }
 
+/** The legacy site's color for a character in a theme, if its table has one. */
+export function legacyColor(name: string, mode: ColorMode): string | null {
+    return COLORS[mode][name] ?? null;
+}
+
 /**
  * Resolve a character's display color for a theme. `color` is the dark-mode
  * color, `colorLight` an optional light-mode override. Each theme takes its

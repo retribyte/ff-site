@@ -1,21 +1,37 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { NpcRun } from '@/lib/stories';
+import type { VoiceRun } from '@/lib/stories';
 import type { StoryLine } from '@/lib/types';
 import { findVoiceOption, loadVoiceOptions, type VoiceOption } from '@/lib/voiceOptions';
 import styles from './story.module.scss';
 
-// Re-voices one NPC quote in the reader (PATCH /stories/:slug/voices): another
+// Re-voices one quote in the reader (PATCH /stories/:slug/voices): another
 // NPC name (an NPC persona, found or created), and optionally the next few
-// quotes the same NPC speaks in the chapter, since a placeholder voice usually
-// covers a stretch of a scene. Only the story's authors and admins see it.
-// They can instead give the quote to a character from the archive, or a
-// character as one of its personas: it stops being an NPC voice (ff-server
-// records that in the admin History).
+// quotes the same voice speaks in the chapter, since a voice usually covers a
+// stretch of a scene. For an NPC quote, the story's authors and admins see it;
+// they can instead give the quote to a character from the archive, or a
+// character as one of its personas: it stops being an NPC voice. A quote a
+// character already speaks is admins' only (ff-server enforces it): another
+// character or persona, or an NPC. Anything involving a character lands in
+// the admin History.
 
 type Updated = StoryLine;
+
+/** One quote in a line, for the picker when the line has several. */
+export interface VoiceChoice {
+    key: string;
+    run: VoiceRun;
+    /** who speaks it and how it starts: 'Emmett Tawfeek: “What the…”' */
+    label: string;
+    /** a character's quote: who speaks it now, its character, and that page */
+    current?: { label: string; name: string; href: string };
+}
+
+/** A quote's key in the picker: its line and first segment. */
+export const choiceKey = (run: VoiceRun) => `${run.lineNo}:${run.segments?.[0] ?? 'line'}`;
 
 const WIDTH = 300; // px, matches .namePopover
 
@@ -26,29 +42,41 @@ export default function VoiceNamePopover({
     anchor,
     runs,
     suggestions,
+    current,
+    choices,
+    chosen,
+    onChoose,
     onSaved,
     onClose,
 }: {
     storySlug: string;
     chapterNo: number;
-    run: NpcRun;
+    run: VoiceRun;
     /** the quote's element; the panel follows it on scroll/resize */
     anchor: HTMLElement;
-    /** every NPC quote in the chapter, in reading order */
-    runs: NpcRun[];
+    /** every quote in the chapter of the run's kind (NPC, or character), in reading order */
+    runs: VoiceRun[];
+    /** a character's quote: who speaks it now ("Vec as Sascha", as the voice
+     *  field lists it), the character's own name, and its page */
+    current?: { label: string; name: string; href: string };
+    /** the line's quotes, when it has several: a picker switches between them */
+    choices?: VoiceChoice[];
+    chosen?: string;
+    onChoose?: (key: string) => void;
     suggestions: string[];
     onSaved: (updated: Updated[]) => void;
     onClose: () => void;
 }) {
     const panel = useRef<HTMLFormElement>(null);
     const input = useRef<HTMLInputElement>(null);
-    const [name, setName] = useState(run.speaker ?? '');
+    const fromCharacter = run.characterId !== null;
+    const [name, setName] = useState(fromCharacter ? (current?.label ?? '') : (run.speaker ?? ''));
     const [alsoNext, setAlsoNext] = useState(0);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
     const router = useRouter();
-    const [linkCharacter, setLinkCharacter] = useState(false);
+    const [linkCharacter, setLinkCharacter] = useState(fromCharacter);
     const [characters, setCharacters] = useState<VoiceOption[] | null>(null);
 
     useEffect(() => {
@@ -59,8 +87,13 @@ export default function VoiceNamePopover({
     }, [linkCharacter, characters]);
     const linkedCharacter = linkCharacter && characters ? findVoiceOption(characters, name) : null;
 
-    // later quotes in the chapter by the same NPC (or, for an unnamed one, other unnamed ones)
-    const sameSpeaker = (r: NpcRun) => (r.speaker ?? '').toLowerCase() === (run.speaker ?? '').toLowerCase();
+    // later quotes in the chapter by the same voice: the same character as the
+    // same persona, or the same NPC (for an unnamed one, other unnamed ones)
+    const sameSpeaker = (r: VoiceRun) =>
+        fromCharacter
+            ? r.characterId === run.characterId && r.personaId === run.personaId
+            : (r.speaker ?? '').toLowerCase() === (run.speaker ?? '').toLowerCase();
+    const who = fromCharacter ? (current?.label ?? 'this character') : (run.speaker ?? 'unnamed NPCs');
     const nextSame = useMemo(() => {
         const at = runs.findIndex((r) => r.lineNo === run.lineNo && r.segments?.[0] === run.segments?.[0]);
         return runs.slice(at + 1).filter(sameSpeaker);
@@ -108,7 +141,7 @@ export default function VoiceNamePopover({
         };
     }, [onClose, anchor]);
 
-    const assignmentsFor = (r: NpcRun, speaker: string | null, character: VoiceOption | null) => {
+    const assignmentsFor = (r: VoiceRun, speaker: string | null, character: VoiceOption | null) => {
         const voice = character ? { characterId: character.characterId, personaId: character.personaId } : { speaker };
         return r.segments === null
             ? [{ chapterNo, lineNo: r.lineNo, ...voice }]
@@ -123,6 +156,16 @@ export default function VoiceNamePopover({
         }
         const speaker = name.trim() || null;
         if (!speaker) return;
+        // the character it already is: nothing to change
+        if (
+            linkedCharacter &&
+            linkedCharacter.characterId === run.characterId &&
+            linkedCharacter.personaId === run.personaId &&
+            alsoNext === 0
+        ) {
+            onClose();
+            return;
+        }
         const targets = [run, ...nextSame.slice(0, alsoNext)];
         setBusy(true);
         setError(null);
@@ -157,8 +200,20 @@ export default function VoiceNamePopover({
             style={position ? { top: position.top, left: position.left } : { visibility: 'hidden' }}
             onSubmit={save}
             role='dialog'
-            aria-label='Change who speaks this NPC quote'
+            aria-label={fromCharacter ? `Change who speaks this quote by ${who}` : 'Change who speaks this NPC quote'}
         >
+            {choices && choices.length > 1 && onChoose && (
+                <label className={styles.namePopoverField}>
+                    <span className='pixel-label'>quote</span>
+                    <select value={chosen} onChange={(e) => onChoose(e.target.value)} disabled={busy}>
+                        {choices.map((c) => (
+                            <option key={c.key} value={c.key}>
+                                {c.label}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+            )}
             <label className={styles.namePopoverField}>
                 <span className='pixel-label'>who&rsquo;s speaking?</span>
                 <input
@@ -186,7 +241,9 @@ export default function VoiceNamePopover({
                     }}
                     disabled={busy}
                 />
-                a character in the archive, or one as a persona (it stops being an NPC voice)
+                {fromCharacter
+                    ? 'a character in the archive, or one as a persona (untick for an NPC voice)'
+                    : 'a character in the archive, or one as a persona (it stops being an NPC voice)'}
             </label>
             <datalist id='story-character-names'>
                 {(characters ?? []).map((c) => (
@@ -203,10 +260,9 @@ export default function VoiceNamePopover({
                         value={alsoNext}
                         onChange={(e) => setAlsoNext(Math.max(0, Math.min(nextSame.length, parseInt(e.target.value) || 0)))}
                         disabled={busy || !name.trim()}
-                        aria-label={`How many of the following quotes by ${run.speaker ?? 'this NPC'} change too`}
+                        aria-label={`How many of the following quotes by ${who} change too`}
                     />
-                    of {nextSame.length} later quote{nextSame.length === 1 ? '' : 's'} by {run.speaker ?? 'unnamed NPCs'} in this
-                    chapter
+                    of {nextSame.length} later quote{nextSame.length === 1 ? '' : 's'} by {who} in this chapter
                 </label>
             )}
             {error && (
@@ -221,6 +277,11 @@ export default function VoiceNamePopover({
                 <button type='button' onClick={onClose} disabled={busy}>
                     Cancel
                 </button>
+                {current && (
+                    <Link href={current.href} className={styles.namePopoverPage}>
+                        {current.name}&rsquo;s page
+                    </Link>
+                )}
             </div>
         </form>
     );
