@@ -246,6 +246,8 @@
     flex: 0 0 1rem;
     display: flex;
     flex-direction: column;
+    // the rail is as tall as its block (.row stretches); buttons sit mid-height
+    justify-content: center;
     align-items: stretch;
     gap: 0.35rem;
 }
