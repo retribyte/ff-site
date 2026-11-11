@@ -176,7 +176,7 @@ export default function StoryIndex({ stories }: { stories: IndexStory[] }) {
                                                         src={character.image}
                                                         name={character.name}
                                                         color={characterColor(character.name, character.color, colorMode, character.colorLight ?? null)}
-                                                        size={28}
+                                                        size={32}
                                                     />
                                                 ))}
                                             </span>

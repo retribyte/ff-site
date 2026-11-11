@@ -465,6 +465,11 @@
     input {
         @include m.form-field(0.82rem, 0.35rem 0.5rem);
         min-width: 0;
+
+        // "@Name" that names no character (the same color as the importer's errors)
+        &[aria-invalid] {
+            border-color: var(--ff1);
+        }
     }
 }
 

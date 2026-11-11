@@ -3,16 +3,19 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { NpcRun } from '@/lib/stories';
-import type { StorySegment } from '@/lib/types';
+import type { StoryLine } from '@/lib/types';
+import { findVoiceOption, loadVoiceOptions, type VoiceOption } from '@/lib/voiceOptions';
 import styles from './story.module.scss';
 
-// Names one NPC voice quote in the reader (PATCH /stories/:slug/voices), and
-// optionally the next few unnamed ones in the chapter, since an NPC usually
-// talks for a stretch of a scene. Only the story's authors and admins see it.
-// They can instead link the quote to a real character from the archive: it
-// stops being an NPC voice (ff-server records that in the admin History).
+// Re-voices one NPC quote in the reader (PATCH /stories/:slug/voices): another
+// NPC name (an NPC persona, found or created), and optionally the next few
+// quotes the same NPC speaks in the chapter, since a placeholder voice usually
+// covers a stretch of a scene. Only the story's authors and admins see it.
+// They can instead give the quote to a character from the archive, or a
+// character as one of its personas: it stops being an NPC voice (ff-server
+// records that in the admin History).
 
-type Updated = { lineNo: number; speaker: string | null; segments: StorySegment[] | null };
+type Updated = StoryLine;
 
 const WIDTH = 300; // px, matches .namePopover
 
@@ -46,25 +49,22 @@ export default function VoiceNamePopover({
     const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
     const router = useRouter();
     const [linkCharacter, setLinkCharacter] = useState(false);
-    const [characters, setCharacters] = useState<{ id: number; name: string }[] | null>(null);
+    const [characters, setCharacters] = useState<VoiceOption[] | null>(null);
 
     useEffect(() => {
         if (!linkCharacter || characters) return;
-        fetch('/site/ff/characters')
-            .then((res) => res.json())
-            .then((envelope: { data?: { id: number; name: string }[] }) =>
-                setCharacters([...(envelope.data ?? [])].sort((a, b) => a.name.localeCompare(b.name)))
-            )
+        loadVoiceOptions()
+            .then(setCharacters)
             .catch(() => setCharacters([]));
     }, [linkCharacter, characters]);
-    const linkedCharacter = linkCharacter
-        ? characters?.find((c) => c.name.toLowerCase() === name.trim().toLowerCase()) ?? null
-        : null;
+    const linkedCharacter = linkCharacter && characters ? findVoiceOption(characters, name) : null;
 
-    // unnamed quotes after this one, in reading order
-    const nextUnnamed = useMemo(() => {
+    // later quotes in the chapter by the same NPC (or, for an unnamed one, other unnamed ones)
+    const sameSpeaker = (r: NpcRun) => (r.speaker ?? '').toLowerCase() === (run.speaker ?? '').toLowerCase();
+    const nextSame = useMemo(() => {
         const at = runs.findIndex((r) => r.lineNo === run.lineNo && r.segments?.[0] === run.segments?.[0]);
-        return runs.slice(at + 1).filter((r) => !r.speaker);
+        return runs.slice(at + 1).filter(sameSpeaker);
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- sameSpeaker only reads run
     }, [runs, run]);
 
     const names = useMemo(
@@ -108,8 +108,8 @@ export default function VoiceNamePopover({
         };
     }, [onClose, anchor]);
 
-    const assignmentsFor = (r: NpcRun, speaker: string | null, characterId?: number) => {
-        const voice = characterId !== undefined ? { speaker: null, characterId } : { speaker };
+    const assignmentsFor = (r: NpcRun, speaker: string | null, character: VoiceOption | null) => {
+        const voice = character ? { characterId: character.characterId, personaId: character.personaId } : { speaker };
         return r.segments === null
             ? [{ chapterNo, lineNo: r.lineNo, ...voice }]
             : r.segments.map((segment) => ({ chapterNo, lineNo: r.lineNo, segment, ...voice }));
@@ -118,11 +118,12 @@ export default function VoiceNamePopover({
     const save = async (e: React.FormEvent) => {
         e.preventDefault();
         if (linkCharacter && !linkedCharacter) {
-            setError(`No character named '${name.trim()}'`);
+            setError(`No character (or character as persona) named '${name.trim()}'`);
             return;
         }
         const speaker = name.trim() || null;
-        const targets = [run, ...(speaker ? nextUnnamed.slice(0, alsoNext) : [])];
+        if (!speaker) return;
+        const targets = [run, ...nextSame.slice(0, alsoNext)];
         setBusy(true);
         setError(null);
         try {
@@ -130,17 +131,18 @@ export default function VoiceNamePopover({
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    assignments: targets.flatMap((r) => assignmentsFor(r, speaker, linkedCharacter?.id)),
+                    assignments: targets.flatMap((r) => assignmentsFor(r, speaker, linkedCharacter)),
                 }),
             });
             const envelope = (await res.json().catch(() => null)) as { status?: string; message?: string; data?: Updated[] } | null;
             if (!res.ok || envelope?.status === 'error') throw new Error(envelope?.message ?? `HTTP ${res.status}`);
-            if (linkedCharacter) {
-                // The line now belongs to a character (color, link, legend): re-render from the server
-                router.refresh();
-            } else {
-                onSaved(envelope?.data ?? []);
-            }
+            // The reader keeps the lines changed in this visit, so it always
+            // gets the new ones: a line renamed earlier would otherwise go on
+            // showing that name over whatever the server sends next.
+            onSaved(envelope?.data ?? []);
+            // A character's line also needs that character (color, link,
+            // legend), which only the server render carries
+            if (linkedCharacter) router.refresh();
             onClose();
         } catch (err) {
             setError(err instanceof Error ? err.message : 'The lore server is not answering.');
@@ -155,7 +157,7 @@ export default function VoiceNamePopover({
             style={position ? { top: position.top, left: position.left } : { visibility: 'hidden' }}
             onSubmit={save}
             role='dialog'
-            aria-label='Name this NPC voice'
+            aria-label='Change who speaks this NPC quote'
         >
             <label className={styles.namePopoverField}>
                 <span className='pixel-label'>who&rsquo;s speaking?</span>
@@ -164,7 +166,7 @@ export default function VoiceNamePopover({
                     list={linkCharacter ? 'story-character-names' : 'story-npc-names'}
                     value={name}
                     maxLength={80}
-                    placeholder={linkCharacter ? 'a character in the archive' : 'an NPC name, e.g. Llamanian Guard'}
+                    placeholder={linkCharacter ? 'a character, or "Vec as Sascha"' : 'an NPC name, e.g. Llamanian Guard'}
                     onChange={(e) => setName(e.target.value)}
                     disabled={busy}
                 />
@@ -184,28 +186,27 @@ export default function VoiceNamePopover({
                     }}
                     disabled={busy}
                 />
-                a character in the archive (it stops being an NPC voice)
+                a character in the archive, or one as a persona (it stops being an NPC voice)
             </label>
             <datalist id='story-character-names'>
                 {(characters ?? []).map((c) => (
-                    <option key={c.id} value={c.name} />
+                    <option key={c.label} value={c.label} />
                 ))}
             </datalist>
-            {nextUnnamed.length > 0 && (
+            {nextSame.length > 0 && (
                 <label className={styles.namePopoverNext}>
                     also the next
                     <input
                         type='number'
                         min={0}
-                        max={nextUnnamed.length}
+                        max={nextSame.length}
                         value={alsoNext}
-                        onChange={(e) =>
-                            setAlsoNext(Math.max(0, Math.min(nextUnnamed.length, parseInt(e.target.value) || 0)))
-                        }
+                        onChange={(e) => setAlsoNext(Math.max(0, Math.min(nextSame.length, parseInt(e.target.value) || 0)))}
                         disabled={busy || !name.trim()}
-                        aria-label='How many of the following unnamed quotes get this name too'
+                        aria-label={`How many of the following quotes by ${run.speaker ?? 'this NPC'} change too`}
                     />
-                    of {nextUnnamed.length} unnamed quote{nextUnnamed.length === 1 ? '' : 's'} in this chapter
+                    of {nextSame.length} later quote{nextSame.length === 1 ? '' : 's'} by {run.speaker ?? 'unnamed NPCs'} in this
+                    chapter
                 </label>
             )}
             {error && (
@@ -214,8 +215,8 @@ export default function VoiceNamePopover({
                 </p>
             )}
             <div className={styles.namePopoverActions}>
-                <button type='submit' disabled={busy || (linkCharacter && !characters) || (!name.trim() && (!run.speaker || linkCharacter))}>
-                    {busy ? 'saving…' : linkCharacter ? 'Link character' : !name.trim() && run.speaker ? 'Clear name' : 'Save'}
+                <button type='submit' disabled={busy || (linkCharacter && !characters) || !name.trim()}>
+                    {busy ? 'saving…' : linkCharacter ? 'Link character' : 'Save'}
                 </button>
                 <button type='button' onClick={onClose} disabled={busy}>
                     Cancel

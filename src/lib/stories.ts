@@ -1,20 +1,31 @@
 import { seasonColors } from './seasons';
 import { apiRaw } from './api';
 import type { SpeakerInfo } from './transcript';
-import type { Character, SeasonKind, StoryChapter, StoryFormat, StoryLine, StoryLineType, StoryQuote, StorySegment } from './types';
+import type { Character, SeasonKind, StoryChapter, StoryFormat, StoryLine, StoryLineType, StoryPersona, StoryQuote, StorySegment } from './types';
 
 // Slim shapes for the story reader — the API includes full character objects
-// on every line; we send an id-keyed lookup table to the client instead.
+// on every line; we send id-keyed lookup tables to the client instead.
 
 export interface SlimLine {
     no: number;
     type: StoryLineType;
     text: string;
     characterId: number | null;
+    /** one of the character's personas, or (characterId null) an NPC persona */
+    personaId: number | null;
+    /** an NPC voice's name (an import draft's, or its persona's), else null */
     speaker: string | null;
-    npcVoice: boolean; // DIALOGUE: an NPC voice, named by `speaker` or unnamed
+    npcVoice: boolean; // DIALOGUE: an NPC voice
     segments: StorySegment[] | null; // sub-paragraph dialogue spans, or null for plain lines
     imageUrl: string | null; // IMAGE: the picture (a booru file URL, or a data: URL in an import preview)
+}
+
+/** How a persona presents a story voice: each field overrides the character's when set */
+export interface PersonaInfo {
+    name: string | null;
+    image: string | null;
+    color: string | null;
+    characterId: number | null;
 }
 
 export interface StoryData {
@@ -23,6 +34,7 @@ export interface StoryData {
     format: StoryFormat;
     lines: SlimLine[];
     characters: Record<number, SpeakerInfo>;
+    personas: Record<number, PersonaInfo>;
 }
 
 /**
@@ -49,6 +61,46 @@ export async function fetchAllLines(
     return { lines, characters };
 }
 
+const isNpcPersona = (persona: StoryPersona | null | undefined) => !!persona && persona.characterId === null;
+
+/** A served segment as the reader holds it: ids, plus the NPC name when an NPC persona speaks it. */
+export function slimSegment(seg: StorySegment): StorySegment {
+    const npc = isNpcPersona(seg.persona);
+    return {
+        text: seg.text,
+        ...(seg.characterId != null ? { characterId: seg.characterId } : {}),
+        ...(seg.personaId != null ? { personaId: seg.personaId } : {}),
+        ...(npc ? { npc: true, speaker: seg.persona!.name } : {}),
+        ...(seg.italic ? { italic: true } : {}),
+        ...(seg.bold ? { bold: true } : {}),
+    };
+}
+
+/** A served line as the reader holds it. */
+export function slimLine(l: StoryLine): SlimLine {
+    const npc = isNpcPersona(l.persona);
+    return {
+        no: l.line_no,
+        type: l.type,
+        text: l.text,
+        characterId: l.characterId,
+        personaId: l.personaId ?? null,
+        speaker: npc ? l.persona!.name : null,
+        npcVoice: npc,
+        segments: l.segments ? l.segments.map(slimSegment) : null,
+        imageUrl: l.imageUrl ?? null,
+    };
+}
+
+/** Every persona a line or its segments are voiced by, into `into`. */
+export function collectPersonas(l: Pick<StoryLine, 'persona' | 'segments'>, into: Record<number, PersonaInfo>) {
+    const add = (p: StoryPersona | null | undefined) => {
+        if (p && !(p.id in into)) into[p.id] = { name: p.name, image: p.image, color: p.color, characterId: p.characterId };
+    };
+    add(l.persona);
+    for (const seg of l.segments ?? []) add(seg.persona);
+}
+
 export function slimStoryChapter(
     slug: string,
     chapterNo: number,
@@ -57,6 +109,7 @@ export function slimStoryChapter(
     segmentCharacters: Character[] = [],
 ): StoryData {
     const characters: StoryData['characters'] = {};
+    const personas: StoryData['personas'] = {};
 
     const addCharacter = (c: Pick<Character, 'id' | 'name' | 'slug' | 'color' | 'colorLight' | 'image'>) => {
         if (!(c.id in characters)) {
@@ -66,83 +119,70 @@ export function slimStoryChapter(
 
     for (const line of lines) {
         if (line.character) addCharacter(line.character);
+        collectPersonas(line, personas);
     }
     // Characters that only speak inside segment spans, hydrated by the API
     for (const c of segmentCharacters) addCharacter(c);
 
+    return { storySlug: slug, chapterNo, format, characters, personas, lines: lines.map(slimLine) };
+}
+
+/**
+ * Who speaks a fragment, as the reader shows it: the persona's name (and
+ * image/color, see the reader) over the character's, or an NPC's name.
+ * null when nobody does (narration).
+ */
+export interface StoryVoice {
+    name: string;
+    characterId: number | null;
+    personaId: number | null;
+    character: SpeakerInfo | null;
+    persona: PersonaInfo | null;
+    npc: boolean;
+}
+
+export function storyVoice(
+    v: { characterId?: number | null; personaId?: number | null; speaker?: string | null; npc?: boolean },
+    data: Pick<StoryData, 'characters' | 'personas'>,
+): StoryVoice | null {
+    const characterId = v.characterId ?? null;
+    const personaId = v.personaId ?? null;
+    const character = characterId !== null ? (data.characters[characterId] ?? null) : null;
+    const persona = personaId !== null ? (data.personas[personaId] ?? null) : null;
+    if (characterId === null && personaId === null && !v.speaker && !v.npc) return null;
+    const name = persona?.name ?? character?.name ?? v.speaker ?? null;
     return {
-        storySlug: slug,
-        chapterNo,
-        format,
-        characters,
-        lines: lines.map((l) => ({
-            no: l.line_no,
-            type: l.type,
-            text: l.text,
-            characterId: l.characterId,
-            speaker: l.speaker,
-            npcVoice: l.npcVoice ?? false,
-            segments: l.segments ?? null,
-            imageUrl: l.imageUrl ?? null,
-        })),
+        name: name ?? (v.npc ? 'unnamed' : '?'),
+        characterId,
+        personaId,
+        character,
+        persona,
+        npc: characterId === null,
     };
 }
 
-/** Count of distinct speaking voices — linked characters plus name-only speakers. */
+/** Count of distinct speaking voices — characters (as each persona) plus NPCs. */
 export function countVoices(data: StoryData): number {
-    const names = new Set<string>();
-    for (const line of data.lines) {
-        addLineVoices(line, data.characters, names);
-    }
-    return names.size;
+    return collectVoices(data).length;
 }
 
-/** Collects every distinct speaking voice (name) in the chapter, in reading order. */
-export function collectVoices(data: StoryData): { name: string; characterId: number | null }[] {
+/** Collects every distinct speaking voice in the chapter, in reading order. */
+export function collectVoices(data: StoryData): StoryVoice[] {
     const seen = new Set<string>();
-    const voices: { name: string; characterId: number | null }[] = [];
-    const push = (name: string, characterId: number | null) => {
-        if (name && !seen.has(name)) {
-            seen.add(name);
-            voices.push({ name, characterId });
+    const voices: StoryVoice[] = [];
+    const push = (voice: StoryVoice | null) => {
+        if (!voice || voice.name === 'unnamed') return;
+        const key = voice.characterId !== null ? `c${voice.characterId}:${voice.personaId ?? ''}` : `n${voice.name.toLowerCase()}`;
+        if (!seen.has(key)) {
+            seen.add(key);
+            voices.push(voice);
         }
     };
     for (const line of data.lines) {
-        if (line.type === 'DIALOGUE') {
-            const name = voiceName(line.characterId, line.speaker, data.characters);
-            if (name) push(name, line.characterId);
-        }
-        for (const seg of line.segments ?? []) {
-            if (seg.characterId != null || seg.speaker) {
-                const name = voiceName(seg.characterId ?? null, seg.speaker ?? null, data.characters);
-                if (name) push(name, seg.characterId ?? null);
-            }
-        }
+        if (line.type === 'DIALOGUE') push(storyVoice({ ...line, npc: line.npcVoice }, data));
+        for (const seg of line.segments ?? []) push(storyVoice(seg, data));
     }
     return voices;
-}
-
-/** Resolves a voice's display name from a linked character or a bare speaker string. */
-function voiceName(
-    characterId: number | null,
-    speaker: string | null,
-    characters: StoryData['characters'],
-): string | null {
-    if (characterId != null && characters[characterId]) return characters[characterId].name;
-    return speaker ?? null;
-}
-
-function addLineVoices(line: SlimLine, characters: StoryData['characters'], names: Set<string>) {
-    if (line.type === 'DIALOGUE') {
-        const name = voiceName(line.characterId, line.speaker, characters);
-        if (name) names.add(name);
-    }
-    for (const seg of line.segments ?? []) {
-        if (seg.characterId != null || seg.speaker) {
-            const name = voiceName(seg.characterId ?? null, seg.speaker ?? null, characters);
-            if (name) names.add(name);
-        }
-    }
 }
 
 /**
@@ -233,6 +273,16 @@ export function quotedSpanText(quote: StoryQuote, characterId: number): string {
         .filter((s) => s.characterId === characterId)
         .map((s) => s.text)
         .join(' ');
+}
+
+/**
+ * The persona name a character speaks a quote under, for "(as X)": the
+ * line's own persona, or the first named one on its spans. Look-only personas
+ * (no name) carry none.
+ */
+export function quotePersonaName(quote: StoryQuote, characterId: number): string | null {
+    if (quote.characterId === characterId && quote.persona?.name) return quote.persona.name;
+    return quote.segments?.find((s) => s.characterId === characterId && s.persona?.name)?.persona?.name ?? null;
 }
 
 /** Deep link to a quoted line — chapter route only needs the leading number.

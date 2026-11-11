@@ -158,7 +158,7 @@ export default function PersonaManager({
                     {personas.map((p) => (
                         <li key={p.id} className={styles.item}>
                             {p.image ? (
-                                <PixelAvatar src={p.image} name={p.name ?? p.label ?? ''} color={p.color ?? 'var(--text-muted)'} size={28} />
+                                <PixelAvatar src={p.image} name={p.name ?? p.label ?? ''} color={p.color ?? 'var(--text-muted)'} size={32} />
                             ) : (
                                 <span className={styles.swatch} style={{ background: p.color ?? 'transparent' }} aria-hidden />
                             )}

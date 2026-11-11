@@ -138,7 +138,7 @@ export default async function EpisodePage({ params }: Props) {
                     <ul className={styles.cast} aria-label='Player characters in this episode'>
                         {episodeCast.map((c) => (
                             <li key={c.id}>
-                                <CastAvatar character={c} size={42} />
+                                <CastAvatar character={c} size={48} />
                             </li>
                         ))}
                     </ul>

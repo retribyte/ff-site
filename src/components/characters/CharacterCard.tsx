@@ -25,7 +25,7 @@ export default function CharacterCard({ character, note }: { character: CardChar
             className={styles.card}
             style={{ '--char': color } as React.CSSProperties}
         >
-            <PixelAvatar src={character.image} name={character.name} color={color} size={56} />
+            <PixelAvatar src={character.image} name={character.name} color={color} size={64} />
             <span className={styles.cardName}>{character.name}</span>
             {note && <span className={styles.cardNote}>{note}</span>}
         </Link>

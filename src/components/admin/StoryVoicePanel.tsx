@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { JobRun } from '@/lib/types';
+import { findVoiceOption, loadVoiceOptions, type VoiceOption } from '@/lib/voiceOptions';
 import { adminCall } from './adminApi';
 import RunResult from './RunResult';
 import styles from './admin.module.scss';
@@ -13,11 +14,6 @@ interface VoiceField {
     text: string;
 }
 
-interface CharacterLite {
-    id: number;
-    name: string;
-}
-
 const slugList = (text: string) =>
     text
         .split(/[\s,]+/)
@@ -25,15 +21,16 @@ const slugList = (text: string) =>
         .filter(Boolean);
 
 // Who speaks story dialogue, fixed in bulk (ff-server POST
-// /admin/story-voices/reassign): plain speaker text to a real character
-// ("Mary" -> Mary Breezwing), a character back to plain text (Jessica -> "Jess"),
-// or either to either, across whole lines and in-paragraph quotes. Preview is
+// /admin/story-voices/reassign): an NPC to a real character ("Mary" -> Mary
+// Breezwing), a character to an NPC (Jessica -> "Jess"), a character to one of
+// its personas ("Vec" -> "Vec as Sascha"), or any to any, across whole lines
+// and in-paragraph quotes. An NPC left with no lines is deleted. Preview is
 // a dry run whose log lists every line it would change, so it doubles as the
 // "where is this voice used" report. Apply unlocks only after a preview of
 // exactly these inputs. Every run is in the History, with before-values.
 export default function StoryVoicePanel() {
     const router = useRouter();
-    const [characters, setCharacters] = useState<CharacterLite[] | null>(null);
+    const [characters, setCharacters] = useState<VoiceOption[] | null>(null);
     const [from, setFrom] = useState<VoiceField>({ kind: 'speaker', text: '' });
     const [to, setTo] = useState<VoiceField>({ kind: 'character', text: '' });
     const [stories, setStories] = useState('');
@@ -44,21 +41,20 @@ export default function StoryVoicePanel() {
     const [previewed, setPreviewed] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch('/site/ff/characters')
-            .then((res) => res.json())
-            .then((envelope: { data?: CharacterLite[] }) =>
-                setCharacters([...(envelope.data ?? [])].sort((a, b) => a.name.localeCompare(b.name)))
-            )
+        loadVoiceOptions()
+            .then(setCharacters)
             .catch(() => setCharacters([]));
     }, []);
 
+    // An NPC by name; or a character, where "Vec" matches all of Vec's lines
+    // as `from` (any persona) and "Vec as Sascha" just that persona's
     const resolve = (v: VoiceField, label: string) => {
         const text = v.text.trim();
         if (!text) throw new Error(`Fill in "${label}"`);
         if (v.kind === 'speaker') return { speaker: text };
-        const match = characters?.find((c) => c.name.toLowerCase() === text.toLowerCase());
-        if (!match) throw new Error(`${label}: no character named '${text}'`);
-        return { characterId: match.id };
+        const match = findVoiceOption(characters ?? [], text);
+        if (!match) throw new Error(`${label}: no character (or character as persona) named '${text}'`);
+        return match.personaId !== null ? { characterId: match.characterId, personaId: match.personaId } : { characterId: match.characterId };
     };
 
     const body = () => ({
@@ -94,9 +90,9 @@ export default function StoryVoicePanel() {
                 value={v.kind}
                 onChange={(e) => set({ ...v, kind: e.target.value as VoiceKind })}
                 disabled={busy}
-                aria-label={`${label}: character or speaker text`}
+                aria-label={`${label}: character or NPC`}
             >
-                <option value='speaker'>speaker text</option>
+                <option value='speaker'>NPC</option>
                 <option value='character'>character</option>
             </select>
             <input
@@ -104,9 +100,9 @@ export default function StoryVoicePanel() {
                 value={v.text}
                 onChange={(e) => set({ ...v, text: e.target.value })}
                 list={v.kind === 'character' ? 'story-voice-characters' : undefined}
-                placeholder={v.kind === 'character' ? 'character name' : 'name as written, e.g. Mary'}
+                placeholder={v.kind === 'character' ? 'character, or "Vec as Sascha"' : 'NPC name, e.g. Mary'}
                 disabled={busy}
-                aria-label={`${label} ${v.kind === 'character' ? 'character name' : 'speaker text'}`}
+                aria-label={`${label} ${v.kind === 'character' ? 'character name' : 'NPC name'}`}
             />
         </div>
     );
@@ -117,14 +113,15 @@ export default function StoryVoicePanel() {
                 Story voices
             </h2>
             <p className={styles.help}>
-                Move story dialogue (whole lines and quotes inside paragraphs) from one voice to another: plain speaker text
-                to a real character, a character back to plain text, or either to either. Leave the scope empty for every
-                story. Preview lists each line it would change, so it also answers &ldquo;where is this voice used?&rdquo;.
+                Move story dialogue (whole lines and quotes inside paragraphs) from one voice to another: an NPC to a real
+                character, a character to an NPC, a character to one of its personas (&ldquo;Vec as Sascha&rdquo;), or
+                any to any. A character with no persona named, as &ldquo;from&rdquo;, covers all of its lines. An NPC left
+                with no lines anywhere is deleted. Leave the scope empty for every story. Preview lists each line it would change, so it also answers &ldquo;where is this voice used?&rdquo;.
                 Transcript lines aren&apos;t touched: use the 🎭 control on an episode for those.
             </p>
             <datalist id='story-voice-characters'>
                 {(characters ?? []).map((c) => (
-                    <option key={c.id} value={c.name} />
+                    <option key={c.label} value={c.label} />
                 ))}
             </datalist>
             <div className={styles.voiceForm}>

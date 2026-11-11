@@ -6,7 +6,7 @@ import type { CharacterAppearances, CharacterQuotes, Character } from '@/lib/typ
 import { characterColor } from '@/lib/characterColors';
 import { personaHasName } from '@/lib/personaIdentity';
 import { lineUrl, seasonColors, seasonDisplayName, seasonOrder, seasonSlug } from '@/lib/seasons';
-import { quotedSpanText, storyQuoteUrl } from '@/lib/stories';
+import { quotePersonaName, quotedSpanText, storyQuoteUrl } from '@/lib/stories';
 import SignalLost from '@/components/SignalLost';
 import { getSessionUser } from '@/lib/auth';
 import ThemedAvatar from '@/components/characters/ThemedAvatar';
@@ -179,7 +179,7 @@ export default async function CharacterPage({ params }: Props) {
             key: `story-${q.id}`,
             text: quotedSpanText(q, character.id),
             href: storyQuoteUrl(q),
-            context: `${q.storyTitle} — ch. ${q.chapterNo}`,
+            context: `${q.storyTitle} — ch. ${q.chapterNo}${quotePersonaName(q, character.id) ? ` (as ${quotePersonaName(q, character.id)})` : ''}`,
         })),
     ];
     // Fresh random intercepts on every visit — intentional impurity on a
@@ -375,7 +375,7 @@ export default async function CharacterPage({ params }: Props) {
                                                 } as React.CSSProperties
                                             }
                                         >
-                                            <ThemedAvatar src={c.image} name={c.name} color={c.color} colorLight={c.colorLight} size={42} />
+                                            <ThemedAvatar src={c.image} name={c.name} color={c.color} colorLight={c.colorLight} size={48} />
                                             <span className={styles.costarName}>{c.name}</span>
                                             {c.episodes > 0 && <span className={styles.costarStats}>{plural(c.episodes, 'episode')}</span>}
                                             {c.stories > 0 && <span className={styles.costarStats}>{plural(c.stories, 'story', 'stories')}</span>}

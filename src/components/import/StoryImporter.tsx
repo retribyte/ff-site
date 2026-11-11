@@ -1,15 +1,18 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from '@/components/auth/SessionProvider';
 import DeleteControl from '@/components/DeleteControl';
 import DocxStoryForm, { type DocxPicture, type ImportMeta } from './DocxStoryForm';
 import { BOORU_URL } from '@/lib/booru';
 import { imageSrc } from '@/lib/images';
-import NpcVoiceNamer, { npcFragments } from './NpcVoiceNamer';
+import NpcVoiceNamer, { npcFragments, type AssignedVoice } from './NpcVoiceNamer';
 import StoryPreview, { type PreviewChapter, type PreviewLine } from './StoryPreview';
+import type { PersonaInfo } from '@/lib/stories';
 import type { SpeakerInfo } from '@/lib/transcript';
+import type { Persona } from '@/lib/types';
+import { voiceOptions } from '@/lib/voiceOptions';
 import styles from './storyImporter.module.scss';
 
 // Payload produced by ff-server's POST /stories/convert (a Google Doc, via
@@ -21,13 +24,16 @@ import styles from './storyImporter.module.scss';
 
 const LINE_TYPES = new Set(['NARRATION', 'DIALOGUE', 'ACTION', 'TRANSCRIPT', 'BREAK', 'HEADING', 'IMAGE']);
 
-// `npc` / `npcVoice`: an NPC voice ([…]{?} in a manuscript), unnamed until a
-// name is given here or later in the story reader. Its name is never matched
-// to a character: NPCs are exactly the voices without a character row.
+// `npc` / `npcVoice`: an NPC voice ([…]{?} in a manuscript, the doc's gray),
+// to be named in the NPC namer before upload: a name (an NPC persona, found or
+// created on upload), or `voice`, a character (as a persona or not) picked
+// there with "@". A named speaker elsewhere maps to a character on the
+// speakers list, or uploads as an NPC of that name.
 interface ImportSegment {
     text: string;
     speaker?: string;
     npc?: boolean;
+    voice?: AssignedVoice;
     italic?: boolean;
     bold?: boolean;
 }
@@ -37,6 +43,7 @@ interface ImportLine {
     text: string;
     speaker?: string;
     npcVoice?: boolean;
+    voice?: AssignedVoice;
     segments?: ImportSegment[];
     booruId?: number; // IMAGE: a manuscript's ![alt](booru:N)
     docxPicture?: number; // IMAGE: picture n of the converted doc, until it's given a booru post
@@ -192,6 +199,11 @@ export default function StoryImporter() {
 
     const [phase, setPhase] = useState<Phase>({ step: 'idle' });
     const [naming, setNaming] = useState(false);
+    // Every persona: characters' (a speaker can map to "Vec as Sascha") and NPCs' (name suggestions)
+    const [personas, setPersonas] = useState<Persona[]>([]);
+    // NPC quotes a revision pre-filled from the story's current voices
+    const [carried, setCarried] = useState<number | null>(null);
+    const carriedPayload = useRef<ImportPayload | null>(null);
 
     useEffect(() => {
         ff<{ id: number; username: string }[]>('/users')
@@ -205,6 +217,9 @@ export default function StoryImporter() {
                 )
             )
             .catch(() => setCharacters([]));
+        ff<Persona[]>('/personas')
+            .then(setPersonas)
+            .catch(() => setPersonas([]));
         ff<{ slug: string; title: string; authors?: { id: number }[] }[]>('/stories')
             .then((data) =>
                 setShelf(
@@ -228,6 +243,7 @@ export default function StoryImporter() {
         setPictureIds({});
         setAuthorOverrides({});
         setCharOverrides({});
+        setCarried(null);
         setOrigin(from);
         setFileName(name);
         try {
@@ -325,16 +341,28 @@ export default function StoryImporter() {
         return [...names].sort();
     }, [payload]);
 
-    // name → character id (exact name first, then any alias)
+    // The voices a speaker can map to: a character ("c:<id>"), or a character
+    // as one of its personas ("p:<personaId>"); '' leaves it an NPC by name
+    const options = useMemo(
+        () => voiceOptions(characters.map((c) => ({ id: c.id, name: c.names[0] })), personas),
+        [characters, personas]
+    );
+    const optionValue = (o: { characterId: number; personaId: number | null }) =>
+        o.personaId !== null ? `p:${o.personaId}` : `c:${o.characterId}`;
+
+    // name → voice: a character's exact name first, then a character persona's
     const charByName = useMemo(() => {
         const map = new Map<string, string>();
         for (const c of characters) {
             for (const alias of c.names) {
-                if (!map.has(alias)) map.set(alias, String(c.id));
+                if (!map.has(alias)) map.set(alias, `c:${c.id}`);
             }
         }
+        for (const p of personas) {
+            if (p.characterId !== null && p.name && !map.has(p.name)) map.set(p.name, `p:${p.id}`);
+        }
         return map;
-    }, [characters]);
+    }, [characters, personas]);
 
     const charMap = useMemo(
         () =>
@@ -348,6 +376,12 @@ export default function StoryImporter() {
 
     const npcQuotes = useMemo(() => (payload ? npcFragments(payload.chapters) : []), [payload]);
     const npcNamed = npcQuotes.filter((f) => f.name.trim()).length;
+    const npcUnnamed = npcQuotes.length - npcNamed;
+    // NPC personas already in the archive, to suggest in the namer
+    const npcNames = useMemo(
+        () => personas.filter((p) => p.characterId === null && p.name).map((p) => p.name as string),
+        [personas]
+    );
 
     // Frontmatter author names; none credits the uploader (the '' row)
     const authorNames = useMemo(() => {
@@ -391,15 +425,85 @@ export default function StoryImporter() {
     const canReplace =
         collision?.field === 'slug' && !!user && (isAdmin || collision.story.authorIds.includes(user.id));
 
-    // Chapters with speakers resolved: a character id, or the raw display name.
-    // The preview renders exactly this, and the upload sends it.
+    // A revision: pre-fill its unnamed NPC quotes with the voices the same text
+    // has in the story now (ff-server matches them by occurrence), once per
+    // loaded draft. Names already typed here are kept.
+    const replaceSlug = canReplace ? collision.story.slug : null;
+    useEffect(() => {
+        if (!payload || !replaceSlug || options.length === 0 || carriedPayload.current === payload) return;
+        carriedPayload.current = payload;
+        const draft = payload;
+        ff<{ chapters: ImportChapter[]; filled: number }>(`/stories/${encodeURIComponent(replaceSlug)}/voices/carry`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chapters: draft.chapters }),
+        })
+            .then((result) => {
+                const byNo = new Map(result.chapters.map((c) => [c.chapter_no, c]));
+                const labelFor = (characterId: number, personaId: number | null | undefined) =>
+                    options.find((o) => o.characterId === characterId && o.personaId === (personaId ?? null))?.label;
+                const next: ImportPayload = structuredClone(draft);
+                let filled = 0;
+                // copy a carried voice onto a quote that's still unnamed here
+                const fill = (
+                    target: { speaker?: string; voice?: AssignedVoice },
+                    from: { speaker?: string; characterId?: number; personaId?: number | null } | undefined
+                ) => {
+                    if (!from || target.speaker || target.voice) return;
+                    const label = from.characterId ? labelFor(from.characterId, from.personaId) : undefined;
+                    if (from.characterId && label) target.voice = { characterId: from.characterId, personaId: from.personaId ?? null, label };
+                    else if (!from.characterId && from.speaker) target.speaker = from.speaker;
+                    else return;
+                    filled++;
+                };
+                for (const chapter of next.chapters) {
+                    const carriedChapter = byNo.get(chapter.chapter_no);
+                    chapter.lines.forEach((line, li) => {
+                        const from = carriedChapter?.lines[li] as (ImportLine & { characterId?: number; personaId?: number }) | undefined;
+                        if (line.npcVoice) fill(line, from);
+                        line.segments?.forEach((seg, si) => {
+                            if (seg.npc) fill(seg, from?.segments?.[si] as ImportSegment & { characterId?: number; personaId?: number });
+                        });
+                    });
+                }
+                if (filled > 0) {
+                    carriedPayload.current = next;
+                    setPayload((current) => (current === draft ? next : current));
+                }
+                setCarried(filled);
+            })
+            .catch(() => setCarried(null)); // nothing pre-filled; the quotes can still be named by hand
+    }, [payload, replaceSlug, options]);
+
+    // Chapters with voices resolved: a character (and persona) by id, or an NPC
+    // by name. The preview renders exactly this, and the upload sends it.
     const resolvedChapters = useMemo((): PreviewChapter[] => {
         if (!payload) return [];
-        // Attach a resolved character id, or fall back to the raw display name.
-        const resolveSpeaker = <T extends { characterId?: number; speaker?: string }>(entry: T, speaker: string) => {
-            const id = charMap[speaker];
-            if (id) entry.characterId = parseInt(id);
-            else entry.speaker = speaker;
+        const personaById = new Map(personas.map((p) => [p.id, p]));
+        // A mapped speaker becomes its character (as a persona or not); anyone else an NPC by name
+        const resolveSpeaker = <T extends { characterId?: number; personaId?: number; speaker?: string }>(entry: T, speaker: string) => {
+            const [kind, raw] = (charMap[speaker] ?? '').split(':');
+            const persona = kind === 'p' ? personaById.get(parseInt(raw)) : undefined;
+            if (kind === 'c') entry.characterId = parseInt(raw);
+            else if (persona?.characterId != null) {
+                entry.characterId = persona.characterId;
+                entry.personaId = persona.id;
+            } else entry.speaker = speaker;
+            return entry;
+        };
+        // An NPC quote: the character picked in the namer, else its NPC name, else still unnamed
+        const resolveNpc = <T extends { characterId?: number; personaId?: number; speaker?: string; npc?: boolean; npcVoice?: boolean }>(
+            entry: T,
+            from: { speaker?: string; voice?: AssignedVoice },
+            flag: 'npc' | 'npcVoice'
+        ) => {
+            if (from.voice) {
+                entry.characterId = from.voice.characterId;
+                if (from.voice.personaId !== null) entry.personaId = from.voice.personaId;
+                return entry;
+            }
+            entry[flag] = true;
+            if (from.speaker) entry.speaker = from.speaker;
             return entry;
         };
 
@@ -418,17 +522,13 @@ export default function StoryImporter() {
                         out.booruId = postFor(line);
                         return out;
                     }
-                    if (line.npcVoice) {
-                        out.npcVoice = true;
-                        if (line.speaker) out.speaker = line.speaker;
-                    } else if (line.speaker) resolveSpeaker(out, line.speaker);
+                    if (line.npcVoice) resolveNpc(out, line, 'npcVoice');
+                    else if (line.speaker) resolveSpeaker(out, line.speaker);
                     if (line.segments) {
                         out.segments = line.segments.map((seg) => {
-                            const resolved: ImportSegment & { characterId?: number } = { text: seg.text };
-                            if (seg.npc) {
-                                resolved.npc = true;
-                                if (seg.speaker) resolved.speaker = seg.speaker;
-                            } else if (seg.speaker) resolveSpeaker(resolved, seg.speaker);
+                            const resolved: Omit<ImportSegment, 'voice'> & { characterId?: number; personaId?: number } = { text: seg.text };
+                            if (seg.npc) resolveNpc(resolved, seg, 'npc');
+                            else if (seg.speaker) resolveSpeaker(resolved, seg.speaker);
                             if (seg.italic) resolved.italic = true;
                             if (seg.bold) resolved.bold = true;
                             return resolved;
@@ -437,7 +537,7 @@ export default function StoryImporter() {
                     return out;
                 }),
         }));
-    }, [payload, charMap, docxPostIds]);
+    }, [payload, charMap, docxPostIds, personas]);
 
     // Name/color/portrait by id, for the preview's dialogue colors and legend
     const previewCharacters = useMemo(
@@ -446,6 +546,13 @@ export default function StoryImporter() {
                 characters.map((c) => [c.id, { name: c.names[0], color: c.color, image: c.image }])
             ) as Record<number, SpeakerInfo>,
         [characters]
+    );
+    const previewPersonas = useMemo(
+        () =>
+            Object.fromEntries(
+                personas.map((p) => [p.id, { name: p.name, image: p.image, color: p.color, characterId: p.characterId }])
+            ) as Record<number, PersonaInfo>,
+        [personas]
     );
 
     // ---- upload -----------------------------------------------------------
@@ -493,7 +600,7 @@ export default function StoryImporter() {
     // swaps every chapter and line in one transaction, keeping the story's id,
     // title, blurb, authors and season (edit those on the story page).
     const replace = async () => {
-        if (!payload || collision?.field !== 'slug' || !canReplace) return;
+        if (!payload || collision?.field !== 'slug' || !canReplace || npcUnnamed > 0) return;
         setPhase({ step: 'uploading' });
         const slug = collision.story.slug;
         try {
@@ -511,7 +618,8 @@ export default function StoryImporter() {
     const busy = phase.step === 'uploading';
     // Every typed post must exist (one the booru can't be asked about is left to the server)
     const picturesReady = badPosts.length === 0 && checkingPosts.length === 0 && badPictureInputs.length === 0;
-    const canUpload = payload !== null && !busy && phase.step !== 'success' && collision === null && picturesReady;
+    const canUpload =
+        payload !== null && !busy && phase.step !== 'success' && collision === null && picturesReady && npcUnnamed === 0;
     const changeWhere = origin === 'docx' ? 'in the form above' : 'in the manuscript frontmatter';
 
     return (
@@ -634,10 +742,10 @@ export default function StoryImporter() {
                                             disabled={busy}
                                             aria-label={`character for ${name}`}
                                         >
-                                            <option value=''>(keep as name)</option>
-                                            {characters.map((c) => (
-                                                <option key={c.id} value={c.id}>
-                                                    {c.names[0]}
+                                            <option value=''>(an NPC: just this name)</option>
+                                            {options.map((o) => (
+                                                <option key={o.label} value={optionValue(o)}>
+                                                    {o.label}
                                                 </option>
                                             ))}
                                         </select>
@@ -646,8 +754,9 @@ export default function StoryImporter() {
                             </ul>
                             {unresolvedSpeakers.length > 0 && (
                                 <p className={styles.hint}>
-                                    unmatched speakers keep their display names (no character link):{' '}
-                                    {unresolvedSpeakers.join(', ')}. Create the character first if that matters.
+                                    These upload as NPCs, a name with no character page (one NPC per name across the
+                                    archive): {unresolvedSpeakers.join(', ')}. Pick a character for any that has one, or
+                                    create it first.
                                 </p>
                             )}
                         </>
@@ -657,13 +766,15 @@ export default function StoryImporter() {
                         <>
                             <h3 className='pixel-label'>npc voices</h3>
                             <div className={styles.npcSummary}>
-                                <p className={styles.hint}>
-                                    {`${npcNamed} of ${npcQuotes.length} NPC quote${npcQuotes.length === 1 ? '' : 's'} named. `}
-                                    Unnamed ones upload as they are, and this story&rsquo;s authors or an admin can name
-                                    each one by clicking it while reading.
-                                    {canReplace &&
-                                        ' Replacing keeps the names already given to quotes whose text is unchanged.'}
+                                <p className={npcUnnamed > 0 ? styles.error : styles.hint}>
+                                    {`${npcNamed} of ${npcQuotes.length} NPC quote${npcQuotes.length === 1 ? '' : 's'} named.`}
+                                    {npcUnnamed > 0 && ' Name every one (or give it to a character) before uploading.'}
                                 </p>
+                                {canReplace && carried !== null && carried > 0 && (
+                                    <p className={styles.hint}>
+                                        {`${carried} ${carried === 1 ? 'quote' : 'quotes'} filled in from the story as it stands, where the text is unchanged. Check them in the list.`}
+                                    </p>
+                                )}
                                 <button
                                     type='button'
                                     className={styles.namerOpen}
@@ -678,7 +789,8 @@ export default function StoryImporter() {
                     {naming && payload && (
                         <NpcVoiceNamer
                             chapters={payload.chapters}
-                            knownNames={[]}
+                            knownNames={npcNames}
+                            voiceOptions={options}
                             onApply={(chapters) => setPayload({ ...payload, chapters: chapters as ImportChapter[] })}
                             onClose={() => setNaming(false)}
                         />
@@ -772,6 +884,7 @@ export default function StoryImporter() {
                         season={payload.story.season}
                         chapters={resolvedChapters}
                         characters={previewCharacters}
+                        personas={previewPersonas}
                         images={previewImages}
                     />
                     {badPosts.length > 0 && (
@@ -782,7 +895,12 @@ export default function StoryImporter() {
 
                     <div className={styles.actions}>
                         {canReplace ? (
-                            phase.step !== 'success' && (
+                            phase.step !== 'success' &&
+                            (npcUnnamed > 0 ? (
+                                <button type='button' className={styles.upload} disabled>
+                                    Name the NPC quotes first
+                                </button>
+                            ) : (
                                 <DeleteControl
                                     onConfirm={() => void replace()}
                                     busy={busy}
@@ -791,7 +909,7 @@ export default function StoryImporter() {
                                     confirmLabel={busy ? 'replacing…' : 'Replace'}
                                     cancelLabel='Keep'
                                 />
-                            )
+                            ))
                         ) : (
                             <button type='button' className={styles.upload} onClick={upload} disabled={!canUpload}>
                                 {phase.step === 'uploading' ? `transmitting ${lineTotal} lines…` : `Upload ${lineTotal} lines`}

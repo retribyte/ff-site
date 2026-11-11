@@ -411,21 +411,30 @@ def upload(payload, api_base):
             else:
                 print(f"warning: could not resolve author {author!r}; leaving them off")
 
-    # Character name -> id (exact name, then aliases) for dialogue attribution
+    # Speaker name -> voice: a character's exact name first, then a character
+    # persona's name (the character speaking as that persona). Anyone else
+    # uploads as an NPC persona of that name (found or created by the server).
     characters = api.call("GET", "/characters")["data"]
     by_name = {}
     for character in characters:
-        by_name.setdefault(character["name"], character["id"])
-        for alias in character.get("aliases", []):
-            by_name.setdefault(alias["name"], character["id"])
+        by_name.setdefault(character["name"], {"characterId": character["id"]})
+    for persona in api.call("GET", "/personas?npc=false")["data"]:
+        if persona.get("name") and persona.get("characterId") is not None:
+            by_name.setdefault(persona["name"], {"characterId": persona["characterId"], "personaId": persona["id"]})
 
     def resolve_speaker(entry, speaker):
-        """Attach characterId (or a display-name speaker) for a speaker string."""
+        """Attach the voice for a speaker string: a character (and persona), else an NPC by name."""
         if speaker in by_name:
-            entry["characterId"] = by_name[speaker]
+            entry.update(by_name[speaker])
         else:
             entry["speaker"] = speaker
             unresolved.add(speaker)
+
+    def resolve_npc(entry, speaker, where):
+        """An NPC voice ({Name} after a {?}-style span): never matched to a character; unnamed is refused."""
+        if not speaker:
+            sys.exit(f"error: {where} has an unnamed NPC voice ({{?}}); name it in the manuscript, or use the web importer")
+        entry["speaker"] = speaker
 
     unresolved = set()
     chapters = []
@@ -437,15 +446,20 @@ def upload(payload, api_base):
                 if "booruId" not in line:
                     sys.exit(f"error: chapter {chapter['chapter_no']} has a picture with no booru post (![...](booru:<post>))")
                 out["booruId"] = line["booruId"]
+            where = f"chapter {chapter['chapter_no']}, line {len(lines) + 1}"
             speaker = line.get("speaker")
-            if speaker:
+            if line.get("npcVoice"):
+                resolve_npc(out, speaker, where)
+            elif speaker:
                 resolve_speaker(out, speaker)
             segments = line.get("segments")
             if segments:
                 out["segments"] = []
                 for seg in segments:
                     resolved = {"text": seg["text"]}
-                    if seg.get("speaker"):
+                    if seg.get("npc"):
+                        resolve_npc(resolved, seg.get("speaker"), where)
+                    elif seg.get("speaker"):
                         resolve_speaker(resolved, seg["speaker"])
                     for style in ("italic", "bold"):
                         if seg.get(style):
@@ -465,7 +479,7 @@ def upload(payload, api_base):
         print(f"  chapter {chapter['chapter_no']}: {len(chapter['lines'])} lines")
 
     if unresolved:
-        print(f"warning: no Character row for {sorted(unresolved)} — kept as display names")
+        print(f"note: no character for {sorted(unresolved)}: uploaded as NPCs (a name, shared across the archive)")
     print(f"done — reads at /stories/{slug}")
 
 
