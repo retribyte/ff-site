@@ -1,0 +1,26 @@
+// The story header's "jump to bookmark" button, in the story's colors
+.button {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: bold;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    color: #fff;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45);
+    background: linear-gradient(135deg, var(--story) 0%, color-mix(in srgb, var(--story-2, var(--story)) 70%, #000) 100%);
+    border: var(--px) solid color-mix(in srgb, var(--story) 60%, var(--border-loud));
+    border-radius: var(--radius);
+    box-shadow: var(--px) var(--px) 0 0 var(--shadow);
+    padding: 0.5rem;
+
+    &:hover,
+    &:focus-visible {
+        color: #fff;
+        filter: brightness(1.15);
+        box-shadow:
+            var(--px) var(--px) 0 0 var(--shadow),
+            0 0 14px color-mix(in srgb, var(--story) 45%, transparent);
+    }
+}

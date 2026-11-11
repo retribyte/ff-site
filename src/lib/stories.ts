@@ -1,6 +1,7 @@
 import { seasonColors } from './seasons';
 import { apiRaw } from './api';
 import type { SlimCommentary, SpeakerInfo } from './transcript';
+import type { BookmarkChapter } from '@/components/story/BookmarkJump';
 import type { Character, SeasonKind, StoryChapter, StoryFormat, StoryLine, StoryLineType, StoryPersona, StoryQuote, StorySegment } from './types';
 
 // Slim shapes for the story reader — the API includes full character objects
@@ -265,6 +266,19 @@ export function chapterSlug(chapter: Pick<StoryChapter, 'chapter_no' | 'title'>)
 }
 
 /** Parses the leading chapter number out of a chapter URL segment. */
+/**
+ * The chapters as the header's bookmark button needs them: line counts and
+ * the page that reads each one (a single-chapter story reads on its own page).
+ */
+export function bookmarkChapters(slug: string, chapters: StoryChapter[]): BookmarkChapter[] {
+    return chapters.map((chapter) => ({
+        no: chapter.chapter_no,
+        // a missing count never drops a bookmark
+        lines: chapter._count?.lines ?? Number.MAX_SAFE_INTEGER,
+        href: chapters.length === 1 ? `/stories/${slug}` : `/stories/${slug}/${chapterSlug(chapter)}`,
+    }));
+}
+
 export function chapterNoFromSlug(slug: string): number | null {
     const match = slug.match(/^(\d+)(-|$)/);
     return match ? parseInt(match[1]) : null;
