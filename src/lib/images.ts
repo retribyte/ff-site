@@ -9,12 +9,17 @@
 import { BOORU_URL } from '@/lib/booru';
 
 const BOORU_ORIGIN = new URL(BOORU_URL).origin;
+const ABSOLUTE_URL = /^[a-z][a-z\d+.-]*:/i;
 
 export function imageSrc(src: string): string;
 export function imageSrc(src: string | null | undefined): string | null;
 export function imageSrc(src: string | null | undefined): string | null {
     if (!src) return null;
     if (src.startsWith('/api/avatars/')) return `/site/ff${src.slice('/api'.length)}`;
+    // Only an absolute URL can be the booru's. Skip the URL parse for the rest
+    // (relative paths, data: URLs): a parse that throws is slow, and a long
+    // transcript asks this for every block's avatar.
+    if (!ABSOLUTE_URL.test(src) || src.startsWith('data:')) return src;
     let url: URL;
     try {
         url = new URL(src);

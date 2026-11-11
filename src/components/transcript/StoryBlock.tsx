@@ -15,17 +15,39 @@ import { Highlighted } from './ScanBar';
 import type { Block } from './TranscriptReader';
 import styles from './transcript.module.scss';
 
+// One formatter per zone, built once: Date#toLocaleString builds a new
+// Intl.DateTimeFormat on every call, which was the costliest part of
+// rendering a long transcript's blocks.
+const TIMESTAMP_OPTIONS: Intl.DateTimeFormatOptions = {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+};
+const utcFormat = new Intl.DateTimeFormat('en-US', { ...TIMESTAMP_OPTIONS, timeZone: 'UTC' });
+let localFormat: Intl.DateTimeFormat | null = null;
+
 // `local` false -> UTC (what the server renders, so hydration matches);
 // true -> the viewer's own timezone, switched on after mount.
 function formatTimestamp(iso: string, local: boolean): string {
-    return new Date(iso).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        ...(local ? {} : { timeZone: 'UTC' }),
-    });
+    const format = local ? (localFormat ??= new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTIONS)) : utcFormat;
+    return format.format(new Date(iso));
+}
+
+const subscribeNoop = () => () => {};
+
+// Its own component so the switch to local time after hydration re-renders
+// only the timestamps, not every block around them.
+function Timestamp({ iso }: { iso: string }) {
+    // False during SSR/hydration (server has no viewer timezone), true after,
+    // without a setState-in-effect.
+    const localTime = useSyncExternalStore(subscribeNoop, () => true, () => false);
+    return (
+        <time className={styles.timestamp} dateTime={iso}>
+            {formatTimestamp(iso, localTime)}
+        </time>
+    );
 }
 
 // Discord colors [bracketed] runs inside ini/md code blocks; the brackets
@@ -117,15 +139,10 @@ interface Props {
     currentMatchNo: number | null;
 }
 
-const subscribeNoop = () => () => {};
-
 function StoryBlock({ block, episodeTitle, characters, players, personas, targetNo, query, currentMatchNo }: Props) {
     const { colorMode } = useTheme();
     const { user } = useSession();
     const [copied, setCopied] = useState(false);
-    // False during SSR/hydration (server has no viewer timezone), true after,
-    // without a setState-in-effect.
-    const localTime = useSyncExternalStore(subscribeNoop, () => true, () => false);
 
     const characterId = block.characterId;
     const character = characterId !== null ? characters[characterId] : null;
@@ -179,11 +196,7 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
                         {(character || persona) && player && speaker !== player.name && (
                             <span className={styles.playedBy}>{player.name}</span>
                         )}
-                        {block.timestamp && (
-                            <time className={styles.timestamp} dateTime={block.timestamp}>
-                                {formatTimestamp(block.timestamp, localTime)}
-                            </time>
-                        )}
+                        {block.timestamp && <Timestamp iso={block.timestamp} />}
                     </div>
                     {block.messages.map((message, i) => {
                         // A different player voicing the same character: name them
