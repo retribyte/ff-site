@@ -1,5 +1,6 @@
 import { ITEM_TYPE_META } from '@/lib/lore';
 import { decodeEntities } from '@/lib/html';
+import { fullHex } from '@/lib/colorContrast';
 
 // Schema-driven editing: every record type declares its fields once and the
 // RecordEditor renders/validates/submits any of them.
@@ -158,6 +159,10 @@ export function valuesToPayload(schema: EntitySchema, values: FormValues): Recor
                 break;
             case 'entity-refs':
                 payload[field.name] = value === '' ? [] : value.split(',').map((id) => parseInt(id));
+                break;
+            case 'color':
+                // `#rgb` shorthand saves as the full `#rrggbb`
+                payload[field.name] = value === '' ? null : (fullHex(value) ?? value);
                 break;
             default:
                 payload[field.name] = value === '' ? null : value;

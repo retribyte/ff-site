@@ -15,6 +15,18 @@ export const BACKGROUNDS: Record<ThemeMode, string[]> = {
     light: ['#f1effa', '#fdfcff', '#e9e5f6'],
 };
 
+/**
+ * A hex color as `#rrggbb`: `#rrggbb` as given, CSS shorthand `#rgb` doubled
+ * out (`#b03` -> `#bb0033`). Null for anything else, including a color still
+ * being typed.
+ */
+export function fullHex(value: string): string | null {
+    const v = value.trim();
+    if (/^#[0-9a-fA-F]{6}$/.test(v)) return v;
+    const short = /^#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$/.exec(v);
+    return short ? `#${short[1]}${short[1]}${short[2]}${short[2]}${short[3]}${short[3]}` : null;
+}
+
 /** WCAG AA for body text. */
 export const MIN_CONTRAST = 4.5;
 

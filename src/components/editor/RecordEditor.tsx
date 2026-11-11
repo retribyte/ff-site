@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     EDITOR_SCHEMAS,
@@ -12,10 +12,12 @@ import {
     type FormValues,
 } from '@/lib/editor/schemas';
 import AvatarField from '@/components/characters/AvatarField';
-import { characterThemeColors } from '@/lib/characterColors';
-import { BACKGROUNDS, MIN_CONTRAST, minContrast } from '@/lib/colorContrast';
+import { characterThemeColors, legacyColor } from '@/lib/characterColors';
+import { BACKGROUNDS, MIN_CONTRAST, fullHex, minContrast, suggestColorFor } from '@/lib/colorContrast';
 import DeleteControl from '@/components/DeleteControl';
 import SimilarColors, { useColoredCharacters, type ColoredCharacter } from './SimilarColors';
+import PixelAvatar from '@/components/transcript/PixelAvatar';
+import transcript from '@/components/transcript/transcript.module.scss';
 import styles from './recordEditor.module.scss';
 
 interface Props {
@@ -71,10 +73,29 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
     const [error, setError] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
     const refOptions = useRefOptions(schema.fields);
-    const themeColorFields = schema.fields.filter((f) => f.kind === 'color' && f.theme);
-    const cast = useColoredCharacters(themeColorFields.length > 0, recordId);
+    const cast = useColoredCharacters(schema.fields.some((f) => f.kind === 'color' && f.theme), recordId);
 
     const set = (name: string, value: string) => setValues((prev) => ({ ...prev, [name]: value }));
+
+    // The two theme colors start locked together when they're empty or one is
+    // the other made readable; locked, editing either one sets both
+    const [colorsLinked, setColorsLinked] = useState(() => themeColorsLinked(schema.fields, values));
+    const darkField = schema.fields.find((f) => f.theme === 'dark');
+    const lightField = schema.fields.find((f) => f.theme === 'light');
+    const setThemeColor = (field: FieldDef, value: string) => {
+        set(field.name, value);
+        const other = schema.fields.find((f) => f.theme && f.theme !== field.theme);
+        // a complete color (#rrggbb, or #rgb shorthand) syncs; one still being typed waits
+        const color = fullHex(value);
+        if (!colorsLinked || !other?.theme || !field.theme || !color) return;
+        // Taking up the color the field already shows (an empty field's
+        // placeholder) changes nothing on screen, so it leaves the other alone
+        const valid = (v: string | undefined) => (v ? fullHex(v) : null);
+        const shown = characterThemeColors(values.name?.trim() || 'Name', valid(values.color), valid(values.colorLight));
+        if (color.toLowerCase() !== shown[field.theme].toLowerCase()) {
+            set(other.name, suggestColorFor(color, other.theme));
+        }
+    };
 
     const submit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -132,12 +153,22 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
 
     return (
         <form className={`pixel-panel ${styles.editor}`} onSubmit={submit}>
-            {schema.fields.map((field) =>
-                field.kind === 'color' && field.theme ? (
-                    field === themeColorFields[0] && (
-                        <ThemeColorsControl key='theme-colors' fields={themeColorFields} values={values} onChange={set} cast={cast} />
-                    )
-                ) : (
+            {schema.fields.map((field) => {
+                if (field.theme === 'light' && darkField) return null; // drawn by the pair
+                if (field.theme === 'dark' && lightField) {
+                    return (
+                        <ThemeColorPair
+                            key={field.name}
+                            fields={{ dark: field, light: lightField }}
+                            values={values}
+                            onChange={setThemeColor}
+                            linked={colorsLinked}
+                            onToggleLinked={() => setColorsLinked((on) => !on)}
+                            cast={cast}
+                        />
+                    );
+                }
+                return (
                     <Field
                         key={field.name}
                         field={field}
@@ -145,8 +176,8 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
                         onChange={(v) => set(field.name, v)}
                         refOptions={field.ref ? (refOptions[field.ref.path] ?? []) : []}
                     />
-                )
-            )}
+                );
+            })}
 
             {error && (
                 <p className={styles.error} role='alert'>
@@ -164,7 +195,20 @@ export default function RecordEditor({ kind, record, recordId }: Props) {
     );
 }
 
-const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
+/** Whether a form's two theme colors start locked: when they're empty or one
+ *  is the other made readable for its theme (suggestColorFor). Two colors
+ *  picked separately, or an empty light color the legacy table fills, start
+ *  unlocked, so the next edit doesn't silently replace them. */
+function themeColorsLinked(fields: FieldDef[], values: FormValues): boolean {
+    const dark = fields.find((f) => f.theme === 'dark');
+    const light = fields.find((f) => f.theme === 'light');
+    if (!dark || !light) return true;
+    const d = fullHex(values[dark.name] ?? '')?.toLowerCase();
+    const l = fullHex(values[light.name] ?? '')?.toLowerCase();
+    if (!l) return legacyColor(values.name?.trim() ?? '', 'light') === null;
+    if (!d) return true;
+    return suggestColorFor(d, 'light') === l || suggestColorFor(l, 'dark') === d;
+}
 
 function Field({
     field,
@@ -240,7 +284,7 @@ function Field({
             control = <AvatarField id={id} value={value} onChange={onChange} placeholder={field.placeholder} />;
             break;
         case 'color':
-            // theme colors render as a pair in ThemeColorsControl
+            // theme colors render as a pair in ThemeColorPair
             control = (
                 <span className={styles.colorRow}>
                     <input
@@ -293,98 +337,187 @@ function Field({
     );
 }
 
+/** The two themes' token values, for previews that show the other theme too
+ *  (src/styles/_tokens.scss; keep in sync). */
+const THEME_TOKENS: Record<'dark' | 'light', Record<string, string>> = {
+    dark: {
+        '--bg': BACKGROUNDS.dark[0],
+        '--surface': BACKGROUNDS.dark[1],
+        '--surface-2': BACKGROUNDS.dark[2],
+        '--border': '#34346a',
+        '--border-loud': '#4d4d95',
+        '--text': '#f0f3f7',
+        '--text-muted': '#9ba0c4',
+        '--shadow': 'rgba(0, 0, 0, 0.55)',
+    },
+    light: {
+        '--bg': BACKGROUNDS.light[0],
+        '--surface': BACKGROUNDS.light[1],
+        '--surface-2': BACKGROUNDS.light[2],
+        '--border': '#c9c2e2',
+        '--border-loud': '#9d92c9',
+        '--text': '#1b1830',
+        '--text-muted': '#5b5878',
+        '--shadow': 'rgba(50, 40, 90, 0.28)',
+    },
+};
+
+const THEMES = ['dark', 'light'] as const;
+
 /**
- * A character's two theme colors (schemas.ts `theme`), side by side: a dark
- * column and a light column. An empty color means "auto": the inputs show
- * what the site will use (characterThemeColors) until a color is typed or
- * picked, and a set color has a "use auto" button to go back. Each column
- * previews the name on its theme, flags hard-to-read overrides, and lists
- * characters with a similar color there (SimilarColors).
+ * A character's two theme colors (schemas.ts `theme`), each in its own box
+ * (picker, then hex), with the lock between them: locked, editing either sets
+ * the other (RecordEditor's setThemeColor). An empty color shows the one the
+ * site will use (characterThemeColors) in its picker and as the hex field's
+ * placeholder, so it can be edited straight away. A color that fails the
+ * readability check against its theme's backgrounds gets the nearest readable
+ * color offered, and characters with a similar color there are listed
+ * (SimilarColors). Below, a transcript block in each theme shows how the
+ * character's lines will look.
  */
-function ThemeColorsControl({
+function ThemeColorPair({
     fields,
     values,
     onChange,
+    linked,
+    onToggleLinked,
     cast,
 }: {
-    fields: FieldDef[];
+    fields: Record<'dark' | 'light', FieldDef>;
     values: FormValues;
-    onChange: (name: string, value: string) => void;
+    onChange: (field: FieldDef, value: string) => void;
+    linked: boolean;
+    onToggleLinked: () => void;
+    /** characters with a color set, for the similar-colors list */
     cast: ColoredCharacter[];
 }) {
     const name = values.name?.trim() || 'Name';
-    const valid = (v: string | undefined) => (v && HEX_COLOR.test(v) ? v : null);
-    const resolved = characterThemeColors(name, valid(values.color), valid(values.colorLight));
-    const columns = (['dark', 'light'] as const)
-        .map((theme) => ({ theme, field: fields.find((f) => f.theme === theme) }))
-        .filter((c): c is { theme: 'dark' | 'light'; field: FieldDef } => c.field !== undefined);
+    const valid = (v: string | undefined) => (v ? fullHex(v) : null); // #rgb counts, as #rrggbb
+    const value = { dark: values[fields.dark.name] ?? '', light: values[fields.light.name] ?? '' };
+    const resolved = characterThemeColors(name, valid(value.dark), valid(value.light));
 
     return (
-        <div className={`${styles.field} ${styles.themeColors}`}>
-            {columns.map(({ theme, field }) => {
-                const id = `field-${field.name}`;
-                const value = values[field.name];
-                const other = theme === 'dark' ? 'light' : 'dark';
-                const otherSet = valid(theme === 'dark' ? values.colorLight : values.color) !== null;
-                const contrast = valid(value) ? minContrast(value, theme) : null;
-                return (
-                    <div key={theme} className={styles.themeColumn}>
-                        <div className={styles.slot}>
-                            <label htmlFor={id} className='pixel-label'>
-                                {field.label}
-                            </label>
-                        </div>
-                        <div className={styles.slot}>
-                            <span className={styles.colorRow}>
-                                <input
-                                    type='color'
-                                    aria-label={`${field.label} picker`}
-                                    value={valid(value) ?? resolved[theme]}
-                                    onChange={(e) => onChange(field.name, e.target.value)}
-                                    style={{ background: BACKGROUNDS[theme][1] }}
-                                />
-                                <input
-                                    id={id}
-                                    type='text'
-                                    value={value}
-                                    onChange={(e) => onChange(field.name, e.target.value)}
-                                    placeholder={resolved[theme]}
-                                    pattern='#[0-9a-fA-F]{6}'
-                                />
-                            </span>
-                        </div>
-                        <div className={styles.slot}>
-                            <span className={styles.previewTile} style={{ background: BACKGROUNDS[theme][1] }}>
-                                <span style={{ color: resolved[theme] }}>{name}</span>
-                                <span className={styles.previewMode} style={{ color: resolved[theme] }}>
-                                    talks in {theme} mode
+        <div className={`${styles.field} ${styles.pairField}`}>
+            <label htmlFor={`field-${fields.dark.name}`} className='pixel-label'>
+                color
+            </label>
+            <div className={styles.colorPair}>
+                {THEMES.map((theme) => {
+                    const field = fields[theme];
+                    const id = `field-${field.name}`;
+                    const color = valid(value[theme]);
+                    const contrast = color ? minContrast(color, theme) : null;
+                    const suggestion =
+                        color && contrast !== null && contrast < MIN_CONTRAST ? suggestColorFor(color, theme) : null;
+                    const set = (v: string) => onChange(field, v);
+                    return (
+                        <Fragment key={theme}>
+                            <span className={`${styles.colorBox} ${styles[`${theme}Box`]}`}>
+                                <label htmlFor={id} className={styles.colorBoxLabel}>
+                                    {theme} mode
+                                </label>
+                                <span className={styles.colorRow}>
+                                    <input
+                                        type='color'
+                                        aria-label={`${field.label} picker`}
+                                        value={valid(value[theme]) ?? resolved[theme]}
+                                        onChange={(e) => set(e.target.value)}
+                                        style={{ background: BACKGROUNDS[theme][1] }}
+                                    />
+                                    <input
+                                        id={id}
+                                        type='text'
+                                        value={value[theme]}
+                                        onChange={(e) => set(tidyHex(e.target.value))}
+                                        // leaving a #rgb shorthand writes it out in full
+                                        onBlur={() => color && color !== value[theme] && set(color)}
+                                        placeholder={resolved[theme]}
+                                        pattern='#([0-9a-fA-F]{3}){1,2}'
+                                    />
                                 </span>
                             </span>
-                        </div>
-                        <div className={`${styles.slot} ${styles.row}`}>
-                            {contrast !== null && contrast < MIN_CONTRAST && (
-                                <span className={styles.warning}>
-                                    hard to read ({contrast.toFixed(1)}:1 &lt; {MIN_CONTRAST}:1)
-                                </span>
-                            )}
-                            {value === '' ? (
-                                <span className={styles.help}>
-                                    auto, {otherSet ? `from the ${other}-mode color` : 'from the name'}
-                                </span>
-                            ) : (
-                                <button type='button' className={styles.miniButton} onClick={() => onChange(field.name, '')}>
-                                    use auto
-                                </button>
-                            )}
-                        </div>
-                        <div className={styles.slot}>
-                        </div>
-                        <div className={styles.slot}>
-                            <SimilarColors theme={theme} color={resolved[theme]} cast={cast} />
+                            {/* warning and similar colors each get a row shared by both
+                                columns, so they line up whichever side has one */}
+                            <span className={`${styles.colorNotes} ${styles[`${theme}Warning`]}`}>
+                                {suggestion !== null && contrast !== null && (
+                                    <>
+                                        <span className={styles.warning}>
+                                            hard to read in {theme} mode ({contrast.toFixed(1)}:1; text needs {MIN_CONTRAST}:1)
+                                        </span>
+                                        <button type='button' className={styles.miniButton} onClick={() => set(suggestion)}>
+                                            <span className={styles.miniSwatch} style={{ background: suggestion }} aria-hidden />
+                                            use {suggestion}
+                                        </button>
+                                    </>
+                                )}
+                            </span>
+                            <span className={`${styles.colorNotes} ${styles[`${theme}Similar`]}`}>
+                                <SimilarColors theme={theme} color={resolved[theme]} cast={cast} />
+                            </span>
+                        </Fragment>
+                    );
+                })}
+                <span className={styles.lock} data-linked={linked || undefined}>
+                    <span className={styles.connector} aria-hidden />
+                    <button
+                        type='button'
+                        className={styles.lockButton}
+                        aria-pressed={linked}
+                        aria-label='Lock the dark-mode and light-mode colors together'
+                        onClick={onToggleLinked}
+                        title={
+                            linked
+                                ? 'Locked: editing either color sets the other to match. Click to edit them separately.'
+                                : 'Unlocked: each color is edited on its own. Click to lock them together.'
+                        }
+                    >
+                        <LockIcon locked={linked} />
+                    </button>
+                    <span className={styles.connector} aria-hidden />
+                </span>
+            </div>
+
+            <div className={styles.dialoguePreview} aria-label='How this character looks in a transcript'>
+                {THEMES.map((mode) => (
+                    <div
+                        key={mode}
+                        className={styles.previewFrame}
+                        style={{ ...THEME_TOKENS[mode], '--char': resolved[mode] } as React.CSSProperties}
+                    >
+                        <span className={styles.previewMode}>{mode} mode</span>
+                        <div className={transcript.block}>
+                            <PixelAvatar src={values.image || null} name={name} color={resolved[mode]} size={40} />
+                            <div className={transcript.blockBody}>
+                                <div className={transcript.blockHeader}>
+                                    <span className={transcript.speaker}>{name}</span>
+                                </div>
+                                <div className={transcript.plain}>Did anyone else hear that?</div>
+                                <div className={transcript.action}>{name} glances down the corridor.</div>
+                            </div>
                         </div>
                     </div>
-                );
-            })}
+                ))}
+            </div>
         </div>
+    );
+}
+
+/** A typed or pasted hex as the field stores it: trimmed, with its `#` (so
+ *  `bb063d` from another tool counts as a color). Anything else is left as
+ *  typed, for the pattern check to flag. */
+function tidyHex(raw: string): string {
+    const v = raw.trim();
+    return /^([0-9a-fA-F]{3}){1,2}$/.test(v) ? `#${v}` : v;
+}
+
+/** A pixel padlock, shackle closed or lifted. */
+function LockIcon({ locked }: { locked: boolean }) {
+    return (
+        <svg className={styles.lockIcon} viewBox='0 0 8 10' aria-hidden shapeRendering='crispEdges'>
+            <rect x='2' y='0' width='4' height='1' />
+            <rect x='1' y='1' width='1' height={locked ? 4 : 2} />
+            <rect x='6' y='1' width='1' height='4' />
+            <path fillRule='evenodd' d='M0 5h8v5H0z M3 7h2v2H3z' />
+        </svg>
     );
 }
