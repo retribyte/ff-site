@@ -187,7 +187,12 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
                 <div className={styles.blockBody}>
                     <div className={styles.blockHeader}>
                         {characterId !== null ? (
-                            <Link href={`/characters/${character?.slug ?? characterId}`} className={styles.speaker}>
+                            // No prefetch: hundreds of blocks, a handful of characters
+                            <Link
+                                href={`/characters/${character?.slug ?? characterId}`}
+                                prefetch={false}
+                                className={styles.speaker}
+                            >
                                 {speaker}
                             </Link>
                         ) : (
