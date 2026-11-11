@@ -291,6 +291,7 @@ export default function DocxStoryForm({
                         <label className={styles.field}>
                             <span className='pixel-label'>published</span>
                             <input id='docx-published' type='date' value={published} onChange={(e) => setPublished(e.target.value)} disabled={locked} />
+                            <span className='pixel-label'>blank keeps a revised story&rsquo;s date</span>
                         </label>
                         <label className={`${styles.field} ${styles.fieldWide}`}>
                             <span className='pixel-label'>authors</span>
