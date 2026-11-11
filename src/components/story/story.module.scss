@@ -325,6 +325,19 @@ $head-gap: 0.25rem;
     font-size: 0.8rem;
 }
 
+// An import preview sits in a scrolling frame with no margins to spill into,
+// and has no action rail: the heads take a column of the text width (as on
+// small screens) and the right gutter goes
+.preview .line {
+    margin-left: -$line-pad;
+    margin-right: -$line-pad;
+    padding-right: $line-pad;
+
+    &[data-target]::before {
+        right: $line-pad;
+    }
+}
+
 @media (max-width: 860px) {
     // No margin room on small screens: the rail takes a narrow column of the
     // text width instead, so the anchor never covers words

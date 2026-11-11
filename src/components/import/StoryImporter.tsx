@@ -10,6 +10,7 @@ import { formatDateOnly } from '@/lib/dates';
 import { imageSrc } from '@/lib/images';
 import NpcVoiceNamer, { npcFragments, type AssignedVoice } from './NpcVoiceNamer';
 import StoryPreview, { type PreviewChapter, type PreviewLine } from './StoryPreview';
+import { markRange, type MarkVoice } from './markDialogue';
 import type { PersonaInfo } from '@/lib/stories';
 import type { SpeakerInfo } from '@/lib/transcript';
 import type { Persona } from '@/lib/types';
@@ -516,9 +517,10 @@ export default function StoryImporter() {
             chapter_no: chapter.chapter_no,
             title: chapter.title ?? undefined,
             lines: chapter.lines
-                .filter((line) => line.type !== 'IMAGE' || postFor(line) !== undefined)
-                .map((line) => {
-                    const out: PreviewLine = { type: line.type, text: line.text };
+                .map((line, source) => ({ line, source }))
+                .filter(({ line }) => line.type !== 'IMAGE' || postFor(line) !== undefined)
+                .map(({ line, source }) => {
+                    const out: PreviewLine = { type: line.type, text: line.text, source };
                     if (line.type === 'IMAGE') {
                         out.booruId = postFor(line);
                         return out;
@@ -539,6 +541,33 @@ export default function StoryImporter() {
                 }),
         }));
     }, [payload, charMap, docxPostIds, personas]);
+
+    // What goes up: the resolved chapters without the preview's bookkeeping
+    const uploadChapters = () =>
+        resolvedChapters.map((c) => ({
+            ...c,
+            lines: c.lines.map((line) => {
+                const out = { ...line };
+                delete out.source;
+                return out;
+            }),
+        }));
+
+    // Words selected in the preview made a quote (or narration again), in the
+    // draft itself, so the speakers list, the NPC namer and the upload all see it
+    const markDialogue = (chapterIndex: number, lineIndex: number, start: number, end: number, voice: MarkVoice) => {
+        const source = resolvedChapters[chapterIndex]?.lines[lineIndex]?.source;
+        if (!payload || source === undefined) return;
+        const next: ImportPayload = structuredClone(payload);
+        const line = next.chapters[chapterIndex].lines[source];
+        if (line.type !== 'NARRATION') return;
+        const segments = markRange(line, start, end, voice);
+        if (segments) line.segments = segments;
+        else delete line.segments;
+        carriedPayload.current = next; // a revision's voices were carried already; an edit doesn't redo it
+        setPayload(next);
+    };
+    const markNames = useMemo(() => [...new Set([...speakerNames, ...npcNames])].sort(), [speakerNames, npcNames]);
 
     // Name/color/portrait by id, for the preview's dialogue colors and legend
     const previewCharacters = useMemo(
@@ -568,7 +597,7 @@ export default function StoryImporter() {
     const upload = async () => {
         if (!payload) return;
         setPhase({ step: 'uploading' });
-        const chapters = resolvedChapters;
+        const chapters = uploadChapters();
         try {
             const created = await ff<{ slug: string; title: string }>('/stories/import', {
                 method: 'POST',
@@ -609,7 +638,7 @@ export default function StoryImporter() {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 // publishedDate only when the draft names one: absent keeps the story's own
-                body: JSON.stringify({ chapters: resolvedChapters, importMeta, publishedDate: payload.story.publishedDate ?? undefined }),
+                body: JSON.stringify({ chapters: uploadChapters(), importMeta, publishedDate: payload.story.publishedDate ?? undefined }),
             });
             setPhase({ step: 'success', count: lineTotal, href: `/stories/${slug}`, replaced: true });
         } catch (error) {
@@ -876,7 +905,8 @@ export default function StoryImporter() {
                     <h3 className='pixel-label'>preview</h3>
                     <p className={styles.hint}>
                         How it will read on the shelf. Check that each color became the right speaker; change a pick
-                        above and the preview follows.
+                        above and the preview follows. Select words in a paragraph to make them a quote, or to turn a
+                        quote back into narration (converting the doc again starts over).
                     </p>
                     <StoryPreview
                         slug={payload.story.slug}
@@ -888,6 +918,9 @@ export default function StoryImporter() {
                         characters={previewCharacters}
                         personas={previewPersonas}
                         images={previewImages}
+                        onMark={phase.step === 'success' || busy ? undefined : markDialogue}
+                        voiceOptions={options}
+                        names={markNames}
                     />
                     {badPosts.length > 0 && (
                         <p className={styles.error}>

@@ -560,7 +560,7 @@ export default function StoryReader({
 
     return (
         <PreviewContext.Provider value={preview}>
-            <div>
+            <div className={preview ? styles.preview : undefined}>
                 <ScanBar scan={scan} />
                 {voices.length > 0 && (
                     <ul className={styles.legend} aria-label='Voices in this chapter'>
