@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
+import { getSessionUser } from '@/lib/auth';
 import type { Character, Season, SeasonCast } from '@/lib/types';
 import { findSeasonBySlug, seasonColors, seasonDisplayName } from '@/lib/seasons';
 import { storyGroupId } from '@/lib/stories';
@@ -49,10 +50,13 @@ export default async function SeasonPage({ params }: Props) {
 
     // No cheap "who speaks in this season" data at this level (that'd mean
     // fetching every episode's messages) — offer every character instead,
-    // same fallback the plan calls for. A failed fetch just empties the
-    // picker rather than taking down the whole season page.
+    // same fallback the plan calls for. Only signed-in readers see the
+    // persona panel, so only they need the list, and only names (lite). A
+    // failed fetch just empties the picker rather than taking down the page.
     const [characters, cast] = await Promise.all([
-        api<Character[]>('/characters').catch(() => []),
+        getSessionUser().then((user) =>
+            user ? api<Pick<Character, 'id' | 'name'>[]>('/characters?lite=true').catch(() => []) : []
+        ),
         // A failed fetch just leaves out the roster
         api<SeasonCast>(`/seasons/${encodeURIComponent(season.slug)}/cast`).catch(() => null),
     ]);
