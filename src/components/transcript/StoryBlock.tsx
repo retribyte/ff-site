@@ -9,7 +9,7 @@ import { resolvePersonaIdentity } from '@/lib/personaIdentity';
 import { parseEmbed } from '@/lib/search';
 import type { SlimMessage, TranscriptData } from '@/lib/transcript';
 import AttributionControl from './AttributionControl';
-import CommentaryThread from './CommentaryThread';
+import CommentaryThread, { notesUrl } from './CommentaryThread';
 import PixelAvatar from './PixelAvatar';
 import { Highlighted } from './ScanBar';
 import type { Block } from './TranscriptReader';
@@ -223,8 +223,7 @@ function StoryBlock({ block, episodeTitle, characters, players, personas, target
                     />
                 )}
                 <CommentaryThread
-                    episodeTitle={episodeTitle}
-                    messageNo={block.key}
+                    notesUrl={notesUrl({ episodeTitle, messageNo: block.key })}
                     initial={block.messages[0].commentaries}
                 />
             </div>

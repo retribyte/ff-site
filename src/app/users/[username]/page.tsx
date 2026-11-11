@@ -13,13 +13,15 @@ import RichText from '@/components/RichText';
 import { imageSrc } from '@/lib/images';
 import NoteList, { messageExcerpt, type NoteGroup } from '@/components/commentary/NoteList';
 import { lineUrl } from '@/lib/seasons';
+import { storyQuoteUrl } from '@/lib/stories';
 import type { MessageType } from '@/lib/types';
 
-// GET /users/:id/commentaries: a note with its line and episode
+// GET /users/:id/commentaries: a note with its line, either a transcript
+// message (with its episode) or a story line (with its chapter and story)
 interface UserNote {
     id: number;
     content: string;
-    messageNo: number;
+    messageNo: number | null;
     message: {
         type: MessageType;
         text: string;
@@ -27,7 +29,14 @@ interface UserNote {
         persona: { name: string | null } | null;
         player: { username: string } | null;
         episode: { title: string; slug: string | null; episode_no: number; seasonTitle: string };
-    };
+    } | null;
+    storyLine: {
+        line_no: number;
+        text: string;
+        character: { name: string } | null;
+        persona: { name: string | null } | null;
+        chapter: { chapter_no: number; title: string | null; story: { slug: string; title: string } };
+    } | null;
 }
 
 interface Props {
@@ -203,22 +212,38 @@ export default async function UserPage({ params }: Props) {
 function noteGroups(notes: UserNote[]): NoteGroup[] {
     const groups = new Map<string, NoteGroup>();
     for (const n of notes) {
-        const ep = n.message.episode;
-        const key = `${ep.title}#${n.messageNo}`;
-        let g = groups.get(key);
+        const group = n.message ? messageGroup(n.message, n.messageNo!) : n.storyLine ? storyLineGroup(n.storyLine) : null;
+        if (!group) continue;
+        let g = groups.get(group.key);
         if (!g) {
-            const persona = n.message.persona?.name;
-            g = {
-                key,
-                href: lineUrl({ title: ep.title, episode_no: ep.episode_no, slug: ep.slug ?? undefined, seasonTitle: ep.seasonTitle }, n.messageNo),
-                where: `${ep.seasonTitle} ${ep.title}, line ${n.messageNo}`,
-                speaker: persona || n.message.character?.name || n.message.player?.username || null,
-                excerpt: messageExcerpt(n.message.type, n.message.text),
-                notes: [],
-            };
-            groups.set(key, g);
+            g = group;
+            groups.set(g.key, g);
         }
         g.notes.push({ id: n.id, author: '', html: n.content });
     }
     return [...groups.values()];
+}
+
+function messageGroup(m: NonNullable<UserNote['message']>, messageNo: number): NoteGroup {
+    const ep = m.episode;
+    return {
+        key: `e:${ep.title}#${messageNo}`,
+        href: lineUrl({ title: ep.title, episode_no: ep.episode_no, slug: ep.slug ?? undefined, seasonTitle: ep.seasonTitle }, messageNo),
+        where: `${ep.seasonTitle} ${ep.title}, line ${messageNo}`,
+        speaker: m.persona?.name || m.character?.name || m.player?.username || null,
+        excerpt: messageExcerpt(m.type, m.text),
+        notes: [],
+    };
+}
+
+function storyLineGroup(l: NonNullable<UserNote['storyLine']>): NoteGroup {
+    const { story, chapter_no } = l.chapter;
+    return {
+        key: `s:${story.slug}#${chapter_no}#${l.line_no}`,
+        href: storyQuoteUrl({ storySlug: story.slug, chapterNo: chapter_no, line_no: l.line_no }),
+        where: `${story.title}, ${l.chapter.title ? `${l.chapter.title}, ` : `chapter ${chapter_no}, `}line ${l.line_no}`,
+        speaker: l.persona?.name || l.character?.name || null,
+        excerpt: messageExcerpt('QUOTE', l.text),
+        notes: [],
+    };
 }

@@ -9,9 +9,19 @@ import RichText from '@/components/RichText';
 import { decodeEntities } from '@/lib/html';
 
 interface Props {
-    episodeTitle: string;
-    messageNo: number;
+    /** The line's notes collection through the proxy, where a new note is POSTed:
+     *  a transcript message's or a story line's (notesUrl builds both) */
+    notesUrl: string;
     initial?: SlimCommentary[];
+}
+
+/** Where a line's notes are added: a transcript message, or a story line. */
+export function notesUrl(
+    line: { episodeTitle: string; messageNo: number } | { storySlug: string; chapterNo: number; lineNo: number }
+): string {
+    return 'episodeTitle' in line
+        ? `/site/ff/episodes/${encodeURIComponent(line.episodeTitle)}/messages/${line.messageNo}/commentaries`
+        : `/site/ff/stories/${encodeURIComponent(line.storySlug)}/chapters/${line.chapterNo}/lines/${line.lineNo}/commentaries`;
 }
 
 interface Envelope {
@@ -20,9 +30,9 @@ interface Envelope {
     data?: { id: number; content: string; creatorId: number; creator?: { username: string } };
 }
 
-// Margin notes on a transcript line. Reads come with the transcript;
+// Margin notes on a transcript or story line. Reads come with the lines;
 // after that the thread owns its own state via the authenticated proxy.
-export default function CommentaryThread({ episodeTitle, messageNo, initial }: Props) {
+export default function CommentaryThread({ notesUrl: collectionUrl, initial }: Props) {
     const { user } = useSession();
     const [notes, setNotes] = useState<SlimCommentary[]>(initial ?? []);
     const [open, setOpen] = useState(false);
@@ -34,8 +44,6 @@ export default function CommentaryThread({ episodeTitle, messageNo, initial }: P
 
     // Nothing to show: no notes, and no one logged in to add one
     if (notes.length === 0 && !user) return null;
-
-    const collectionUrl = `/site/ff/episodes/${encodeURIComponent(episodeTitle)}/messages/${messageNo}/commentaries`;
 
     const add = async () => {
         if (!draft.trim()) return;

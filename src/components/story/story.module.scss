@@ -18,8 +18,13 @@
 // unclickable, so the line pads out to cover them and cancels it with a
 // negative margin: the text doesn't move.
 $line-pad: 0.4rem; // covers the highlight outline (1px + 4px offset)
-$anchor-gutter: 2.6rem; // the anchor rail's width plus its gap, on wide screens
-$head-gutter: 2.6rem; // the speaker-heads rail on the left, mirroring the anchor rail
+$rail-button: 1.5rem; // the action rail's buttons (link, voices, notes)
+$rail-gap: 0.3rem;
+$rail-inset: 0.5rem; // between the text and the rail
+// The action rail's margin on wide screens: room for its three buttons side
+// by side, as on a one-line line, where each column holds one
+$anchor-gutter: $rail-inset + 3 * $rail-button + 2 * $rail-gap;
+$head-gutter: 2.6rem; // the speaker-heads rail on the left
 $head-size: 2rem; // a 32px PixelAvatar
 $head-gap: 0.25rem;
 
@@ -31,8 +36,10 @@ $head-gap: 0.25rem;
     content-visibility: auto;
     contain-intrinsic-size: auto 4rem;
     // --heads is the number of stacked speaker heads: a short line grows to
-    // hold them all, since the rail is clipped by the line's paint containment
-    min-height: calc(var(--heads, 0) * #{$head-size + $head-gap} + #{$line-pad * 2});
+    // hold them all, since the rail is clipped by the line's paint containment.
+    // The action rail never makes it grow (it wraps instead), but a line is
+    // always at least one rail button tall
+    min-height: calc(max(var(--heads, 0) * #{$head-size + $head-gap}, #{$rail-button}) + #{$line-pad * 2});
 
     p {
         margin: 0;
@@ -58,10 +65,47 @@ $head-gap: 0.25rem;
         outline-offset: 4px;
     }
 
-    &:hover .anchor,
-    &:focus-within .anchor {
-        opacity: 1;
+    // Hovered, focused, or with a panel open: the whole rail shows, spilling
+    // into the empty margin below a short line, so the line drops its paint
+    // containment (which would clip it) and stacks over its neighbors
+    &:hover,
+    &:focus-within,
+    &:has(button[aria-expanded='true']) {
+        content-visibility: visible;
+        z-index: 3;
+
+        .anchor,
+        .voiceButton,
+        button[data-empty] {
+            opacity: 1;
+        }
     }
+
+    // Unnamed NPC quotes carry a "who's speaking?" marker for whoever can name them
+    &[data-voices] .npcUnnamed {
+        text-decoration: underline dotted var(--accent-soft);
+        text-underline-offset: 0.2em;
+    }
+}
+
+// The line's action rail in the right margin, as beside a transcript block:
+// link, voices (🎭, for whoever may change them), margin notes. It keeps to
+// the line's height: buttons stack down from the top, and when the line is
+// too short for them all they wrap into columns to the right, the last
+// (partly filled) column sitting at the bottom, e.g. two on the left and the
+// notes at the bottom right. A tall line just shows one column at its top.
+.lineActions {
+    --char: var(--story); // the notes chip's color
+    position: absolute;
+    top: $line-pad;
+    left: calc(100% - #{$anchor-gutter - $rail-inset});
+    max-height: calc(100% - #{$line-pad * 2});
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-content: flex-start;
+    gap: $rail-gap;
 }
 
 // Speaker heads: a rail in the left margin, opposite the anchor button's
@@ -250,12 +294,11 @@ $head-gap: 0.25rem;
     padding: 0.6rem 0;
 }
 
-.anchor {
-    position: absolute;
-    top: $line-pad;
-    right: calc($anchor-gutter - 2.1rem);
-    width: 1.5rem;
-    height: 1.5rem;
+.anchor,
+.voiceButton {
+    width: $rail-button;
+    height: $rail-button;
+    padding: 0;
     opacity: 0;
     font-family: var(--font-pixel);
     font-size: 0.75rem;
@@ -271,9 +314,15 @@ $head-gap: 0.25rem;
         background: color-mix(in srgb, var(--story) 15%, var(--surface-2));
     }
 
-    &:focus-visible {
+    &:focus-visible,
+    &[aria-expanded='true'] {
         opacity: 1;
     }
+}
+
+.voiceButton {
+    font-family: inherit;
+    font-size: 0.8rem;
 }
 
 @media (max-width: 860px) {
@@ -286,8 +335,23 @@ $head-gap: 0.25rem;
         margin-left: -$line-pad;
     }
 
-    .anchor {
+    // no room to wrap sideways and no hover on touch: one column, faintly
+    // visible, and the line holds it all
+    .line {
+        min-height: calc(max(var(--heads, 0) * #{$head-size + $head-gap}, var(--rail-all, 1) * #{$rail-button + $rail-gap} - #{$rail-gap}) + #{$line-pad * 2});
+    }
+
+    .lineActions {
+        left: auto;
         right: $line-pad;
+        max-height: none;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+
+    .anchor,
+    .voiceButton,
+    .lineActions button[data-empty] {
         opacity: 0.45;
     }
 
@@ -298,7 +362,8 @@ $head-gap: 0.25rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .anchor {
+    .anchor,
+    .voiceButton {
         transition: none;
     }
 }
@@ -307,28 +372,10 @@ $head-gap: 0.25rem;
 // An NPC has no character page, so its quote carries its name as a tooltip
 // (help cursor) instead of a link. Unnamed ones read as ordinary gray
 // dialogue to everyone except the story's authors and admins, who get a
-// dotted "who's speaking?" marker and a click to name it.
+// dotted "who's speaking?" marker (.line[data-voices]) and name it with the
+// line's 🎭 button.
 .npcVoice {
     cursor: help;
-}
-
-.npcEditable {
-    cursor: pointer;
-    border-radius: var(--radius);
-
-    &:hover {
-        background: var(--highlight);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--accent-soft);
-        outline-offset: 1px;
-    }
-
-    &.npcUnnamed {
-        text-decoration: underline dotted var(--accent-soft);
-        text-underline-offset: 0.2em;
-    }
 }
 
 .namePopover {
@@ -386,6 +433,7 @@ $head-gap: 0.25rem;
 
 .namePopoverActions {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
 
     button {
@@ -401,4 +449,11 @@ $head-gap: 0.25rem;
         opacity: 0.6;
         cursor: default;
     }
+}
+
+// A character's quote (VoiceNamePopover): its page, now that clicking the
+// quote opens the popover instead of following the link
+.namePopoverPage {
+    margin-left: auto;
+    font-size: 0.8rem;
 }
