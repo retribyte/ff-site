@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import IndexScan from '@/components/IndexScan';
+import Pager from '@/components/Pager';
 import { seasonColors, seasonOrder } from '@/lib/seasons';
 import { averageWords } from '@/lib/stories';
 import styles from './quoteLog.module.scss';
@@ -25,6 +26,11 @@ export interface LogQuote {
 const NO_SEASON = '';
 const ALL_SOURCES = '';
 const TRANSCRIPTS = '__transcripts';
+
+// Quotes per page, per section. Every quote is already in the browser (the
+// search and filters run over all of them); paging only limits how many are
+// rendered at once, since a main character has thousands.
+const PAGE_SIZE = 100;
 
 /** A set with `value` flipped in or out. */
 function toggled<T>(set: Set<T>, value: T): Set<T> {
@@ -80,6 +86,8 @@ export default function QuoteLog({ name, quotes }: { name: string; quotes: LogQu
     const transcriptQuotes = visible.filter((q) => q.source === 'transcript');
     const storyQuotes = visible.filter((q) => q.source === 'story');
     const narrowed = visible.length < quotes.length;
+    // A new search or filter starts each section back on its first page
+    const filterKey = `${query}|${source}|${[...hiddenSeasons].join(',')}`;
 
     return (
         <div>
@@ -145,20 +153,29 @@ export default function QuoteLog({ name, quotes }: { name: string; quotes: LogQu
                 </p>
             )}
 
-            {transcriptQuotes.length > 0 && (
-                <QuoteSection title='Quotes' quotes={transcriptQuotes} />
+            {transcriptQuotes.length > 0 && <QuoteSection key={`t|${filterKey}`} title='Quotes' quotes={transcriptQuotes} />}
+            {storyQuotes.length > 0 && (
+                <QuoteSection key={`s|${filterKey}`} title='Story appearances' quotes={storyQuotes} />
             )}
-            {storyQuotes.length > 0 && <QuoteSection title='Story appearances' quotes={storyQuotes} />}
         </div>
     );
 }
 
 function QuoteSection({ title, quotes }: { title: string; quotes: LogQuote[] }) {
+    const [page, setPage] = useState(1);
+    const sectionRef = useRef<HTMLElement>(null);
+    const shown = quotes.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+    const goTo = (p: number) => {
+        setPage(p);
+        sectionRef.current?.scrollIntoView({ block: 'start' });
+    };
+
     return (
-        <section className={styles.section}>
+        <section ref={sectionRef} className={styles.section}>
             <h2 className={styles.sectionTitle}>{title}</h2>
-            <ol className={styles.quotes}>
-                {quotes.map((quote) => (
+            <ol className={styles.quotes} start={(page - 1) * PAGE_SIZE + 1}>
+                {shown.map((quote) => (
                     <li key={quote.key} className={styles.quote}>
                         <span className={styles.quoteMark} aria-hidden>
                             “
@@ -174,6 +191,7 @@ function QuoteSection({ title, quotes }: { title: string; quotes: LogQuote[] }) 
                     </li>
                 ))}
             </ol>
+            <Pager page={page} total={quotes.length} limit={PAGE_SIZE} onPage={goTo} />
         </section>
     );
 }

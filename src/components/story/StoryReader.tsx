@@ -43,7 +43,9 @@ function CharacterLink({
             {children}
         </span>
     ) : (
-        <Link href={`/characters/${slug ?? characterId}`} className={className} style={style} title={title}>
+        // No prefetch: a long story has thousands of these, and each one
+        // otherwise builds a prefetch URL and watches the viewport
+        <Link href={`/characters/${slug ?? characterId}`} prefetch={false} className={className} style={style} title={title}>
             {children}
         </Link>
     );

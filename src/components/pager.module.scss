@@ -7,8 +7,16 @@
     gap: 1rem;
     margin-top: 1.5rem;
 
-    a {
+    a,
+    button {
         @include m.pixel-nav-link;
+    }
+
+    button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
     }
 }
 
@@ -25,7 +33,8 @@
     display: flex;
     gap: 0.4rem;
 
-    a {
+    a,
+    button {
         padding: 0.2rem 0.5rem;
         border: 1px solid transparent;
         border-radius: var(--radius);
@@ -40,4 +49,12 @@
     color: var(--text) !important;
     border-color: var(--border-loud) !important;
     background: var(--surface-2);
+}
+
+// The "…" between the first or last page and the pages around the current one
+.gap {
+    font-family: var(--font-pixel);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    padding: 0.2rem 0;
 }

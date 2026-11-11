@@ -63,16 +63,14 @@
     gap: 0.4rem;
     align-items: stretch;
     position: relative;
+    // No content-visibility: tracking which of ~900 rows are on screen cost
+    // more while scrolling than laying them all out once does. isolation keeps
+    // each row its own stacking context, as content-visibility made it.
+    isolation: isolate;
 
-    // Long transcripts stay responsive: offscreen lines skip layout/paint
-    content-visibility: auto;
-    contain-intrinsic-size: auto 8rem;
-
-    // An open commentary/persona panel floats out of the rail, so this line must
-    // drop its paint containment (which would clip the panel) and stack above the
-    // following lines (each its own context via content-visibility).
+    // An open commentary/persona panel floats out of the rail, so this line
+    // stacks above the following lines
     &:has(button[aria-expanded='true']) {
-        content-visibility: visible;
         z-index: 4;
     }
 

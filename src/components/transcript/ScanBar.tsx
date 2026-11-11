@@ -13,24 +13,16 @@ export function scrollToMessage(no: number, smooth: boolean) {
         const rect = target.getBoundingClientRect();
         return rect.top + rect.height / 2 - window.innerHeight / 2;
     };
-    // Inside a skipped (content-visibility: auto) block the message itself
-    // reports a bogus rect, so judge distance by the outermost such block
-    let box: Element = el;
-    for (let a = el.parentElement; a; a = a.parentElement) {
-        if (getComputedStyle(a).contentVisibility === 'auto') box = a;
-    }
-
-    // Nearby: a smooth scroll only crosses blocks that are already rendered
-    if (smooth && !reduced && Math.abs(offCenter(box)) < window.innerHeight * 2) {
+    // Nearby: a smooth scroll; far away, a long animated scroll would only drag
+    if (smooth && !reduced && Math.abs(offCenter(el)) < window.innerHeight * 2) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
     }
 
-    // Far away: off-screen blocks are content-visibility: auto, laid out at a
-    // placeholder height until they render, so one jump lands wherever those
-    // estimates said, and blocks rendering around it keep shifting it for a
-    // few frames after. Re-center until it holds still for several frames;
-    // give up early if the reader starts scrolling on their own.
+    // Far away: jump. Pictures still loading above the line (story images,
+    // avatars) can shift it for a few frames after, so re-center until it
+    // holds still for several frames; give up early if the reader starts
+    // scrolling on their own.
     let frames = 0;
     let stableFrames = 0;
     let cancelled = false;

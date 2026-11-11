@@ -14,6 +14,13 @@ describe('imageSrc', () => {
     it('leaves local paths and data URLs alone', () => {
         expect(imageSrc('/avatars/emmett.png')).toBe('/avatars/emmett.png');
         expect(imageSrc('data:image/png;base64,AA==')).toBe('data:image/png;base64,AA==');
+        expect(imageSrc('avatars/emmett.png')).toBe('avatars/emmett.png');
+        expect(imageSrc('//booru.vortox.space/x.png')).toBe('//booru.vortox.space/x.png');
+    });
+
+    it('leaves other sites alone and matches the booru origin case-insensitively', () => {
+        expect(imageSrc('https://example.com/x.png')).toBe('https://example.com/x.png');
+        expect(imageSrc(BOORU_URL.toUpperCase() + '/x.png')).toMatch(/^\/site\/ff\/booru\/image\?url=/);
     });
 
     it('passes empty values through as null', () => {
