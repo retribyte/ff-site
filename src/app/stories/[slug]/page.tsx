@@ -3,11 +3,12 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { Story } from '@/lib/types';
-import { chapterSlug, countVoices, fetchAllLines, formatWords, slimStoryChapter, storyColors } from '@/lib/stories';
+import { bookmarkChapters, chapterSlug, countVoices, fetchAllLines, formatWords, slimStoryChapter, storyColors } from '@/lib/stories';
 import { recordView } from '@/lib/views';
 import SignalLost from '@/components/SignalLost';
 import StoryReader from '@/components/story/StoryReader';
 import ChoiceJump from '@/components/story/ChoiceJump';
+import BookmarkJump from '@/components/story/BookmarkJump';
 import styles from './story-page.module.scss';
 import DeleteStoryButton from '@/components/story/DeleteStoryButton';
 import StoryShelfControl from '@/components/story/StoryShelfControl';
@@ -74,11 +75,14 @@ export default async function StoryPage({ params }: Props) {
                 <header className={styles.header}>
                     <h1 className={styles.title}>{story.title}</h1>
                     <StoryByline authors={story.authors} />
-                    <p className='pixel-label'>
-                        {formatWords(story.wordCount ?? 0)}
-                        {choices.length > 0 && <> ⭑ {choices.length} choices</>}
-                        {voices > 0 && <> ⭑ {voices} voices</>}
-                    </p>
+                    <div className={styles.metaRow}>
+                        <p className='pixel-label'>
+                            {formatWords(story.wordCount ?? 0)}
+                            {choices.length > 0 && <> ⭑ {choices.length} choices</>}
+                            {voices > 0 && <> ⭑ {voices} voices</>}
+                        </p>
+                        <BookmarkJump slug={slug} chapters={bookmarkChapters(slug, chapters)} here={chapters[0].chapter_no} />
+                    </div>
                     <StoryPublishedDate slug={story.slug} publishedDate={story.publishedDate} authorIds={(story.authors ?? []).map((a) => a.id)} />
                     {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
                     <div className={styles.adminActions}>
@@ -107,9 +111,12 @@ export default async function StoryPage({ params }: Props) {
             <header className={styles.header}>
                 <h1 className={styles.title}>{story.title}</h1>
                 <StoryByline authors={story.authors} />
-                <p className='pixel-label'>
-                    {chapters.length} chapters ⭑ {formatWords(story.wordCount ?? 0)}
-                </p>
+                <div className={styles.metaRow}>
+                    <p className='pixel-label'>
+                        {chapters.length} chapters ⭑ {formatWords(story.wordCount ?? 0)}
+                    </p>
+                    <BookmarkJump slug={slug} chapters={bookmarkChapters(slug, chapters)} />
+                </div>
                 <StoryPublishedDate slug={story.slug} publishedDate={story.publishedDate} authorIds={(story.authors ?? []).map((a) => a.id)} />
                 {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
                 <div className={styles.adminActions}>

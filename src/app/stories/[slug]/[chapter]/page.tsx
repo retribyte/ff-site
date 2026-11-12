@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import type { Story } from '@/lib/types';
 import {
+    bookmarkChapters,
     formatWords,
     chapterNoFromSlug,
     chapterSlug,
@@ -15,6 +16,7 @@ import { recordView } from '@/lib/views';
 import SignalLost from '@/components/SignalLost';
 import StoryReader from '@/components/story/StoryReader';
 import ChoiceJump from '@/components/story/ChoiceJump';
+import BookmarkJump from '@/components/story/BookmarkJump';
 import StoryByline from '@/components/story/StoryByline';
 import styles from '../story-page.module.scss';
 
@@ -94,9 +96,12 @@ export default async function StoryChapterPage({ params, searchParams }: Props) 
             <header className={styles.header}>
                 <h1 className={styles.chapterTitle}>{chapter.title ?? `Chapter ${chapter.chapter_no}`}</h1>
                 <StoryByline authors={story.authors} />
-                <p className='pixel-label'>
-                    chapter {chapter.chapter_no} of {chapters.length} ⭑ {formatWords(chapter.wordCount ?? 0)}
-                </p>
+                <div className={styles.metaRow}>
+                    <p className='pixel-label'>
+                        chapter {chapter.chapter_no} of {chapters.length} ⭑ {formatWords(chapter.wordCount ?? 0)}
+                    </p>
+                    <BookmarkJump slug={slug} chapters={bookmarkChapters(slug, chapters)} here={chapter.chapter_no} />
+                </div>
             </header>
 
             <StoryReader data={data} authorIds={(story.authors ?? []).map((a) => a.id)} />

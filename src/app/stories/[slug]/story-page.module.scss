@@ -22,6 +22,37 @@
     text-align: center;
 }
 
+// The header's word-count label, centered, with the bookmark button (when the
+// reader has one) to its right; on narrow screens the button goes below
+.metaRow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.75rem 0;
+
+    > p {
+        grid-column: 2;
+        margin: 0;
+    }
+
+    > a {
+        grid-column: 3;
+        justify-self: end;
+    }
+
+    @media (max-width: 760px) {
+        grid-template-columns: auto;
+        justify-content: center;
+
+        > p,
+        > a {
+            grid-column: 1;
+            justify-self: center;
+        }
+    }
+}
+
 .title {
     margin: 0.2rem 0 0.5rem;
     @include m.glow-heading(var(--story));

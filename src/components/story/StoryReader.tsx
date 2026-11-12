@@ -14,6 +14,7 @@ import PixelAvatar from '@/components/transcript/PixelAvatar';
 import DeleteStoryButton from './DeleteStoryButton';
 import VoiceNamePopover, { choiceKey, type VoiceChoice } from './VoiceNamePopover';
 import CommentaryThread, { notesUrl } from '@/components/transcript/CommentaryThread';
+import { bookmarkSpot, toggleBookmark, useStoryBookmark } from '@/lib/storyBookmarks';
 import styles from './story.module.scss';
 
 // An import preview (`/import`, before publishing): character names don't
@@ -204,6 +205,8 @@ const Line = memo(function Line({
     notesUrl,
     onVoice,
     voiceOpen,
+    onBookmark,
+    bookmarked,
 }: {
     line: SlimLine;
     lookup: Lookup;
@@ -217,15 +220,20 @@ const Line = memo(function Line({
     onVoice?: VoiceHandler;
     /** that popover is open for this line */
     voiceOpen: boolean;
+    /** sets, moves or clears the reader's bookmark at this line */
+    onBookmark: (lineNo: number) => void;
+    /** this line holds the reader's bookmark */
+    bookmarked: boolean;
 }) {
     const [copied, setCopied] = useState(false);
     const preview = useContext(PreviewContext);
     const { user } = useSession();
     // The rail's buttons: link, voices (if the viewer may change them), notes
-    // (when it has some, or the viewer can add one). On wide screens they wrap
-    // within the line's height; on small ones the line grows to hold them all
+    // (when it has some, or the viewer can add one), bookmark. On wide screens
+    // they wrap within the line's height; on small ones the line grows to hold
+    // them all
     const notesShown = !!notesUrl && (line.notes.length > 0 || !!user);
-    const railAll = 1 + (onVoice ? 1 : 0) + (notesShown ? 1 : 0);
+    const railAll = 2 + (onVoice ? 1 : 0) + (notesShown ? 1 : 0);
 
     const copyAnchor = () => {
         const url = `${window.location.origin}${window.location.pathname}?line=${line.no}`;
@@ -364,6 +372,7 @@ const Line = memo(function Line({
             className={styles.line}
             data-target={highlighted || undefined}
             data-voices={onVoice ? true : undefined}
+            data-bookmark={bookmarked || undefined}
             style={{ '--heads': heads.length, '--rail-all': railAll } as React.CSSProperties}
         >
             {heads.length > 0 && (
@@ -393,7 +402,7 @@ const Line = memo(function Line({
             {content}
             {!preview && (
                 // The line's action rail, as beside a transcript block: link,
-                // voices (who may change them), margin notes
+                // voices (who may change them), margin notes, bookmark
                 <div className={styles.lineActions}>
                     <button
                         type='button'
@@ -417,6 +426,16 @@ const Line = memo(function Line({
                         </button>
                     )}
                     {notesUrl && <CommentaryThread notesUrl={notesUrl} initial={line.notes} />}
+                    <button
+                        type='button'
+                        className={styles.bookmarkButton}
+                        onClick={() => onBookmark(line.no)}
+                        aria-pressed={bookmarked}
+                        aria-label={bookmarked ? `Remove the bookmark at line ${line.no}` : `Bookmark line ${line.no}`}
+                        title={bookmarked ? 'Remove your bookmark' : 'Bookmark this line'}
+                    >
+                        🔖
+                    </button>
                 </div>
             )}
         </div>
@@ -546,6 +565,15 @@ export default function StoryReader({
             return { key: chapterKey, lines: next, personas };
         });
 
+    // The reader's bookmark (this browser only), when it's in this chapter
+    const bookmark = useStoryBookmark(data.storySlug);
+    const bookmarkSpotHere = bookmark !== null ? bookmarkSpot(bookmark) : null;
+    const bookmarkedNo = bookmarkSpotHere?.chapter === data.chapterNo ? bookmarkSpotHere.line : null;
+    const onBookmark = useCallback(
+        (lineNo: number) => toggleBookmark(data.storySlug, data.chapterNo, lineNo),
+        [data.storySlug, data.chapterNo]
+    );
+
     const lineParam = searchParams.get('line');
     const targetNo = lineParam ? parseInt(lineParam) : null;
     useEffect(() => {
@@ -602,6 +630,8 @@ export default function StoryReader({
                             notesUrl={preview ? undefined : notesUrl({ storySlug: data.storySlug, chapterNo: data.chapterNo, lineNo: line.no })}
                             onVoice={voiceLines.has(line.no) ? openVoice : undefined}
                             voiceOpen={editing?.lineNo === line.no}
+                            onBookmark={onBookmark}
+                            bookmarked={line.no === bookmarkedNo}
                         />
                     ))}
                 </div>

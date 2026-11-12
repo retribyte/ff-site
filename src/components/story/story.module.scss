@@ -23,12 +23,17 @@
 // made it: the deep-link highlight (z-index -1) sits behind the line's text,
 // not behind the page.
 $line-pad: 0.4rem; // covers the highlight outline (1px + 4px offset)
-$rail-button: 1.5rem; // the action rail's buttons (link, voices, notes)
+$rail-button: 1.5rem; // the action rail's buttons (link, voices, notes, bookmark)
 $rail-gap: 0.3rem;
 $rail-inset: 0.5rem; // between the text and the rail
-// The action rail's margin on wide screens: room for its three buttons side
+// The action rail's margin on wide screens: room for its four buttons side
 // by side, as on a one-line line, where each column holds one
-$anchor-gutter: $rail-inset + 3 * $rail-button + 2 * $rail-gap;
+$anchor-gutter: $rail-inset + 4 * $rail-button + 3 * $rail-gap;
+// Narrower than this, the rail wouldn't fit beside the centered text column
+// (half the column plus the gutter, each side of the middle), so it moves
+// into the text width
+$rail-breakpoint: 940px;
+$ribbon-height: 0.3rem;
 $head-gutter: 2.6rem; // the speaker-heads rail on the left
 $head-size: 2rem; // a 32px PixelAvatar
 $head-gap: 0.25rem;
@@ -69,6 +74,21 @@ $head-gap: 0.25rem;
         outline-offset: 4px;
     }
 
+    // The reader's bookmark: a ribbon across the top of the text, in the gap
+    // above the line, notched at both ends. It spans the text column alone,
+    // so it never meets either rail, on any screen
+    &[data-bookmark]::after {
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        top: calc(#{$line-pad} - 0.5rem - #{$ribbon-height * 0.5});
+        left: $head-gutter;
+        right: $anchor-gutter;
+        height: $ribbon-height;
+        background: linear-gradient(90deg, var(--story), var(--story-2, var(--story)));
+        clip-path: polygon(0 0, 100% 0, calc(100% - #{$ribbon-height}) 50%, 100% 100%, 0 100%, $ribbon-height 50%);
+    }
+
     // Hovered, focused, or with a panel open: the whole rail shows, spilling
     // into the empty margin below a short line, so the line stacks over its
     // neighbors
@@ -79,6 +99,7 @@ $head-gap: 0.25rem;
 
         .anchor,
         .voiceButton,
+        .bookmarkButton,
         button[data-empty] {
             opacity: 1;
         }
@@ -298,7 +319,8 @@ $head-gap: 0.25rem;
 }
 
 .anchor,
-.voiceButton {
+.voiceButton,
+.bookmarkButton {
     width: $rail-button;
     height: $rail-button;
     padding: 0;
@@ -323,7 +345,8 @@ $head-gap: 0.25rem;
     }
 }
 
-.voiceButton {
+.voiceButton,
+.bookmarkButton {
     font-family: inherit;
     font-size: 0.8rem;
 }
@@ -341,7 +364,14 @@ $head-gap: 0.25rem;
     }
 }
 
-@media (max-width: 860px) {
+// The bookmarked line's button stays lit, in the story's color
+.bookmarkButton[aria-pressed='true'] {
+    opacity: 1;
+    background: color-mix(in srgb, var(--story) 30%, var(--surface-2));
+    border-color: var(--story);
+}
+
+@media (max-width: $rail-breakpoint) {
     // No margin room on small screens: the rail takes a narrow column of the
     // text width instead, so the anchor never covers words
     .line {
@@ -367,6 +397,7 @@ $head-gap: 0.25rem;
 
     .anchor,
     .voiceButton,
+    .bookmarkButton,
     .lineActions button[data-empty] {
         opacity: 0.45;
     }
@@ -375,11 +406,16 @@ $head-gap: 0.25rem;
         right: 2.1rem;
         outline-offset: 2px;
     }
+
+    .line[data-bookmark]::after {
+        right: 2.1rem;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .anchor,
-    .voiceButton {
+    .voiceButton,
+    .bookmarkButton {
         transition: none;
     }
 }
