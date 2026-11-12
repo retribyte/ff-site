@@ -54,3 +54,7 @@ archive-to-markdown/__pycache__/
 # database dumps (hold account data)
 *.dump
 /archive-to-markdown/html/
+
+# portrait creator sprite bundle (built by portrait-extract/extract.py, not committed)
+/public/portrait-bundle/
+portrait-extract/__pycache__/

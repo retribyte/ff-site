@@ -1,0 +1,516 @@
+@use '../../styles/mixins' as m;
+
+// Three columns: races, the portrait, its options. Each column scrolls on its own so the
+// portrait stays in view while browsing long lists.
+.page {
+    display: grid;
+    grid-template-columns: minmax(15rem, 19rem) minmax(20rem, 1fr) minmax(19rem, 26rem);
+    gap: 1rem;
+    width: 100%;
+    max-width: 100rem;
+    margin: 0 auto;
+    padding: 1rem;
+    height: calc(100vh - var(--navbar-height));
+    min-height: 34rem;
+
+    @media (max-width: 68rem) {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+}
+
+.races,
+.stage,
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-height: 0;
+    padding: 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: var(--px) solid var(--accent);
+}
+
+.stage {
+    align-items: center;
+    overflow-y: auto;
+    border-top-color: var(--accent-2);
+}
+
+.raceScroll,
+.panelBody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+
+    @media (max-width: 68rem) {
+        max-height: 28rem;
+    }
+}
+
+.search {
+    @include m.scan-input;
+    flex: 0 0 auto; // the mixin's flex: 1 would stretch it down a column
+    height: 2rem;
+    width: 100%;
+    padding: 0 0.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    &:focus {
+        border-color: var(--accent-soft);
+    }
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+
+.tab,
+.toggle,
+.small,
+.primary {
+    font-family: var(--font-pixel);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        color: var(--text);
+        border-color: var(--border-loud);
+    }
+
+    &[aria-selected='true'],
+    &[aria-pressed='true'] {
+        color: var(--text);
+        background: var(--highlight);
+        border-color: var(--accent-soft);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.primary {
+    @include m.cta-gradient;
+    padding: 0.4rem 0.8rem;
+}
+
+.small {
+    align-self: flex-start;
+    font-size: 0.6rem;
+    padding: 0.2rem 0.4rem;
+}
+
+.check,
+.inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.inline select {
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border-loud);
+    border-radius: var(--radius);
+    padding: 0.2rem 0.3rem;
+}
+
+.count,
+.npc {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.npc {
+    margin-left: 0.35rem;
+    padding: 0 0.25rem;
+    border: 1px solid var(--border-loud);
+}
+
+.empty,
+.hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.error {
+    @include m.pixel-error;
+}
+
+// ----- race picker
+
+.groupTitle,
+.fieldTitle {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-soft);
+}
+
+.raceGrid {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.6rem;
+}
+
+.race {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.25rem 0.4rem;
+    text-align: left;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--border-loud);
+    }
+
+    &[aria-pressed='true'] {
+        background: var(--highlight);
+        border-color: var(--accent-soft);
+        box-shadow: var(--glow);
+    }
+}
+
+.raceText {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.2;
+}
+
+.raceName {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+}
+
+.raceKind {
+    font-family: var(--font-pixel);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    color: var(--accent-2);
+}
+
+.raceMod {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+// ----- stage
+
+.stageHead {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+}
+
+.frame {
+    display: grid;
+    place-items: center;
+    padding: 0.5rem;
+    border: var(--px) solid var(--border-loud);
+    background: #10102c var(--starfield);
+    background-size: var(--starfield-size);
+
+    &[data-backdrop='dark'] {
+        background: #16161d;
+    }
+
+    &[data-backdrop='light'] {
+        background: #e9e7f2;
+    }
+
+    &[data-backdrop='checker'] {
+        background: repeating-conic-gradient(#8a8a98 0% 25%, #b9b9c6 0% 50%) 0 0 / 16px 16px;
+    }
+}
+
+.portrait {
+    width: min(344px, 70vw);
+    height: min(344px, 70vw);
+    image-rendering: pixelated;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 0.6rem;
+}
+
+.field {
+    width: 100%;
+}
+
+.poses,
+.styleGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.poses {
+    justify-content: center;
+}
+
+.styleCell {
+    padding: 0.1rem;
+    line-height: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--border-loud);
+    }
+
+    &[aria-pressed='true'] {
+        background: var(--highlight);
+        border-color: var(--accent-2);
+    }
+}
+
+// ----- swatches
+
+.swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+}
+
+.swatch {
+    display: flex;
+    width: 2rem;
+    height: 1.25rem;
+    padding: 0;
+    overflow: hidden;
+    background: var(--surface-2);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    span {
+        flex: 1;
+    }
+
+    &[aria-pressed='true'] {
+        border-color: var(--text);
+        box-shadow: 0 0 0 1px var(--accent-2);
+    }
+}
+
+.swatchFx {
+    font-family: var(--font-pixel);
+    font-size: 0.55rem;
+    line-height: 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+// ----- wardrobe
+
+.wornBox {
+    padding: 0.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border-loud);
+}
+
+.wornHead {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+
+    .small {
+        margin-left: auto;
+    }
+}
+
+.modGroup {
+    border: 1px solid var(--border);
+
+    summary {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        background: var(--surface-2);
+    }
+
+    .small {
+        margin: 0 0.4rem 0.4rem;
+    }
+}
+
+.itemList {
+    @include m.reset-list;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    gap: 0.2rem;
+    padding: 0.4rem;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    padding: 0.2rem 0.3rem;
+    font-size: 0.75rem;
+    text-align: left;
+    color: var(--text);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &:hover {
+        border-color: var(--border-loud);
+    }
+
+    &[aria-pressed='true'] {
+        background: var(--highlight);
+        border-color: var(--accent-soft);
+    }
+}
+
+.itemIcon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    image-rendering: pixelated;
+}
+
+// ----- palette editor
+
+.paletteList,
+.sourceList {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.paletteRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    input[type='color'] {
+        width: 2.2rem;
+        height: 1.6rem;
+        padding: 0;
+        background: none;
+        border: 1px solid var(--border-loud);
+        cursor: pointer;
+    }
+}
+
+.chip {
+    width: 2.2rem;
+    height: 1.6rem;
+    border: 1px solid var(--border-loud);
+}
+
+.arrow {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.hex {
+    width: 5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.2rem 0.35rem;
+}
+
+// ----- sprite sources
+
+.sourceRow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.4rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+}
+
+.sourceThumbs {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .small {
+        margin-left: auto;
+        align-self: center;
+    }
+}
+
+.code {
+    margin: 0;
+    padding: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+    background: var(--bg);
+    border: 1px solid var(--border);
+}
