@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSession } from '@/components/auth/SessionProvider';
 import DeleteControl from '@/components/DeleteControl';
 import DiscordStoryForm from './DiscordStoryForm';
-import DocxStoryForm, { type DocxPicture, type ImportMeta } from './DocxStoryForm';
+import DocxStoryForm, { type DocxPicture, type DraftDetails, type ImportMeta } from './DocxStoryForm';
 import RevisionReview from './RevisionReview';
 import { applyRevision, compareStory, type RevLine } from '@/lib/storyRevision';
 import { BOORU_URL } from '@/lib/booru';
@@ -269,6 +269,20 @@ export default function StoryImporter() {
         }
     };
 
+    // The Google Doc form's details edited after converting: the draft takes them as they are
+    const applyDetails = (details: DraftDetails) => {
+        if (!payload || origin !== 'docx' || phase.step === 'success') return;
+        const story = { ...payload.story, title: details.title, slug: details.slug };
+        for (const key of ['blurb', 'season', 'canon', 'publishedDate'] as const) {
+            if (details[key] === undefined) delete story[key];
+            else (story as Record<string, unknown>)[key] = details[key];
+        }
+        const next: ImportPayload = { ...payload, story, authors: details.authors };
+        delete next.author;
+        carriedPayload.current = next; // only the details changed: a revision's voices needn't be fetched again
+        setPayload(next);
+    };
+
     const onJsonFile = (file: File | undefined) => {
         if (!file) return;
         void file.text().then((raw) => loadPayload(() => parsePayload(raw), file.name, 'json'));
@@ -417,6 +431,10 @@ export default function StoryImporter() {
     const isAdmin = user?.role === 'ADMIN';
     const selfAdded = !!user && !isAdmin && !pickedAuthorIds.includes(user.id);
     const authorIds = selfAdded && user ? [...pickedAuthorIds, user.id] : pickedAuthorIds;
+
+    // A revision changes the story's authors only when the draft names some, and only for an admin
+    const draftNamesAuthors = (payload?.authors ?? (payload?.author ? [payload.author] : [])).some((n) => n.trim());
+    const revisionAuthorIds = isAdmin && draftNamesAuthors && pickedAuthorIds.length > 0 ? pickedAuthorIds : undefined;
 
     // Slug and title are each unique on the shelf (title case-insensitively,
     // matching the server). Identical text under a new slug+title can only be
@@ -716,8 +734,14 @@ export default function StoryImporter() {
             await ff(`/stories/${encodeURIComponent(slug)}/import`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                // publishedDate only when the draft names one: absent keeps the story's own
-                body: JSON.stringify({ chapters: uploadChapters(), importMeta, publishedDate: payload.story.publishedDate ?? undefined }),
+                // a blurb, date or authors only when the draft names them: absent keeps the story's own
+                body: JSON.stringify({
+                    chapters: uploadChapters(),
+                    importMeta,
+                    publishedDate: payload.story.publishedDate ?? undefined,
+                    blurb: payload.story.blurb?.trim() || undefined,
+                    authorIds: revisionAuthorIds,
+                }),
             });
             setPhase({ step: 'success', count: lineTotal, href: `/stories/${slug}`, replaced: true });
         } catch (error) {
@@ -738,6 +762,7 @@ export default function StoryImporter() {
                 onConverted={(converted, name, _warnings, meta, pictures) =>
                     loadPayload(() => validatePayload(converted), name, 'docx', meta, pictures)
                 }
+                onDetails={applyDetails}
                 disabled={busy}
             />
 
@@ -1089,8 +1114,9 @@ export default function StoryImporter() {
                             This slug is{' '}
                             <Link href={`/stories/${collision.story.slug}`}>&ldquo;{collision.story.title}&rdquo;</Link>,
                             already on the shelf. If this is a revised draft of it, replace its text: every chapter and
-                            line is swapped at once, and its title, blurb, authors and season stay as they are (edit
-                            those on the story page). If it&rsquo;s a different story, change the slug {changeWhere}.
+                            line is swapped at once. Its title and season stay as they are; a blurb or published date
+                            set in this draft replaces the story&rsquo;s{isAdmin ? ', and so do the authors when the draft names any' : ''}
+                            (anything left blank stays as it is). If it&rsquo;s a different story, change the slug {changeWhere}.
                         </p>
                     )}
                     {collision?.field === 'title' && phase.step !== 'success' && (

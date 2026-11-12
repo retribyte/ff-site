@@ -27,8 +27,24 @@
     @include m.field-stack;
     text-align: left;
 
-    input {
+    input,
+    textarea {
         @include m.form-field;
+    }
+
+    textarea {
+        resize: vertical;
+        font-family: var(--font-prose);
+    }
+}
+
+// The blurb editor: the field takes the panel's width
+.panelWide {
+    display: flex;
+    width: min(40rem, 100%);
+
+    .field {
+        flex: 1 1 100%;
     }
 }
 
