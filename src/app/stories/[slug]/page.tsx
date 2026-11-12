@@ -13,6 +13,7 @@ import styles from './story-page.module.scss';
 import DeleteStoryButton from '@/components/story/DeleteStoryButton';
 import StoryShelfControl from '@/components/story/StoryShelfControl';
 import StoryByline from '@/components/story/StoryByline';
+import StoryBlurb from '@/components/story/StoryBlurb';
 import StoryPublishedDate from '@/components/story/StoryPublishedDate';
 import OwnerControl from '@/components/admin/OwnerControl';
 
@@ -84,7 +85,7 @@ export default async function StoryPage({ params }: Props) {
                         <BookmarkJump slug={slug} chapters={bookmarkChapters(slug, chapters)} here={chapters[0].chapter_no} />
                     </div>
                     <StoryPublishedDate slug={story.slug} publishedDate={story.publishedDate} authorIds={(story.authors ?? []).map((a) => a.id)} />
-                    {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
+                    <StoryBlurb slug={story.slug} blurb={story.blurb ?? null} authorIds={(story.authors ?? []).map((a) => a.id)} className={styles.summary} />
                     <div className={styles.adminActions}>
                         <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
                         <StoryShelfControl slug={story.slug} canon={story.canon ?? true} seasonTitle={story.season?.title ?? null} />
@@ -118,7 +119,7 @@ export default async function StoryPage({ params }: Props) {
                     <BookmarkJump slug={slug} chapters={bookmarkChapters(slug, chapters)} />
                 </div>
                 <StoryPublishedDate slug={story.slug} publishedDate={story.publishedDate} authorIds={(story.authors ?? []).map((a) => a.id)} />
-                {story.blurb && <p className={styles.summary}>{story.blurb}</p>}
+                <StoryBlurb slug={story.slug} blurb={story.blurb ?? null} authorIds={(story.authors ?? []).map((a) => a.id)} className={styles.summary} />
                 <div className={styles.adminActions}>
                     <DeleteStoryButton slug={story.slug} redirectTo='/stories' />
                     <StoryShelfControl slug={story.slug} canon={story.canon ?? true} seasonTitle={story.season?.title ?? null} />

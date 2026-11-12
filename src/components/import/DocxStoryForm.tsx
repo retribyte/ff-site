@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { slugify } from '@/lib/slug';
 import styles from './storyImporter.module.scss';
 
@@ -40,6 +40,7 @@ export interface DocxPicture {
 export interface ImportMeta {
     format: 'prose' | 'script';
     colors: Record<string, string | null>; // '#rrggbb' -> speaker name, '?' (unnamed NPCs) or null (narration)
+    codes?: Record<string, string>; // a Discord export's speaker code -> speaker name or '?' (DiscordStoryForm)
 }
 
 // What the last import of the story at this slug remembered
@@ -80,10 +81,24 @@ function toBase64(buffer: ArrayBuffer): string {
     return btoa(binary);
 }
 
+/** The story's details as the form has them, for a draft already converted. */
+export interface DraftDetails {
+    title: string;
+    slug: string;
+    blurb?: string;
+    season?: string;
+    canon?: boolean;
+    publishedDate?: string;
+    authors: string[];
+}
+
 export default function DocxStoryForm({
     onConverted,
+    onDetails,
     disabled,
 }: {
+    /** the details changed after converting: the importer updates its draft (no need to convert again) */
+    onDetails?: (details: DraftDetails) => void;
     onConverted: (
         payload: ConvertedStory,
         fileName: string,
@@ -134,6 +149,7 @@ export default function DocxStoryForm({
         setError(null);
         setWarnings([]);
         setAnalysis(null);
+        converted.current = false; // a new file: its details go with its conversion
         setBusy('reading');
         try {
             const base64 = toBase64(await picked.arrayBuffer());
@@ -224,6 +240,7 @@ export default function DocxStoryForm({
                 meta,
             });
             setWarnings(result.warnings);
+            converted.current = true;
             onConverted(result.payload, file.name, result.warnings, { format, colors }, result.pictures ?? []);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'The conversion failed.');
@@ -231,6 +248,28 @@ export default function DocxStoryForm({
             setBusy(null);
         }
     };
+
+    // Once converted, the details (not the text) follow the form without converting again
+    const converted = useRef(false);
+    const onDetailsRef = useRef(onDetails);
+    useEffect(() => {
+        onDetailsRef.current = onDetails;
+    });
+    useEffect(() => {
+        if (!converted.current) return;
+        onDetailsRef.current?.({
+            title: title.trim(),
+            slug: slug.trim() || slugify(title),
+            blurb: blurb.trim() || undefined,
+            season: season || undefined,
+            canon: nonCanon ? false : undefined,
+            publishedDate: published || undefined,
+            authors: authors
+                .split(',')
+                .map((a) => a.trim())
+                .filter(Boolean),
+        });
+    }, [title, slug, blurb, season, nonCanon, published, authors]);
 
     const locked = disabled || busy !== null;
 

@@ -10,7 +10,6 @@ import JobHistory from '@/components/admin/JobHistory';
 import LogPanel from '@/components/admin/LogPanel';
 import ViewsPanel from '@/components/admin/ViewsPanel';
 import StoryVoicePanel from '@/components/admin/StoryVoicePanel';
-import VmImportPanel from '@/components/admin/VmImportPanel';
 import styles from './admin.module.scss';
 
 export const metadata: Metadata = {
@@ -47,7 +46,6 @@ export default async function AdminPage() {
                 <h1>Admin</h1>
             </header>
             <EpisodeImportPanel />
-            <VmImportPanel />
             <MaintenanceJobs jobs={jobs} />
             <StoryVoicePanel />
             <JobHistory runs={runs} />
