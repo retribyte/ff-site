@@ -24,6 +24,7 @@ export interface PreviewLine {
     npcVoice?: boolean;
     segments?: StorySegment[];
     booruId?: number; // IMAGE
+    imageUrl?: string | null; // IMAGE kept from the shelf: its booru file, as stored
     /** the line's index in the payload chapter (a picture with no post is left out of the preview) */
     source?: number;
 }
@@ -52,7 +53,7 @@ function chapterData(
         // a voice with no character is an NPC (named or not)
         npcVoice: !!line.npcVoice || (line.characterId === undefined && !!line.speaker),
         segments: line.segments ?? null,
-        imageUrl: line.booruId !== undefined ? (images[line.booruId] ?? null) : null,
+        imageUrl: line.booruId !== undefined ? (images[line.booruId] ?? line.imageUrl ?? null) : null,
         notes: [], // not on the server yet
     }));
     return { storySlug: slug, chapterNo: chapter.chapter_no, format, lines, characters, personas };

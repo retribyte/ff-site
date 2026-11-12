@@ -4,7 +4,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from '@/components/auth/SessionProvider';
 import DeleteControl from '@/components/DeleteControl';
+import DiscordStoryForm from './DiscordStoryForm';
 import DocxStoryForm, { type DocxPicture, type ImportMeta } from './DocxStoryForm';
+import RevisionReview from './RevisionReview';
+import { applyRevision, compareStory, type RevLine } from '@/lib/storyRevision';
 import { BOORU_URL } from '@/lib/booru';
 import { formatDateOnly } from '@/lib/dates';
 import { imageSrc } from '@/lib/images';
@@ -23,6 +26,9 @@ import styles from './storyImporter.module.scss';
 // keyed by *names* (character/speaker names). The converter already derives
 // each line's `text` (and, for segmented narration, its clean concatenation),
 // so we only resolve names → ids here.
+
+// How the review names a line nobody speaks
+const LINE_KIND: Record<string, string> = { ACTION: 'action', TRANSCRIPT: 'vcomm', BREAK: 'scene break', HEADING: 'heading', IMAGE: 'picture' };
 
 const LINE_TYPES = new Set(['NARRATION', 'DIALOGUE', 'ACTION', 'TRANSCRIPT', 'BREAK', 'HEADING', 'IMAGE']);
 
@@ -106,7 +112,7 @@ type Phase =
     | { step: 'failed'; message: string; duplicate: boolean };
 
 // Where the payload came from, for wording the "change the slug" advice.
-type Origin = 'docx' | 'json';
+type Origin = 'docx' | 'discord' | 'json';
 
 interface ShelfStory {
     slug: string;
@@ -206,6 +212,11 @@ export default function StoryImporter() {
     // NPC quotes a revision pre-filled from the story's current voices
     const [carried, setCarried] = useState<number | null>(null);
     const carriedPayload = useRef<ImportPayload | null>(null);
+    // A revision's review: the story as it stands on the shelf, and the
+    // differences whose shelf side is kept
+    const [shelfText, setShelfText] = useState<{ slug: string; chapters: PreviewChapter[] } | null>(null);
+    const [shelfFailure, setShelfFailure] = useState<{ slug: string; message: string } | null>(null);
+    const [keep, setKeep] = useState<ReadonlySet<string>>(new Set());
 
     useEffect(() => {
         ff<{ id: number; username: string }[]>('/users')
@@ -246,6 +257,7 @@ export default function StoryImporter() {
         setAuthorOverrides({});
         setCharOverrides({});
         setCarried(null);
+        setKeep(new Set());
         setOrigin(from);
         setFileName(name);
         try {
@@ -378,7 +390,6 @@ export default function StoryImporter() {
 
     const npcQuotes = useMemo(() => (payload ? npcFragments(payload.chapters) : []), [payload]);
     const npcNamed = npcQuotes.filter((f) => f.name.trim()).length;
-    const npcUnnamed = npcQuotes.length - npcNamed;
     // NPC personas already in the archive, to suggest in the namer
     const npcNames = useMemo(
         () => personas.filter((p) => p.characterId === null && p.name).map((p) => p.name as string),
@@ -406,11 +417,6 @@ export default function StoryImporter() {
     const isAdmin = user?.role === 'ADMIN';
     const selfAdded = !!user && !isAdmin && !pickedAuthorIds.includes(user.id);
     const authorIds = selfAdded && user ? [...pickedAuthorIds, user.id] : pickedAuthorIds;
-
-    const lineTotal = useMemo(
-        () => (payload ? payload.chapters.reduce((sum, c) => sum + c.lines.length, 0) : 0),
-        [payload]
-    );
 
     // Slug and title are each unique on the shelf (title case-insensitively,
     // matching the server). Identical text under a new slug+title can only be
@@ -542,13 +548,83 @@ export default function StoryImporter() {
         }));
     }, [payload, charMap, docxPostIds, personas]);
 
+    // A revision of a story on the shelf: the story as it stands, to review the draft against
+    const reviewSlug = replaceSlug;
+    useEffect(() => {
+        if (!reviewSlug) return;
+        let live = true;
+        ff<{ chapters: PreviewChapter[] }>(`/stories/${encodeURIComponent(reviewSlug)}/text`)
+            .then((text) => live && setShelfText({ slug: reviewSlug, chapters: text.chapters }))
+            .catch(
+                (error) =>
+                    live &&
+                    setShelfFailure({ slug: reviewSlug, message: error instanceof Error ? error.message : 'The story could not be read.' })
+            );
+        return () => {
+            live = false;
+        };
+    }, [reviewSlug]);
+    const shelfError = shelfFailure?.slug === reviewSlug ? shelfFailure.message : null;
+    const revision = useMemo(
+        () => (reviewSlug && shelfText?.slug === reviewSlug ? compareStory(shelfText.chapters, resolvedChapters) : null),
+        [reviewSlug, shelfText, resolvedChapters]
+    );
+    // What the preview shows and the upload sends: the draft, with the review's picks
+    const finalChapters = useMemo(
+        () => (revision ? applyRevision(revision, keep).map((c) => ({ ...c, title: c.title ?? undefined })) : resolvedChapters),
+        [revision, keep, resolvedChapters]
+    );
+    const lineTotal = finalChapters.reduce((sum, c) => sum + c.lines.length, 0);
+    const keepChanges = (keys: string[], kept: boolean) =>
+        setKeep((prev) => {
+            const next = new Set(prev);
+            for (const key of keys) {
+                if (kept) next.add(key);
+                else next.delete(key);
+            }
+            return next;
+        });
+    // Quotes still to be named, in what goes up (a line kept from the shelf already has its voice)
+    const unnamedLeft = useMemo(
+        () =>
+            finalChapters.reduce(
+                (n, c) =>
+                    n +
+                    c.lines.reduce(
+                        (m, l) =>
+                            m +
+                            (l.npcVoice && l.characterId === undefined && !l.speaker ? 1 : 0) +
+                            (l.segments ?? []).filter((seg) => seg.npc && seg.characterId == null && !seg.speaker).length,
+                        0
+                    ),
+                0
+            ),
+        [finalChapters]
+    );
+
+    // A revision replaces only once its review has loaded (so no shelf line is dropped unseen)
+    const reviewReady = !reviewSlug || revision !== null;
+
+    // Who speaks a line, for the review: a character (as a persona), an NPC, or narration
+    const voiceLabel = (line: RevLine) => {
+        if (line.characterId !== undefined) {
+            const name = characters.find((c) => c.id === line.characterId)?.names[0] ?? `character ${line.characterId}`;
+            const persona = line.personaId !== undefined ? personas.find((p) => p.id === line.personaId) : undefined;
+            return persona ? `${name} as ${persona.name ?? persona.label}` : name;
+        }
+        if (line.npcVoice || line.speaker) return line.speaker ? line.speaker : 'an unnamed NPC';
+        if (line.segments?.some((seg) => seg.characterId != null || seg.npc || seg.speaker)) return 'narration with quotes';
+        return LINE_KIND[line.type] ?? 'narration';
+    };
+
     // What goes up: the resolved chapters without the preview's bookkeeping
     const uploadChapters = () =>
-        resolvedChapters.map((c) => ({
+        finalChapters.map((c) => ({
             ...c,
             lines: c.lines.map((line) => {
                 const out = { ...line };
                 delete out.source;
+                delete out.imageUrl; // the server looks pictures up itself
                 return out;
             }),
         }));
@@ -556,10 +632,13 @@ export default function StoryImporter() {
     // Words selected in the preview made a quote (or narration again), in the
     // draft itself, so the speakers list, the NPC namer and the upload all see it
     const markDialogue = (chapterIndex: number, lineIndex: number, start: number, end: number, voice: MarkVoice) => {
-        const source = resolvedChapters[chapterIndex]?.lines[lineIndex]?.source;
-        if (!payload || source === undefined) return;
+        const chapter = finalChapters[chapterIndex];
+        // a line kept from the shelf has no place in the draft to mark
+        const source = chapter?.lines[lineIndex]?.source;
+        const payloadIndex = payload ? payload.chapters.findIndex((c) => c.chapter_no === chapter?.chapter_no) : -1;
+        if (!payload || source === undefined || payloadIndex < 0) return;
         const next: ImportPayload = structuredClone(payload);
-        const line = next.chapters[chapterIndex].lines[source];
+        const line = next.chapters[payloadIndex].lines[source];
         if (line.type !== 'NARRATION') return;
         const segments = markRange(line, start, end, voice);
         if (segments) line.segments = segments;
@@ -630,7 +709,7 @@ export default function StoryImporter() {
     // swaps every chapter and line in one transaction, keeping the story's id,
     // title, blurb, authors and season (edit those on the story page).
     const replace = async () => {
-        if (!payload || collision?.field !== 'slug' || !canReplace || npcUnnamed > 0) return;
+        if (!payload || collision?.field !== 'slug' || !canReplace || unnamedLeft > 0 || !reviewReady) return;
         setPhase({ step: 'uploading' });
         const slug = collision.story.slug;
         try {
@@ -650,8 +729,8 @@ export default function StoryImporter() {
     // Every typed post must exist (one the booru can't be asked about is left to the server)
     const picturesReady = badPosts.length === 0 && checkingPosts.length === 0 && badPictureInputs.length === 0;
     const canUpload =
-        payload !== null && !busy && phase.step !== 'success' && collision === null && picturesReady && npcUnnamed === 0;
-    const changeWhere = origin === 'docx' ? 'in the form above' : 'in the manuscript frontmatter';
+        payload !== null && !busy && phase.step !== 'success' && collision === null && picturesReady && unnamedLeft === 0;
+    const changeWhere = origin === 'json' ? 'in the manuscript frontmatter' : 'in the form above';
 
     return (
         <div className={styles.importer}>
@@ -661,6 +740,16 @@ export default function StoryImporter() {
                 }
                 disabled={busy}
             />
+
+            <details className={styles.advanced} open={origin === 'discord' || undefined}>
+                <summary className='pixel-label'>vortox machina: update it from a discord export</summary>
+                <DiscordStoryForm
+                    onConverted={(converted, name, _warnings, meta) =>
+                        loadPayload(() => validatePayload(converted), name, 'discord', meta)
+                    }
+                    disabled={busy}
+                />
+            </details>
 
             <details className={styles.advanced}>
                 <summary className='pixel-label'>advanced: upload a story .json from the CLI pipeline</summary>
@@ -797,9 +886,9 @@ export default function StoryImporter() {
                         <>
                             <h3 className='pixel-label'>npc voices</h3>
                             <div className={styles.npcSummary}>
-                                <p className={npcUnnamed > 0 ? styles.error : styles.hint}>
+                                <p className={unnamedLeft > 0 ? styles.error : styles.hint}>
                                     {`${npcNamed} of ${npcQuotes.length} NPC quote${npcQuotes.length === 1 ? '' : 's'} named.`}
-                                    {npcUnnamed > 0 && ' Name every one (or give it to a character) before uploading.'}
+                                    {unnamedLeft > 0 && ' Name every one (or give it to a character) before uploading.'}
                                 </p>
                                 {canReplace && carried !== null && carried > 0 && (
                                     <p className={styles.hint}>
@@ -902,6 +991,24 @@ export default function StoryImporter() {
                         </>
                     )}
 
+                    {reviewSlug && phase.step !== 'success' && (
+                        <>
+                            <h3 className='pixel-label'>changes from the story on the shelf</h3>
+                            <p className={styles.hint}>
+                                Every line this draft changes, adds or drops, compared with &ldquo;{collision?.story.title}&rdquo; as
+                                it stands. The new version is used unless you keep the shelf&rsquo;s: keep fixes made on the
+                                site, and lines the new version no longer has. The preview below follows your picks.
+                            </p>
+                            {shelfError ? (
+                                <p className={styles.error}>✖ couldn&rsquo;t read the story on the shelf: {shelfError}</p>
+                            ) : revision ? (
+                                <RevisionReview changes={revision.changes} keep={keep} onKeep={keepChanges} voiceLabel={voiceLabel} />
+                            ) : (
+                                <p className={styles.hint}>Reading the story on the shelf…</p>
+                            )}
+                        </>
+                    )}
+
                     <h3 className='pixel-label'>preview</h3>
                     <p className={styles.hint}>
                         How it will read on the shelf. Check that each color became the right speaker; change a pick
@@ -914,7 +1021,7 @@ export default function StoryImporter() {
                         themeColor={payload.story.themeColor}
                         themeColor2={payload.story.themeColor2}
                         season={payload.story.season}
-                        chapters={resolvedChapters}
+                        chapters={finalChapters}
                         characters={previewCharacters}
                         personas={previewPersonas}
                         images={previewImages}
@@ -931,9 +1038,9 @@ export default function StoryImporter() {
                     <div className={styles.actions}>
                         {canReplace ? (
                             phase.step !== 'success' &&
-                            (npcUnnamed > 0 ? (
+                            (unnamedLeft > 0 || !reviewReady ? (
                                 <button type='button' className={styles.upload} disabled>
-                                    Name the NPC quotes first
+                                    {unnamedLeft > 0 ? 'Name the NPC quotes first' : 'Reading the story on the shelf…'}
                                 </button>
                             ) : (
                                 <DeleteControl

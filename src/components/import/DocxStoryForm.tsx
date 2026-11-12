@@ -40,6 +40,7 @@ export interface DocxPicture {
 export interface ImportMeta {
     format: 'prose' | 'script';
     colors: Record<string, string | null>; // '#rrggbb' -> speaker name, '?' (unnamed NPCs) or null (narration)
+    codes?: Record<string, string>; // a Discord export's speaker code -> speaker name or '?' (DiscordStoryForm)
 }
 
 // What the last import of the story at this slug remembered
