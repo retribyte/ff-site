@@ -21,11 +21,6 @@ export function pickProvider(entry: ImageEntry | undefined, choice: SpriteChoice
     return mods.length ? mods[mods.length - 1] : null;
 }
 
-/** Bundle-relative URL of one mod's copy of an image. */
-export function spritePath(mod: string, image: string): string {
-    return `sprites/${mod}${image.split('/').map(encodeURIComponent).join('/')}`;
-}
-
 export function cropFrame(sheet: Pixels, rect: FrameRect | undefined): Pixels | null {
     const [x, y, w, h] = rect ?? [0, 0, sheet.width, sheet.height];
     if (w <= 0 || h <= 0 || x < 0 || y < 0 || x + w > sheet.width || y + h > sheet.height) return null;

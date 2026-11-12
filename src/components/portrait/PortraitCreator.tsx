@@ -4,8 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import raceTable from '@/data/portrait/races.json';
 import { BrowserBundle, paint, toPngBlob } from '@/lib/portrait/browserBundle';
 import { defaultRecipe, EMOTES, randomRecipe } from '@/lib/portrait/humanoid';
-import { resolveRaces, type Race, type RaceDef } from '@/lib/portrait/races';
-import { speciesFor } from '@/lib/portrait/species';
+import { raceSpecies, resolveRaces, type Race, type RaceDef } from '@/lib/portrait/races';
 import type { Pixels, Recipe } from '@/lib/portrait/types';
 import { BodyPanel, PalettePanel, RacePicker, SourcesPanel, WardrobePanel } from './panels';
 import Thumb from './Thumb';
@@ -29,11 +28,13 @@ export default function PortraitCreator() {
     const [backdrop, setBackdrop] = useState<(typeof BACKDROPS)[number]>('space');
     const [pixels, setPixels] = useState<Pixels | null>(null);
     const canvas = useRef<HTMLCanvasElement>(null);
+    const [pasting, setPasting] = useState(false);
+    const [note, setNote] = useState('');
 
     const races = useMemo(() => (bundle ? resolveRaces(bundle.manifest, raceTable.races as RaceDef[]) : []), [bundle]);
     const picked = races.find((r) => r.id === draft?.race) ?? null;
     // The species follows the recipe's own choice of mods, which the Sources tab can change.
-    const race = picked && bundle && draft ? { ...picked, species: speciesFor(bundle.manifest, picked.species.kind, draft.recipe.exclude) ?? picked.species } : picked;
+    const race = picked && bundle && draft ? { ...picked, species: raceSpecies(bundle.manifest, picked, draft.recipe.exclude) } : picked;
 
     // Load the bundle, then start from the draft left in this browser, else the first race.
     useEffect(() => {
@@ -72,7 +73,9 @@ export default function PortraitCreator() {
     const set = useCallback((update: (recipe: Recipe) => Recipe) => {
         setDraft((d) => (d ? { ...d, recipe: update(d.recipe) } : d));
     }, []);
-    const pickRace = (r: Race) => setDraft({ race: r.id, recipe: defaultRecipe(r.species, r) });
+    // The clothing toggle belongs to the session, not the race: it carries over to a new race
+    // and through Randomize.
+    const pickRace = (r: Race) => setDraft((d) => ({ race: r.id, recipe: { ...defaultRecipe(r.species, r), nude: d?.recipe.nude ?? false } }));
 
     if (error) return <main className={styles.page}><p className={styles.error}>{error}</p></main>;
     if (!bundle || !race || !recipe) return <main className={styles.page}><p className={styles.empty}>Loading sprites…</p></main>;
@@ -98,6 +101,34 @@ export default function PortraitCreator() {
         a.click();
         URL.revokeObjectURL(a.href);
     };
+    // A recipe as text: the race plus every pick, worn item, colour edit and choice of mods, so
+    // a portrait can be handed to someone else or kept in a note and reopened here.
+    const copyRecipe = async () => {
+        try {
+            await navigator.clipboard.writeText(JSON.stringify(draft));
+            setNote('Recipe copied.');
+        } catch {
+            setNote('Could not reach the clipboard.');
+        }
+    };
+    const loadRecipe = (text: string) => {
+        let parsed: Draft | null = null;
+        try {
+            parsed = JSON.parse(text);
+        } catch {
+            parsed = null;
+        }
+        const r = parsed?.recipe;
+        if (!r || r.v !== 1 || typeof r.species !== 'string' || !Array.isArray(r.exclude) || typeof r.wear !== 'object') return setNote('That is not a portrait recipe.');
+        const kind = r.species.toLowerCase();
+        const target = races.find((x) => x.id === parsed!.race && x.species.kind.toLowerCase() === kind) ?? races.find((x) => x.species.kind.toLowerCase() === kind);
+        if (!target) return setNote(`This recipe is for "${r.species}", which is not in the sprites loaded here.`);
+        const known = new Set(bundle.manifest.mods.map((m) => m.id));
+        const missing = [...new Set(Object.values(r.wear).map((w) => w?.item).filter((id): id is string => !!id && !!bundle.items && !bundle.items.items.some((i) => i.id === id)))];
+        setDraft({ race: target.id, recipe: { ...r, species: target.species.kind, prefer: r.prefer?.filter((m) => known.has(m)) } });
+        setPasting(false);
+        setNote(missing.length ? `Recipe loaded. Not in the sprites loaded here: ${missing.join(', ')}.` : 'Recipe loaded.');
+    };
     // Poses that differ only in name are shown once.
     const poses = sp.personalities.map((p, i) => ({ i, key: JSON.stringify(p) })).filter((p, n, all) => all.findIndex((q) => q.key === p.key) === n);
 
@@ -115,7 +146,7 @@ export default function PortraitCreator() {
                     <canvas ref={canvas} width={43} height={43} className={styles.portrait} aria-label={`${race.name} portrait`} />
                 </div>
                 <div className={styles.row}>
-                    <button type='button' className={styles.primary} onClick={() => set((r) => ({ ...randomRecipe(sp, r), emote: r.emote }))}>Randomise</button>
+                    <button type='button' className={styles.primary} onClick={() => set((r) => ({ ...randomRecipe(sp, r), emote: r.emote, nude: r.nude }))}>Randomize</button>
                     {sp.genders.length > 1 && sp.genders.map((g, i) => (
                         <button key={g.name} type='button' className={styles.toggle} aria-pressed={recipe.gender === i} onClick={() => setGender(i)}>{g.name}</button>
                     ))}
@@ -153,6 +184,15 @@ export default function PortraitCreator() {
                     <button type='button' className={styles.toggle} onClick={() => download(8)}>PNG 8x</button>
                     <button type='button' className={styles.toggle} disabled title='The 14 by 14 avatar crop comes last'>Make avatar</button>
                 </div>
+                <div className={styles.row}>
+                    <button type='button' className={styles.toggle} onClick={copyRecipe} title='Copy this portrait as text: race, every option and worn item, colour edits and which mods draw it'>Copy recipe</button>
+                    <button type='button' className={styles.toggle} aria-pressed={pasting} onClick={() => { setPasting(!pasting); setNote(''); }}>Paste recipe</button>
+                    {note && <span className={styles.hint} role='status'>{note}</span>}
+                </div>
+                {pasting && (
+                    <input className={styles.search} type='text' autoFocus placeholder='Paste a copied recipe here' aria-label='Paste a recipe' value=''
+                        onChange={(e) => e.target.value.trim() && loadRecipe(e.target.value)} />
+                )}
             </section>
 
             <section className={styles.options} aria-label='Options'>

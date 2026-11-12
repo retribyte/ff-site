@@ -2,13 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { paint, type BrowserBundle } from '@/lib/portrait/browserBundle';
+import { wearableBy } from '@/lib/portrait/curation';
 import { renderLayer } from '@/lib/portrait/compose';
 import { distinctColors, hexToRgba } from '@/lib/portrait/directives';
 import { buildLayers, defaultRecipe } from '@/lib/portrait/humanoid';
-import { spriteSources, UNCATEGORISED, type Race } from '@/lib/portrait/races';
+import { raceSpecies, spriteSources, UNCATEGORISED, type Race } from '@/lib/portrait/races';
 import { speciesFor } from '@/lib/portrait/species';
+import { sortOptions, SWATCH_COLORS, SWATCH_SORTS } from '@/lib/portrait/swatchSort';
 import type { ColorOption, ColorPick, ItemsFile, Recipe, WearItem, WearSlot } from '@/lib/portrait/types';
 import Thumb from './Thumb';
+import { usePref } from './usePref';
 import styles from './portrait.module.scss';
 
 type SetRecipe = (update: (recipe: Recipe) => Recipe) => void;
@@ -25,6 +28,7 @@ export function RacePicker({ bundle, races, categories, current, onPick }: {
     const [query, setQuery] = useState('');
     const [category, setCategory] = useState('all');
     const [npcs, setNpcs] = useState(true);
+    const [layout, setLayout] = usePref('portraitRaceLayout', ['list', 'grid'] as const, 'list');
     const tabs = ['all', ...categories, ...(races.some((r) => r.category === UNCATEGORISED) ? [UNCATEGORISED] : [])];
     const q = query.trim().toLowerCase();
     const shown = races.filter((r) =>
@@ -45,17 +49,24 @@ export function RacePicker({ bundle, races, categories, current, onPick }: {
                     </button>
                 ))}
             </div>
-            <label className={styles.check}>
-                <input type='checkbox' checked={npcs} onChange={(e) => setNpcs(e.target.checked)} /> include NPC-only races
-            </label>
+            <div className={styles.titleRow}>
+                <label className={styles.check}>
+                    <input type='checkbox' checked={npcs} onChange={(e) => setNpcs(e.target.checked)} /> include NPC-only races
+                </label>
+                <button type='button' className={styles.small} onClick={() => setLayout(layout === 'list' ? 'grid' : 'list')} title={layout === 'list' ? 'Show the races as a grid of squares' : 'Show the races as a list'}>
+                    {layout === 'list' ? 'grid' : 'list'}
+                </button>
+            </div>
             <div className={styles.raceScroll}>
                 {groups.map((g) => (
                     <div key={g.category}>
                         <h3 className={styles.groupTitle}>{g.category} <span className={styles.count}>{g.races.length}</span></h3>
-                        <ul className={styles.raceGrid}>
+                        <ul className={styles.raceGrid} data-layout={layout}>
                             {g.races.map((r) => (
                                 <li key={r.id}>
-                                    <button type='button' className={styles.race} aria-pressed={current === r.id} onClick={() => onPick(r)} title={r.species.description || undefined}>
+                                    <button type='button' className={styles.race} aria-pressed={current === r.id} onClick={() => onPick(r)}
+                                        title={layout === 'grid' ? [r.name, r.descriptor, r.npc ? 'NPC' : ''].filter(Boolean).join(' · ') : r.species.description || undefined}
+                                        aria-label={layout === 'grid' ? r.name : undefined}>
                                         <Thumb bundle={bundle} recipe={{ ...defaultRecipe(r.species, r), nude: true }} view='head' size={48} />
                                         <span className={styles.raceText}>
                                             <span className={styles.raceName}>{r.name}</span>
@@ -84,17 +95,27 @@ function optionColors(option: ColorOption): string[] {
 }
 
 export function Swatches({ options, value, onPick, label }: { options: ColorOption[]; value: number; onPick: (index: number) => void; label: string }) {
+    const [sort, setSort] = usePref('portraitSwatchSort', SWATCH_SORTS, 'default');
+    // Display order only: picks stay indices into `options`, which is what a recipe stores.
+    const order = useMemo(() => sortOptions(options, sort), [options, sort]);
     if (options.length < 2) return null;
     const picked = ((value % options.length) + options.length) % options.length;
     return (
         <div className={styles.field}>
-            <h4 className={styles.fieldTitle}>{label} <span className={styles.count}>{picked + 1} of {options.length}</span></h4>
+            <div className={styles.titleRow}>
+                <h4 className={styles.fieldTitle}>{label} <span className={styles.count}>{picked + 1} of {options.length}</span></h4>
+                <button type='button' className={styles.small} onClick={() => setSort(SWATCH_SORTS[(SWATCH_SORTS.indexOf(sort) + 1) % SWATCH_SORTS.length])}
+                    title='Change how these swatches are ordered: as the mod lists them, by hue, by saturation or by lightness'>
+                    sort: {sort === 'default' ? 'mod order' : sort}
+                </button>
+            </div>
             <div className={styles.swatches}>
-                {options.map((option, i) => {
+                {order.map((i) => {
+                    const option = options[i];
                     const colors = optionColors(option);
                     return (
                         <button key={i} type='button' className={styles.swatch} aria-pressed={i === picked} aria-label={`${label} ${i + 1}`} title={typeof option === 'string' ? option : undefined} onClick={() => onPick(i)}>
-                            {colors.length ? colors.slice(0, 4).map((c, n) => <span key={n} style={{ background: `#${c.slice(0, 6)}` }} />) : <span className={styles.swatchFx}>fx</span>}
+                            {colors.length ? colors.slice(0, SWATCH_COLORS).map((c, n) => <span key={n} style={{ background: `#${c.slice(0, 6)}` }} />) : <span className={styles.swatchFx}>fx</span>}
                         </button>
                     );
                 })}
@@ -211,7 +232,7 @@ export function WardrobePanel({ bundle, race, recipe, set }: { bundle: BrowserBu
         const q = query.trim().toLowerCase();
         const byMod = new Map<string, WearItem[]>();
         for (const item of items.items) {
-            if (item.slot !== slot) continue;
+            if (item.slot !== slot || !wearableBy(item, race.species.kind)) continue;
             if (q && !item.name.toLowerCase().includes(q) && !item.id.toLowerCase().includes(q)) continue;
             if (!byMod.has(item.mod)) byMod.set(item.mod, []);
             byMod.get(item.mod)!.push(item);
@@ -219,7 +240,7 @@ export function WardrobePanel({ bundle, race, recipe, set }: { bundle: BrowserBu
         // The race's own mod first, then the base game, then the rest by size.
         const rank = (mod: string) => (mod === race.species.mod ? 0 : mod === 'vanilla' ? 1 : 2);
         return [...byMod.entries()].sort((a, b) => rank(a[0]) - rank(b[0]) || b[1].length - a[1].length);
-    }, [items, slot, query, race.species.mod]);
+    }, [items, slot, query, race.species.mod, race.species.kind]);
 
     const worn = recipe.wear[slot];
     const wornItem = worn && items?.items.find((i) => i.id === worn.item && i.slot === slot);
@@ -396,7 +417,7 @@ export function SourcesPanel({ bundle, race, recipe, set }: { bundle: BrowserBun
     const choose = (exclude: string[], onTop: string[]) => set((r) => {
         const choice = { exclude, prefer: onTop };
         // Dropping a mod can change the species itself (its styles, and which kinds it has).
-        const sp = speciesFor(bundle.manifest, race.species.kind, exclude) ?? race.species;
+        const sp = raceSpecies(bundle.manifest, race, exclude);
         const g = sp.genders[r.gender] ?? sp.genders[0];
         const dir = `/humanoid/${sp.kind.toLowerCase()}/`;
         const has = (group: string, o: string) => o === '' || bundle.has(`${dir}${group}/${o}.png`.toLowerCase(), choice);

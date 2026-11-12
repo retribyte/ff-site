@@ -3,6 +3,7 @@
 // options read out. So leaving a mod out drops its changes to the species too (Cuter turns
 // Avian beaks and fluff into human hair; without it they come back), not only its sprites.
 
+import { isHiddenItem } from './curation';
 import { applyPatch, type Json } from './jsonPatch';
 import type { ColorOption, Manifest, RawSpecies, Species, SpeciesFlag, SpeciesGender } from './types';
 
@@ -52,8 +53,9 @@ export function deriveSpecies(raw: RawSpecies, exclude: string[], hasImage: (pat
             hairGroup, hair: options('hair', hairGroup),
             facialHairGroup, facialHair: options('facialHair', facialHairGroup),
             facialMaskGroup, facialMask: options('facialMask', facialMaskGroup),
-            shirt: list(g.shirt ?? cfg.shirt).map(String),
-            pants: list(g.pants ?? cfg.pants).map(String),
+            // Starting outfits the creator hides (invisible clothing) are not offered.
+            shirt: list(g.shirt ?? cfg.shirt).map(String).filter((id) => !isHiddenItem(id)),
+            pants: list(g.pants ?? cfg.pants).map(String).filter((id) => !isHiddenItem(id)),
         };
     });
     return {

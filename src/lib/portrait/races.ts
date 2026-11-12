@@ -18,6 +18,22 @@ export interface RaceDef {
     /** Mod ids whose sprites win over load order, most preferred first. */
     prefer?: string[];
     hidden?: boolean;
+    /** Style options this race does not get to choose: each is fixed to the value given ('' for none). */
+    lock?: StyleLock;
+}
+
+export type StyleLock = Partial<Record<'hair' | 'facialHair' | 'facialMask', string>>;
+
+/** The species with a race's locked styles reduced to their one value, so no picker offers them. */
+export function lockStyles(species: Species, lock: StyleLock | undefined): Species {
+    if (!lock || !Object.keys(lock).length) return species;
+    return { ...species, genders: species.genders.map((g) => ({ ...g, ...Object.fromEntries(Object.entries(lock).map(([k, v]) => [k, [v]])) })) };
+}
+
+/** A race's species for a given choice of mods (the Sources tab can change a recipe's). */
+export function raceSpecies(manifest: Manifest, race: Pick<Race, 'species' | 'lock'>, exclude: string[]): Species {
+    const species = speciesFor(manifest, race.species.kind, exclude);
+    return species ? lockStyles(species, race.lock) : race.species;
 }
 
 export interface Race {
@@ -30,6 +46,7 @@ export interface Race {
     category: string;
     exclude: string[];
     prefer?: string[];
+    lock?: StyleLock;
     /** Not offered by the game's own creator (NPC-only species). */
     npc: boolean;
 }
@@ -50,8 +67,9 @@ export function resolveRaces(manifest: Manifest, defs: RaceDef[]): Race[] {
     const races: Race[] = [];
     for (const def of defs) {
         const kind = kinds.get((def.species ?? def.id).toLowerCase());
-        const species = kind && speciesFor(manifest, kind, def.exclude);
-        if (!species) continue; // table entry for a species this bundle doesn't have
+        const derived = kind && speciesFor(manifest, kind, def.exclude);
+        if (!derived) continue; // table entry for a species this bundle doesn't have
+        const species = lockStyles(derived, def.lock);
         used.add(species.kind);
         if (def.hidden) continue;
         const title = speciesTitle(species);
@@ -65,6 +83,7 @@ export function resolveRaces(manifest: Manifest, defs: RaceDef[]): Race[] {
             category: def.category ?? UNCATEGORISED,
             exclude: def.exclude ?? [],
             ...(def.prefer?.length ? { prefer: def.prefer } : {}),
+            ...(def.lock ? { lock: def.lock } : {}),
             npc: !species.playable,
         });
     }

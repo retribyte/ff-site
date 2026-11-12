@@ -1,4 +1,5 @@
-// Shapes of the sprite bundle written by portrait-extract/extract.py, and of a saved portrait.
+// Shapes of the sprite bundle written by portrait-extract/extract.py (one folder per mod), of
+// the merged view the site builds from the folders present (merge.ts), and of a saved portrait.
 
 import type { Json } from './jsonPatch';
 
@@ -24,6 +25,56 @@ export interface BundleMod {
     priority?: number;
     workshopId?: string;
 }
+
+/**
+ * Where one mod's copy of an image sits in that mod's sprites.pack: byte offset, byte length,
+ * content hash, index into the mod's `frameFiles` (-1 for none).
+ */
+export type ImageRef = [offset: number, length: number, hash: string, frames: number];
+
+/** A mod folder's mod.json: only what that mod's own files contribute, nothing merged. */
+export interface ModFile {
+    version: number;
+    id: string;
+    name: string;
+    /** Position in the game's load order when it was extracted. */
+    order: number;
+    priority?: number;
+    workshopId?: string;
+    /** Changes whenever anything in the folder does; part of the pack's URL. */
+    build: string;
+    frameFiles: string[];
+    /** Its species sprites (item sprites are listed in its items.json). */
+    images: Record<string, ImageRef>;
+    /** Species files it ships, unpatched. */
+    species: Record<string, Omit<RawSpecies, 'mod' | 'patches'>>;
+    /** Its patches to species files, by species kind. */
+    speciesPatches: Record<string, Json>;
+    /** Frame rectangles of the .frames files it ships. */
+    frames: Record<string, Record<string, FrameRect>>;
+}
+
+/** An item as a mod folder lists it. `patch`: this mod's version of an item another mod defines. */
+export type ModItem = Omit<WearItem, 'mod' | 'only'> & { patch?: true };
+
+/** A mod folder's items.json. `colors` index its own `palettes`. */
+export interface ModItemsFile {
+    version: number;
+    id: string;
+    build: string;
+    items: ModItem[];
+    palettes: ColorOption[][];
+    images: Record<string, ImageRef>;
+}
+
+/** What is needed to read a mod's pack. */
+export interface PackInfo {
+    build: string;
+    frameFiles: string[];
+}
+
+/** For each mod, where each of its images sits in its pack. */
+export type ImageIndex = Record<string, Record<string, ImageRef>>;
 
 export interface SpeciesGender {
     name: string;
@@ -77,10 +128,12 @@ export interface RawSpecies {
     patches: { m: string; p: Json }[];
 }
 
+/** The mods present, merged in load order (merge.ts). */
 export interface Manifest {
-    version: number;
     build: string;
     mods: BundleMod[];
+    packs: Record<string, PackInfo>;
+    where: ImageIndex;
     /** Read through speciesFor() in species.ts, which applies the patches a race keeps. */
     species: Record<string, RawSpecies>;
     images: Record<string, ImageEntry>;
@@ -101,14 +154,16 @@ export interface WearItem {
     mask?: string;
     directives?: string;
     hideBody?: true;
+    /** Species kinds (lowercase) that may wear it; absent means any. Set by curation.ts. */
+    only?: string[];
 }
 
+/** Every present mod's items, merged (merge.ts). */
 export interface ItemsFile {
-    version: number;
-    build: string;
     items: WearItem[];
     palettes: ColorOption[][];
     images: Record<string, ImageEntry>;
+    where: ImageIndex;
 }
 
 /** A pick from a colour list, plus hand edits: output colour -> replacement, applied last. */

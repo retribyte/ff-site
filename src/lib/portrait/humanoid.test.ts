@@ -22,7 +22,7 @@ const species = (over: Partial<Species> = {}): Species => ({
     ...over,
 });
 const items: ItemsFile = {
-    version: 1, build: 't', images: {}, palettes: [[{ dddddd: '555555' }, { dddddd: '666666' }]],
+    images: {}, where: {}, palettes: [[{ dddddd: '555555' }, { dddddd: '666666' }]],
     items: [
         { id: 'shirt', slot: 'chest', name: 'Shirt', mod: 'vanilla', colors: 0, frames: { male: { body: '/i/chestm.png', backSleeve: '/i/bsleeve.png', frontSleeve: '/i/fsleeve.png' }, female: { body: '/i/chestf.png' } } },
         { id: 'pants', slot: 'legs', name: 'Pants', mod: 'vanilla', colors: 0, frames: { male: { body: '/i/pantsm.png' } } },
@@ -147,7 +147,7 @@ describe('resolveRaces and speciesFor', () => {
         ],
     });
     const images = Object.fromEntries(['malebody.png', 'hair/1.png', 'hair/2.png', 'beaks/b1.png'].map((f) => [`/humanoid/novakid/${f}`, { m: ['vanilla'] }]));
-    const m: Manifest = { version: 1, build: 't', mods: [], species: { novakid: raw('novakid', 'NOVAKID'), newcomer: raw('newcomer', 'Newcomer', false) }, images, frames: {} };
+    const m: Manifest = { build: 't', mods: [], packs: {}, where: {}, species: { novakid: raw('novakid', 'NOVAKID'), newcomer: raw('newcomer', 'Newcomer', false) }, images, frames: {} };
 
     it('applies only the patches of the mods a race keeps', () => {
         const all = speciesFor(m, 'novakid')!;

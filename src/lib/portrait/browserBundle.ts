@@ -1,33 +1,46 @@
-// The sprite bundle as the browser sees it: manifests fetched once, sprite sheets fetched
-// and decoded on demand and kept for the session.
+// The sprite bundle as the browser sees it: the mods' index files fetched once and merged,
+// sprites fetched from each mod's pack as byte ranges, decoded on demand and kept for the session.
 
-import { compose, cropFrame, layerImages, pickProvider, spritePath, type FrameSource } from './compose';
+import { compose, cropFrame, layerImages, pickProvider, type FrameSource } from './compose';
+import { curateItems, repairSheet } from './curation';
 import { buildLayers, type Layer } from './humanoid';
+import { locate, mergeItems, mergeMods } from './merge';
+import { planRuns, slice, type Wanted } from './pack';
 import { decodePng } from './png';
 import { speciesFor } from './species';
-import type { ImageEntry, ItemsFile, Manifest, Pixels, Recipe, SpriteChoice } from './types';
+import type { ImageEntry, ItemsFile, Manifest, ModFile, ModItemsFile, Pixels, Recipe, SpriteChoice } from './types';
 
 export const BUNDLE_URL = (process.env.NEXT_PUBLIC_PORTRAIT_BUNDLE_URL ?? '/portrait-bundle').replace(/\/$/, '');
+const PACK_NAME = 'sprites.pack';
+/** How long to collect sprite requests before sending them, so a screenful goes out together. */
+const BATCH_MS = 8;
+
+type Deliver = (bytes: Uint8Array | null) => void;
 
 export class BrowserBundle {
     items: ItemsFile | null = null;
     private sheets = new Map<string, Promise<Pixels | null>>();
     private ready = new Map<string, Pixels | null>();
     private itemsLoading: Promise<ItemsFile> | null = null;
+    private queue = new Map<string, Wanted<Deliver>[]>();
+    private flushing: ReturnType<typeof setTimeout> | null = null;
+    /** Whole packs, for a server that ignores Range and sends the entire file. */
+    private whole = new Map<string, Uint8Array>();
 
     private constructor(readonly manifest: Manifest) {}
 
     static async load(): Promise<BrowserBundle> {
-        const res = await fetch(`${BUNDLE_URL}/manifest.json`);
+        const res = await fetch(`${BUNDLE_URL}/mods.json`);
         if (!res.ok) throw new Error(`No sprite bundle at ${BUNDLE_URL} (${res.status}). Build one with portrait-extract/extract.py.`);
-        return new BrowserBundle(await res.json());
+        const index: { mods: ModFile[] } = await res.json();
+        return new BrowserBundle(mergeMods(index.mods));
     }
 
     /** The clothing index is large; it loads the first time something needs it. */
     loadItems(): Promise<ItemsFile> {
         this.itemsLoading ??= fetch(`${BUNDLE_URL}/items.json?v=${this.manifest.build}`)
             .then((res) => res.json())
-            .then((items: ItemsFile) => (this.items = items));
+            .then((index: { mods: ModItemsFile[] }) => (this.items = curateItems(mergeItems(index.mods, this.manifest))));
         return this.itemsLoading;
     }
 
@@ -35,14 +48,53 @@ export class BrowserBundle {
         return this.manifest.images[image] ?? this.items?.images[image];
     }
 
+    /** The bytes of one mod's copy of an image, fetched together with whatever else is wanted just now. */
+    private bytes(mod: string, image: string): Promise<Uint8Array | null> {
+        const ref = locate(mod, image, this.manifest, this.items);
+        if (!ref) return Promise.resolve(null);
+        return new Promise((resolve) => {
+            const list = this.queue.get(mod) ?? [];
+            list.push({ offset: ref[0], length: ref[1], for: resolve });
+            this.queue.set(mod, list);
+            this.flushing ??= setTimeout(() => this.flush(), BATCH_MS);
+        });
+    }
+
+    private flush(): void {
+        const queue = this.queue;
+        this.queue = new Map();
+        this.flushing = null;
+        for (const [mod, wanted] of queue) {
+            const whole = this.whole.get(mod);
+            if (whole) {
+                for (const item of wanted) item.for(slice(whole, 0, item));
+                continue;
+            }
+            const url = `${BUNDLE_URL}/${encodeURIComponent(mod)}/${PACK_NAME}?v=${this.manifest.packs[mod]?.build ?? ''}`;
+            for (const run of planRuns(wanted)) {
+                fetch(url, { headers: { Range: `bytes=${run.start}-${run.end - 1}` } })
+                    .then(async (res) => {
+                        if (!res.ok) throw new Error(String(res.status));
+                        const body = new Uint8Array(await res.arrayBuffer());
+                        // 206: just the range asked for. 200: the server sent the whole pack.
+                        const base = res.status === 206 ? run.start : 0;
+                        if (res.status !== 206) this.whole.set(mod, body);
+                        for (const item of run.items) item.for(slice(body, base, item));
+                    })
+                    .catch(() => run.items.forEach((item) => item.for(null)));
+            }
+        }
+    }
+
     private sheet(image: string, mod: string): Promise<Pixels | null> {
         const key = `${mod}${image}`;
         let pending = this.sheets.get(key);
         if (!pending) {
-            pending = fetch(`${BUNDLE_URL}/${spritePath(mod, image)}?v=${this.manifest.build}`)
-                .then(async (res) => (res.ok ? decodePng(new Uint8Array(await res.arrayBuffer())) : null))
+            pending = this.bytes(mod, image)
+                .then((bytes) => (bytes ? decodePng(bytes) : null))
                 .catch(() => null)
                 .then((px) => {
+                    if (px) repairSheet(key, px);
                     this.ready.set(key, px);
                     return px;
                 });
