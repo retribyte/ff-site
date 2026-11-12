@@ -14,7 +14,7 @@ import styles from './storyImporter.module.scss';
 // asks about new ones.
 
 interface Conversion {
-    lines: { type: 'ACTION' | 'NARRATION' | 'DIALOGUE'; text: string; code?: string }[];
+    lines: { type: 'ACTION' | 'NARRATION' | 'DIALOGUE' | 'TRANSCRIPT'; text: string; code?: string }[];
     entries: number;
     codes: { code: string; count: number; example: string }[];
     warnings: string[];

@@ -216,7 +216,8 @@ export default function StoryImporter() {
     // differences whose shelf side is kept
     const [shelfText, setShelfText] = useState<{ slug: string; chapters: PreviewChapter[] } | null>(null);
     const [shelfFailure, setShelfFailure] = useState<{ slug: string; message: string } | null>(null);
-    const [keep, setKeep] = useState<ReadonlySet<string>>(new Set());
+    // The reviewer's picks by change: true keeps the shelf's side (unpicked: each kind's default)
+    const [picks, setPicks] = useState<ReadonlyMap<string, boolean>>(new Map());
 
     useEffect(() => {
         ff<{ id: number; username: string }[]>('/users')
@@ -257,7 +258,7 @@ export default function StoryImporter() {
         setAuthorOverrides({});
         setCharOverrides({});
         setCarried(null);
-        setKeep(new Set());
+        setPicks(new Map());
         setOrigin(from);
         setFileName(name);
         try {
@@ -587,6 +588,12 @@ export default function StoryImporter() {
         () => (reviewSlug && shelfText?.slug === reviewSlug ? compareStory(shelfText.chapters, resolvedChapters) : null),
         [reviewSlug, shelfText, resolvedChapters]
     );
+    // The changes whose shelf side is kept: the picked ones, and by default every line only on
+    // the shelf (dropping one is a choice, never what happens because the new version lacks it)
+    const keep = useMemo(
+        () => new Set((revision?.changes ?? []).filter((c) => picks.get(c.key) ?? c.kind === 'removed').map((c) => c.key)),
+        [revision, picks]
+    );
     // What the preview shows and the upload sends: the draft, with the review's picks
     const finalChapters = useMemo(
         () => (revision ? applyRevision(revision, keep).map((c) => ({ ...c, title: c.title ?? undefined })) : resolvedChapters),
@@ -594,12 +601,9 @@ export default function StoryImporter() {
     );
     const lineTotal = finalChapters.reduce((sum, c) => sum + c.lines.length, 0);
     const keepChanges = (keys: string[], kept: boolean) =>
-        setKeep((prev) => {
-            const next = new Set(prev);
-            for (const key of keys) {
-                if (kept) next.add(key);
-                else next.delete(key);
-            }
+        setPicks((prev) => {
+            const next = new Map(prev);
+            for (const key of keys) next.set(key, kept);
             return next;
         });
     // Quotes still to be named, in what goes up (a line kept from the shelf already has its voice)
@@ -1021,8 +1025,9 @@ export default function StoryImporter() {
                             <h3 className='pixel-label'>changes from the story on the shelf</h3>
                             <p className={styles.hint}>
                                 Every line this draft changes, adds or drops, compared with &ldquo;{collision?.story.title}&rdquo; as
-                                it stands. The new version is used unless you keep the shelf&rsquo;s: keep fixes made on the
-                                site, and lines the new version no longer has. The preview below follows your picks.
+                                it stands. Changed and new lines use the new version unless you keep the shelf&rsquo;s (a fix
+                                made on the site, say); lines only on the shelf stay unless you remove them. The preview below
+                                follows your picks.
                             </p>
                             {shelfError ? (
                                 <p className={styles.error}>✖ couldn&rsquo;t read the story on the shelf: {shelfError}</p>
