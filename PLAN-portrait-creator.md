@@ -103,8 +103,14 @@ need a code change or a deploy. Order agreed with Trey:
 2. ~~**ff-server** serves the bundle and holds the settings.~~ Done 2026-11-14 (branch
    `portrait-creator` in both repos), not deployed. See "Step 2 as built" below. Left out: an
    endpoint that returns several sprites at once (optional; Trey has not asked for it).
-3. **`/admin` panel:** mods (enable, disable, delete), races and categories, hidden items,
-   per-species clothing limits, pixel repairs.
+3. ~~**`/admin` panel.**~~ Done 2026-11-14: `/admin/portraits` (linked from /admin). Mods:
+   switch off or on (at once, for everyone), limit a mod's clothing to some species, delete
+   its files from the server. Races: order, name, descriptor, category, hidden, species,
+   which mods a race leaves out or puts on top, fixed styles; species in the sprites but not
+   in the list are offered to add; a line copied from the creator's Sources tab can be
+   pasted in. Categories, the hidden-clothing pattern and list, and pixel repairs are one
+   form. Not in it yet: picking a hidden item or a stray pixel by clicking on it in the
+   creator (ids and coordinates are typed).
 4. **A script to push mod folders to the server.**
 5. **Member modpack uploads** (last): keyed by mod id so a new version replaces the old one;
    the same component also sits on the admin panel.
@@ -123,7 +129,7 @@ Three places, three kinds of thing:
   pixel repairs, and an on/off switch per mod. A folder with no row is on. `npm run
   portrait:import-settings` in ff-server fills them from `races.json` and `curation.json`
   (`skipMods` become mods switched off); `PUT /api/admin/portrait/settings` does the same
-  over HTTP, which is how production gets its first settings. Step 3's panel edits them.
+  over HTTP, which is how production gets its first settings. `/admin/portraits` edits them.
 - **Site code.** `/portraits` asks for a login, reads `GET /api/portrait/settings` on the
   server and hands it to the creator. Sprites come through `/site/portrait-bundle/...`, a
   route that adds the member's token and passes `Range` on to ff-server's

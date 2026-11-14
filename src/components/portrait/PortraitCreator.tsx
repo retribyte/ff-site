@@ -25,6 +25,18 @@ export interface PortraitSettings {
     categories: string[];
     races: RaceDef[];
     curation: Curation;
+    /** Every mod the server knows: folders in its bundle, and mods remembered as switched off. */
+    mods?: PortraitMod[];
+}
+
+export interface PortraitMod {
+    id: string;
+    name: string;
+    enabled: boolean;
+    /** Its folder is in the server's bundle. */
+    present: boolean;
+    /** Species kinds that may wear its clothing; empty for anyone. */
+    itemsOnlyFor: string[];
 }
 
 export default function PortraitCreator({ settings }: { settings: PortraitSettings }) {

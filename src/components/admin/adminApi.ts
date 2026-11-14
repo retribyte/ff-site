@@ -6,11 +6,12 @@ interface Envelope<T> {
     message?: string;
 }
 
-export async function adminCall<T>(path: string, body?: unknown): Promise<T> {
+/** GET without a body, POST with one, or the method named. */
+export async function adminCall<T>(path: string, body?: unknown, method?: 'PUT' | 'PATCH' | 'DELETE'): Promise<T> {
     let res: Response;
     try {
         res = await fetch(`/site/ff/admin/${path}`, {
-            method: body === undefined ? 'GET' : 'POST',
+            method: method ?? (body === undefined ? 'GET' : 'POST'),
             headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
             body: body === undefined ? undefined : JSON.stringify(body),
         });
