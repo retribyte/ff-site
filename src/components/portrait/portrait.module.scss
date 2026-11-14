@@ -612,3 +612,110 @@
     object-fit: contain;
     image-rendering: pixelated;
 }
+
+// ----- 14x14 avatar modal
+
+.avatarModal {
+    width: min(46rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    padding: 1rem;
+    color: var(--text);
+    background: var(--surface);
+    overflow: auto;
+
+    &::backdrop {
+        background: rgba(0, 0, 0, 0.55);
+    }
+}
+
+.avatarHead,
+.avatarFoot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.avatarHead {
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+
+    h2 {
+        margin: 0;
+    }
+}
+
+.avatarFoot {
+    margin-top: 1rem;
+}
+
+.avatarBody {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.avatarPane {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+// Transparent pixels show as a checkerboard, as in an image editor
+.avatarCanvas {
+    display: block;
+    image-rendering: pixelated;
+    background: repeating-conic-gradient(#8a8a98 0% 25%, #b9b9c6 0% 50%) 0 0 / 16px 16px;
+    touch-action: none;
+}
+
+.avatarSource {
+    position: relative;
+    max-width: 100%;
+    cursor: move;
+
+    canvas {
+        width: 100%;
+        height: 100%;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--border-loud);
+        outline-offset: 2px;
+    }
+}
+
+.avatarBox {
+    position: absolute;
+    box-sizing: border-box;
+    border: 2px solid #fff;
+    outline: 2px solid #000;
+    pointer-events: none;
+}
+
+.avatarCrop {
+    cursor: crosshair;
+}
+
+.avatarSizes {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+
+.avatarApply {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.select {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.4rem;
+    max-width: 16rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+}

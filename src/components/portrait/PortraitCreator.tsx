@@ -7,6 +7,7 @@ import type { Curation } from '@/lib/portrait/curation';
 import { raceSpecies, resolveRaces, type Race, type RaceDef } from '@/lib/portrait/races';
 import type { Pixels, Recipe } from '@/lib/portrait/types';
 import { BodyPanel, PalettePanel, RacePicker, SourcesPanel, WardrobePanel } from './panels';
+import AvatarModal from './AvatarModal';
 import SavedPanel, { type Kept } from './SavedPanel';
 import Thumb from './Thumb';
 import styles from './portrait.module.scss';
@@ -40,7 +41,7 @@ export interface PortraitMod {
     itemsOnlyFor: string[];
 }
 
-export default function PortraitCreator({ settings }: { settings: PortraitSettings }) {
+export default function PortraitCreator({ settings, user }: { settings: PortraitSettings; user: { id: number; role: string } }) {
     const [bundle, setBundle] = useState<BrowserBundle | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [draft, setDraft] = useState<Draft | null>(null);
@@ -52,6 +53,7 @@ export default function PortraitCreator({ settings }: { settings: PortraitSettin
     const [note, setNote] = useState('');
     // The saved portrait on the stage, if it was saved or opened this session (the Saved tab)
     const [kept, setKept] = useState<Kept | null>(null);
+    const [avatar, setAvatar] = useState(false);
 
     const races = useMemo(() => (bundle ? resolveRaces(bundle.manifest, settings.races) : []), [bundle, settings]);
     const picked = races.find((r) => r.id === draft?.race) ?? null;
@@ -218,7 +220,7 @@ export default function PortraitCreator({ settings }: { settings: PortraitSettin
                     <button type='button' className={styles.toggle} onClick={() => download(1)}>PNG 43 px</button>
                     <button type='button' className={styles.toggle} onClick={() => download(4)}>PNG 4x</button>
                     <button type='button' className={styles.toggle} onClick={() => download(8)}>PNG 8x</button>
-                    <button type='button' className={styles.toggle} disabled title='The 14 by 14 avatar crop comes last'>Make avatar</button>
+                    <button type='button' className={styles.toggle} disabled={!pixels} onClick={() => setAvatar(true)} title='Cut a 14 by 14 avatar from this portrait'>Make avatar</button>
                 </div>
                 <div className={styles.row}>
                     <button type='button' className={styles.toggle} onClick={copyRecipe} title='Copy this portrait as text: race, every option and worn item, colour edits and which mods draw it'>Copy recipe</button>
@@ -230,6 +232,8 @@ export default function PortraitCreator({ settings }: { settings: PortraitSettin
                         onChange={(e) => e.target.value.trim() && loadRecipe(e.target.value)} />
                 )}
             </section>
+
+            {avatar && pixels && <AvatarModal pixels={pixels} name={kept?.name ?? race.id} user={user} onClose={() => setAvatar(false)} />}
 
             <section className={styles.options} aria-label='Options'>
                 <div className={styles.tabs} role='tablist'>

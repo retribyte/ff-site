@@ -37,5 +37,5 @@ export default async function PortraitsPage() {
             </main>
         );
     }
-    return <PortraitCreator settings={settings} />;
+    return <PortraitCreator settings={settings} user={{ id: user.id, role: user.role }} />;
 }

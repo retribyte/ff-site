@@ -118,6 +118,8 @@ need a code change or a deploy. Order agreed with Trey:
    "Portrait creator sprites".
 5. **Member modpack uploads** (last): keyed by mod id so a new version replaces the old one;
    the same component also sits on the admin panel.
+   **Not started: waiting on Trey** (what a member uploads, and whether an upload is live
+   at once or waits for an admin).
 
 ### Step 2 as built
 
@@ -163,7 +165,11 @@ Still open from before:
   character. "Copy recipe" and "Paste recipe" still carry a portrait as text.
 - ~~`npm run build`~~ passes (2026-11-14).
 - **Wardrobe polish:** virtualised lists, favourites or a curated shelf, back items checked.
-- **14x14 avatar modal** with eraser; "apply to character" through the existing avatar upload.
+- ~~**14x14 avatar modal.**~~ Done 2026-11-14: "Make avatar" opens it at any point. The
+  square starts on the head and is moved by dragging or the arrow keys; an eraser (and "put
+  back") clears stray pixels; the result downloads as a PNG or goes straight onto a
+  character the member may edit (their own; any, for an admin) through the existing avatar
+  upload.
 - **Index size:** `mods.json` is 3 MB and `items.json` 3.9 MB before compression.
 - **Vesperian's sprites are 5 MB** on their own (unoptimised PNGs in the mod).
 
