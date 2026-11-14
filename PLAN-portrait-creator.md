@@ -186,8 +186,8 @@ Still open from before:
 - **Check against the game.** One check so far: Trey's Avian screenshot (Matthias Lewkey); the
   head reproduced, body, clothing and poses are unchecked.
 - **Trey's pass with the resolver:** human (Starface vs Cuter), floran, dragon. Settled: Avian
-  and Glitch leave Cuter out (Avian is Bird Up); Blazekid is Novakid with Novaskin, no Cuter,
-  no brand.
+  and Glitch leave Cuter out (Avian is Bird Up); Blazekid is Novakid with Novaskin and Cuter
+  (Cuter back on for it, 2026-11-14; Novakid itself still leaves it out), no brand.
 - ~~**Saving.**~~ Done 2026-11-14: the creator's **Saved** tab keeps a portrait under a name
   (recipe and rendered PNG, in ff-server's `portraits` table), lists the member's portraits
   with thumbnails, reopens one, saves over it or deletes it. Private to the member who saved

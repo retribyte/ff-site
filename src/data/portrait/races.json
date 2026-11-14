@@ -9,7 +9,7 @@
         { "id": "hylotl", "descriptor": "Fish", "category": "animal" },
         { "id": "glitch", "descriptor": "Robot", "category": "mechanical", "exclude": ["761242493"] },
         { "id": "novakid", "species": "novakid", "name": "Novakid", "descriptor": "Star", "category": "fantasy", "exclude": [ "761242493", "730117759", "734168608" ] },
-        { "id": "blazekid", "species": "novakid", "name": "Blazekid", "descriptor": "Star", "category": "fantasy", "exclude": ["761242493"], "lock": { "facialHair": "" } },
+        { "id": "blazekid", "species": "novakid", "name": "Blazekid", "descriptor": "Star", "category": "fantasy", "lock": { "facialHair": "" } },
         { "id": "alpaca", "descriptor": "Alpaca", "category": "animal" },
         { "id": "saturn", "name": "Saturnian Entomae", "descriptor": "Moth", "category": "insect" },
         { "id": "saturn2", "descriptor": "Moth", "category": "insect", "hidden": true },
