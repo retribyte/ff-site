@@ -60,7 +60,7 @@ export default function Navbar() {
     const { user } = useSession();
     const navLinks = [
         ...links,
-        ...(user ? [{ href: '/import', label: 'Import' }] : []),
+        ...(user ? [{ href: '/portraits', label: 'Portraits' }, { href: '/import', label: 'Import' }] : []),
         ...(user?.role === 'ADMIN' ? [{ href: '/admin', label: 'Admin' }] : []),
     ];
     // The small-screen menu remembers the page it was opened on, so any
