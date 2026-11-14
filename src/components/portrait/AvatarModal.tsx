@@ -12,9 +12,35 @@ import styles from './portrait.module.scss';
 const SOURCE_SCALE = 8;
 const CROP_SCALE = 16;
 
-interface CharacterOption {
-    id: number;
+/** Someone the avatar can go on: a character, or (for admins) an NPC voice. */
+interface Wearer {
+    /** `c:<id>` for a character, `p:<id>` for an NPC voice: the select's value. */
+    key: string;
+    path: string;
     name: string;
+    hasAvatar: boolean;
+    /** How much they say in the archive: the order within a group. */
+    lines: number;
+}
+
+interface WearerGroup {
+    label: string;
+    wearers: Wearer[];
+}
+
+/**
+ * The list in the order it is offered: characters before NPC voices, and within each those
+ * with no avatar yet first; most quoted first inside every group. Empty groups are left out.
+ */
+function groupWearers(characters: Wearer[], npcs: Wearer[]): WearerGroup[] {
+    const byLines = (a: Wearer, b: Wearer) => b.lines - a.lines || a.name.localeCompare(b.name);
+    const part = (list: Wearer[], has: boolean) => list.filter((w) => w.hasAvatar === has).sort(byLines);
+    return [
+        { label: 'Characters without an avatar', wearers: part(characters, false) },
+        { label: 'Characters with an avatar', wearers: part(characters, true) },
+        { label: 'NPC voices without an avatar', wearers: part(npcs, false) },
+        { label: 'NPC voices with an avatar', wearers: part(npcs, true) },
+    ].filter((g) => g.wearers.length);
 }
 
 function dataUrl(blob: Blob): Promise<string> {
@@ -40,7 +66,7 @@ export default function AvatarModal({ pixels, name, user, onClose }: {
     // Erased pixels, in the portrait's own coordinates, so moving the square keeps them
     const [erased, setErased] = useState<ReadonlySet<string>>(new Set());
     const [tool, setTool] = useState<'erase' | 'restore'>('erase');
-    const [characters, setCharacters] = useState<CharacterOption[] | null>(null);
+    const [groups, setGroups] = useState<WearerGroup[] | null>(null);
     const [target, setTarget] = useState('');
     const [busy, setBusy] = useState(false);
     const [note, setNote] = useState('');
@@ -51,13 +77,21 @@ export default function AvatarModal({ pixels, name, user, onClose }: {
         dialog.current?.showModal();
     }, []);
 
-    // Characters this member may change: their own, or all of them for an admin
+    // Who this member may give an avatar: their own characters, or for an admin every
+    // character and the NPC voices too
     useEffect(() => {
-        const query = user.role === 'ADMIN' ? 'lite=true' : `lite=true&ownerId=${user.id}`;
-        fetch(`/site/ff/characters?${query}`)
-            .then((res) => res.json())
-            .then((envelope: { data?: CharacterOption[] }) => setCharacters([...(envelope.data ?? [])].sort((a, b) => a.name.localeCompare(b.name))))
-            .catch(() => setCharacters([]));
+        const admin = user.role === 'ADMIN';
+        const list = <T,>(path: string): Promise<T[]> =>
+            fetch(`/site/ff/${path}`).then((res) => res.json()).then((envelope: { data?: T[] }) => envelope.data ?? [], () => []);
+        Promise.all([
+            list<{ id: number; name: string; image: string | null; quoteCount?: number }>(admin ? 'characters' : `characters?ownerId=${user.id}`),
+            admin ? list<{ id: number; name: string; image: string | null; messageCount?: number; storyQuoteCount?: number }>('personas?npc=true') : [],
+        ]).then(([characters, npcs]) =>
+            setGroups(groupWearers(
+                characters.map((c) => ({ key: `c:${c.id}`, path: `characters/${c.id}`, name: c.name, hasAvatar: !!c.image, lines: c.quoteCount ?? 0 })),
+                npcs.map((n) => ({ key: `p:${n.id}`, path: `personas/${n.id}`, name: n.name, hasAvatar: !!n.image, lines: (n.messageCount ?? 0) + (n.storyQuoteCount ?? 0) })),
+            )),
+        );
     }, [user]);
 
     const cut = useMemo(() => cropAvatar(pixels, box, erased), [pixels, box, erased]);
@@ -113,7 +147,7 @@ export default function AvatarModal({ pixels, name, user, onClose }: {
         URL.revokeObjectURL(a.href);
     };
     const apply = async () => {
-        const character = characters?.find((c) => String(c.id) === target);
+        const character = groups?.flatMap((g) => g.wearers).find((w) => w.key === target);
         if (!character) return;
         setBusy(true);
         setError('');
@@ -121,7 +155,7 @@ export default function AvatarModal({ pixels, name, user, onClose }: {
         try {
             const blob = await toPngBlob(cut, 1);
             if (!blob) throw new Error('The avatar could not be drawn');
-            const res = await fetch(`/site/ff/characters/${character.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: await dataUrl(blob) }) });
+            const res = await fetch(`/site/ff/${character.path}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: await dataUrl(blob) }) });
             const envelope = (await res.json().catch(() => null)) as { status?: string; message?: string } | null;
             if (!res.ok || envelope?.status !== 'success') throw new Error(envelope?.message ?? `Request failed (HTTP ${res.status})`);
             setNote(`${character.name} now wears this avatar.`);
@@ -179,9 +213,13 @@ export default function AvatarModal({ pixels, name, user, onClose }: {
             <footer className={styles.avatarFoot}>
                 <button type='button' className={styles.toggle} disabled={empty} onClick={() => void download()}>Download PNG</button>
                 <span className={styles.avatarApply}>
-                    <select className={styles.select} aria-label='Character to give this avatar' value={target} onChange={(e) => { setTarget(e.target.value); setNote(''); }} disabled={!characters?.length}>
-                        <option value=''>{characters === null ? 'loading characters…' : characters.length ? 'put it on a character…' : 'you have no characters'}</option>
-                        {characters?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    <select className={styles.select} aria-label='Character to give this avatar' value={target} onChange={(e) => { setTarget(e.target.value); setNote(''); }} disabled={!groups?.length}>
+                        <option value=''>{groups === null ? 'loading characters…' : groups.length ? 'put it on a character…' : 'you have no characters'}</option>
+                        {groups?.map((group) => (
+                            <optgroup key={group.label} label={group.label}>
+                                {group.wearers.map((w) => <option key={w.key} value={w.key}>{w.name}</option>)}
+                            </optgroup>
+                        ))}
                     </select>
                     <button type='button' className={styles.primary} disabled={!target || busy || empty} onClick={() => void apply()}>{busy ? 'saving…' : 'Apply'}</button>
                 </span>
