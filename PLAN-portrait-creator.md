@@ -200,6 +200,10 @@ Still open from before:
   back") clears stray pixels; the result downloads as a PNG or goes straight onto a
   character the member may edit (their own; any, for an admin) through the existing avatar
   upload.
+- ~~**Phones.**~~ Done 2026-11-14: under 48rem wide the three columns become three views (Race,
+  Portrait, Customize) switched by a bar of buttons, with a small live portrait in the bar
+  when the large one is not showing. Stylesheet only, plus the `view` state in
+  `PortraitCreator.tsx`; checked in a headless phone-sized browser, not on a real phone.
 - **Index size:** `mods.json` is 3 MB and `items.json` 3.9 MB before compression.
 - **Vesperian's sprites are 5 MB** on their own (unoptimised PNGs in the mod).
 

@@ -17,6 +17,14 @@ const DRAFT_KEY = 'portraitDraft';
 const TABS = ['body', 'wardrobe', 'colours', 'sources', 'saved'] as const;
 type Tab = (typeof TABS)[number];
 const BACKDROPS = ['space', 'dark', 'light', 'checker'] as const;
+// On a narrow screen the three columns become three views, one shown at a time (the
+// stylesheet hides the others; a wide screen shows all three and no switcher).
+const VIEWS = [
+    { view: 'race', label: 'Race' },
+    { view: 'portrait', label: 'Portrait' },
+    { view: 'options', label: 'Customize' },
+] as const;
+type View = (typeof VIEWS)[number]['view'];
 
 interface Draft {
     race: string;
@@ -50,6 +58,8 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
     const [error, setError] = useState<string | null>(null);
     const [draft, setDraft] = useState<Draft | null>(null);
     const [tab, setTab] = useState<Tab>('body');
+    const [view, setView] = useState<View>('portrait');
+    const mini = useRef<HTMLCanvasElement>(null);
     const [backdrop, setBackdrop] = useState<(typeof BACKDROPS)[number]>('space');
     const [pixels, setPixels] = useState<Pixels | null>(null);
     const canvas = useRef<HTMLCanvasElement>(null);
@@ -97,6 +107,11 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
             stale = true;
         };
     }, [bundle, recipe]);
+
+    // The narrow layout's small copy of the portrait, beside the view buttons
+    useEffect(() => {
+        if (pixels && mini.current) paint(mini.current, pixels);
+    }, [pixels, view]);
 
     const set = useCallback((update: (recipe: Recipe) => Recipe) => {
         setDraft((d) => (d ? { ...d, recipe: update(d.recipe) } : d));
@@ -175,7 +190,17 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
     const poses = sp.personalities.map((p, i) => ({ i, key: JSON.stringify(p) })).filter((p, n, all) => all.findIndex((q) => q.key === p.key) === n);
 
     return (
-        <main className={styles.page}>
+        <main className={styles.page} data-view={view}>
+            <nav className={styles.viewBar} aria-label='Creator views'>
+                {view !== 'portrait' && (
+                    <button type='button' className={styles.mini} onClick={() => setView('portrait')} aria-label={`${race.name} portrait: show it large`}>
+                        <canvas ref={mini} width={43} height={43} />
+                    </button>
+                )}
+                {VIEWS.map((v) => (
+                    <button key={v.view} type='button' className={styles.viewTab} aria-pressed={view === v.view} onClick={() => setView(v.view)}>{v.label}</button>
+                ))}
+            </nav>
             <RacePicker bundle={bundle} races={races} categories={settings.categories} current={race.id} onPick={pickRace} />
 
             <section className={styles.stage} aria-label='Portrait'>

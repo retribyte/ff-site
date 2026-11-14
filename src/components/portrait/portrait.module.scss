@@ -726,3 +726,139 @@
     background: var(--surface);
     border: 1px solid var(--border);
 }
+
+// ----- narrow screens: one column at a time, picked with the bar's buttons.
+// Kept last in the file so its rules win over the ones above.
+
+.viewBar {
+    display: none;
+}
+
+@media (max-width: 48rem) {
+    .page {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        height: calc(100dvh - var(--navbar-height));
+        min-height: 0;
+        padding: 0.5rem;
+
+        &[data-view='race'] > :is(.stage, .options),
+        &[data-view='portrait'] > :is(.races, .options),
+        &[data-view='options'] > :is(.races, .stage) {
+            display: none;
+        }
+    }
+
+    .viewBar {
+        display: flex;
+        align-items: stretch;
+        gap: 0.3rem;
+        flex-shrink: 0;
+    }
+
+    .viewTab {
+        flex: 1 1 0;
+        min-height: 2.5rem;
+        font-family: var(--font-pixel);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-muted);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        cursor: pointer;
+
+        &[aria-pressed='true'] {
+            color: var(--text);
+            background: var(--highlight);
+            border-color: var(--accent-soft);
+        }
+    }
+
+    // The portrait at twice its size, cut down to the figure (which stands at the bottom
+    // middle of its 43 pixel square) so the bar stays short.
+    .mini {
+        position: relative;
+        flex: 0 0 3rem;
+        height: 4rem;
+        padding: 0;
+        overflow: hidden;
+        background: #10102c;
+        border: 1px solid var(--border-loud);
+        border-radius: var(--radius);
+        cursor: pointer;
+
+        canvas {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 86px;
+            height: 86px;
+            margin-left: -43px;
+            image-rendering: pixelated;
+        }
+    }
+
+    .races,
+    .stage,
+    .options {
+        flex: 1 1 auto;
+        padding: 0.6rem;
+    }
+
+    .raceScroll,
+    .panelBody {
+        flex: 1 1 auto;
+        max-height: none;
+    }
+
+    .gate {
+        flex: 0 0 auto;
+        align-self: center;
+    }
+
+    // Room for a finger; a row of tabs fills its line, and the five option tabs fit on one
+    .tab,
+    .toggle {
+        padding: 0.5rem 0.6rem;
+    }
+
+    .tab {
+        flex: 1 1 auto;
+        padding: 0.5rem 0.3rem;
+        font-size: 0.6rem;
+        letter-spacing: 0;
+    }
+
+    .small {
+        padding: 0.35rem 0.5rem;
+    }
+
+    .swatch {
+        width: 2.4rem;
+        height: 1.7rem;
+    }
+
+    .title {
+        font-size: 1.25rem;
+    }
+
+    .portrait {
+        width: min(344px, 70vw, 36dvh);
+        height: min(344px, 70vw, 36dvh);
+    }
+
+    // One row that scrolls sideways, not four rows above the buttons
+    .poses {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.3rem;
+
+        .styleCell {
+            flex-shrink: 0;
+        }
+    }
+}
