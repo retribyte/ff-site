@@ -88,3 +88,10 @@ committed).
 `scripts/portrait-push.sh` copies mod folders to the directory ff-server reads
 (`--dry-run` shows what would change). ff-server's `docs/deploy-nfsn.md`, "Portrait creator
 sprites", has the server side.
+
+## The browser has the same extractor
+
+`src/lib/portrait/extract/` is this extractor in TypeScript, so a member can add a mod from
+their own copy of the game at `/portraits/mods`. A change to what a folder holds must be made
+in both. `parity.test.ts` there runs the TypeScript one over a real install and compares every
+folder with the one this script wrote (see its header for how to run it).

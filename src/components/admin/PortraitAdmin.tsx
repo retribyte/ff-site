@@ -5,7 +5,8 @@ import { BUNDLE_URL } from '@/lib/portrait/browserBundle';
 import type { RaceDef, StyleLock } from '@/lib/portrait/races';
 import type { ModFile } from '@/lib/portrait/types';
 import type { PortraitMod, PortraitSettings } from '@/components/portrait/PortraitCreator';
-import { adminCall } from './adminApi';
+import ModUploader from '@/components/portrait/ModUploader';
+import { adminCall, formatWhen } from './adminApi';
 import styles from './admin.module.scss';
 import own from './portraitAdmin.module.scss';
 
@@ -13,6 +14,14 @@ import own from './portraitAdmin.module.scss';
 // Mods change at once; the race list and the curation form are saved with their own button.
 
 type Settings = PortraitSettings & { mods: PortraitMod[] };
+
+/** The settings as the server has them now (after an upload added a mod). */
+async function refreshSettings(): Promise<Settings> {
+    const res = await fetch('/site/ff/portrait/settings');
+    const envelope = (await res.json()) as { status: string; data?: Settings };
+    if (!res.ok || envelope.status !== 'success' || !envelope.data) throw new Error('settings unavailable');
+    return envelope.data;
+}
 
 const words = (text: string) => text.split(/[\s,]+/).map((w) => w.trim()).filter(Boolean);
 const message = (err: unknown) => (err instanceof Error ? err.message : 'That did not work');
@@ -35,6 +44,15 @@ export default function PortraitAdmin({ initial }: { initial: PortraitSettings }
     return (
         <>
             <ModsPanel settings={settings} onSaved={setSettings} />
+            <section className={styles.panel} aria-labelledby='portrait-upload'>
+                <h2 id='portrait-upload' className={styles.panelTitle}>
+                    Add mods
+                </h2>
+                <ModUploader
+                    switchedOff={settings.mods.filter((m) => !m.enabled)}
+                    onUploaded={() => void refreshSettings().then(setSettings, () => {})}
+                />
+            </section>
             <RacesPanel settings={settings} kinds={kinds} onSaved={setSettings} />
             <CurationPanel settings={settings} onSaved={setSettings} />
         </>
@@ -103,7 +121,10 @@ function ModsPanel({ settings, onSaved }: PanelProps) {
                         const limitChanged = words(limit).join(',').toLowerCase() !== mod.itemsOnlyFor.join(',');
                         return (
                             <tr key={mod.id} data-off={!mod.enabled || undefined} className={own.modRow}>
-                                <td>{mod.name}</td>
+                                <td>
+                                    {mod.name}
+                                    {mod.uploadedBy && mod.uploadedAt && <span className={own.dim}> · uploaded by {mod.uploadedBy}, {formatWhen(mod.uploadedAt)}</span>}
+                                </td>
                                 <td className={own.mono}>{mod.id}</td>
                                 <td className={styles.nowrap}>
                                     {mod.enabled ? 'on' : <span className={styles.bad}>off</span>}

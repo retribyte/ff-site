@@ -116,10 +116,9 @@ need a code change or a deploy. Order agreed with Trey:
    server folders this machine lacks). Tried against a local folder only: it has not been
    run against the server. The server-side steps are in ff-server's `docs/deploy-nfsn.md`,
    "Portrait creator sprites".
-5. **Member modpack uploads** (last): keyed by mod id so a new version replaces the old one;
-   the same component also sits on the admin panel.
-   **Not started: waiting on Trey** (what a member uploads, and whether an upload is live
-   at once or waits for an admin).
+5. ~~**Member mod uploads.**~~ Done 2026-11-14 (Trey: a member gives the .pak; live as soon
+   as it is uploaded). `/portraits/mods`, linked from the creator, and the same form on
+   `/admin/portraits`. See "Step 5 as built" below.
 
 ### Step 2 as built
 
@@ -151,6 +150,37 @@ To run it on a dev machine: build the bundle (`python3 scripts/portrait-extract/
 ff-server on a database that lacks the three tables), run `npm run portrait:import-settings`,
 start both servers and log in.
 
+### Step 5 as built
+
+- **The member's browser does the extracting.** `src/lib/portrait/extract/` is a port of the
+  Python extractor that reads paks through the browser's file API (only the parts it needs:
+  a 900 MB base game and 159 mods take about two seconds). Nothing but the finished folder of
+  a ticked mod is uploaded; the server never sees a pak and runs no extractor.
+- **It needs the base game's `packed.pak` as well as the mod.** A mod's pak does not say how
+  sprite sheets are cut into frames, and it patches species and clothing the base game (or
+  another mod) defines. So the form asks for `packed.pak` and then for mods: the workshop
+  folder, or .pak files one by one. A mod that builds on another mod reads right only if
+  that mod is among the files chosen.
+- **A browser cannot open the file window at a given folder** (only at Desktop, Documents and
+  the like), so the form shows Steam's usual path for the member's system, Windows first,
+  with a copy button, to paste into the file window.
+- **The form says what the site already has:** not yet (ticked), already there, a different
+  copy, or there as another copy (the same mod under a hand-installed id). Mods an admin
+  switched off are left out of the reading, as `skipMods` are in the Python extractor.
+- **Upload:** the folder goes up as one file in 2 MB pieces to ff-server, which checks it and
+  swaps it in by rename. The mod's row records who uploaded it and when.
+- **Load order is worked out by the site** (`loadOrder` in `merge.ts`) from each folder's
+  priority, id and the mods it names as loading before it (`modName`, `after` in mod.json),
+  not from the `order` one machine gave. On Trey's bundle this picks the same sprite for
+  every image and the same patch order as before.
+- **The two extractors must stay the same.** `parity.test.ts` compares them on a real
+  install, folder by folder (`STARBOUND_DIR=<Starbound folder> PORTRAIT_EXTRA_MODS=../squoatling-mod
+  npx vitest run src/lib/portrait/extract/parity`): 75 mods, every pack byte for byte.
+- **Known limits.** Two members with different mods installed can build slightly different
+  folders for the same mod (which species a "cuter" mod has sprites for; a species' place in
+  the game's own creator list). Any member can replace any mod's folder; the row says who.
+  The pack's PNGs are not checked on the server (the site decodes them with its own reader).
+
 Still open from before:
 
 - **Check against the game.** One check so far: Trey's Avian screenshot (Matthias Lewkey); the
@@ -176,6 +206,6 @@ Still open from before:
 ## Open questions
 
 - Whether Zander's machine also builds mod folders (the per-mod layout makes that additive).
-- Whether saved portraits are public, and whether a character page shows its full portrait.
+- Saved portraits are private (Trey, 2026-11-14); an avatar put on a character is public like any avatar.
 - The extractor has only been run on Linux; Windows and macOS paths are written but untested.
 - Curating the wardrobe: 2,930 head items and one mod with about 2,400 items.

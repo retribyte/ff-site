@@ -37,10 +37,14 @@ export interface ModFile {
     version: number;
     id: string;
     name: string;
-    /** Position in the game's load order when it was extracted. */
+    /** Position in the load order on the machine that extracted it. The site works the order out itself (merge.ts), since folders come from different machines. */
     order: number;
     priority?: number;
     workshopId?: string;
+    /** The mod's own name for itself (its metadata `name`), which other mods' `after` lists use. */
+    modName?: string;
+    /** Names (`modName`) of the mods it says load before it: its metadata's includes and requires. */
+    after?: string[];
     /** Changes whenever anything in the folder does; part of the pack's URL. */
     build: string;
     frameFiles: string[];

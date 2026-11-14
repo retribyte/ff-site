@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { locate, mergeItems, mergeMods } from './merge';
+import { loadOrder, locate, mergeItems, mergeMods } from './merge';
 import type { ImageRef, ModFile, ModItem, ModItemsFile } from './types';
 
 // Made-up mods: a base game, a mod that redraws and patches it ("cute"), and a clothing mod.
 const ref = (offset: number, hash: string, frames = -1): ImageRef => [offset, 10, hash, frames];
-const mod = (id: string, order: number, over: Partial<ModFile> = {}): ModFile => ({
-    version: 2, id, name: id, order, build: `${id}-build`, frameFiles: [], images: {}, species: {}, speciesPatches: {}, frames: {}, ...over,
+// The second argument is the mod's priority: the site orders mods by what they say of themselves
+const mod = (id: string, priority: number, over: Partial<ModFile> = {}): ModFile => ({
+    version: 2, id, name: id, order: 99, priority, build: `${id}-build`, frameFiles: [], images: {}, species: {}, speciesPatches: {}, frames: {}, ...over,
 });
 const species = (kind: string) => ({ kind, playable: true, order: 0, personalities: [], config: { kind } });
 const item = (id: string, body: string, over: Partial<ModItem> = {}): ModItem => ({ id, slot: 'chest', name: id, colors: 0, frames: { male: { body } }, ...over });
@@ -22,6 +23,27 @@ const cute = mod('cute', 2, {
     speciesPatches: { elf: [{ op: 'add', path: '/cute', value: true }], ghost: [] },
 });
 const hats = mod('hats', 1);
+
+describe('loadOrder', () => {
+    const ids = (files: ModFile[]) => loadOrder(files).map((f) => f.id);
+
+    it('puts the base game first, then lower priority first, whatever position a machine gave', () => {
+        expect(ids([mod('200', 5), mod('100', 0, { order: 7 }), mod('vanilla', 9999, { order: 3 }), mod('300', -5, { order: 1 })])).toEqual(['vanilla', '300', '100', '200']);
+    });
+
+    it('orders equal priority as the game finds mods: its mods folder, then the workshop by id', () => {
+        expect(ids([mod('729', 0), mod('1099', 0), mod('my-mod', 0), mod('vanilla', 0)])).toEqual(['vanilla', 'my-mod', '1099', '729']);
+    });
+
+    it('loads a mod after the mods it names, by their own names, and survives a loop', () => {
+        const race = mod('900', 0, { modName: 'TheRace' });
+        const addon = mod('100', 0, { modName: 'RaceAddon', after: ['TheRace', 'NotInstalled'] });
+        expect(ids([addon, race])).toEqual(['900', '100']);
+        const a = mod('1', 0, { modName: 'A', after: ['B'] });
+        const b = mod('2', 0, { modName: 'B', after: ['A'] });
+        expect(ids([a, b]).sort()).toEqual(['1', '2']);
+    });
+});
 
 describe('mergeMods', () => {
     it('lists each image’s mods in load order, whatever order the files arrive in', () => {

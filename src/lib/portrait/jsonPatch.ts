@@ -85,9 +85,12 @@ function applyOps(input: Json, ops: Op[]): Json {
     return doc;
 }
 
-/** The document with the patch applied; unchanged where the patch (or a batch of it) fails. */
-export function applyPatch(doc: Json, patch: Json): Json {
-    if (!Array.isArray(patch)) return doc;
+/**
+ * The document with the patch applied. A failed batch is skipped, as in the game; a flat patch
+ * that fails, or a patch that is not a list, throws.
+ */
+export function applyPatchStrict(doc: Json, patch: Json): Json {
+    if (!Array.isArray(patch)) throw new PatchError('patch is not a list');
     if (patch.length && patch.every(Array.isArray)) {
         for (const batch of patch) {
             try {
@@ -98,8 +101,13 @@ export function applyPatch(doc: Json, patch: Json): Json {
         }
         return doc;
     }
+    return applyOps(doc, patch as Op[]);
+}
+
+/** The document with the patch applied; unchanged where the patch (or a batch of it) fails. */
+export function applyPatch(doc: Json, patch: Json): Json {
     try {
-        return applyOps(doc, patch as Op[]);
+        return applyPatchStrict(doc, patch);
     } catch {
         return doc;
     }

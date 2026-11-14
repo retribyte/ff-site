@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BrowserBundle, paint, toPngBlob } from '@/lib/portrait/browserBundle';
 import { defaultRecipe, EMOTES, randomRecipe } from '@/lib/portrait/humanoid';
@@ -39,6 +40,9 @@ export interface PortraitMod {
     present: boolean;
     /** Species kinds that may wear its clothing; empty for anyone. */
     itemsOnlyFor: string[];
+    /** The member who uploaded its folder through the site, and when; null if it was pushed. */
+    uploadedBy?: string | null;
+    uploadedAt?: string | null;
 }
 
 export default function PortraitCreator({ settings, user }: { settings: PortraitSettings; user: { id: number; role: string } }) {
@@ -227,6 +231,9 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
                     <button type='button' className={styles.toggle} aria-pressed={pasting} onClick={() => { setPasting(!pasting); setNote(''); }}>Paste recipe</button>
                     {note && <span className={styles.hint} role='status'>{note}</span>}
                 </div>
+                <p className={styles.hint}>
+                    A race or outfit missing? <Link href='/portraits/mods'>Add a mod from your copy of Starbound.</Link>
+                </p>
                 {pasting && (
                     <input className={styles.search} type='text' autoFocus placeholder='Paste a copied recipe here' aria-label='Paste a recipe' value=''
                         onChange={(e) => e.target.value.trim() && loadRecipe(e.target.value)} />

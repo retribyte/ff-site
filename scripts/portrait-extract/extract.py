@@ -270,6 +270,12 @@ class Bundle:
             info["priority"] = src.priority
         if str(src.meta.get("steamContentId") or "").isdigit():
             info["workshopId"] = str(src.meta["steamContentId"])
+        # What the site needs to work out the load order itself, whichever machine a folder
+        # came from: the mod's own name and the names it says load before it.
+        info["modName"] = src.name
+        after = [d for d in list(src.meta.get("includes") or []) + list(src.meta.get("requires") or []) if isinstance(d, str)]
+        if after:
+            info["after"] = after
         content = {
             "frameFiles": frame_files,
             "images": {p: r for p, r in refs.items() if p in mod.species_images},

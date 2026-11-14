@@ -24,8 +24,37 @@ function fingerprint(parts: string[]): string {
     return h.toString(16).padStart(8, '0');
 }
 
+/**
+ * The mods in the game's load order, worked out from what each folder says about itself,
+ * because folders come from different machines (members upload them) and the position one
+ * machine gave a mod means nothing next to another's. The game's rule: the base game first;
+ * then by priority, lowest first; mods of equal priority by where they are installed (the
+ * game's own mods folder before the workshop, and workshop mods in the order of their ids);
+ * and a mod always after the mods it names in its metadata (`after`: its includes and requires).
+ */
+export function loadOrder(files: ModFile[]): ModFile[] {
+    const base = files.filter((f) => f.id === 'vanilla');
+    // A workshop mod's id is its workshop number (or starts with it); anything else was installed by hand
+    const workshop = (f: ModFile) => (/^\d/.test(f.id) ? 1 : 0);
+    const rest = files.filter((f) => f.id !== 'vanilla').sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0) || workshop(a) - workshop(b) || byText(a.id, b.id));
+    const byName = new Map(rest.map((f) => [f.modName ?? f.id, f]));
+    const placed: ModFile[] = [];
+    const seen = new Set<ModFile>();
+    const place = (file: ModFile, stack: ModFile[]) => {
+        if (seen.has(file) || stack.includes(file)) return;
+        for (const name of file.after ?? []) {
+            const dep = byName.get(name);
+            if (dep) place(dep, [...stack, file]);
+        }
+        seen.add(file);
+        placed.push(file);
+    };
+    for (const file of rest) place(file, []);
+    return [...base, ...placed];
+}
+
 export function mergeMods(files: ModFile[]): Manifest {
-    const mods = [...files].sort((a, b) => a.order - b.order || byText(a.id, b.id));
+    const mods = loadOrder(files);
     const manifest: Manifest = { build: fingerprint(mods.map((m) => `${m.id}:${m.build}`)), mods: [], packs: {}, where: {}, species: {}, images: {}, frames: {} };
     const last = new Map<string, string>();
     const patches: Record<string, RawSpecies['patches']> = {};
