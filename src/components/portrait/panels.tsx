@@ -471,7 +471,7 @@ export function SourcesPanel({ bundle, race, recipe, set }: { bundle: BrowserBun
                     );
                 })}
             </ul>
-            <p className={styles.hint}>To keep this choice as a race, add this line to src/data/portrait/races.json:</p>
+            <p className={styles.hint}>To keep this choice as a race, an admin adds this line to the race list:</p>
             <pre className={styles.code}>{line}</pre>
             <button type='button' className={styles.small} onClick={() => navigator.clipboard?.writeText(line)}>copy line</button>
         </div>

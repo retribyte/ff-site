@@ -55,6 +55,10 @@ archive-to-markdown/__pycache__/
 *.dump
 /archive-to-markdown/html/
 
-# portrait creator sprite bundle (built by portrait-extract/extract.py, not committed)
+# portrait creator sprite bundle (built by scripts/portrait-extract/extract.py, never committed:
+# game and mod assets stay out of git). /public/portrait-bundle/ was its place before the
+# server took over serving it.
+/.portrait-bundle/
 /public/portrait-bundle/
-portrait-extract/__pycache__/
+/scripts/public/
+scripts/portrait-extract/__pycache__/

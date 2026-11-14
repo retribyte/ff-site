@@ -10,7 +10,7 @@ import { locate, mergeItems, mergeMods } from '../merge';
 import type { ItemsFile, Manifest, ModFile, ModItemsFile, Pixels, SpriteChoice } from '../types';
 import { decodePng } from './png';
 
-export const DEFAULT_BUNDLE_DIR = path.resolve(import.meta.dirname, '../../../../public/portrait-bundle');
+export const DEFAULT_BUNDLE_DIR = path.resolve(import.meta.dirname, '../../../../.portrait-bundle');
 export const PACK_NAME = 'sprites.pack';
 
 export class DiskBundle {

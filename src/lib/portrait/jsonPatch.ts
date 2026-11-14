@@ -1,4 +1,4 @@
-// Starbound's JSON patches (the .patch files mods ship), same rules as portrait-extract's
+// Starbound's JSON patches (the .patch files mods ship), same rules as scripts/portrait-extract's
 // sbassets.apply_patch: a patch is a list of operations or a list of such lists (batches).
 // A batch that fails, usually on its `test`, is skipped; a failing flat patch changes nothing.
 

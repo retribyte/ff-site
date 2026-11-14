@@ -2,7 +2,7 @@
 // sprites fetched from each mod's pack as byte ranges, decoded on demand and kept for the session.
 
 import { compose, cropFrame, layerImages, pickProvider, type FrameSource } from './compose';
-import { curateItems, repairSheet } from './curation';
+import { curateItems, repairSheet, setCuration, type Curation } from './curation';
 import { buildLayers, type Layer } from './humanoid';
 import { locate, mergeItems, mergeMods } from './merge';
 import { planRuns, slice, type Wanted } from './pack';
@@ -10,7 +10,7 @@ import { decodePng } from './png';
 import { speciesFor } from './species';
 import type { ImageEntry, ItemsFile, Manifest, ModFile, ModItemsFile, Pixels, Recipe, SpriteChoice } from './types';
 
-export const BUNDLE_URL = (process.env.NEXT_PUBLIC_PORTRAIT_BUNDLE_URL ?? '/portrait-bundle').replace(/\/$/, '');
+export const BUNDLE_URL = (process.env.NEXT_PUBLIC_PORTRAIT_BUNDLE_URL ?? '/site/portrait-bundle').replace(/\/$/, '');
 const PACK_NAME = 'sprites.pack';
 /** How long to collect sprite requests before sending them, so a screenful goes out together. */
 const BATCH_MS = 8;
@@ -29,9 +29,12 @@ export class BrowserBundle {
 
     private constructor(readonly manifest: Manifest) {}
 
-    static async load(): Promise<BrowserBundle> {
+    /** `curation` is the server's settings: what to hide and repair in this bundle. */
+    static async load(curation: Curation): Promise<BrowserBundle> {
+        setCuration(curation);
         const res = await fetch(`${BUNDLE_URL}/mods.json`);
-        if (!res.ok) throw new Error(`No sprite bundle at ${BUNDLE_URL} (${res.status}). Build one with portrait-extract/extract.py.`);
+        if (res.status === 401) throw new Error('Log in to use the portrait creator.');
+        if (!res.ok) throw new Error(`The server has no sprites to offer (${res.status}).`);
         const index: { mods: ModFile[] } = await res.json();
         return new BrowserBundle(mergeMods(index.mods));
     }

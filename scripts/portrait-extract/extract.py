@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build the portrait creator's sprite bundle from a Starbound install.
 
-    python3 portrait-extract/extract.py                 # auto-detects Starbound + workshop mods
-    python3 portrait-extract/extract.py --mod ../squoatling-mod --out public/portrait-bundle
+    python3 scripts/portrait-extract/extract.py                 # auto-detects Starbound + workshop mods
+    python3 scripts/portrait-extract/extract.py --mod ../squoatling-mod --out .portrait-bundle
 
 Reads the vanilla pak, <Starbound>/mods, every subscribed workshop mod and any --mod given
 (a .pak or an unpacked mod folder), in the game's load order, and writes one folder per mod
@@ -475,9 +475,9 @@ def main() -> None:
     ap.add_argument("--mod", action="append", default=[], metavar="PATH",
                     help="extra mod: a .pak or an unpacked mod folder; repeatable. A mod with the "
                          "same name as a workshop mod replaces it")
-    ap.add_argument("--out", default=str(Path(__file__).resolve().parent.parent / "public/portrait-bundle"),
-                    help="bundle folder (default: ff-site/public/portrait-bundle)")
-    ap.add_argument("--curation", default=str(Path(__file__).resolve().parent.parent / "src/data/portrait/curation.json"),
+    ap.add_argument("--out", default=str(Path(__file__).resolve().parent.parent.parent / ".portrait-bundle"),
+                    help="bundle folder (default: ff-site/.portrait-bundle)")
+    ap.add_argument("--curation", default=str(Path(__file__).resolve().parent.parent.parent / "src/data/portrait/curation.json"),
                     help="curation file whose skipMods are left out (default: the site's); 'none' to ignore")
     args = ap.parse_args()
 

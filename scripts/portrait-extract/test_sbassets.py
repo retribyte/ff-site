@@ -1,4 +1,4 @@
-"""python3 -m unittest discover portrait-extract"""
+"""python3 -m unittest discover scripts/portrait-extract"""
 
 import json
 import sys

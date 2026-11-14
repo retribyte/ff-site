@@ -5,7 +5,7 @@ install and its mods. Python 3.9+, standard library only, so it runs on any mach
 Starbound (Linux, Windows, macOS).
 
 ```sh
-python3 portrait-extract/extract.py --mod ../squoatling-mod
+python3 scripts/portrait-extract/extract.py --mod ../squoatling-mod
 ```
 
 It finds Starbound through Steam (or `--starbound <folder>` / `STARBOUND_DIR`), then reads, in
@@ -22,7 +22,7 @@ Nothing is unpacked to disk first; paks are read in place. A full run takes abou
 
 ## Output
 
-By default `public/portrait-bundle/` (gitignored; `--out` changes it). **One folder per mod**,
+By default `.portrait-bundle/` (gitignored; `--out` changes it). **One folder per mod**,
 holding only what that mod's own files contribute:
 
 | File | Holds |
@@ -30,7 +30,7 @@ holding only what that mod's own files contribute:
 | `<mod id>/mod.json` | the species files it ships (unpatched), its patches to other mods' species, the frame rectangles of its `.frames` files, and where each of its species sprites sits in the pack |
 | `<mod id>/items.json` | the head, chest, legs and back items it defines, with colour options, and where their sprites sit in the pack |
 | `<mod id>/sprites.pack` | its PNGs, untouched, end to end |
-| `mods.json`, `items.json` | every folder's file of that name, concatenated: what the site fetches |
+| `mods.json`, `items.json` | every folder's file of that name, concatenated (ff-server builds the same thing itself from the folders it has, leaving out mods switched off; these two are only a convenience for looking at a bundle) |
 
 A mod's id is its workshop number, `vanilla`, or a slug of its name for local mods.
 
@@ -80,5 +80,5 @@ A file that fails to parse or a patch that fails to apply is reported and skippe
 Not handled: species built by Lua scripts (`createScripts`; none installed today), `.patch.lua`,
 and item `builder` scripts (the item's plain config is used).
 
-Tests: `python3 -m unittest discover portrait-extract` (made-up mods only; no game file is ever
+Tests: `python3 -m unittest discover scripts/portrait-extract` (made-up mods only; no game file is ever
 committed).

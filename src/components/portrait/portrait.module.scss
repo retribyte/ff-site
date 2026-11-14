@@ -161,6 +161,21 @@
     @include m.pixel-error;
 }
 
+// The "log in" notice shown to visitors: across the whole page, not in the first column
+.gate {
+    grid-column: 1 / -1;
+    align-self: start;
+    justify-self: center;
+    max-width: 28rem;
+    margin-top: 3rem;
+    padding: 1.5rem;
+    text-align: center;
+
+    p {
+        margin: 0.5rem 0 0;
+    }
+}
+
 // ----- race picker
 
 .groupTitle,

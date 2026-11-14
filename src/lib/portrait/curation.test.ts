@@ -1,10 +1,28 @@
 import { describe, expect, it } from 'vitest';
-import { curateItems, isHiddenItem, repairSheet, wearableBy } from './curation';
+import { beforeAll } from 'vitest';
+import { curateItems, isHiddenItem, NO_CURATION, repairSheet, setCuration, wearableBy } from './curation';
 import type { ItemsFile, WearItem } from './types';
 
 const item = (id: string, name: string, mod = 'vanilla'): WearItem => ({ id, slot: 'chest', name, mod, frames: {}, colors: 0 });
 
+const SETTINGS = {
+    hideItemPattern: 'invisi|inviso',
+    hideItems: ['saturnnullchest'],
+    itemsOnlyFor: { '1099066352': ['alpaca'] },
+    erase: { '3667354412/humanoid/mobian race/hair/male1.png': [[72, 40]] },
+};
+
 describe('curation', () => {
+    beforeAll(() => setCuration(SETTINGS));
+
+    it('hides and repairs nothing until settings are given', () => {
+        setCuration(NO_CURATION);
+        expect(isHiddenItem('invisiblefabricchest')).toBe(false);
+        setCuration({ ...NO_CURATION, hideItemPattern: '(' }); // does not compile
+        expect(isHiddenItem('invisiblefabricchest')).toBe(false);
+        setCuration(SETTINGS);
+    });
+
     it('hides invisible clothing by name, by id and by list', () => {
         expect(isHiddenItem('toonoutfit4chest', 'Inviso-Shirt')).toBe(true);
         expect(isHiddenItem('invisiblefabricchest')).toBe(true);

@@ -1,4 +1,4 @@
-// Shapes of the sprite bundle written by portrait-extract/extract.py (one folder per mod), of
+// Shapes of the sprite bundle written by scripts/portrait-extract/extract.py (one folder per mod), of
 // the merged view the site builds from the folders present (merge.ts), and of a saved portrait.
 
 import type { Json } from './jsonPatch';

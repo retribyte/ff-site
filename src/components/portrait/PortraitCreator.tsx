@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import raceTable from '@/data/portrait/races.json';
 import { BrowserBundle, paint, toPngBlob } from '@/lib/portrait/browserBundle';
 import { defaultRecipe, EMOTES, randomRecipe } from '@/lib/portrait/humanoid';
+import type { Curation } from '@/lib/portrait/curation';
 import { raceSpecies, resolveRaces, type Race, type RaceDef } from '@/lib/portrait/races';
 import type { Pixels, Recipe } from '@/lib/portrait/types';
 import { BodyPanel, PalettePanel, RacePicker, SourcesPanel, WardrobePanel } from './panels';
@@ -20,7 +20,14 @@ interface Draft {
     recipe: Recipe;
 }
 
-export default function PortraitCreator() {
+/** The creator's settings, from ff-server's GET /portrait/settings. */
+export interface PortraitSettings {
+    categories: string[];
+    races: RaceDef[];
+    curation: Curation;
+}
+
+export default function PortraitCreator({ settings }: { settings: PortraitSettings }) {
     const [bundle, setBundle] = useState<BrowserBundle | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [draft, setDraft] = useState<Draft | null>(null);
@@ -31,15 +38,15 @@ export default function PortraitCreator() {
     const [pasting, setPasting] = useState(false);
     const [note, setNote] = useState('');
 
-    const races = useMemo(() => (bundle ? resolveRaces(bundle.manifest, raceTable.races as RaceDef[]) : []), [bundle]);
+    const races = useMemo(() => (bundle ? resolveRaces(bundle.manifest, settings.races) : []), [bundle, settings]);
     const picked = races.find((r) => r.id === draft?.race) ?? null;
     // The species follows the recipe's own choice of mods, which the Sources tab can change.
     const race = picked && bundle && draft ? { ...picked, species: raceSpecies(bundle.manifest, picked, draft.recipe.exclude) } : picked;
 
     // Load the bundle, then start from the draft left in this browser, else the first race.
     useEffect(() => {
-        BrowserBundle.load().then((loaded) => {
-            const list = resolveRaces(loaded.manifest, raceTable.races as RaceDef[]);
+        BrowserBundle.load(settings.curation).then((loaded) => {
+            const list = resolveRaces(loaded.manifest, settings.races);
             let saved: Draft | null = null;
             try {
                 saved = JSON.parse(localStorage.getItem(DRAFT_KEY) ?? 'null');
@@ -50,7 +57,7 @@ export default function PortraitCreator() {
             setBundle(loaded);
             if (list.length) setDraft(known ? saved : { race: list[0].id, recipe: defaultRecipe(list[0].species, list[0]) });
         }, (e: Error) => setError(e.message));
-    }, []);
+    }, [settings]);
 
     useEffect(() => {
         if (draft) localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -134,7 +141,7 @@ export default function PortraitCreator() {
 
     return (
         <main className={styles.page}>
-            <RacePicker bundle={bundle} races={races} categories={raceTable.categories} current={race.id} onPick={pickRace} />
+            <RacePicker bundle={bundle} races={races} categories={settings.categories} current={race.id} onPick={pickRace} />
 
             <section className={styles.stage} aria-label='Portrait'>
                 <header className={styles.stageHead}>

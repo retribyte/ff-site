@@ -1,15 +1,19 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import curation from '../../data/portrait/curation.json';
 import { compose, FRAME_SIZE } from './compose';
+import { setCuration } from './curation';
 import { buildLayers, defaultRecipe } from './humanoid';
 import { speciesFor } from './species';
 import { DiskBundle } from './testing/diskBundle';
 import { encodePng } from './testing/png';
 import type { Pixels } from './types';
 
-// Runs against a real bundle (portrait-extract/extract.py) when one is on disk; CI has none.
+// Runs against a real bundle (scripts/portrait-extract/extract.py) when one is on disk; CI has none.
 // PORTRAIT_SHEET=<dir> also writes contact sheets there for a look by eye.
+// The site gets its curation from ff-server; here the file those settings were imported from stands in.
+setCuration(curation);
 const hasBundle = DiskBundle.exists();
 
 function sheet(cells: Pixels[], columns: number, scale: number): Pixels {

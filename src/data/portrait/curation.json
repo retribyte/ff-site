@@ -1,8 +1,9 @@
 {
-    "_about": "What the portrait creator leaves out or repairs. `skipMods` (workshop id: name) are dropped by portrait-extract/extract.py before anything is read from them, so re-run it after changing that list. The rest is applied by the site when it loads a bundle (src/lib/portrait/curation.ts): `hideItemPattern` is a case-insensitive regex tested against an item's id and name; `hideItems` are ids hidden outright (clothing that draws nothing); `itemsOnlyFor` limits a mod's items to the listed species kinds; `erase` clears single pixels of a sprite sheet, keyed by `<mod id><image path>`, as [x, y] in the sheet.",
+    "_about": "Where the portrait creator's curation started, and still the file `npm run portrait:import-settings` (in ff-server) loads into the database. The site no longer reads this file: it gets these settings from ff-server (GET /portrait/settings), so an edit here does nothing until it is imported. `skipMods` (workshop id: name) are also dropped by scripts/portrait-extract/extract.py before anything is read from them, and on import they become mods switched off on the server. `hideItemPattern` is a case-insensitive regex tested against an item's id and name; `hideItems` are ids hidden outright (clothing that draws nothing); `itemsOnlyFor` limits a mod's items to the listed species kinds; `erase` clears single pixels of a sprite sheet, keyed by `<mod id><image path>`, as [x, y] in the sheet.",
     "skipMods": {
         "1146396826": "Skittles Outfit Modpack",
-        "1490178203": "Copyright Infringement Mod"
+        "1490178203": "Copyright Infringement Mod",
+        "1299574409": "Get rid of that underwear!"
     },
     "hideItemPattern": "invisi|inviso",
     "hideItems": [

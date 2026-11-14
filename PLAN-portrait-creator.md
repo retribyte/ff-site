@@ -25,17 +25,17 @@ a character creator inside ff-site. Branch `portrait-creator`. Decisions are Tre
 - **Colours:** the species' and items' own colour options, plus free edits through a palette
   editor (body has its palette, each clothing item its own).
 - **Poses:** yes. Back items: yes, low priority. Randomise: yes.
-- **Race table:** a JSON file in the repo (`src/data/portrait/races.json`), not a DB table.
-  Revisit if editing it by hand becomes a chore.
+- **Race table:** tables in ff-server (since step 2 below). `src/data/portrait/races.json` and
+  `curation.json` are what those tables were first filled from; the site does not read them.
 
 ## How it works
 
 ```
 Starbound paks + mods ──extract.py──> one folder per mod (mod.json, items.json, sprites.pack)
+                                              │   in a directory ff-server reads; members only
+        folders present and switched on ──merge.ts──> species, clothing, where each sprite is
                                               │
-                    folders present ──merge.ts──> species, clothing, where each sprite is
-                                              │
-races.json, curation.json (names, hidden) ────┤
+settings tables in ff-server (names, hidden) ─┤
                                               ▼
             recipe ──humanoid.ts──> layers ──compose.ts──> 43x43 RGBA
 ```
@@ -46,7 +46,7 @@ races.json, curation.json (names, hidden) ────┤
 - **Sprites are fetched as byte ranges** of each mod's pack; ranges close together share a
   request (`pack.ts`). The same click-through went from 420 requests to 123, and page load
   from 140 to 25. One request per mod per screenful is the floor while each mod is its own file.
-- `portrait-extract/` (Python, stdlib): see its README.
+- `scripts/portrait-extract/` (Python, stdlib): see its README.
 - `src/lib/portrait/`: the engine, no DOM.
   - `directives.ts`: Starbound colour directives (replace, hueshift, saturation, brightness,
     multiply, setcolor: all that the installed species and items use).
@@ -100,17 +100,44 @@ members only; game and mod assets never enter version control; removing material
 need a code change or a deploy. Order agreed with Trey:
 
 1. ~~Per-mod folders with batched sprite fetches (extractor and site loader).~~ Done.
-2. **ff-server:** serve the bundle from a directory outside the deployed site (the site deploy
-   mirrors its folder with `--delete`), members only, in the same shape as the static files
-   (`mods.json`, `items.json`, `<mod>/sprites.pack` with `Range`), built from the folders
-   present and the mods switched on. Settings tables to replace `races.json` and
-   `curation.json`. A prod-sql file. Optionally one endpoint that returns several sprites at
-   once, to get under one request per mod.
+2. ~~**ff-server** serves the bundle and holds the settings.~~ Done 2026-11-14 (branch
+   `portrait-creator` in both repos), not deployed. See "Step 2 as built" below. Left out: an
+   endpoint that returns several sprites at once (optional; Trey has not asked for it).
 3. **`/admin` panel:** mods (enable, disable, delete), races and categories, hidden items,
    per-species clothing limits, pixel repairs.
 4. **A script to push mod folders to the server.**
 5. **Member modpack uploads** (last): keyed by mod id so a new version replaces the old one;
    the same component also sits on the admin panel.
+
+### Step 2 as built
+
+Three places, three kinds of thing:
+
+- **Assets on disk.** The extractor writes to `ff-site/.portrait-bundle/` by default
+  (gitignored; no longer under `public/`, so Next does not serve it). ff-server reads the
+  directory named by `PORTRAIT_BUNDLE_DIR` in its `.env`. In production that will be a
+  directory outside both deploy folders. Deleting a mod's folder there removes the mod on the
+  next request, with no restart.
+- **Settings in the database** (ff-server tables `portrait_mods`, `portrait_races`,
+  `portrait_settings`): the race list and categories, hidden items, per-species clothing,
+  pixel repairs, and an on/off switch per mod. A folder with no row is on. `npm run
+  portrait:import-settings` in ff-server fills them from `races.json` and `curation.json`
+  (`skipMods` become mods switched off); `PUT /api/admin/portrait/settings` does the same
+  over HTTP, which is how production gets its first settings. Step 3's panel edits them.
+- **Site code.** `/portraits` asks for a login, reads `GET /api/portrait/settings` on the
+  server and hands it to the creator. Sprites come through `/site/portrait-bundle/...`, a
+  route that adds the member's token and passes `Range` on to ff-server's
+  `/api/portrait/bundle/{mods.json, items.json, <mod>/sprites.pack}`. No token, no sprites
+  (401), and both are marked noindex.
+
+The two index files go out gzipped (7 MB as files, 0.9 MB on the wire) and are revalidated
+with an ETag, so a return visit downloads neither.
+
+To run it on a dev machine: build the bundle (`python3 scripts/portrait-extract/extract.py
+--mod ../squoatling-mod`), set `PORTRAIT_BUNDLE_DIR` to the absolute path of
+`ff-site/.portrait-bundle` in `ff-server/.env`, apply the schema (`npx prisma db push` in
+ff-server on a database that lacks the three tables), run `npm run portrait:import-settings`,
+start both servers and log in.
 
 Still open from before:
 
