@@ -225,8 +225,7 @@ export default function ModUploader({ switchedOff = [], onUploaded }: {
 
             <ol className={styles.steps}>
                 <li>
-                    <strong>The base game’s file, packed.pak.</strong> A mod cannot be read without it: it says how every sprite sheet is cut into frames, and holds
-                    the species and clothing that mods change. It is not uploaded unless you tick it below.
+                    <strong>The base game’s file, packed.pak.</strong>
                     <PathLine path={steamPath(os, 'common', 'Starbound', 'assets')} />
                     <label className={styles.pick}>
                         <input type='file' accept='.pak' disabled={busy} onChange={(e) => addFiles(e.target.files)} />
@@ -234,8 +233,7 @@ export default function ModUploader({ switchedOff = [], onUploaded }: {
                     </label>
                 </li>
                 <li>
-                    <strong>Your mods.</strong> Choose the workshop folder to take every mod you are subscribed to (your browser will ask to confirm; nothing is
-                    uploaded yet), or pick .pak files one by one. Pick as often as you like.
+                    <strong>Your mods.</strong> Choose the workshop folder to take every mod you are subscribed to, or pick .pak files one by one.
                     <PathLine path={steamPath(os, 'workshop', 'content', '211820')} />
                     <span className={styles.pickRow}>
                         <label className={styles.pick}>

@@ -176,6 +176,13 @@
     }
 }
 
+.loginButton {
+    display: inline-block;
+    margin-top: 1rem;
+    text-decoration: none;
+    @include m.cta-button(1rem, 0.5rem 1.25rem);
+}
+
 // ----- race picker
 
 .groupTitle,

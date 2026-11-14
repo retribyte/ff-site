@@ -19,9 +19,10 @@ export default async function PortraitsPage() {
             <main className={styles.page}>
                 <div className={`pixel-panel ${styles.gate}`}>
                     <p className='pixel-label'>⚠ restricted frequency</p>
-                    <p>
-                        The portrait creator is for members. <Link href='/login'>Log in</Link>
-                    </p>
+                    <p>The portrait creator is for members.</p>
+                    <Link className={styles.loginButton} href='/login'>
+                        Log in
+                    </Link>
                 </div>
             </main>
         );
