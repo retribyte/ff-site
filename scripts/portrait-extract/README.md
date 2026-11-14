@@ -82,3 +82,9 @@ and item `builder` scripts (the item's plain config is used).
 
 Tests: `python3 -m unittest discover scripts/portrait-extract` (made-up mods only; no game file is ever
 committed).
+
+## Getting a bundle onto the server
+
+`scripts/portrait-push.sh` copies mod folders to the directory ff-server reads
+(`--dry-run` shows what would change). ff-server's `docs/deploy-nfsn.md`, "Portrait creator
+sprites", has the server side.

@@ -111,7 +111,11 @@ need a code change or a deploy. Order agreed with Trey:
    pasted in. Categories, the hidden-clothing pattern and list, and pixel repairs are one
    form. Not in it yet: picking a hidden item or a stray pixel by clicking on it in the
    creator (ids and coordinates are typed).
-4. **A script to push mod folders to the server.**
+4. ~~**A script to push mod folders to the server.**~~ Written 2026-11-14:
+   `scripts/portrait-push.sh` (all mods or the ones named; `--dry-run`; `--prune` to delete
+   server folders this machine lacks). Tried against a local folder only: it has not been
+   run against the server. The server-side steps are in ff-server's `docs/deploy-nfsn.md`,
+   "Portrait creator sprites".
 5. **Member modpack uploads** (last): keyed by mod id so a new version replaces the old one;
    the same component also sits on the admin panel.
 
