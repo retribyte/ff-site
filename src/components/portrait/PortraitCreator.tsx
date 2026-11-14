@@ -7,11 +7,12 @@ import type { Curation } from '@/lib/portrait/curation';
 import { raceSpecies, resolveRaces, type Race, type RaceDef } from '@/lib/portrait/races';
 import type { Pixels, Recipe } from '@/lib/portrait/types';
 import { BodyPanel, PalettePanel, RacePicker, SourcesPanel, WardrobePanel } from './panels';
+import SavedPanel, { type Kept } from './SavedPanel';
 import Thumb from './Thumb';
 import styles from './portrait.module.scss';
 
 const DRAFT_KEY = 'portraitDraft';
-const TABS = ['body', 'wardrobe', 'colours', 'sources'] as const;
+const TABS = ['body', 'wardrobe', 'colours', 'sources', 'saved'] as const;
 type Tab = (typeof TABS)[number];
 const BACKDROPS = ['space', 'dark', 'light', 'checker'] as const;
 
@@ -49,6 +50,8 @@ export default function PortraitCreator({ settings }: { settings: PortraitSettin
     const canvas = useRef<HTMLCanvasElement>(null);
     const [pasting, setPasting] = useState(false);
     const [note, setNote] = useState('');
+    // The saved portrait on the stage, if it was saved or opened this session (the Saved tab)
+    const [kept, setKept] = useState<Kept | null>(null);
 
     const races = useMemo(() => (bundle ? resolveRaces(bundle.manifest, settings.races) : []), [bundle, settings]);
     const picked = races.find((r) => r.id === draft?.race) ?? null;
@@ -94,7 +97,10 @@ export default function PortraitCreator({ settings }: { settings: PortraitSettin
     }, []);
     // The clothing toggle belongs to the session, not the race: it carries over to a new race
     // and through Randomize.
-    const pickRace = (r: Race) => setDraft((d) => ({ race: r.id, recipe: { ...defaultRecipe(r.species, r), nude: d?.recipe.nude ?? false } }));
+    const pickRace = (r: Race) => {
+        setKept(null); // another race is another portrait: saving it should not overwrite the one opened
+        setDraft((d) => ({ race: r.id, recipe: { ...defaultRecipe(r.species, r), nude: d?.recipe.nude ?? false } }));
+    };
 
     if (error) return <main className={styles.page}><p className={styles.error}>{error}</p></main>;
     if (!bundle || !race || !recipe) return <main className={styles.page}><p className={styles.empty}>Loading sprites…</p></main>;
@@ -130,6 +136,26 @@ export default function PortraitCreator({ settings }: { settings: PortraitSettin
             setNote('Could not reach the clipboard.');
         }
     };
+    // Puts a pasted or saved portrait on the stage; false (with a note) if it cannot be shown here.
+    const loadDraft = (parsed: Draft | null): boolean => {
+        const r = parsed?.recipe;
+        if (!r || r.v !== 1 || typeof r.species !== 'string' || !Array.isArray(r.exclude) || typeof r.wear !== 'object') {
+            setNote('That is not a portrait recipe.');
+            return false;
+        }
+        const kind = r.species.toLowerCase();
+        const target = races.find((x) => x.id === parsed!.race && x.species.kind.toLowerCase() === kind) ?? races.find((x) => x.species.kind.toLowerCase() === kind);
+        if (!target) {
+            setNote(`This recipe is for "${r.species}", which is not in the sprites loaded here.`);
+            return false;
+        }
+        const known = new Set(bundle.manifest.mods.map((m) => m.id));
+        const missing = [...new Set(Object.values(r.wear).map((w) => w?.item).filter((id): id is string => !!id && !!bundle.items && !bundle.items.items.some((i) => i.id === id)))];
+        setDraft({ race: target.id, recipe: { ...r, species: target.species.kind, prefer: r.prefer?.filter((m) => known.has(m)) } });
+        setPasting(false);
+        setNote(missing.length ? `Recipe loaded. Not in the sprites loaded here: ${missing.join(', ')}.` : 'Recipe loaded.');
+        return true;
+    };
     const loadRecipe = (text: string) => {
         let parsed: Draft | null = null;
         try {
@@ -137,16 +163,7 @@ export default function PortraitCreator({ settings }: { settings: PortraitSettin
         } catch {
             parsed = null;
         }
-        const r = parsed?.recipe;
-        if (!r || r.v !== 1 || typeof r.species !== 'string' || !Array.isArray(r.exclude) || typeof r.wear !== 'object') return setNote('That is not a portrait recipe.');
-        const kind = r.species.toLowerCase();
-        const target = races.find((x) => x.id === parsed!.race && x.species.kind.toLowerCase() === kind) ?? races.find((x) => x.species.kind.toLowerCase() === kind);
-        if (!target) return setNote(`This recipe is for "${r.species}", which is not in the sprites loaded here.`);
-        const known = new Set(bundle.manifest.mods.map((m) => m.id));
-        const missing = [...new Set(Object.values(r.wear).map((w) => w?.item).filter((id): id is string => !!id && !!bundle.items && !bundle.items.items.some((i) => i.id === id)))];
-        setDraft({ race: target.id, recipe: { ...r, species: target.species.kind, prefer: r.prefer?.filter((m) => known.has(m)) } });
-        setPasting(false);
-        setNote(missing.length ? `Recipe loaded. Not in the sprites loaded here: ${missing.join(', ')}.` : 'Recipe loaded.');
+        if (loadDraft(parsed)) setKept(null); // a pasted recipe is not the saved portrait any more
     };
     // Poses that differ only in name are shown once.
     const poses = sp.personalities.map((p, i) => ({ i, key: JSON.stringify(p) })).filter((p, n, all) => all.findIndex((q) => q.key === p.key) === n);
@@ -224,6 +241,7 @@ export default function PortraitCreator({ settings }: { settings: PortraitSettin
                 {tab === 'wardrobe' && <WardrobePanel bundle={bundle} race={race} recipe={recipe} set={set} />}
                 {tab === 'colours' && <PalettePanel bundle={bundle} recipe={recipe} set={set} />}
                 {tab === 'sources' && <SourcesPanel bundle={bundle} race={race} recipe={recipe} set={set} />}
+                {tab === 'saved' && <SavedPanel race={race.id} raceName={race.name} recipe={recipe} pixels={pixels} kept={kept} setKept={setKept} onOpen={loadDraft} />}
             </section>
         </main>
     );

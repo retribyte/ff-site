@@ -563,3 +563,52 @@
     background: var(--bg);
     border: 1px solid var(--border);
 }
+
+// ----- saved portraits
+
+.savedList {
+    list-style: none;
+    margin: 0.4rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.savedItem {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--border);
+
+    &[data-current] {
+        border-color: var(--border-loud);
+    }
+}
+
+.savedOpen {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.25rem;
+    text-align: left;
+    font: inherit;
+    color: var(--text);
+    background: none;
+    border: 0;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        background: var(--surface-2);
+    }
+}
+
+.savedThumb {
+    flex: none;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    image-rendering: pixelated;
+}

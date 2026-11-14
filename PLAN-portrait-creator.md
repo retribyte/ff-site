@@ -156,9 +156,12 @@ Still open from before:
 - **Trey's pass with the resolver:** human (Starface vs Cuter), floran, dragon. Settled: Avian
   and Glitch leave Cuter out (Avian is Bird Up); Blazekid is Novakid with Novaskin, no Cuter,
   no brand.
-- **Saving:** `Portrait` in ff-server (owner, name, recipe JSON, rendered PNG, optional
-  character), list and reopen. Until then "Copy recipe" and "Paste recipe" carry a portrait as text.
-- **`npm run build` and the Next 16 guides** before a PR: only the dev server has been run.
+- ~~**Saving.**~~ Done 2026-11-14: the creator's **Saved** tab keeps a portrait under a name
+  (recipe and rendered PNG, in ff-server's `portraits` table), lists the member's portraits
+  with thumbnails, reopens one, saves over it or deletes it. Private to the member who saved
+  it, until Trey rules on the open question below. Not done: linking a saved portrait to a
+  character. "Copy recipe" and "Paste recipe" still carry a portrait as text.
+- ~~`npm run build`~~ passes (2026-11-14).
 - **Wardrobe polish:** virtualised lists, favourites or a curated shelf, back items checked.
 - **14x14 avatar modal** with eraser; "apply to character" through the existing avatar upload.
 - **Index size:** `mods.json` is 3 MB and `items.json` 3.9 MB before compression.
