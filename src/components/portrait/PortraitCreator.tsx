@@ -108,10 +108,11 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
         };
     }, [bundle, recipe]);
 
-    // The narrow layout's small copy of the portrait, beside the view buttons
+    // The narrow layout's small copy of the portrait, beside the view buttons in every view so
+    // the bar never changes shape
     useEffect(() => {
         if (pixels && mini.current) paint(mini.current, pixels);
-    }, [pixels, view]);
+    }, [pixels]);
 
     const set = useCallback((update: (recipe: Recipe) => Recipe) => {
         setDraft((d) => (d ? { ...d, recipe: update(d.recipe) } : d));
@@ -192,11 +193,9 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
     return (
         <main className={styles.page} data-view={view}>
             <nav className={styles.viewBar} aria-label='Creator views'>
-                {view !== 'portrait' && (
-                    <button type='button' className={styles.mini} onClick={() => setView('portrait')} aria-label={`${race.name} portrait: show it large`}>
-                        <canvas ref={mini} width={43} height={43} />
-                    </button>
-                )}
+                <button type='button' className={styles.mini} onClick={() => setView('portrait')} aria-label={`${race.name} portrait: show it large`}>
+                    <canvas ref={mini} width={43} height={43} />
+                </button>
                 {VIEWS.map((v) => (
                     <button key={v.view} type='button' className={styles.viewTab} aria-pressed={view === v.view} onClick={() => setView(v.view)}>{v.label}</button>
                 ))}
