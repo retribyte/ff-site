@@ -123,7 +123,7 @@ function ModsPanel({ settings, onSaved }: PanelProps) {
                             <tr key={mod.id} data-off={!mod.enabled || undefined} className={own.modRow}>
                                 <td>
                                     {mod.name}
-                                    {mod.uploadedBy && mod.uploadedAt && <span className={own.dim}> · uploaded by {mod.uploadedBy}, {formatWhen(mod.uploadedAt)}</span>}
+                                    {mod.uploadedBy && mod.uploadedAt && <span className={own.dim}>, uploaded by {mod.uploadedBy}, {formatWhen(mod.uploadedAt)}</span>}
                                 </td>
                                 <td className={own.mono}>{mod.id}</td>
                                 <td className={styles.nowrap}>
@@ -283,7 +283,7 @@ function RacesPanel({ settings, kinds, onSaved }: PanelProps & { kinds: { kind: 
                                 <button type='button' className={own.raceName} aria-expanded={open === i} onClick={() => setOpen(open === i ? null : i)}>
                                     <strong>{race.name || race.id}</strong>
                                     {race.descriptor && <span className={own.dim}> {race.descriptor}</span>}
-                                    {race.species && race.species !== race.id && <span className={own.dim}> · species {race.species}</span>}
+                                    {race.species && race.species !== race.id && <span className={own.dim}>, species {race.species}</span>}
                                 </button>
                                 <select className={styles.select} aria-label={`Category of ${race.id}`} value={race.category ?? ''} onChange={(e) => edit(i, { category: e.target.value })}>
                                     <option value=''>uncategorised</option>

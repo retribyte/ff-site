@@ -146,7 +146,7 @@ export default function SavedPanel({ race, raceName, recipe, pixels, kept, setKe
                                 <img className={styles.savedThumb} src={`/site/ff/portraits/${item.id}/image.png?v=${encodeURIComponent(item.updatedAt)}`} alt='' width={64} height={64} />
                                 <span>
                                     <strong>{item.name}</strong>
-                                    <span className={styles.hint}> {item.race} · {when(item.updatedAt)}</span>
+                                    <span className={styles.hint}> {item.race}, {when(item.updatedAt)}</span>
                                 </span>
                             </button>
                             {confirming === item.id ? (

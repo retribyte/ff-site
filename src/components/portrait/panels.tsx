@@ -65,7 +65,7 @@ export function RacePicker({ bundle, races, categories, current, onPick }: {
                             {g.races.map((r) => (
                                 <li key={r.id}>
                                     <button type='button' className={styles.race} aria-pressed={current === r.id} onClick={() => onPick(r)}
-                                        title={layout === 'grid' ? [r.name, r.descriptor, r.npc ? 'NPC' : ''].filter(Boolean).join(' · ') : r.species.description || undefined}
+                                        title={layout === 'grid' ? [r.name, r.descriptor, r.npc ? 'NPC' : ''].filter(Boolean).join(', ') : r.species.description || undefined}
                                         aria-label={layout === 'grid' ? r.name : undefined}>
                                         <Thumb bundle={bundle} recipe={{ ...defaultRecipe(r.species, r), nude: true }} view='head' size={48} />
                                         <span className={styles.raceText}>
