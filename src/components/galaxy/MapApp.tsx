@@ -30,17 +30,52 @@ const LAYER_ROWS: { key: keyof Layers; label: string; swatch: string; hint: stri
     { key: 'galaxy', label: 'Galaxy', swatch: 'radial-gradient(#ffe2b4, #5a6ea8 60%, #1a2238)', hint: 'The shape of the Milky Way' },
 ];
 
-export function LayersPanel({ store, startOpen = true }: { store: Store; startOpen?: boolean }) {
-    const [open, setOpen] = useState(startOpen);
+// The view buttons' pictures. Every slanted edge is isometric: one unit up for two across.
+const ICON = { fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinejoin: 'miter' as const, 'aria-hidden': true };
+/** A slab seen from a corner: the view that turns. */
+const TiltIcon = () => (
+    <svg width='36' height='22' viewBox='0 0 36 22' {...ICON}>
+        <path d='M18 2L34 10L18 18L2 10Z' />
+        <path d='M2 10V13L18 21L34 13V10' />
+    </svg>
+);
+/** The same slab from straight above. */
+const TopIcon = () => (
+    <svg width='22' height='22' viewBox='0 0 22 22' {...ICON}>
+        <rect x='3' y='3' width='16' height='16' />
+    </svg>
+);
+const RecenterIcon = () => (
+    <svg width='22' height='22' viewBox='0 0 22 22' {...ICON} strokeWidth={1.6}>
+        <circle cx='11' cy='11' r='6' />
+        <path d='M11 1V21M1 11H21' />
+    </svg>
+);
+const LayersIcon = () => (
+    <svg width='22' height='22' viewBox='0 0 22 22' {...ICON} strokeWidth={1.6}>
+        <path d='M11 2L20 6.5L11 11L2 6.5Z' />
+        <path d='M11 6.5L20 11L11 15.5L2 11Z' />
+        <path d='M11 11L20 15.5L11 20L2 15.5Z' />
+    </svg>
+);
+
+/** Rotate or top-down, and back to the middle. Pictures only; the names are tooltips. */
+export function ViewButtons({ store }: { store: Store }) {
+    return (
+        <div className={styles.viewBtns}>
+            <div className={styles.seg} role='group' aria-label='Camera'>
+                <button type='button' aria-pressed={store.view === 'tilt'} onClick={() => store.setView('tilt')} title='Rotate' aria-label='Rotate'><TiltIcon /></button>
+                <button type='button' aria-pressed={store.view === 'top'} onClick={() => store.setView('top')} title='Top-down' aria-label='Top-down'><TopIcon /></button>
+            </div>
+            <button type='button' className={styles.iconBtn} onClick={store.resetView} title='Recenter the map' aria-label='Recenter the map'><RecenterIcon /></button>
+        </div>
+    );
+}
+
+/** The list of layers with a checkbox each. */
+function LayerList({ store }: { store: Store }) {
     const set = (key: keyof Layers, on: boolean) => store.setLayers({ ...store.layers, [key]: on });
     return (
-        <section className={cx('pixel-panel', styles.layers)} aria-label='Map layers and view'>
-            <button type='button' className={styles.layersHead} onClick={() => setOpen(!open)} aria-expanded={open}>
-                <span className='pixel-label'>Layers</span>
-                <span aria-hidden>{open ? '▾' : '▸'}</span>
-            </button>
-            {open && (
-                <>
                     <ul className={styles.layerList}>
                         {/* The still picture (no WebGL) has every other layer painted in */}
                         {LAYER_ROWS.filter((row) => !store.still || row.key === 'labels').map((row) => (
@@ -67,15 +102,24 @@ export function LayersPanel({ store, startOpen = true }: { store: Store; startOp
                             </li>
                         ))}
                     </ul>
-                    {!store.still && <div className={styles.layersView}>
-                        <span className='pixel-label'>View</span>
-                        <div className={styles.seg} role='group' aria-label='Camera'>
-                            <button type='button' aria-pressed={store.view === 'tilt'} onClick={() => store.setView('tilt')}>Rotate</button>
-                            <button type='button' aria-pressed={store.view === 'top'} onClick={() => store.setView('top')}>Top-down</button>
-                        </div>
-                        <button type='button' className={styles.linkBtn} onClick={store.resetView}>Recenter the map</button>
-                    </div>}
-                </>
+    );
+}
+
+/** Wide screens: the layers, which fold away, over the view buttons, which do not. */
+export function LayersPanel({ store }: { store: Store }) {
+    const [open, setOpen] = useState(true);
+    return (
+        <section className={cx('pixel-panel', styles.layers)} aria-label='Map layers and view'>
+            <button type='button' className={styles.layersHead} onClick={() => setOpen(!open)} aria-expanded={open}>
+                <span className='pixel-label'>Layers</span>
+                <span aria-hidden>{open ? '▾' : '▸'}</span>
+            </button>
+            {open && <LayerList store={store} />}
+            {!store.still && (
+                <div className={styles.layersView}>
+                    <span className='pixel-label'>View</span>
+                    <ViewButtons store={store} />
+                </div>
             )}
         </section>
     );
@@ -115,6 +159,8 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
     // true = the add wizard is open; a slot = it adds the planet a gap ring stands for
     const [creating, setCreating] = useState<boolean | PlanetSlot>(false);
     const [narrow, setNarrow] = useState<boolean | null>(null);
+    // Phones: the layers list, opened from its button; holds the selection it was opened under, so picking a place folds it away
+    const [layersFor, setLayersFor] = useState<number | null>(null);
     useEffect(() => {
         // Followed, not read once: a window can be resized or a phone turned after the page loads
         const media = window.matchMedia('(max-width: 760px)');
@@ -137,6 +183,14 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
     const groups = HIT_GROUPS.map(([key, title]) => ({ title, hits: found.filter((h) => h.group === key) })).filter((g) => g.hits.length > 0);
     const place = store.selPlace;
     const inSystem = store.level === 'system' && place?.kind === 'system';
+
+    const layersOpen = layersFor === (place?.id ?? 0);
+    // The same plain button the system view adds with; a phone has room for fewer words
+    const addButton = store.user ? (
+        <button type='button' className={cx(styles.btnQuiet, styles.cAdd)} onClick={() => setCreating(true)} title='Add a system or landmark'>{narrow ? '+ System' : '+ System or landmark'}</button>
+    ) : (
+        <Link href='/login' className={cx(styles.btnQuiet, styles.cAdd)}>{narrow ? 'Sign in to add' : 'Sign in to add to the map'}</Link>
+    );
 
     return (
         <main className={styles.root}>
@@ -196,8 +250,19 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                                 </div>
                             )}
                         </div>
-                        {/* Folds itself away when the selection changes, so it never sits over the sheet */}
-                        {narrow && !store.placing && <LayersPanel key={place?.id ?? 0} store={store} startOpen={false} />}
+                        {/* Phones: one row of buttons under the search box, the layers list opening beneath it */}
+                        {narrow && !store.placing && (
+                            <div className={styles.cBar}>
+                                {addButton}
+                                {!store.still && <ViewButtons store={store} />}
+                                <button type='button' className={styles.iconBtn} aria-pressed={layersOpen} onClick={() => setLayersFor(layersOpen ? null : (place?.id ?? 0))} title='Layers' aria-label='Layers'><LayersIcon /></button>
+                            </div>
+                        )}
+                        {narrow && !store.placing && layersOpen && (
+                            <section className={cx('pixel-panel', styles.layers)} aria-label='Map layers'>
+                                <LayerList store={store} />
+                            </section>
+                        )}
                         {place && !store.placing && (
                             <aside className={cx('pixel-panel', styles.cSheet)}>
                                 <button type='button' className={styles.close} onClick={() => store.select(null)} aria-label='Close'>x</button>
@@ -205,12 +270,7 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                             </aside>
                         )}
                         {/* Under the open place, else under the search box: the same plain button the system view adds with */}
-                        {!store.placing &&
-                            (store.user ? (
-                                <button type='button' className={cx(styles.btnQuiet, styles.cAdd)} onClick={() => setCreating(true)}>+ System or landmark</button>
-                            ) : (
-                                <Link href='/login' className={cx(styles.btnQuiet, styles.cAdd)}>Sign in to add to the map</Link>
-                            ))}
+                        {!narrow && !store.placing && addButton}
                     </div>
                     {narrow === false && (
                         <div className={styles.cRight}>

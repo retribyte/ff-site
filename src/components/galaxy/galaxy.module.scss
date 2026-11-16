@@ -44,6 +44,15 @@
     cursor: crosshair;
 }
 
+// No WebGL: the site's starfield around the still picture, which has the same stars painted in
+.sceneStill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--starfield) 0 0 / var(--starfield-size);
+    opacity: 0.45;
+}
+
 // The picture shown when the browser has no WebGL
 .still {
     position: absolute;
@@ -591,6 +600,37 @@
     color: var(--accent-2);
 }
 
+// A readout is a button: a click swaps it for a box to type the number into
+button.fieldReadout {
+    padding: 0;
+    border: 0;
+    border-bottom: 1px dashed var(--accent-2);
+    background: none;
+    font-family: inherit;
+    text-align: right;
+    cursor: text;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--text);
+        border-bottom-style: solid;
+    }
+}
+
+.fieldTyped {
+    display: inline-flex;
+    gap: 6px;
+    align-items: baseline;
+    font-size: 0.8rem;
+    color: var(--accent-2);
+
+    input {
+        width: 9em;
+        padding: 1px 6px;
+        text-align: right;
+    }
+}
+
 .nameInput {
     font: 1.05rem var(--font-display) !important;
     border-style: dashed !important;
@@ -718,6 +758,66 @@
             background: var(--accent);
             color: #fff;
         }
+    }
+}
+
+// The view buttons: pictures, the two cameras joined and Recenter on its own
+.viewBtns {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    flex: none;
+
+    .seg button {
+        display: grid;
+        place-items: center;
+        width: 50px;
+        height: 32px;
+        padding: 0;
+    }
+}
+
+.iconBtn {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 32px;
+    padding: 0;
+    border: 2px solid var(--border-loud);
+    background: var(--surface);
+    color: var(--text-muted);
+    cursor: pointer;
+
+    &:hover {
+        color: var(--text);
+    }
+
+    &[aria-pressed='true'] {
+        background: var(--accent);
+        color: #fff;
+    }
+}
+
+.viewBtns .seg button:hover:not([aria-pressed='true']) {
+    color: var(--text);
+}
+
+// Phones: add, the view buttons and the layers button on one row under the search box
+.cBar {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    flex: none;
+
+    > .cAdd {
+        margin-right: auto;
+        white-space: nowrap;
+    }
+
+    > .iconBtn,
+    .seg button {
+        box-shadow: 0 2px 8px var(--shadow);
     }
 }
 
@@ -930,12 +1030,27 @@
     padding: 8px 10px 10px;
 }
 
+// Folded away: the view buttons sit straight under the heading
+.layersHead + .layersView {
+    border-top: 1px dashed var(--border-loud);
+}
+
 // ---------- Chosen layout: full-screen system view ----------
 .sys {
     position: absolute;
     inset: 0;
     z-index: 5;
     background: radial-gradient(circle at 62% 50%, #0d1424, var(--void) 70%);
+
+    // The site's starfield, dimmed so that no star passes for a moon
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--starfield) 0 0 / var(--starfield-size);
+        opacity: 0.4;
+        pointer-events: none;
+    }
 }
 
 // Floating panels, as on the galaxy level.
@@ -1205,16 +1320,18 @@
         top: 100px;
     }
 
-    // Under the search box, at the right: a small button that opens into a short, scrolling list
+    // Under the row of buttons, at the right: a short, scrolling list
     .cLeft > .layers {
         align-self: flex-end;
-        width: auto;
-        min-width: 110px;
-        max-width: 200px;
+        width: 196px;
         flex: 0 1 auto;
-        min-height: 30px;
+        min-height: 60px;
         max-height: 42vh;
         overflow-y: auto;
+
+        .layerList {
+            border-top: 0;
+        }
     }
 }
 

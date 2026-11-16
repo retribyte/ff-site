@@ -10,7 +10,7 @@ import {
     bodyColor, describeSize, fmtNum, gravityG, habAU, habitability, massEarths, regionLabel, sectorOf, starOf, yearDays, zoneOf,
 } from './data';
 import type { Body, Place } from './data';
-import { BodyFields, BodyIcon, BodyName, BodyTree, DeleteButton, KIND_LABEL, designation, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
+import { BodyFields, BodyIcon, BodyName, BodyTexture, BodyTree, DeleteButton, KIND_LABEL, designation, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
 import type { PlanetSlot } from './parts';
 import type { Store } from './store';
 import styles from './galaxy.module.scss';
@@ -126,6 +126,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
                             <circle cx={c.x} cy={c.y} r={r} className={styles.orbitLine} style={{ stroke: zone.color }} />
                             <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} />
                             <circle cx={bx} cy={by} r={pr} fill={bodyColor(p)} />
+                            <BodyTexture body={p} x={bx} y={by} r={pr} />
                             <circle cx={bx} cy={by} r={pr} className={styles.shade} />
                             <text x={bx} y={by - pr - 8 - kids.length * MOON_GAP} textAnchor='middle'>{p.name}</text>
                             {kids.map((m, j) => {
@@ -141,7 +142,10 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
                                         {m.kind === 'station' ? (
                                             <rect x={mx - 3} y={my - 3} width='6' height='6' fill={bodyColor(m)} transform={`rotate(45 ${mx} ${my})`} />
                                         ) : (
-                                            <circle cx={mx} cy={my} r={Math.min(bodyPx(m), MOON_GAP / 2)} fill={bodyColor(m)} />
+                                            <>
+                                                <circle cx={mx} cy={my} r={Math.min(bodyPx(m), MOON_GAP / 2)} fill={bodyColor(m)} />
+                                                <BodyTexture body={m} x={mx} y={my} r={Math.min(bodyPx(m), MOON_GAP / 2)} />
+                                            </>
                                         )}
                                         <text x={bx} y={by + pr + MOON_GAP * kids.length + 14 + j * 13} textAnchor='middle' className={cx(styles.moonName, on && styles.moonNameOn)}>{m.name}</text>
                                     </g>
@@ -296,7 +300,7 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                         {editing && mine ? (
                           <>
                             <TextFields key={body.id} store={store} place={place} body={body} />
-                            <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} system={place} selfId={body.id} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                            <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} system={place} selfId={body.id} planet={place.bodies.find((b) => b.id === body.parentId && b.kind === 'planet')} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
                           </>
                         ) : (
                             <Telemetry place={place} body={body} />

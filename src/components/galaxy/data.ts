@@ -445,6 +445,27 @@ export const COMPOSITIONS: Record<string, { label: string; color: string; densit
     artificial: { label: 'Artificial', color: '#9aa3b8', density: 0.1 },
 };
 
+/**
+ * The closest a moon can orbit, in km from its planet's centre, before tides pull it
+ * apart: the Roche limit for a solid body, 1.26 R (planet density / moon density)^(1/3).
+ * Densities are the rough ones of COMPOSITIONS, so this is a floor, not a measurement.
+ */
+export function rocheKm(planet: { radiusKm: number; type: string }, moonType: string): number {
+    const ratio = (COMPOSITIONS[planet.type]?.density ?? 1) / (COMPOSITIONS[moonType]?.density ?? 1);
+    return 1.26 * planet.radiusKm * Math.cbrt(ratio);
+}
+
+/**
+ * How near and how far a moon or station may orbit this planet, km. A moon stays
+ * outside its Roche limit; a station is held together by its hull, so it only has to
+ * clear the surface. With no planet known, the plain reference range.
+ */
+export function satelliteRange(kind: BodyKind, planet: { radiusKm: number; type: string } | undefined, type: string): [number, number] {
+    if (!planet) return MOON_ORBIT_RANGE;
+    const lo = Math.ceil(kind === 'moon' ? rocheKm(planet, type) : planet.radiusKm * 1.03);
+    return [lo, Math.max(MOON_ORBIT_RANGE[1], lo * 100)];
+}
+
 export const starOf = (place: Place) => place.bodies.find((b) => b.kind === 'star');
 
 export const toT = (v: number, [lo, hi]: [number, number]) => Math.log(v / lo) / Math.log(hi / lo);

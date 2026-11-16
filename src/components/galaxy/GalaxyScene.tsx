@@ -380,6 +380,69 @@ function buildTransit(fontDisplay: string): THREE.Group {
     return group;
 }
 
+// The site's starfield (public/images/starfield.svg), which tiles seamlessly at this size
+const STAR_TILE = { w: 1334, h: 1000 };
+const VOID = '#05080e';
+
+/** The starfield tile painted onto the map's own black, as a texture that repeats. */
+function loadStarfield(): Promise<THREE.Texture | null> {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            const c = document.createElement('canvas');
+            c.width = STAR_TILE.w;
+            c.height = STAR_TILE.h;
+            const g = c.getContext('2d')!;
+            g.fillStyle = VOID;
+            g.fillRect(0, 0, c.width, c.height);
+            g.globalAlpha = 0.45;
+            g.drawImage(img, 0, 0, c.width, c.height);
+            const tex = new THREE.CanvasTexture(c);
+            tex.colorSpace = THREE.SRGBColorSpace;
+            tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+            resolve(tex);
+        };
+        img.onerror = () => resolve(null);
+        img.src = '/images/starfield.svg';
+    });
+}
+
+/**
+ * The starfield behind the map, two ways. `box` is a skybox for the rotating view: a
+ * cube around the camera with the tile repeated on every face (the scene keeps it
+ * centred on the camera, so the stars turn with the view and never come nearer).
+ * `flat` is for top-down and the still picture: the tile laid straight onto the
+ * screen at its own size, `pixelRatio` device pixels to one of its own.
+ */
+function buildSky(tex: THREE.Texture, pixelRatio: number): { box: THREE.Mesh; flat: THREE.Mesh } {
+    const faces = tex.clone();
+    // A face spans 90 degrees; this many tiles across it keeps a star about its drawn size at the map's lens
+    faces.repeat.set(1.5, 2);
+    faces.needsUpdate = true;
+    const box = new THREE.Mesh(new THREE.BoxGeometry(2000, 2000, 2000), new THREE.MeshBasicMaterial({ map: faces, side: THREE.BackSide, depthTest: false, depthWrite: false }));
+    const flat = new THREE.Mesh(
+        new THREE.PlaneGeometry(2, 2),
+        new THREE.ShaderMaterial({
+            uniforms: { map: { value: tex }, tile: { value: new THREE.Vector2(STAR_TILE.w * pixelRatio, STAR_TILE.h * pixelRatio) } },
+            vertexShader: 'void main() { gl_Position = vec4(position.xy, 1.0, 1.0); }',
+            fragmentShader: `
+                uniform sampler2D map;
+                uniform vec2 tile;
+                void main() {
+                    gl_FragColor = texture2D(map, gl_FragCoord.xy / tile);
+                    #include <colorspace_fragment>
+                }`,
+            depthTest: false,
+            depthWrite: false,
+        }),
+    );
+    for (const mesh of [box, flat]) {
+        mesh.frustumCulled = false;
+        mesh.renderOrder = -100;
+    }
+    return { box, flat };
+}
+
 /** Half the width, in klyr, of the square the still picture covers (top-down, +y up, Sagittarius A in the middle). */
 export const STILL_HALF = 52;
 
@@ -392,16 +455,20 @@ export function renderStill(size: number, fontDisplay: string): Promise<string> 
     return new Promise((resolve) => {
         const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
         renderer.setSize(size, size, false);
-        renderer.setClearColor(new THREE.Color('#05080e'));
+        renderer.setClearColor(new THREE.Color(VOID));
         const scene = new THREE.Scene();
         const camera = new THREE.OrthographicCamera(-STILL_HALF, STILL_HALF, STILL_HALF, -STILL_HALF, 0.1, 1000);
         camera.position.set(0, 0, 200);
         camera.up.set(0, 1, 0);
         camera.lookAt(0, 0, 0);
+        const stars = loadStarfield();
         const groups = buildWorld(fontDisplay, () => {
-            renderer.render(scene, camera);
-            resolve(renderer.domElement.toDataURL('image/webp', 0.9));
-            renderer.dispose();
+            void stars.then((tex) => {
+                if (tex) scene.add(buildSky(tex, 1).flat);
+                renderer.render(scene, camera);
+                resolve(renderer.domElement.toDataURL('image/webp', 0.9));
+                renderer.dispose();
+            });
         });
         groups.octants.visible = false;
         groups.bearings.visible = false;
@@ -558,7 +625,7 @@ const TOP_DIR = new THREE.Vector3(0, -0.0005, 1).normalize();
 export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen, onStill }: Props) {
     const hostRef = useRef<HTMLDivElement>(null);
     const markerRefs = useRef(new Map<number, HTMLButtonElement>());
-    const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Groups; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
+    const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Groups; sky: { box: THREE.Mesh; flat: THREE.Mesh } | null; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
     const live = useRef({ places, placing, onPlace, onSelect, selectedId });
     const [readout, setReadout] = useState('');
     const [failed, setFailed] = useState(false);
@@ -577,7 +644,7 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
             return;
         }
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-        renderer.setClearColor(new THREE.Color('#05080e'));
+        renderer.setClearColor(new THREE.Color(VOID));
         host.prepend(renderer.domElement);
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 6000);
@@ -592,7 +659,13 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         const groups = buildWorld(getComputedStyle(host).getPropertyValue('--font-display').trim() || 'sans-serif');
         scene.add(...Object.values(groups));
 
-        three.current = { camera, controls, groups, goal: null, camGoal: null, distGoal: null, top: false, maxBase: 150 };
+        three.current = { camera, controls, groups, sky: null, goal: null, camGoal: null, distGoal: null, top: false, maxBase: 150 };
+        void loadStarfield().then((tex) => {
+            const t = three.current;
+            if (!tex || !t || t.camera !== camera) return tex?.dispose();
+            t.sky = buildSky(tex, renderer.getPixelRatio());
+            scene.add(t.sky.box, t.sky.flat);
+        });
         // A drag or a scroll takes over from any camera move in progress
         controls.addEventListener('start', () => {
             const t = three.current;
@@ -687,6 +760,12 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
                 tg.set(nx, ny, nz);
                 controls.update();
             }
+            if (t.sky) {
+                // A skybox while the view can turn; the same stars laid flat when it cannot
+                t.sky.box.visible = !t.top;
+                t.sky.flat.visible = t.top;
+                t.sky.box.position.copy(camera.position);
+            }
             renderer.render(scene, camera);
             const w = host.clientWidth;
             const h = host.clientHeight;
@@ -716,7 +795,8 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         };
     }, []);
 
-    // View lock: top-down is a straight-down camera with rotation off (drag pans).
+    // View lock: top-down is a straight-down camera that only zooms. It still slides to a
+    // place that is picked and back on Recenter; a drag pans only while placing something.
     useEffect(() => {
         const t = three.current;
         if (!t) return;
@@ -727,6 +807,7 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         const dist = camera.position.distanceTo(controls.target) / (wasTop ? FLAT : 1);
         const f = top ? FLAT : 1;
         controls.enableRotate = !top;
+        controls.enablePan = !top || placing;
         controls.mouseButtons.LEFT = top ? THREE.MOUSE.PAN : THREE.MOUSE.ROTATE;
         controls.touches.ONE = top ? THREE.TOUCH.PAN : THREE.TOUCH.ROTATE;
         controls.touches.TWO = top ? THREE.TOUCH.DOLLY_PAN : THREE.TOUCH.DOLLY_ROTATE;
@@ -831,7 +912,7 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
     };
 
     return (
-        <div ref={hostRef} className={`${styles.scene} ${placing ? styles.scenePlacing : ''}`} onClick={failed ? clickStill : undefined}>
+        <div ref={hostRef} className={`${styles.scene} ${placing ? styles.scenePlacing : ''} ${failed ? styles.sceneStill : ''}`} onClick={failed ? clickStill : undefined}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             {failed && <img className={styles.still} src='/galaxy/still.webp' alt='The galaxy from above, with its territories' style={{ width: side, height: side }} />}
             {places.map((place) => {

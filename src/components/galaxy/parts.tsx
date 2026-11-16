@@ -10,8 +10,8 @@ import WikiLink from '@/components/WikiLink';
 import { decodeEntities } from '@/lib/html';
 import { isValidSlug } from '@/lib/slug';
 import {
-    COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_RANGE, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
-    bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, planetNumber, randomPointIn, regionAt, regionLabel, sectorOf, starOf, toT, yearDays, zoneOf,
+    COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
+    bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, planetNumber, randomPointIn, regionAt, regionLabel, satelliteRange, sectorOf, starOf, toT, yearDays, zoneOf,
 } from './data';
 import type { Body, BodyKind, Place, Ref, RegionKey } from './data';
 import type { Store, TextPatch, Where } from './store';
@@ -32,9 +32,54 @@ interface ScaleProps {
     starType?: string;
     /** A lineup of reference bodies to pick from; otherwise a ruler to click along. */
     sizes?: boolean;
+    /** What the value is counted in, shown beside the box a known value is typed into. */
+    unit: string;
+    /** The least and most a typed value may be. */
+    bounds: [number, number];
 }
 
-function ScaleInput({ label, value, onChange, refs, range, readout, starType, sizes }: ScaleProps) {
+/** The readout of a scale; a click turns it into a box for whoever does know the number. */
+function Readout({ text, value, unit, bounds, onChange }: { text: string; value: number; unit: string; bounds: [number, number]; onChange: (v: number) => void }) {
+    const [typed, setTyped] = useState<string | null>(null);
+    if (typed === null) {
+        return (
+            <button type='button' className={styles.fieldReadout} onClick={() => setTyped(String(Number(value.toPrecision(6))))} title={`Type a value in ${unit}`}>
+                {text}
+            </button>
+        );
+    }
+    const commit = () => {
+        const v = Number(typed);
+        if (typed.trim() !== '' && Number.isFinite(v) && v > 0) onChange(Math.max(bounds[0], Math.min(bounds[1], v)));
+        setTyped(null);
+    };
+    return (
+        <span className={styles.fieldTyped}>
+            <input
+                type='number'
+                autoFocus
+                min={bounds[0]}
+                max={bounds[1]}
+                step='any'
+                value={typed}
+                onChange={(e) => setTyped(e.target.value)}
+                onFocus={(e) => e.currentTarget.select()}
+                onBlur={commit}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') e.currentTarget.blur();
+                    if (e.key === 'Escape') {
+                        e.stopPropagation();
+                        setTyped(null);
+                    }
+                }}
+                aria-label={`${unit}`}
+            />
+            {unit}
+        </span>
+    );
+}
+
+function ScaleInput({ label, value, onChange, refs, range, readout, starType, sizes, unit, bounds }: ScaleProps) {
     const t = Math.max(0, Math.min(1, toT(value, range)));
     const nearest = refs.reduce((best, r) => (Math.abs(Math.log(value / r.value)) < Math.abs(Math.log(value / best.value)) ? r : best), refs[0]);
     const hab = starType ? habAU(starType) : 1;
@@ -52,7 +97,7 @@ function ScaleInput({ label, value, onChange, refs, range, readout, starType, si
         <div className={styles.field}>
             <div className={styles.fieldHead}>
                 <span className='pixel-label'>{label}</span>
-                <span className={styles.fieldReadout}>{readout}</span>
+                <Readout text={readout} value={value} unit={unit} bounds={bounds} onChange={onChange} />
             </div>
             {sizes ? (
                 <div className={styles.lineup}>
@@ -123,7 +168,7 @@ function PlanetNumber({ draft, onChange, system, selfId }: { draft: BodyDraft; o
     );
 }
 
-export function BodyFields({ kind, draft, onChange, starType, system, selfId }: { kind: BodyKind; draft: BodyDraft; onChange: (patch: Partial<BodyDraft>) => void; starType: string; /** Planets: the system it is in, and its own id once it exists. */ system?: Place; selfId?: number }) {
+export function BodyFields({ kind, draft, onChange, starType, system, selfId, planet }: { kind: BodyKind; draft: BodyDraft; onChange: (patch: Partial<BodyDraft>) => void; starType: string; /** Planets: the system it is in, and its own id once it exists. */ system?: Place; selfId?: number; /** Moons and stations: the planet it orbits. */ planet?: Body }) {
     if (kind === 'star') {
         return (
             <div className={styles.field}>
@@ -140,6 +185,13 @@ export function BodyFields({ kind, draft, onChange, starType, system, selfId }: 
     }
     const orbitsStar = kind === 'planet';
     const zone = zoneOf(draft.orbit, starType);
+    // A moon cannot orbit inside its planet's Roche limit, nor a station inside the planet
+    const satRange = satelliteRange(kind, planet, draft.type);
+    const satRefs = [
+        ...(planet && kind === 'moon' ? [{ key: 'roche', label: 'Roche limit', value: satRange[0] }] : []),
+        ...MOON_ORBIT_REFS.filter((r) => r.value > satRange[0] * 1.15 && r.value <= satRange[1]),
+    ];
+    const satOrbit = Math.max(draft.orbit, satRange[0]);
     return (
         <>
             {kind !== 'station' && (
@@ -162,6 +214,8 @@ export function BodyFields({ kind, draft, onChange, starType, system, selfId }: 
                 refs={kind === 'planet' ? SIZE_REFS.slice(1) : SIZE_REFS.slice(0, 4)}
                 range={SIZE_RANGE}
                 readout={`${describeSize(draft.radiusKm)}, ${fmtNum(draft.radiusKm)} km`}
+                unit='km'
+                bounds={[1, 1e7]}
             />
             {orbitsStar ? (
                 <ScaleInput
@@ -171,16 +225,20 @@ export function BodyFields({ kind, draft, onChange, starType, system, selfId }: 
                     refs={ORBIT_REFS}
                     range={ORBIT_RANGE}
                     starType={starType}
+                    unit='AU'
+                    bounds={[0.001, 1e5]}
                     readout={`${zone.label}, ${fmtNum(draft.orbit)} AU, a year of ${fmtNum(yearDays(draft.orbit, starType))} equinoxes`}
                 />
             ) : (
                 <ScaleInput
                     label='Distance from what it orbits'
-                    value={draft.orbit}
+                    value={satOrbit}
                     onChange={(v) => onChange({ orbit: v })}
-                    refs={MOON_ORBIT_REFS}
-                    range={MOON_ORBIT_RANGE}
-                    readout={`${fmtNum(draft.orbit)} km`}
+                    refs={satRefs}
+                    range={satRange}
+                    unit='km'
+                    bounds={[satRange[0], 1e9]}
+                    readout={`${fmtNum(satOrbit)} km`}
                 />
             )}
             {orbitsStar && <PlanetNumber draft={draft} onChange={onChange} system={system} selfId={selfId} />}
@@ -373,6 +431,76 @@ export function BodyName({ body, paren }: { body: Body; paren?: boolean }) {
     );
 }
 
+const DARK = 'rgba(0, 0, 0, 0.2)';
+const LIGHT = 'rgba(255, 255, 255, 0.26)';
+
+/**
+ * What a planet or moon is made of, drawn over its disc at (x, y) in a darker and a
+ * lighter shade of whatever color it has. Shapes are laid out on a disc of radius 1
+ * and turned by an angle that differs per body, so no two look stamped.
+ */
+export function BodyTexture({ body, x, y, r }: { body: Body; x: number; y: number; r: number }) {
+    const banded = body.type === 'gas' || body.type === 'ice' || body.type === 'desert';
+    const turn = banded ? ((body.id * 47) % 50) - 25 : (body.id * 47) % 360;
+    return (
+        <g transform={`translate(${x} ${y}) scale(${r})`} pointerEvents='none'>
+            <clipPath id={`galaxy-disc-${body.id}`}><circle r='1' /></clipPath>
+            <g clipPath={`url(#galaxy-disc-${body.id})`}>
+                <g transform={`rotate(${turn})`}>
+                    {body.type === 'rocky' && (
+                        <>
+                            <path d='M-1.1 0.25C-0.6 0 -0.2 0.3 0.1 0.55S0.7 0.9 1.1 0.7V1.2H-1.1Z' fill={DARK} />
+                            <circle cx='-0.35' cy='-0.3' r='0.27' fill={DARK} />
+                            <circle cx='0.42' cy='-0.02' r='0.18' fill={DARK} />
+                            <circle cx='0.2' cy='-0.58' r='0.11' fill={DARK} />
+                            <circle cx='-0.41' cy='-0.36' r='0.13' fill={LIGHT} />
+                        </>
+                    )}
+                    {body.type === 'ocean' && (
+                        <>
+                            <path d='M-0.75 -0.2C-0.6 -0.62 -0.1 -0.6 0.02 -0.25C0.12 0.05 -0.2 0.12 -0.3 0.3C-0.4 0.5 -0.62 0.4 -0.7 0.15Z' fill={LIGHT} />
+                            <path d='M0.25 0.15C0.5 -0.05 0.85 0.2 0.7 0.5C0.6 0.75 0.3 0.8 0.2 0.55Z' fill={LIGHT} />
+                            <path d='M0.3 -0.7C0.5 -0.75 0.7 -0.55 0.6 -0.42C0.5 -0.32 0.3 -0.45 0.3 -0.7Z' fill={LIGHT} />
+                            <path d='M-1.1 0.5C-0.5 0.75 0.3 0.95 1.1 0.6V1.2H-1.1Z' fill={DARK} />
+                        </>
+                    )}
+                    {body.type === 'desert' && (
+                        <>
+                            <path d='M-1 -0.5Q-0.5 -0.7 0 -0.5T1 -0.5V-0.3Q0.5 -0.5 0 -0.3T-1 -0.3Z' fill={DARK} />
+                            <path d='M-1 0.05Q-0.5 -0.15 0 0.05T1 0.05V0.3Q0.5 0.1 0 0.3T-1 0.3Z' fill={DARK} />
+                            <path d='M-1 -0.2Q-0.5 -0.4 0 -0.2T1 -0.2V-0.1Q0.5 -0.3 0 -0.1T-1 -0.1Z' fill={LIGHT} />
+                            <path d='M-1 0.6Q-0.5 0.4 0 0.6T1 0.6V0.72Q0.5 0.52 0 0.72T-1 0.72Z' fill={LIGHT} />
+                        </>
+                    )}
+                    {body.type === 'ice' && (
+                        <>
+                            <ellipse cx='0' cy='-1' rx='0.85' ry='0.45' fill={LIGHT} />
+                            <ellipse cx='0' cy='1' rx='0.7' ry='0.36' fill={LIGHT} />
+                            <path d='M-0.8 0.1L-0.35 -0.1L0 0.15L0.4 -0.05L0.85 0.2M-0.35 -0.1L-0.2 -0.4M0.4 -0.05L0.3 0.4' fill='none' stroke={DARK} strokeWidth='0.07' />
+                        </>
+                    )}
+                    {body.type === 'gas' && (
+                        <>
+                            <rect x='-1' y='-0.68' width='2' height='0.2' fill={DARK} />
+                            <rect x='-1' y='-0.36' width='2' height='0.1' fill={LIGHT} />
+                            <rect x='-1' y='-0.12' width='2' height='0.26' fill={DARK} />
+                            <rect x='-1' y='0.3' width='2' height='0.09' fill={LIGHT} />
+                            <rect x='-1' y='0.52' width='2' height='0.16' fill={DARK} />
+                            <ellipse cx='0.36' cy='0.24' rx='0.22' ry='0.1' fill={LIGHT} />
+                        </>
+                    )}
+                    {body.type === 'artificial' && (
+                        <>
+                            <path d='M-1 -0.34H1M-1 0.34H1M-0.34 -1V1M0.34 -1V1' fill='none' stroke={DARK} strokeWidth='0.08' />
+                            <circle r='0.66' fill='none' stroke={LIGHT} strokeWidth='0.08' />
+                        </>
+                    )}
+                </g>
+            </g>
+        </g>
+    );
+}
+
 /** Sun, planet, moon or station, in the body's own color. */
 export function BodyIcon({ body, size = 16 }: { body: Body; size?: number }) {
     const c = bodyColor(body);
@@ -544,7 +672,7 @@ export function SelectionDetail({ store }: { store: Store }) {
                     {editing && mine ? (
                       <>
                         <TextFields key={body.id} store={store} place={place} body={body} />
-                        <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} system={place} selfId={body.id} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                        <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} system={place} selfId={body.id} planet={place.bodies.find((b) => b.id === body.parentId && b.kind === 'planet')} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
                       </>
                     ) : (
                         <BodyFacts place={place} body={body} />
@@ -695,7 +823,10 @@ export function CreateFlow({ store, onDone, slot }: { store: Store; onDone: () =
             if (id) store.openSystem(parentSystem.id, id);
             ok = !!id;
         } else if (parentPlanet) {
-            const id = await store.addBody(parentPlanet.p.id, parentPlanet.b.id, { kind: kind as BodyKind, name: called || null, ...draft, ordinal: null, type: kind === 'station' ? 'artificial' : draft.type });
+            const type = kind === 'station' ? 'artificial' : draft.type;
+            // Never inside the planet's Roche limit (a station: the planet itself)
+            const orbit = Math.max(draft.orbit, satelliteRange(kind as BodyKind, parentPlanet.b, type)[0]);
+            const id = await store.addBody(parentPlanet.p.id, parentPlanet.b.id, { kind: kind as BodyKind, name: called || null, ...draft, orbit, ordinal: null, type });
             if (id) store.openSystem(parentPlanet.p.id, id);
             ok = !!id;
         }
@@ -739,7 +870,7 @@ export function CreateFlow({ store, onDone, slot }: { store: Store; onDone: () =
         <BodyFields kind='star' draft={{ ...draft, type: starType }} onChange={(p) => p.type && setStarType(p.type)} starType={starType} />
     );
     const bodyFields = kind !== 'system' && kind !== 'landmark' && (
-        <BodyFields kind={kind as BodyKind} draft={draft} onChange={(p) => setDraft({ ...draft, ...p })} starType={hostStarType} system={parentSystem ?? undefined} />
+        <BodyFields kind={kind as BodyKind} draft={draft} onChange={(p) => setDraft({ ...draft, ...p })} starType={hostStarType} system={parentSystem ?? undefined} planet={parentPlanet?.b} />
     );
     const categoryField = kind === 'landmark' && (
         <div className={styles.field}>
