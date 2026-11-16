@@ -40,7 +40,8 @@ export function LayersPanel({ store, startOpen = true }: { store: Store; startOp
             {open && (
                 <>
                     <ul className={styles.layerList}>
-                        {LAYER_ROWS.map((row) => (
+                        {/* The still picture (no WebGL) has every other layer painted in */}
+                        {LAYER_ROWS.filter((row) => !store.still || row.key === 'labels').map((row) => (
                             <li key={row.key}>
                                 <label title={row.hint}>
                                     <input type='checkbox' checked={store.layers[row.key]} onChange={(e) => set(row.key, e.target.checked)} />
@@ -64,14 +65,14 @@ export function LayersPanel({ store, startOpen = true }: { store: Store; startOp
                             </li>
                         ))}
                     </ul>
-                    <div className={styles.layersView}>
+                    {!store.still && <div className={styles.layersView}>
                         <span className='pixel-label'>View</span>
                         <div className={styles.seg} role='group' aria-label='Camera'>
                             <button type='button' aria-pressed={store.view === 'tilt'} onClick={() => store.setView('tilt')}>Rotate</button>
                             <button type='button' aria-pressed={store.view === 'top'} onClick={() => store.setView('top')}>Top-down</button>
                         </div>
                         <button type='button' className={styles.linkBtn} onClick={store.resetView}>Recenter the map</button>
-                    </div>
+                    </div>}
                 </>
             )}
         </section>
@@ -85,8 +86,12 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
     const [creating, setCreating] = useState(false);
     const [narrow, setNarrow] = useState<boolean | null>(null);
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setNarrow(window.matchMedia('(max-width: 760px)').matches);
+        // Followed, not read once: a window can be resized or a phone turned after the page loads
+        const media = window.matchMedia('(max-width: 760px)');
+        const follow = () => setNarrow(media.matches);
+        follow();
+        media.addEventListener('change', follow);
+        return () => media.removeEventListener('change', follow);
     }, []);
 
     const q = query.trim().toLowerCase();
@@ -115,6 +120,7 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                     onPlace={store.handlePlace}
                     flyToken={store.flyToken}
                     resetToken={store.resetToken}
+                    onStill={store.setStill}
                     onOpen={(id) => store.places.find((p) => p.id === id)?.kind === 'system' && store.openSystem(id)}
                 />
                 {store.placing && (

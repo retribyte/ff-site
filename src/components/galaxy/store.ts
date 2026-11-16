@@ -83,6 +83,7 @@ export function useGalaxyStore(initial: ApiPlace[]) {
     const [flyToken, setFlyToken] = useState(0);
     const [resetToken, setResetToken] = useState(0);
     const [placing, setPlacing] = useState(false);
+    const [still, setStill] = useState(false);
     const [ready, setReady] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [episodes, setEpisodes] = useState<EpisodeChoice[] | null>(null);
@@ -144,6 +145,9 @@ export function useGalaxyStore(initial: ApiPlace[]) {
         /** The place's creator or an admin (ff-server enforces it; this only hides controls). */
         canEdit: (place: Place) => !!user && (user.role === 'ADMIN' || user.id === place.owner.id),
         ready,
+        /** The browser has no WebGL: the map is a still picture, with no camera and no layers to switch. */
+        still,
+        setStill: useCallback(() => setStill(true), []),
         error,
         clearError: () => setError(null),
         places,

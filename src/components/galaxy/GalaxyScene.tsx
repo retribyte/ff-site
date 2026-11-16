@@ -43,6 +43,8 @@ interface Props {
     onOpen?: (id: number) => void;
     /** Changing this number puts the camera back where it started. */
     resetToken?: number;
+    /** Called once when there is no WebGL and the still picture is shown instead. */
+    onStill?: () => void;
 }
 
 /**
@@ -464,7 +466,7 @@ const FLAT = Math.tan((24 * Math.PI) / 180) / Math.tan(((FLAT_FOV / 2) * Math.PI
  */
 const TOP_DIR = new THREE.Vector3(0, -0.0005, 1).normalize();
 
-export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen }: Props) {
+export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen, onStill }: Props) {
     const hostRef = useRef<HTMLDivElement>(null);
     const markerRefs = useRef(new Map<number, HTMLButtonElement>());
     const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Groups; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
@@ -692,13 +694,14 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
     const [box, setBox] = useState<{ w: number; h: number } | null>(null);
     useEffect(() => {
         if (!failed) return;
+        onStill?.();
         const host = hostRef.current!;
         const measure = () => setBox({ w: host.clientWidth, h: host.clientHeight });
         measure();
         const ro = new ResizeObserver(measure);
         ro.observe(host);
         return () => ro.disconnect();
-    }, [failed]);
+    }, [failed, onStill]);
     const side = box ? Math.min(box.w, box.h) : 0;
     useEffect(() => {
         if (!failed || !box) return;
