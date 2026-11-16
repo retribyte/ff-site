@@ -247,6 +247,78 @@ function puffMesh(puffs: Puff[], blending: THREE.Blending, renderOrder: number):
     return mesh;
 }
 
+type Groups = Record<'galaxy' | 'grid' | 'octants' | 'ring' | 'terr' | 'rim' | 'bearings', THREE.Object3D>;
+
+/** Everything the map draws, one group per layer. `onTerritories` runs once the territory picture has loaded into its group. */
+function buildWorld(fontDisplay: string, onTerritories?: () => void): Groups {
+    const galaxy = buildGalaxy();
+    const grid = buildGrid();
+    const octants = buildOctants(fontDisplay);
+    const ring = dashedRing(DISK_R, '#8792a8', 0.6);
+    const rim = buildRim();
+    const terr = new THREE.Group();
+    terr.rotation.z = MAP_ROT;
+    terr.add(
+        textSprite('Galactic Union', REGIONS.gu.color, fontDisplay, [-5.5, 16, 1.2], 3),
+        textSprite('ADE', REGIONS.ade.color, fontDisplay, [23.2, -6.4, 1.2], 3),
+        textSprite('Llamanian Republic', REGIONS.lr.color, fontDisplay, [-0.3, -23, 1.2], 3),
+    );
+    const bearings = new THREE.Group();
+    const and = new THREE.Vector3(ANDROMEDA_DIR[0], ANDROMEDA_DIR[1], 0);
+    bearings.add(
+        new THREE.ArrowHelper(and, and.clone().multiplyScalar(47), 8, 0x8792a8, 2, 1.2),
+        textSprite('toward Andromeda', '#8792a8', fontDisplay, [and.x * 60, and.y * 60, 1.5], 3),
+        textSprite('Galactic bar', '#8792a8', fontDisplay, [3.5, 13, 1.6], 2.6),
+    );
+    new THREE.TextureLoader().load('/galaxy/territories.png', (tex) => {
+        const plane = new THREE.Mesh(
+            new THREE.PlaneGeometry(800 / PPK, 600 / PPK),
+            new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide }),
+        );
+        plane.position.set((400 - 336) / PPK, -(300 - 356) / PPK, -0.05);
+        terr.add(plane);
+        onTerritories?.();
+    });
+    // The slab's thickness, hinted by a faint outline above and below the plane.
+    for (const z of [H, -H]) {
+        const box = new THREE.LineLoop(
+            new THREE.BufferGeometry().setFromPoints([[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sy]) => new THREE.Vector3(sx * N * S, sy * N * S, z))),
+            new THREE.LineBasicMaterial({ color: '#8792a8', transparent: true, opacity: 0.12 }),
+        );
+        grid.add(box);
+    }
+    return { galaxy, rim, terr, grid, octants, ring, bearings };
+}
+
+/** Half the width, in klyr, of the square the still picture covers (top-down, +y up, Sagittarius A in the middle). */
+export const STILL_HALF = 52;
+
+/**
+ * The map as one top-down picture, for browsers without WebGL (which cannot run this:
+ * `/galaxy/still`, a dev-only page, draws it for saving as public/galaxy/still.webp).
+ * Answers a data URL once the territory picture is in.
+ */
+export function renderStill(size: number, fontDisplay: string): Promise<string> {
+    return new Promise((resolve) => {
+        const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+        renderer.setSize(size, size, false);
+        renderer.setClearColor(new THREE.Color('#05080e'));
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-STILL_HALF, STILL_HALF, STILL_HALF, -STILL_HALF, 0.1, 1000);
+        camera.position.set(0, 0, 200);
+        camera.up.set(0, 1, 0);
+        camera.lookAt(0, 0, 0);
+        const groups = buildWorld(fontDisplay, () => {
+            renderer.render(scene, camera);
+            resolve(renderer.domElement.toDataURL('image/webp', 0.9));
+            renderer.dispose();
+        });
+        groups.octants.visible = false;
+        groups.bearings.visible = false;
+        scene.add(...Object.values(groups));
+    });
+}
+
 /** A marker on screen this frame: its dot's centre and half-size. */
 interface Spot {
     node: HTMLButtonElement;
@@ -395,7 +467,7 @@ const TOP_DIR = new THREE.Vector3(0, -0.0005, 1).normalize();
 export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen }: Props) {
     const hostRef = useRef<HTMLDivElement>(null);
     const markerRefs = useRef(new Map<number, HTMLButtonElement>());
-    const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Record<'galaxy' | 'grid' | 'octants' | 'ring' | 'terr' | 'rim' | 'bearings', THREE.Object3D>; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
+    const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Groups; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
     const live = useRef({ places, placing, onPlace, onSelect, selectedId });
     const [readout, setReadout] = useState('');
     const [failed, setFailed] = useState(false);
@@ -426,45 +498,10 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         controls.minDistance = 6;
         controls.maxDistance = 150;
 
-        const fontDisplay = getComputedStyle(host).getPropertyValue('--font-display').trim() || 'sans-serif';
-        const galaxy = buildGalaxy();
-        const grid = buildGrid();
-        const octants = buildOctants(fontDisplay);
-        const ring = dashedRing(DISK_R, '#8792a8', 0.6);
-        const rim = buildRim();
-        const terr = new THREE.Group();
-        terr.rotation.z = MAP_ROT;
-        terr.add(
-            textSprite('Galactic Union', REGIONS.gu.color, fontDisplay, [-5.5, 16, 1.2], 3),
-            textSprite('ADE', REGIONS.ade.color, fontDisplay, [23.2, -6.4, 1.2], 3),
-            textSprite('Llamanian Republic', REGIONS.lr.color, fontDisplay, [-0.3, -23, 1.2], 3),
-        );
-        const bearings = new THREE.Group();
-        const and = new THREE.Vector3(ANDROMEDA_DIR[0], ANDROMEDA_DIR[1], 0);
-        bearings.add(
-            new THREE.ArrowHelper(and, and.clone().multiplyScalar(47), 8, 0x8792a8, 2, 1.2),
-            textSprite('toward Andromeda', '#8792a8', fontDisplay, [and.x * 60, and.y * 60, 1.5], 3),
-            textSprite('Galactic bar', '#8792a8', fontDisplay, [3.5, 13, 1.6], 2.6),
-        );
-        scene.add(galaxy, rim, terr, grid, octants, ring, bearings);
-        new THREE.TextureLoader().load('/galaxy/territories.png', (tex) => {
-            const plane = new THREE.Mesh(
-                new THREE.PlaneGeometry(800 / PPK, 600 / PPK),
-                new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide }),
-            );
-            plane.position.set((400 - 336) / PPK, -(300 - 356) / PPK, -0.05);
-            terr.add(plane);
-        });
-        // The slab's thickness, hinted by a faint outline above and below the plane.
-        for (const z of [H, -H]) {
-            const box = new THREE.LineLoop(
-                new THREE.BufferGeometry().setFromPoints([[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sy]) => new THREE.Vector3(sx * N * S, sy * N * S, z))),
-                new THREE.LineBasicMaterial({ color: '#8792a8', transparent: true, opacity: 0.12 }),
-            );
-            grid.add(box);
-        }
+        const groups = buildWorld(getComputedStyle(host).getPropertyValue('--font-display').trim() || 'sans-serif');
+        scene.add(...Object.values(groups));
 
-        three.current = { camera, controls, groups: { galaxy, grid, octants, ring, terr, rim, bearings }, goal: null, camGoal: null, distGoal: null, top: false, maxBase: 150 };
+        three.current = { camera, controls, groups, goal: null, camGoal: null, distGoal: null, top: false, maxBase: 150 };
         // A drag or a scroll takes over from any camera move in progress
         controls.addEventListener('start', () => {
             const t = three.current;
@@ -651,9 +688,44 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [flyToken]);
 
+    // Without WebGL: the map as one top-down picture (public/galaxy/still.webp), with the places laid over it. No camera.
+    const [box, setBox] = useState<{ w: number; h: number } | null>(null);
+    useEffect(() => {
+        if (!failed) return;
+        const host = hostRef.current!;
+        const measure = () => setBox({ w: host.clientWidth, h: host.clientHeight });
+        measure();
+        const ro = new ResizeObserver(measure);
+        ro.observe(host);
+        return () => ro.disconnect();
+    }, [failed]);
+    const side = box ? Math.min(box.w, box.h) : 0;
+    useEffect(() => {
+        if (!failed || !box) return;
+        const spots: Spot[] = [];
+        for (const place of places) {
+            const node = markerRefs.current.get(place.id);
+            if (!node) continue;
+            const x = box.w / 2 + (place.pos[0] / STILL_HALF) * (side / 2);
+            const y = box.h / 2 - (place.pos[1] / STILL_HALF) * (side / 2);
+            node.style.transform = `translate(${x}px, ${y}px)`;
+            spots.push({ node, x, y, r: place.precision === 'region' ? 14 : 8, first: place.id === selectedId, system: place.kind === 'system' });
+        }
+        declutter(spots);
+    }, [failed, box, side, places, selectedId, layers.labels]);
+    const clickStill = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!failed || !box) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = ((e.clientX - rect.left - box.w / 2) / (side / 2)) * STILL_HALF;
+        const y = (-(e.clientY - rect.top - box.h / 2) / (side / 2)) * STILL_HALF;
+        if (placing && Math.hypot(x, y) <= N * S) onPlace([x, y, 0]);
+        else if (!placing) onSelect(null);
+    };
+
     return (
-        <div ref={hostRef} className={`${styles.scene} ${placing ? styles.scenePlacing : ''}`}>
-            {failed && <p className={styles.sceneFail}>This browser cannot draw the 3D map (WebGL is unavailable).</p>}
+        <div ref={hostRef} className={`${styles.scene} ${placing ? styles.scenePlacing : ''}`} onClick={failed ? clickStill : undefined}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {failed && <img className={styles.still} src='/galaxy/still.webp' alt='The galaxy from above, with its territories' style={{ width: side, height: side }} />}
             {places.map((place) => {
                 const star = starOf(place);
                 const color = place.kind === 'system' ? (STAR_TYPES[star?.type ?? '']?.color ?? '#ffe9a8') : '#7fd3e8';

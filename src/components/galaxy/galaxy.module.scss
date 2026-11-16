@@ -39,16 +39,19 @@
     }
 }
 
+.scenePlacing,
 .scenePlacing canvas {
     cursor: crosshair;
 }
 
-.sceneFail {
+// The picture shown when the browser has no WebGL
+.still {
     position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    color: var(--map-muted);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    user-select: none;
+    pointer-events: none;
 }
 
 .marker {
