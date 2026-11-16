@@ -13,7 +13,7 @@ import {
     COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
     bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, planetNumber, randomPointIn, regionAt, regionLabel, satelliteRange, sectorOf, starOf, toT, yearDays, zoneOf,
 } from './data';
-import type { Body, BodyKind, Place, Ref, RegionKey } from './data';
+import type { Body, BodyKind, Place, Ref, RegionKey, Vec3 } from './data';
 import type { Store, TextPatch, Where } from './store';
 import styles from './galaxy.module.scss';
 
@@ -439,13 +439,13 @@ const LIGHT = 'rgba(255, 255, 255, 0.26)';
  * lighter shade of whatever color it has. Shapes are laid out on a disc of radius 1
  * and turned by an angle that differs per body, so no two look stamped.
  */
-export function BodyTexture({ body, x, y, r }: { body: Body; x: number; y: number; r: number }) {
+export function BodyTexture({ body, x, y, r, scope = 'map' }: { body: Body; x: number; y: number; r: number; /** Keeps the clip's id apart where the same body is drawn twice on a page. */ scope?: string }) {
     const banded = body.type === 'gas' || body.type === 'ice' || body.type === 'desert';
     const turn = banded ? ((body.id * 47) % 50) - 25 : (body.id * 47) % 360;
     return (
         <g transform={`translate(${x} ${y}) scale(${r})`} pointerEvents='none'>
-            <clipPath id={`galaxy-disc-${body.id}`}><circle r='1' /></clipPath>
-            <g clipPath={`url(#galaxy-disc-${body.id})`}>
+            <clipPath id={`galaxy-disc-${scope}-${body.id}`}><circle r='1' /></clipPath>
+            <g clipPath={`url(#galaxy-disc-${scope}-${body.id})`}>
                 <g transform={`rotate(${turn})`}>
                     {body.type === 'rocky' && (
                         <>
@@ -498,6 +498,18 @@ export function BodyTexture({ body, x, y, r }: { body: Body; x: number; y: numbe
                 </g>
             </g>
         </g>
+    );
+}
+
+/** The head of a body's details: a planet or moon as the diagram draws it, texture and all; a star or station as its icon. */
+export function BodyPortrait({ body, size = 40 }: { body: Body; size?: number }) {
+    if (body.kind !== 'planet' && body.kind !== 'moon') return <BodyIcon body={body} size={size} />;
+    return (
+        <svg className={styles.bodyIcon} width={size} height={size} viewBox='0 0 40 40' aria-hidden>
+            <circle cx='20' cy='20' r='19' fill={bodyColor(body)} />
+            <BodyTexture body={body} x={20} y={20} r={19} scope='portrait' />
+            <circle cx='20' cy='20' r='18' className={styles.shade} />
+        </svg>
     );
 }
 
@@ -662,7 +674,7 @@ export function SelectionDetail({ store }: { store: Store }) {
             {body ? (
                 <>
                     <header className={styles.detailHead}>
-                        <BodyIcon body={body} size={40} />
+                        <BodyPortrait body={body} />
                         <div>
                             <h3><BodyName body={body} paren /></h3>
                             <p className='pixel-label'>{KIND_LABEL[body.kind]} in {place.placeholder ? 'an unnamed system' : place.name}</p>
@@ -761,14 +773,14 @@ const CREATE_KINDS: { key: CreateKind; label: string; glyph: string }[] = [
 ];
 
 /** One wizard for everything a member can add, one question at a time. */
-export function CreateFlow({ store, onDone, slot }: { store: Store; onDone: () => void; /** Opened from a gap ring: the planet that goes there. */ slot?: PlanetSlot }) {
+export function CreateFlow({ store, onDone, slot, at: spot }: { store: Store; onDone: () => void; /** Opened from a gap ring: the planet that goes there. */ slot?: PlanetSlot; /** Opened from a spot clicked on the map: where it goes. */ at?: Vec3 }) {
     const ctxPlanet = store.selBody?.kind === 'planet' ? store.selBody : null;
     const ctxSystem = store.level === 'system' && store.selPlace?.kind === 'system' ? store.selPlace : null;
     const [kind, setKind] = useState<CreateKind>(ctxPlanet ? 'moon' : ctxSystem ? 'planet' : 'system');
     const [name, setName] = useState('');
     // A planet's system or a satellite's planet, by id; 'new' = a planet whose star is not known yet
     const [parent, setParent] = useState<number | 'new'>(ctxPlanet?.id ?? ctxSystem?.id ?? 'new');
-    const [where, setWhere] = useState<Where | null>(null);
+    const [where, setWhere] = useState<Where | null>(spot ? { pos: spot, precision: 'exact' } : null);
     const [starType, setStarType] = useState('sunlike');
     const [category, setCategory] = useState('landmark');
     const [draft, setDraft] = useState<BodyDraft>(ctxPlanet ? { type: 'rocky', radiusKm: 1737, orbit: 384400 } : { type: 'rocky', radiusKm: 6371, orbit: 1, ...slot });

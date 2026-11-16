@@ -159,6 +159,52 @@
     }
 }
 
+// "+ Add here", hung over the empty spot that was clicked: a small diamond on the spot, the button above it
+.addHere {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    z-index: 2;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: -4px;
+        top: -4px;
+        width: 8px;
+        height: 8px;
+        background: var(--map-nav);
+        transform: rotate(45deg);
+    }
+
+    span {
+        position: absolute;
+        left: 0;
+        bottom: 10px;
+        transform: translateX(-50%);
+        padding: 4px 10px;
+        border: 2px solid var(--map-nav);
+        background: var(--surface-2);
+        color: var(--text);
+        font: 0.7rem var(--font-pixel);
+        text-transform: uppercase;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    &:hover span,
+    &:focus-visible span {
+        background: var(--accent);
+        color: #fff;
+    }
+}
+
 .readout {
     position: absolute;
     left: 12px;

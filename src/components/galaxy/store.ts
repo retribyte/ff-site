@@ -189,6 +189,8 @@ export function useGalaxyStore(initial: ApiPlace[]) {
         /** The place's creator or an admin (ff-server enforces it; this only hides controls). */
         canEdit: (place: Place) => !!user && (user.role === 'ADMIN' || user.id === place.owner.id),
         ready,
+        /** The saved view settings are in: until then nothing is drawn, so the defaults never flash by. */
+        restored,
         /** The browser has no WebGL: the map is a still picture, with no camera and no layers to switch. */
         still,
         setStill: useCallback(() => setStill(true), []),

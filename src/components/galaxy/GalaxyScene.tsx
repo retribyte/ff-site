@@ -45,6 +45,8 @@ interface Props {
     onOpen?: (id: number) => void;
     /** Changing this number puts the camera back where it started. */
     resetToken?: number;
+    /** Given to whoever may add: a click on empty space offers "+ Add here", and this takes the spot. */
+    onAddAt?: (pos: Vec3) => void;
     /** How strongly the starfield shows behind the map, 0 to 1. */
     sky?: number;
     /** Called once when there is no WebGL and the still picture is shown instead. */
@@ -638,16 +640,19 @@ const FLAT = Math.tan((24 * Math.PI) / 180) / Math.tan(((FLAT_FOV / 2) * Math.PI
  */
 const TOP_DIR = new THREE.Vector3(0, -0.0005, 1).normalize();
 
-export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen, onStill, sky = STILL_SKY }: Props) {
+export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen, onStill, onAddAt, sky = STILL_SKY }: Props) {
     const hostRef = useRef<HTMLDivElement>(null);
     const markerRefs = useRef(new Map<number, HTMLButtonElement>());
     const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Groups; sky: Sky | null; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
-    const live = useRef({ places, placing, onPlace, onSelect, selectedId, sky });
+    // The empty spot last clicked, which the "+ Add here" button hangs over
+    const [spot, setSpot] = useState<Vec3 | null>(null);
+    const spotRef = useRef<HTMLButtonElement>(null);
+    const live = useRef({ places, placing, onPlace, onSelect, selectedId, sky, spot, canAdd: !!onAddAt });
     const [readout, setReadout] = useState('');
     const [failed, setFailed] = useState(false);
 
     useEffect(() => {
-        live.current = { places, placing, onPlace, onSelect, selectedId, sky };
+        live.current = { places, placing, onPlace, onSelect, selectedId, sky, spot, canAdd: !!onAddAt };
         if (three.current?.sky) setSkyOpacity(three.current.sky, sky);
     });
 
@@ -726,7 +731,10 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
             if (down && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 6) {
                 const p = hitPlane(e);
                 if (live.current.placing && p && Math.hypot(p[0], p[1]) <= N * S) live.current.onPlace(p);
-                else if (!live.current.placing) live.current.onSelect(null);
+                else if (!live.current.placing) {
+                    live.current.onSelect(null);
+                    setSpot(live.current.canAdd && p && Math.hypot(p[0], p[1]) <= N * S ? p : null);
+                }
             }
             down = null;
         };
@@ -810,6 +818,11 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
             }
             declutter(shown);
             shown.length = 0;
+            const at = live.current.spot;
+            if (at && spotRef.current) {
+                v.set(at[0], at[1], at[2]).project(camera);
+                spotRef.current.style.transform = `translate(${((v.x + 1) / 2) * w}px, ${((1 - v.y) / 2) * h}px)`;
+            }
         };
         frame();
 
@@ -937,8 +950,19 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         const x = ((e.clientX - rect.left - box.w / 2) / (side / 2)) * STILL_HALF;
         const y = (-(e.clientY - rect.top - box.h / 2) / (side / 2)) * STILL_HALF;
         if (placing && Math.hypot(x, y) <= N * S) onPlace([x, y, 0]);
-        else if (!placing) onSelect(null);
+        else if (!placing) {
+            onSelect(null);
+            setSpot(onAddAt && Math.hypot(x, y) <= N * S ? [x, y, 0] : null);
+        }
     };
+    // Gone once something is picked or a spot is being placed; Escape puts it away
+    const showSpot = spot && onAddAt && !placing && selectedId === null;
+    useEffect(() => {
+        if (!showSpot) return;
+        const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setSpot(null);
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [showSpot]);
 
     return (
         <div ref={hostRef} className={`${styles.scene} ${placing ? styles.scenePlacing : ''} ${failed ? styles.sceneStill : ''}`} onClick={failed ? clickStill : undefined}>
@@ -961,7 +985,10 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
                         style={{ '--marker': color } as React.CSSProperties}
                         onClick={(e) => {
                             e.stopPropagation();
-                            if (!placing) onSelect(place.id);
+                            if (!placing) {
+                                setSpot(null);
+                                onSelect(place.id);
+                            }
                         }}
                         onDoubleClick={() => !placing && onOpen?.(place.id)}
                         title={place.precision === 'region' ? `${place.name} (rough position)` : place.name}
@@ -971,6 +998,22 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
                     </button>
                 );
             })}
+            {showSpot && (
+                <button
+                    ref={spotRef}
+                    type='button'
+                    className={styles.addHere}
+                    style={failed && box ? { transform: `translate(${box.w / 2 + (spot[0] / STILL_HALF) * (side / 2)}px, ${box.h / 2 - (spot[1] / STILL_HALF) * (side / 2)}px)` } : undefined}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setSpot(null);
+                        onAddAt(spot);
+                    }}
+                    title={sectorOf(spot)}
+                >
+                    <span>+ Add here</span>
+                </button>
+            )}
             <div className={styles.readout}>{placing ? `Click to place. ${readout}` : readout}</div>
         </div>
     );

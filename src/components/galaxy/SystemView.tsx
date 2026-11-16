@@ -10,7 +10,7 @@ import {
     bodyColor, describeSize, fmtNum, gravityG, habAU, habitability, massEarths, regionLabel, sectorOf, starOf, yearDays, zoneOf,
 } from './data';
 import type { Body, Place } from './data';
-import { BodyFields, BodyIcon, BodyName, BodyTexture, BodyTree, DeleteButton, KIND_LABEL, designation, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
+import { BodyFields, BodyName, BodyPortrait, BodyTexture, BodyTree, DeleteButton, KIND_LABEL, designation, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
 import type { PlanetSlot } from './parts';
 import type { Store } from './store';
 import styles from './galaxy.module.scss';
@@ -115,7 +115,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
         if (!moving) return;
         let last = performance.now();
         let raf = requestAnimationFrame(function step(now) {
-            setTime((t) => t + Math.min(0.1, (now - last) / 1000));
+            setTime((t) => t + Math.min(0.1, (now - last) / 5000));
             last = now;
             raf = requestAnimationFrame(step);
         });
@@ -210,15 +210,14 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                     const { r, index: i } = ring;
                     const p = ring.planet;
                     if (!p) {
-                        // Labelled across the star from the planet it sits inside, clear of that planet's name
-                        const far = planetAngle(i) + Math.PI;
+                        // Labelled at the top of its ring, where "+ add a planet" is, and holding still
                         return (
                             <g key={`gap${ring.n}`} className={styles.addRing} onClick={(e) => (e.stopPropagation(), onAdd?.({ ordinal: ring.n, orbit: ring.orbit }))}>
                                 <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} style={{ strokeWidth: GAP_REACH * 1.6 }} />
                                 <circle cx={c.x} cy={c.y} r={r} />
                                 <title>Add {stem}-{ring.n}</title>
                                 {/* Squeezed rings (a phone) have no room for a label each */}
-                                {over <= 1.5 && <text x={c.x + r * Math.cos(far)} y={c.y + r * Math.sin(far) + 4} textAnchor='middle'>+ add {stem}-{ring.n}</text>}
+                                {over <= 1.5 && <text x={c.x} y={c.y - r + 4} textAnchor='middle'>+ add {stem}-{ring.n}</text>}
                             </g>
                         );
                     }
@@ -403,7 +402,7 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                 {body ? (
                     <section className={styles.sysSection}>
                         <header className={styles.detailHead}>
-                            <BodyIcon body={body} size={40} />
+                            <BodyPortrait body={body} />
                             <div>
                                 <h3><BodyName body={body} paren /></h3>
                                 <p className='pixel-label'>{KIND_LABEL[body.kind]}{body.kind !== 'star' && ` ${designation(body)}`}</p>

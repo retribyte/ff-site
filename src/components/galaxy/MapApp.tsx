@@ -6,7 +6,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { OCTS, REGIONS, regionAt, regionLabel, starOf } from './data';
-import type { ApiPlace, Body, Place, RegionKey } from './data';
+import type { ApiPlace, Body, Place, RegionKey, Vec3 } from './data';
 import GalaxyScene from './GalaxyScene';
 import type { Layers } from './GalaxyScene';
 import { BodyIcon, CreateFlow, LandmarkIcon, SelectionDetail, placeTitle } from './parts';
@@ -168,7 +168,7 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
     const [query, setQuery] = useState('');
     const [region, setRegion] = useState<RegionKey | null>(null);
     // true = the add wizard is open; a slot = it adds the planet a gap ring stands for
-    const [creating, setCreating] = useState<boolean | PlanetSlot>(false);
+    const [creating, setCreating] = useState<boolean | PlanetSlot | { at: Vec3 }>(false);
     const [narrow, setNarrow] = useState<boolean | null>(null);
     // Phones: the view settings, opened from their button; holds the selection they were opened under, so picking a place folds them away
     const [settingsFor, setSettingsFor] = useState<number | null>(null);
@@ -203,6 +203,9 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
         <Link href='/login' className={cx(styles.btnQuiet, styles.cAdd)}>{narrow ? 'Sign in to add' : 'Sign in to add to the map'}</Link>
     );
 
+    // Nothing is drawn until the saved view settings are in, so the defaults never flash by
+    if (!store.restored) return <main className={styles.root} />;
+
     return (
         <main className={styles.root} style={{ '--sky': store.sky } as React.CSSProperties}>
         <div className={styles.shell}>
@@ -219,6 +222,7 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                     resetToken={store.resetToken}
                     onStill={store.setStill}
                     sky={store.sky}
+                    onAddAt={store.user ? (at) => setCreating({ at }) : undefined}
                     onOpen={(id) => store.places.find((p) => p.id === id)?.kind === 'system' && store.openSystem(id)}
                 />
                 {store.placing && (
@@ -296,7 +300,7 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
             {creating && (
                 <div className={cx(styles.cModalWrap, store.placing && styles.tucked)} onMouseDown={(e) => e.target === e.currentTarget && !store.placing && setCreating(false)}>
                     <div className={cx('pixel-panel', styles.cModal)}>
-                        <CreateFlow store={store} slot={creating === true ? undefined : creating} onDone={() => setCreating(false)} />
+                        <CreateFlow store={store} slot={typeof creating === 'object' && 'ordinal' in creating ? creating : undefined} at={typeof creating === 'object' && 'at' in creating ? creating.at : undefined} onDone={() => setCreating(false)} />
                     </div>
                 </div>
             )}
