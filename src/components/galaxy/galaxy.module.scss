@@ -352,6 +352,58 @@
     }
 }
 
+.untag {
+    margin-left: 6px;
+    padding: 0 5px;
+    border: 0;
+    background: none;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--text);
+    }
+}
+
+.episodePicker {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border: 1px solid var(--border-loud);
+        max-height: 14rem;
+        overflow-y: auto;
+    }
+
+    li.muted {
+        padding: 4px 8px;
+    }
+
+    li button {
+        display: block;
+        width: 100%;
+        padding: 5px 8px;
+        border: 0;
+        background: none;
+        color: var(--text);
+        font: inherit;
+        font-size: 0.85rem;
+        text-align: left;
+        cursor: pointer;
+
+        &:hover,
+        &:focus-visible {
+            background: var(--highlight);
+        }
+    }
+}
+
 .tree {
     list-style: none;
     margin: 0;

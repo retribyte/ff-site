@@ -263,7 +263,7 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                                 {body.kind !== 'star' && <DeleteButton onDelete={() => store.removeBody(place.id, body.id)} />}
                             </div>
                         )}
-                        <Travelogue place={place} body={body} />
+                        <Travelogue store={store} place={place} body={body} />
                     </section>
                 ) : (
                     <section className={styles.sysSection}>
@@ -284,7 +284,7 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                             <Row label='Moons and stations' value={Math.max(0, place.bodies.length - planets.length - 1)} />
                             <Row label='Added by' value={place.owner.username} />
                         </div>
-                        <Travelogue place={place} body={null} />
+                        <Travelogue store={store} place={place} body={null} />
                     </section>
                 )}
               </div>

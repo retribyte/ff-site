@@ -8,6 +8,15 @@ import { useSession } from '@/components/auth/SessionProvider';
 import { fromApi, loadTerritories } from './data';
 import type { ApiBody, ApiPlace, Body, BodyKind, Place, Precision, RegionKey, Vec3 } from './data';
 import type { Layers, ViewMode } from './GalaxyScene';
+import { episodeNumberLabel, seasonOrder } from '@/lib/seasons';
+import type { Season } from '@/lib/types';
+
+/** An episode the travelogue picker can offer. */
+export interface EpisodeChoice {
+    slug: string;
+    /** "FF2 episode 4, Shady Business" */
+    label: string;
+}
 
 async function call<T>(method: 'GET' | 'POST' | 'PATCH' | 'DELETE', path: string, body?: unknown): Promise<T> {
     const res = await fetch(`/site/ff/galaxy${path}`, {
@@ -69,6 +78,8 @@ export function useGalaxyStore(initial: ApiPlace[]) {
     const [placing, setPlacing] = useState(false);
     const [ready, setReady] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [episodes, setEpisodes] = useState<EpisodeChoice[] | null>(null);
+    const episodesAsked = useRef(false);
     const placeCb = useRef<((pos: Vec3) => void) | null>(null);
     // Slider edits to a body are sent once the member stops dragging
     const pending = useRef(new Map<number, { patch: BodyPatch; timer: ReturnType<typeof setTimeout> }>());
@@ -201,6 +212,41 @@ export function useGalaxyStore(initial: ApiPlace[]) {
             const before = pending.current.get(bodyId);
             if (before) clearTimeout(before.timer);
             pending.current.set(bodyId, { patch: { ...before?.patch, ...patch }, timer: setTimeout(() => sendBody(placeId, bodyId), 500) });
+        },
+        /** Every episode in archive order, for the travelogue picker; null until `loadEpisodes` has answered. */
+        episodes,
+        loadEpisodes() {
+            if (episodesAsked.current) return;
+            episodesAsked.current = true;
+            void attempt(async () => {
+                const res = await fetch('/site/ff/seasons');
+                const json = (await res.json().catch(() => null)) as { data?: Season[] } | null;
+                if (!res.ok || !json?.data) throw new Error('The episode list could not be loaded.');
+                const seasons = [...json.data].sort((a, b) => {
+                    const [x, y] = [seasonOrder(a.title), seasonOrder(b.title)];
+                    return x[0] - y[0] || x[1].localeCompare(y[1]);
+                });
+                setEpisodes(
+                    seasons.flatMap((season) => {
+                        const all = [...(season.episodes ?? [])].sort((a, b) => a.episode_no - b.episode_no);
+                        return all.map((e) => ({ slug: e.slug, label: `${season.title} episode ${episodeNumberLabel(e, all)}, ${e.title}` }));
+                    }),
+                );
+            }).then((ok) => {
+                // Failed: the next open of the picker asks again
+                if (ok === null) episodesAsked.current = false;
+            });
+        },
+        /** Tags an episode on a place, or on one of its bodies. */
+        async tagEpisode(placeId: number, bodyId: number | null, episode: string) {
+            const made = await attempt(() => call<unknown>('POST', `/places/${placeId}/travelogue`, { episode, bodyId }));
+            if (made === null) return false;
+            await refreshPlace(placeId);
+            return true;
+        },
+        async untagEpisode(placeId: number, tagId: number) {
+            if ((await attempt(() => call<void>('DELETE', `/travelogue/${tagId}`).then(() => true))) === null) return;
+            await refreshPlace(placeId);
         },
         async removeBody(placeId: number, bodyId: number) {
             if ((await attempt(() => call<void>('DELETE', `/bodies/${bodyId}`).then(() => true))) === null) return;

@@ -158,29 +158,87 @@ export function BodyFields({ kind, draft, onChange, starType }: { kind: BodyKind
 }
 
 // ---------- Detail blocks ----------
-/** The episodes tagged on a place (with those on its bodies) or on one body, in episode order. */
-export function Travelogue({ place, body }: { place: Place; body: Body | null }) {
+/** The episodes tagged on a place (with those on its bodies) or on one body, in episode order. Members tag more. */
+export function Travelogue({ store, place, body }: { store: Store; place: Place; body: Body | null }) {
+    const [adding, setAdding] = useState(false);
     const rows = body ? body.travelogue.map((tag) => ({ tag, via: '' })) : [...place.travelogue.map((tag) => ({ tag, via: '' })), ...place.bodies.flatMap((b) => b.travelogue.map((tag) => ({ tag, via: b.name })))];
     rows.sort((a, b) => (a.tag.episode?.seasonTitle ?? '').localeCompare(b.tag.episode?.seasonTitle ?? '') || (a.tag.episode?.episode_no ?? 0) - (b.tag.episode?.episode_no ?? 0));
-    if (rows.length === 0) return null;
+    const user = store.user;
+    if (rows.length === 0 && !user) return null;
+    const here = body ? body.travelogue : place.travelogue;
     return (
         <section className={styles.travelogue}>
             <h4 className='pixel-label'>Travelogue</h4>
-            <ol>
-                {rows.map(({ tag, via }) => (
-                    <li key={tag.id}>
-                        {tag.episode ? (
-                            <Link href={`/archives/${tag.episode.seasonSlug}/${tag.episode.slug}`}>
-                                {tag.episode.seasonTitle} episode {tag.episode.episode_no}, {tag.episode.title}
-                            </Link>
-                        ) : (
-                            <span className={styles.muted}>{tag.episodeSlug}</span>
-                        )}
-                        {via && <span className={styles.muted}> on {via}</span>}
-                    </li>
+            {rows.length > 0 && (
+                <ol>
+                    {rows.map(({ tag, via }) => (
+                        <li key={tag.id}>
+                            {tag.episode ? (
+                                <Link href={`/archives/${tag.episode.seasonSlug}/${tag.episode.slug}`}>
+                                    {tag.episode.seasonTitle} episode {tag.episode.episode_no}, {tag.episode.title}
+                                </Link>
+                            ) : (
+                                <span className={styles.muted}>{tag.episodeSlug}</span>
+                            )}
+                            {via && <span className={styles.muted}> on {via}</span>}
+                            {user && (user.id === tag.creatorId || store.canEdit(place)) && (
+                                <button type='button' className={styles.untag} title='Remove from the travelogue' aria-label={`Remove ${tag.episode?.title ?? tag.episodeSlug} from the travelogue`} onClick={() => store.untagEpisode(place.id, tag.id)}>
+                                    ×
+                                </button>
+                            )}
+                        </li>
+                    ))}
+                </ol>
+            )}
+            {user &&
+                (adding ? (
+                    <EpisodePicker store={store} taken={here.map((tag) => tag.episodeSlug)} onPick={(slug) => store.tagEpisode(place.id, body?.id ?? null, slug)} onClose={() => setAdding(false)} />
+                ) : (
+                    <button type='button' className={styles.linkBtn} onClick={() => (store.loadEpisodes(), setAdding(true))}>
+                        Tag an episode
+                    </button>
                 ))}
-            </ol>
         </section>
+    );
+}
+
+/** Type to find an episode; picking one tags it and leaves the box open for the next. */
+function EpisodePicker({ store, taken, onPick, onClose }: { store: Store; taken: string[]; onPick: (slug: string) => void; onClose: () => void }) {
+    const [q, setQ] = useState('');
+    const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+    const matches = (store.episodes ?? []).filter((e) => !taken.includes(e.slug) && words.every((w) => e.label.toLowerCase().includes(w)));
+    const shown = matches.slice(0, 8);
+    return (
+        <div className={styles.episodePicker}>
+            <div className={styles.inlineForm}>
+                <input
+                    autoFocus
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape') onClose();
+                        if (e.key === 'Enter' && words.length > 0 && shown.length === 1) onPick(shown[0].slug);
+                    }}
+                    placeholder='Episode title or season'
+                    aria-label='Find an episode'
+                />
+                <button type='button' className={styles.btnQuiet} onClick={onClose}>Done</button>
+            </div>
+            {store.episodes === null ? (
+                <p className={styles.muted}>Loading episodes</p>
+            ) : shown.length === 0 ? (
+                <p className={styles.muted}>No episode matches</p>
+            ) : (
+                <ul>
+                    {shown.map((e) => (
+                        <li key={e.slug}>
+                            <button type='button' onClick={() => onPick(e.slug)}>{e.label}</button>
+                        </li>
+                    ))}
+                    {matches.length > shown.length && <li className={styles.muted}>and {matches.length - shown.length} more</li>}
+                </ul>
+            )}
+        </div>
     );
 }
 
@@ -355,7 +413,7 @@ export function SelectionDetail({ store }: { store: Store }) {
                             {body.kind !== 'star' && <DeleteButton onDelete={() => store.removeBody(place.id, body.id)} />}
                         </div>
                     )}
-                    <Travelogue place={place} body={body} />
+                    <Travelogue store={store} place={place} body={body} />
                 </>
             ) : (
                 <>
@@ -373,7 +431,7 @@ export function SelectionDetail({ store }: { store: Store }) {
                         )}
                         {mine && <DeleteButton onDelete={() => store.removePlace(place.id)} />}
                     </div>
-                    <Travelogue place={place} body={null} />
+                    <Travelogue store={store} place={place} body={null} />
                 </>
             )}
         </div>
