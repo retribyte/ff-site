@@ -26,6 +26,8 @@ export interface Layers {
     bearings: boolean;
     /** Names beside the place markers. */
     labels: boolean;
+    /** The arms and the Bakree and Omega routes as colored transit lines. */
+    transit: boolean;
 }
 
 interface Props {
@@ -70,17 +72,12 @@ function buildGalaxy(): THREE.Group {
     };
     g.globalCompositeOperation = 'lighter';
     blob(0, 0, DISK_R, '120,140,200', 0.3);
-    const b = Math.tan((12 * Math.PI) / 180);
-    const R0 = 11;
-    const tMax = Math.log(DISK_R / R0) / b;
-    for (let arm = 0; arm < 4; arm++) {
-        const major = arm % 2 === 0;
-        const off = Math.PI / 2 + (arm * Math.PI) / 2;
+    const tMax = Math.log(DISK_R / ARM_R0) / ARM_PITCH;
+    for (const { off, major } of ARMS) {
         for (let n = 0; n <= 260; n++) {
-            const t = (n / 260) * tMax;
-            const r = R0 * Math.exp(b * t);
+            const [x, y, r] = armPoint(off, (n / 260) * tMax);
             const w = (2.2 + r / 12) * (major ? 1 : 0.75);
-            blob(r * Math.cos(off + t), r * Math.sin(off + t), w, '150,185,255', (major ? 0.03 : 0.02) * (1 - (0.6 * n) / 260));
+            blob(x, y, w, '150,185,255', (major ? 0.03 : 0.02) * (1 - (0.6 * n) / 260));
         }
     }
     // Bar along +y, then the bulge.
@@ -118,6 +115,25 @@ function buildGalaxy(): THREE.Group {
     group.add(glow);
     return group;
 }
+
+// The four arms, each a log spiral r = ARM_R0 * exp(ARM_PITCH * t) at angle `off + t`. Laid out
+// this way they fall where the Milky Way's do as seen from Sol (26.7 klyr out, 27 degrees off the
+// bar): Norma at about 12 klyr, Scutum-Crux 17, Sagittarius 24, Sol, then Perseus 33; the
+// Norma spiral's second turn is the Outer arm. Scutum-Crux and Perseus are the two major arms.
+const ARM_PITCH = Math.tan((12 * Math.PI) / 180);
+const ARM_R0 = 11;
+const ARMS = [
+    { name: 'Norma', off: Math.PI / 2, major: false },
+    { name: 'Perseus', off: Math.PI, major: true },
+    { name: 'Sagittarius', off: (3 * Math.PI) / 2, major: false },
+    { name: 'Scutum-Crux', off: 0, major: true },
+];
+const armPoint = (off: number, t: number): [number, number, number] => {
+    const r = ARM_R0 * Math.exp(ARM_PITCH * t);
+    return [r * Math.cos(off + t), r * Math.sin(off + t), r];
+};
+/** Sol's own short arm, between Sagittarius and Perseus: the angle Sol sits at and how far out. */
+const ORION = { angle: Math.atan2(23.79, -12.122), r: 26.7 };
 
 /** One soft cloud: where it is (klyr), how wide, its color (0..1) and how strong. */
 type Puff = [x: number, y: number, z: number, size: number, r: number, g: number, b: number, alpha: number];
@@ -159,15 +175,11 @@ function galaxyClouds(): { light: Puff[]; dust: Puff[] } {
         light.push([gauss() * 1.5 * thin, y, gauss() * 1.1 * thin, between(2.2, 4.2), 1, 0.8, 0.58, strength * 0.032 * thin]);
     }
     // Arms
-    const pitch = Math.tan((12 * Math.PI) / 180);
-    const R0 = 11;
-    const tMax = Math.log((DISK_R * 0.96) / R0) / pitch;
-    for (let arm = 0; arm < 4; arm++) {
-        const major = arm % 2 === 0;
-        const off = Math.PI / 2 + (arm * Math.PI) / 2;
+    const tMax = Math.log((DISK_R * 0.96) / ARM_R0) / ARM_PITCH;
+    ARMS.forEach(({ off, major }, arm) => {
         const at = (t: number) => {
-            const r = R0 * Math.exp(pitch * t);
-            return { r, x: r * Math.cos(off + t), y: r * Math.sin(off + t), width: (1.5 + r / 13) * (major ? 1 : 0.72) };
+            const [x, y, r] = armPoint(off, t);
+            return { r, x, y, width: (1.5 + r / 13) * (major ? 1 : 0.72) };
         };
         for (let n = count(major ? 1500 : 950); n > 0; n--) {
             const u = rnd();
@@ -189,6 +201,13 @@ function galaxyClouds(): { light: Puff[]; dust: Puff[] } {
             const inward = 1 - (0.55 * p.width + gauss() * 0.3 * p.width) / p.r;
             dust.push([p.x * inward, p.y * inward, gauss() * 0.3, between(2.6, 5.2), 0.02, 0.015, 0.03, strength * 0.085 * (1 - 0.5 * u)]);
         }
+    });
+    // The Orion Spur: the short, faint arm Sol sits in
+    for (let n = count(150); n > 0; n--) {
+        const turn = between(-0.75, 0.6);
+        const r = ORION.r * Math.exp(ARM_PITCH * 1.4 * turn);
+        const fade = 1 - Math.abs(turn + 0.075) / 0.72;
+        light.push([r * Math.cos(ORION.angle + turn) + gauss() * 1.1, r * Math.sin(ORION.angle + turn) + gauss() * 1.1, gauss() * 0.55, between(2.4, 4.6), 0.6, 0.74, 1, strength * 0.05 * fade]);
     }
     // The thin disc between the arms
     for (let n = count(700); n > 0; n--) {
@@ -249,7 +268,7 @@ function puffMesh(puffs: Puff[], blending: THREE.Blending, renderOrder: number):
     return mesh;
 }
 
-type Groups = Record<'galaxy' | 'grid' | 'octants' | 'ring' | 'terr' | 'rim' | 'bearings', THREE.Object3D>;
+type Groups = Record<'galaxy' | 'grid' | 'octants' | 'ring' | 'terr' | 'rim' | 'bearings' | 'transit', THREE.Object3D>;
 
 /** Everything the map draws, one group per layer. `onTerritories` runs once the territory picture has loaded into its group. */
 function buildWorld(fontDisplay: string, onTerritories?: () => void): Groups {
@@ -289,7 +308,76 @@ function buildWorld(fontDisplay: string, onTerritories?: () => void): Groups {
         );
         grid.add(box);
     }
-    return { galaxy, rim, terr, grid, octants, ring, bearings };
+    return { galaxy, rim, terr, grid, octants, ring, bearings, transit: buildTransit(fontDisplay) };
+}
+
+/** A flat colored band along a path on the plane, like a line on a transit map. */
+function ribbon(path: [number, number][], color: string, width = 0.55): THREE.Mesh {
+    const position: number[] = [];
+    const index: number[] = [];
+    path.forEach(([x, y], i) => {
+        const [ax, ay] = path[Math.max(0, i - 1)];
+        const [bx, by] = path[Math.min(path.length - 1, i + 1)];
+        const len = Math.hypot(bx - ax, by - ay) || 1;
+        const [nx, ny] = [(-(by - ay) / len) * (width / 2), ((bx - ax) / len) * (width / 2)];
+        position.push(x + nx, y + ny, 0.3, x - nx, y - ny, 0.3);
+        if (i > 0) index.push(2 * i - 2, 2 * i - 1, 2 * i, 2 * i, 2 * i - 1, 2 * i + 1);
+    });
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(position, 3));
+    geo.setIndex(index);
+    const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.9, depthTest: false, depthWrite: false, side: THREE.DoubleSide }));
+    mesh.renderOrder = 2;
+    return mesh;
+}
+
+// The line colors of the old "Comprehensive Map" (the subway-style one). Perseus was not on it.
+const LINE_COLORS = { outer: '#ff2fd6', threeKpc: '#ffe600', scutum: '#22e02a', sagittarius: '#2f8cff', perseus: '#35d6d0', bakree: '#ff2a2a', omega: '#ff8a1f' };
+/** The routes between saved places, by slug, in order. */
+const ROUTES: { color: string; stops: string[] }[] = [
+    { color: LINE_COLORS.bakree, stops: ['bakree_nebula', 'sol', 'ptorei_nebula'] },
+    { color: LINE_COLORS.omega, stops: ['geche_customs', 'padox_district', 'bagriburg', 'vanta_outer_junction'] },
+];
+
+/**
+ * The transit-map layer: each arm drawn as a colored line along its spiral, named as on
+ * the old subway-style map (the Norma spiral is "3kpc" near the bar and "Outer" beyond
+ * 20 klyr). The routes between places are added by the scene, which knows the places.
+ */
+function buildTransit(fontDisplay: string): THREE.Group {
+    const group = new THREE.Group();
+    const tMax = Math.log((DISK_R * 0.97) / ARM_R0) / ARM_PITCH;
+    const spiral = (off: number, from: number, to: number): [number, number][] => {
+        const path: [number, number][] = [];
+        for (let n = 0; n <= 160; n++) {
+            const [x, y] = armPoint(off, from + ((to - from) * n) / 160);
+            path.push([x, y]);
+        }
+        return path;
+    };
+    const label = (text: string, color: string, off: number, t: number) => {
+        const [x, y, r] = armPoint(off, t);
+        group.add(textSprite(text, color, fontDisplay, [x * (1 + 2 / r), y * (1 + 2 / r), 0.6], 2.6));
+    };
+    const split = Math.log(20 / ARM_R0) / ARM_PITCH;
+    const [norma, perseus, sagittarius, scutum] = ARMS;
+    group.add(
+        ribbon(spiral(norma.off, 0, split), LINE_COLORS.threeKpc),
+        ribbon(spiral(norma.off, split, tMax), LINE_COLORS.outer),
+        ribbon(spiral(perseus.off, 0, tMax), LINE_COLORS.perseus),
+        ribbon(spiral(sagittarius.off, 0, tMax), LINE_COLORS.sagittarius),
+        ribbon(spiral(scutum.off, 0, tMax), LINE_COLORS.scutum),
+    );
+    label('3kpc', LINE_COLORS.threeKpc, norma.off, split * 0.45);
+    label('Outer', LINE_COLORS.outer, norma.off, tMax * 0.86);
+    label('Perseus', LINE_COLORS.perseus, perseus.off, tMax * 0.7);
+    label('Sagittarius', LINE_COLORS.sagittarius, sagittarius.off, tMax * 0.62);
+    label('Scutum-Crux', LINE_COLORS.scutum, scutum.off, tMax * 0.55);
+    const routes = new THREE.Group();
+    routes.name = 'routes';
+    group.add(routes);
+    group.visible = false;
+    return group;
 }
 
 /** Half the width, in klyr, of the square the still picture covers (top-down, +y up, Sagittarius A in the middle). */
@@ -317,6 +405,7 @@ export function renderStill(size: number, fontDisplay: string): Promise<string> 
         });
         groups.octants.visible = false;
         groups.bearings.visible = false;
+        groups.transit.visible = false;
         scene.add(...Object.values(groups));
     });
 }
@@ -668,7 +757,23 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         g.octants.visible = layers.octants;
         g.ring.visible = layers.grid || layers.octants || layers.galaxy;
         g.bearings.visible = layers.bearings;
+        g.transit.visible = layers.transit;
     }, [layers]);
+
+    // The transit layer's routes run between saved places, so they follow the places
+    const stops = ROUTES.map((route) => route.stops.map((slug) => places.find((p) => p.slug === slug)?.pos.slice(0, 2).join(',') ?? '').join(';')).join('|');
+    useEffect(() => {
+        const routes = three.current?.groups.transit.getObjectByName('routes');
+        if (!routes) return;
+        for (const old of [...routes.children]) {
+            routes.remove(old);
+            (old as THREE.Mesh).geometry.dispose();
+        }
+        stops.split('|').forEach((route, i) => {
+            const path = route.split(';').filter(Boolean).map((xy) => xy.split(',').map(Number) as [number, number]);
+            if (path.length > 1) routes.add(ribbon(path, ROUTES[i].color));
+        });
+    }, [stops]);
 
     useEffect(() => {
         const t = three.current;

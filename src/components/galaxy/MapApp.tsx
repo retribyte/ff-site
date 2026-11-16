@@ -20,6 +20,7 @@ const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boo
 // Listed top of the stack first, like layers in a paint program.
 const LAYER_ROWS: { key: keyof Layers; label: string; swatch: string; hint: string }[] = [
     { key: 'labels', label: 'Place names', swatch: '#dce4f1', hint: 'Names beside systems and landmarks' },
+    { key: 'transit', label: 'Arm lines', swatch: 'linear-gradient(90deg, #ff2fd6 0 25%, #ffe600 0 50%, #22e02a 0 75%, #2f8cff 0)', hint: 'The spiral arms as colored lines, with the Bakree and Omega routes' },
     { key: 'bearings', label: 'Bearings', swatch: '#8792a8', hint: 'The galactic bar and the way to Andromeda' },
     { key: 'octants', label: 'Octants', swatch: 'conic-gradient(#4f8ff0 0 25%, #e9c24a 0 50%, #45c27a 0 75%, #e8584f 0)', hint: 'The eight colored octant slabs and their names' },
     { key: 'grid', label: 'Sector grid', swatch: '#5d6779', hint: 'Sectors, 5 klyr to a square' },

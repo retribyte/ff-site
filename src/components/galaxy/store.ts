@@ -79,7 +79,7 @@ export function useGalaxyStore(initial: ApiPlace[]) {
     const [selBodyId, setSelBodyId] = useState<number | null>(null);
     const [level, setLevel] = useState<'galaxy' | 'system'>('galaxy');
     const [view, setView] = useState<ViewMode>('tilt');
-    const [layers, setLayers] = useState<Layers>({ galaxy: true, territories: true, rim: true, grid: true, octants: false, bearings: true, labels: true });
+    const [layers, setLayers] = useState<Layers>({ galaxy: true, territories: true, rim: true, grid: true, octants: false, bearings: true, labels: true, transit: false });
     const [flyToken, setFlyToken] = useState(0);
     const [resetToken, setResetToken] = useState(0);
     const [placing, setPlacing] = useState(false);
