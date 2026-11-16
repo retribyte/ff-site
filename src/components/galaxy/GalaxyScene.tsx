@@ -98,13 +98,9 @@ function buildGalaxy(): THREE.Group {
     disc.position.z = -0.12;
     disc.renderOrder = -2;
     group.add(disc);
-    // The arms, bar and bulge again as round, glowing bodies over the painted disc, so the galaxy has depth when tilted.
-    for (let arm = 0; arm < 4; arm++) group.add(glowMesh(armGeometry(Math.PI / 2 + (arm * Math.PI) / 2, arm % 2 === 0), 0x96b9ff, 0.32));
-    const bar = glowMesh(solidSphere(), 0xffd6a0, 0.4);
-    bar.scale.set(2.6, 12, 1.8);
-    const bulge = glowMesh(solidSphere(), 0xffe2b4, 0.7);
-    bulge.scale.set(5.5, 5.5, 3.4);
-    group.add(bar, bulge);
+    // The galaxy's body: clouds of large soft puffs with real thickness, over the painted disc.
+    const { light, dust } = galaxyClouds();
+    group.add(puffMesh(light, THREE.AdditiveBlending, -1.6), puffMesh(dust, THREE.NormalBlending, -1.5));
     // A glow that still shows edge-on, where the flat disc vanishes.
     const gc = document.createElement('canvas');
     gc.width = gc.height = 128;
@@ -121,94 +117,133 @@ function buildGalaxy(): THREE.Group {
     return group;
 }
 
+/** One soft cloud: where it is (klyr), how wide, its color (0..1) and how strong. */
+type Puff = [x: number, y: number, z: number, size: number, r: number, g: number, b: number, alpha: number];
+
 /**
- * One spiral arm as a tube along the same log spiral the disc is painted with: it
- * widens outward, is about half as thick as it is wide, and closes to a point at both ends.
+ * The Milky Way as a few thousand overlapping clouds, each several klyr wide so none
+ * reads as a star or a place: the bulge and bar (warm, thick), four arms along the
+ * painted spiral (blue-white with pink star-forming patches, thinner outward), the
+ * haze between them, a faint halo, and dark dust lanes along each arm's inner edge.
+ * Seeded, so the galaxy looks the same on every visit.
  */
-function armGeometry(off: number, major: boolean): THREE.BufferGeometry {
-    const b = Math.tan((12 * Math.PI) / 180);
+function galaxyClouds(): { light: Puff[]; dust: Puff[] } {
+    let seed = 0x5a17a;
+    const rnd = () => {
+        seed = (seed + 0x6d2b79f5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    const gauss = () => Math.sqrt(-2 * Math.log(1 - rnd())) * Math.cos(2 * Math.PI * rnd());
+    const between = (lo: number, hi: number) => lo + (hi - lo) * rnd();
+    const light: Puff[] = [];
+    const dust: Puff[] = [];
+    // Fewer clouds where the screen is small and the chip is modest
+    const amount = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse), (max-width: 700px)').matches ? 0.5 : 1;
+    const count = (n: number) => Math.round(n * amount);
+    const strength = 1 / Math.sqrt(amount);
+
+    // Bulge: a round, warm body, brightest and whitest at the middle
+    for (let n = count(520); n > 0; n--) {
+        const [x, y, z] = [gauss() * 2.9, gauss() * 2.9, gauss() * 2.0];
+        const core = Math.exp(-Math.hypot(x, y, z * 1.4) / 3);
+        light.push([x, y, z, between(2.4, 5), 1, 0.86 + 0.1 * core, 0.66 + 0.25 * core, strength * (0.022 + 0.045 * core)]);
+    }
+    // Bar along +y
+    for (let n = count(320); n > 0; n--) {
+        const y = between(-11.5, 11.5);
+        const thin = 1 - 0.55 * (Math.abs(y) / 11.5);
+        light.push([gauss() * 1.5 * thin, y, gauss() * 1.1 * thin, between(2.2, 4.2), 1, 0.8, 0.58, strength * 0.032 * thin]);
+    }
+    // Arms
+    const pitch = Math.tan((12 * Math.PI) / 180);
     const R0 = 11;
-    const tMax = Math.log((DISK_R * 0.94) / R0) / b;
-    const STEPS = 150;
-    const SIDES = 14;
-    const position: number[] = [];
-    const normal: number[] = [];
-    const fade: number[] = [];
-    const index: number[] = [];
-    for (let n = 0; n <= STEPS; n++) {
-        const u = n / STEPS;
-        const t = u * tMax;
-        const r = R0 * Math.exp(b * t);
-        const [cx, cy] = [r * Math.cos(off + t), r * Math.sin(off + t)];
-        // Across the arm: the spiral's tangent turned a quarter
-        const tx = b * Math.cos(off + t) - Math.sin(off + t);
-        const ty = b * Math.sin(off + t) + Math.cos(off + t);
-        const tl = Math.hypot(tx, ty);
-        const [nx, ny] = [ty / tl, -tx / tl];
-        const ends = Math.sin(Math.PI * Math.min(1, u * 6, (1 - u) * 4) * 0.5);
-        const w = (1.5 + r / 16) * (major ? 1 : 0.72) * ends;
-        const h = w * 0.5;
-        for (let m = 0; m < SIDES; m++) {
-            const a = (m / SIDES) * Math.PI * 2;
-            const [ca, sa] = [Math.cos(a), Math.sin(a)];
-            position.push(cx + nx * w * ca, cy + ny * w * ca, h * sa);
-            const nl = Math.hypot(ca / 1, sa * 2);
-            normal.push((nx * ca) / nl, (ny * ca) / nl, (sa * 2) / nl);
-            fade.push((major ? 1 : 0.7) * (1 - 0.55 * u));
-            if (n < STEPS) {
-                const [i0, i1] = [n * SIDES + m, n * SIDES + ((m + 1) % SIDES)];
-                index.push(i0, i0 + SIDES, i1, i1, i0 + SIDES, i1 + SIDES);
-            }
+    const tMax = Math.log((DISK_R * 0.96) / R0) / pitch;
+    for (let arm = 0; arm < 4; arm++) {
+        const major = arm % 2 === 0;
+        const off = Math.PI / 2 + (arm * Math.PI) / 2;
+        const at = (t: number) => {
+            const r = R0 * Math.exp(pitch * t);
+            return { r, x: r * Math.cos(off + t), y: r * Math.sin(off + t), width: (1.5 + r / 13) * (major ? 1 : 0.72) };
+        };
+        for (let n = count(major ? 1500 : 950); n > 0; n--) {
+            const u = rnd();
+            const p = at(u * tMax);
+            // Clumps: the arm is patchy, not a smooth band
+            const clump = 0.45 + 0.55 * Math.pow(Math.sin(u * 37 + arm * 1.7) * 0.5 + 0.5, 1.5);
+            const [dx, dy] = [gauss() * p.width * 0.62, gauss() * p.width * 0.62];
+            const z = gauss() * (0.95 - 0.5 * (p.r / DISK_R));
+            const fade = (major ? 1 : 0.7) * (1 - 0.45 * u) * clump;
+            const kind = rnd();
+            if (kind < 0.07) light.push([p.x + dx, p.y + dy, z * 0.6, between(2, 3.2), 1, 0.5, 0.68, strength * 0.085 * fade]);
+            else if (kind < 0.2) light.push([p.x + dx, p.y + dy, z * 0.7, between(2, 3.4), 0.82, 0.92, 1, strength * 0.09 * fade]);
+            else light.push([p.x + dx, p.y + dy, z, between(2.6, 6), 0.5 + 0.2 * rnd(), 0.66 + 0.12 * rnd(), 1, strength * 0.05 * fade]);
+        }
+        // Dust lane on the inner (leading) edge
+        for (let n = count(major ? 600 : 340); n > 0; n--) {
+            const u = 0.04 + 0.9 * rnd();
+            const p = at(u * tMax);
+            const inward = 1 - (0.55 * p.width + gauss() * 0.3 * p.width) / p.r;
+            dust.push([p.x * inward, p.y * inward, gauss() * 0.3, between(2.6, 5.2), 0.02, 0.015, 0.03, strength * 0.085 * (1 - 0.5 * u)]);
         }
     }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(position, 3));
-    geo.setAttribute('normal', new THREE.Float32BufferAttribute(normal, 3));
-    geo.setAttribute('fade', new THREE.Float32BufferAttribute(fade, 1));
-    geo.setIndex(index);
-    return geo;
+    // The thin disc between the arms
+    for (let n = count(700); n > 0; n--) {
+        const r = 6 + (DISK_R * 0.93 - 6) * Math.pow(rnd(), 0.8);
+        const a = rnd() * Math.PI * 2;
+        light.push([r * Math.cos(a), r * Math.sin(a), gauss() * 0.7, between(4.5, 9), 0.6, 0.66, 0.9, strength * 0.02 * (1 - 0.55 * (r / DISK_R))]);
+    }
+    // Halo
+    for (let n = count(140); n > 0; n--) {
+        light.push([gauss() * 13, gauss() * 13, gauss() * 8, between(10, 18), 0.75, 0.78, 1, strength * 0.007]);
+    }
+    return { light, dust };
 }
 
-function solidSphere(): THREE.BufferGeometry {
-    const geo = new THREE.SphereGeometry(1, 32, 20);
-    geo.setAttribute('fade', new THREE.Float32BufferAttribute(new Float32Array(geo.attributes.position.count).fill(1), 1));
-    return geo;
-}
-
-/** A body of light: brightest where its surface faces the camera and gone at its outline, so it reads as round with no hard edge. */
-function glowMesh(geo: THREE.BufferGeometry, color: number, opacity: number): THREE.Mesh {
+/** Draws puffs as camera-facing discs that are solid at the middle and gone at the rim, all in one call. */
+function puffMesh(puffs: Puff[], blending: THREE.Blending, renderOrder: number): THREE.Mesh {
+    const geo = new THREE.InstancedBufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], 3));
+    geo.setIndex([0, 1, 2, 0, 2, 3]);
+    const flat = new Float32Array(puffs.length * 8);
+    puffs.forEach((puff, i) => flat.set(puff, i * 8));
+    const buffer = new THREE.InstancedInterleavedBuffer(flat, 8);
+    geo.setAttribute('center', new THREE.InterleavedBufferAttribute(buffer, 4, 0));
+    geo.setAttribute('tint', new THREE.InterleavedBufferAttribute(buffer, 4, 4));
+    geo.instanceCount = puffs.length;
     const mesh = new THREE.Mesh(
         geo,
         new THREE.ShaderMaterial({
-            uniforms: { color: { value: new THREE.Color(color) }, opacity: { value: opacity } },
             vertexShader: `
-                attribute float fade;
-                varying float vFade;
-                varying vec3 vNormal;
-                varying vec3 vView;
+                attribute vec4 center;
+                attribute vec4 tint;
+                varying vec2 vAt;
+                varying vec4 vTint;
                 void main() {
-                    vec4 mv = modelViewMatrix * vec4(position, 1.0);
-                    vFade = fade;
-                    vNormal = normalize(normalMatrix * normal);
-                    vView = normalize(-mv.xyz);
+                    vAt = position.xy;
+                    vTint = tint;
+                    vec4 mv = modelViewMatrix * vec4(center.xyz, 1.0);
+                    mv.xy += position.xy * center.w * 0.5;
                     gl_Position = projectionMatrix * mv;
                 }`,
             fragmentShader: `
-                uniform vec3 color;
-                uniform float opacity;
-                varying float vFade;
-                varying vec3 vNormal;
-                varying vec3 vView;
+                varying vec2 vAt;
+                varying vec4 vTint;
                 void main() {
-                    float facing = abs(dot(normalize(vNormal), normalize(vView)));
-                    gl_FragColor = vec4(color, opacity * vFade * facing * facing);
+                    float d = dot(vAt, vAt);
+                    if (d > 1.0) discard;
+                    float soft = exp(-d * 4.0) - 0.0183;
+                    gl_FragColor = vec4(vTint.rgb, vTint.a * soft);
                 }`,
             transparent: true,
             depthWrite: false,
-            blending: THREE.AdditiveBlending,
+            depthTest: false,
+            blending,
         }),
     );
-    mesh.renderOrder = -1.5;
+    mesh.frustumCulled = false;
+    mesh.renderOrder = renderOrder;
     return mesh;
 }
 
