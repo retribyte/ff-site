@@ -1,17 +1,19 @@
 'use client';
 
-// PROTOTYPE. The chosen layout: variant C's galaxy level (search box and side
-// sheet over a full-bleed map, add wizard) with a full-screen system view.
+// The galaxy map: a search box and a side sheet over the full-bleed galaxy, the
+// layers panel, the add wizard, and the full-screen view of one system.
 
 import { useEffect, useState } from 'react';
-import { OCTS, REGIONS, regionAt, regionLabel } from './data';
-import type { RegionKey } from './data';
+import Link from 'next/link';
+import { LANDMARK_CATEGORIES, OCTS, REGIONS, regionAt, regionLabel } from './data';
+import type { ApiPlace, RegionKey } from './data';
+import GalaxyScene from './GalaxyScene';
 import type { Layers } from './GalaxyScene';
 import { CreateFlow, SelectionDetail, placeTitle } from './parts';
 import SystemView from './SystemView';
-import { Stage } from './variants';
+import { useGalaxyStore } from './store';
 import type { Store } from './store';
-import styles from './proto.module.scss';
+import styles from './galaxy.module.scss';
 
 const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boolean).join(' ');
 
@@ -76,7 +78,8 @@ export function LayersPanel({ store, startOpen = true }: { store: Store; startOp
     );
 }
 
-export default function MapApp({ store }: { store: Store }) {
+export default function MapApp({ places }: { places: ApiPlace[] }) {
+    const store = useGalaxyStore(places);
     const [query, setQuery] = useState('');
     const [region, setRegion] = useState<RegionKey | null>(null);
     const [creating, setCreating] = useState(false);
@@ -89,18 +92,38 @@ export default function MapApp({ store }: { store: Store }) {
     const q = query.trim().toLowerCase();
     const hits = q
         ? store.places.flatMap((p) => [
-              ...(placeTitle(p).toLowerCase().includes(q) ? [{ p, bodyId: null as string | null, label: placeTitle(p), sub: regionLabel(p) }] : []),
-              ...p.bodies.filter((b) => b.kind !== 'star' && b.name.toLowerCase().includes(q)).map((b) => ({ p, bodyId: b.id as string | null, label: b.name, sub: `in ${placeTitle(p)}` })),
+              ...(placeTitle(p).toLowerCase().includes(q) ? [{ p, bodyId: null as number | null, label: placeTitle(p), sub: regionLabel(p) }] : []),
+              ...p.bodies.filter((b) => b.kind !== 'star' && b.name.toLowerCase().includes(q)).map((b) => ({ p, bodyId: b.id as number | null, label: b.name, sub: `in ${placeTitle(p)}` })),
           ])
         : region
-          ? store.places.filter((p) => (p.precision === 'region' ? p.regionHint === region : regionAt(p.pos) === region)).map((p) => ({ p, bodyId: null as string | null, label: placeTitle(p), sub: p.kind === 'landmark' ? (p.category ?? 'Landmark') : 'System' }))
+          ? store.places.filter((p) => (p.precision === 'region' ? p.regionHint === region : regionAt(p.pos) === region)).map((p) => ({ p, bodyId: null as number | null, label: placeTitle(p), sub: p.kind === 'landmark' ? (LANDMARK_CATEGORIES[p.category ?? ''] ?? 'Landmark') : 'System' }))
           : [];
     const place = store.selPlace;
     const inSystem = store.level === 'system' && place?.kind === 'system';
 
     return (
+        <main className={styles.root}>
         <div className={styles.shell}>
-            <Stage store={store} galaxyOnly />
+            <div className={styles.stage}>
+                <GalaxyScene
+                    places={store.places}
+                    selectedId={place?.id ?? null}
+                    onSelect={(id) => store.select(id)}
+                    view={store.view}
+                    layers={store.layers}
+                    placing={store.placing}
+                    onPlace={store.handlePlace}
+                    flyToken={store.flyToken}
+                    resetToken={store.resetToken}
+                    onOpen={(id) => store.places.find((p) => p.id === id)?.kind === 'system' && store.openSystem(id)}
+                />
+                {store.placing && (
+                    <div className={styles.placingBanner}>
+                        Click the map where it belongs.
+                        <button type='button' className={styles.btnQuiet} onClick={store.cancelPlace}>Cancel</button>
+                    </div>
+                )}
+            </div>
             {!inSystem && (
                 <>
                     <div className={styles.cLeft}>
@@ -131,7 +154,7 @@ export default function MapApp({ store }: { store: Store }) {
                         {place && !store.placing && (
                             <aside className={cx('pixel-panel', styles.cSheet)}>
                                 <button type='button' className={styles.close} onClick={() => store.select(null)} aria-label='Close'>x</button>
-                                <SelectionDetail store={store} style='lineup' showTree />
+                                <SelectionDetail store={store} />
                             </aside>
                         )}
                     </div>
@@ -140,17 +163,28 @@ export default function MapApp({ store }: { store: Store }) {
                             <LayersPanel store={store} />
                         </div>
                     )}
-                    <button type='button' className={styles.cFab} onClick={() => setCreating(true)} aria-label='Add to the map'>+</button>
+                    {store.user ? (
+                        <button type='button' className={styles.cFab} onClick={() => setCreating(true)} aria-label='Add to the map'>+</button>
+                    ) : (
+                        <Link href='/login' className={styles.cSignIn}>Sign in to add to the map</Link>
+                    )}
                 </>
             )}
             {inSystem && place && <SystemView store={store} place={place} onAdd={() => setCreating(true)} />}
             {creating && (
                 <div className={cx(styles.cModalWrap, store.placing && styles.tucked)}>
                     <div className={cx('pixel-panel', styles.cModal)}>
-                        <CreateFlow store={store} style='lineup' stepped onDone={() => setCreating(false)} />
+                        <CreateFlow store={store} onDone={() => setCreating(false)} />
                     </div>
                 </div>
             )}
+            {store.error && !creating && (
+                <p className={styles.toast} role='alert'>
+                    {store.error}
+                    <button type='button' className={styles.close} onClick={store.clearError} aria-label='Dismiss'>x</button>
+                </p>
+            )}
         </div>
+        </main>
     );
 }

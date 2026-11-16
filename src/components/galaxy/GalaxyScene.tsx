@@ -1,14 +1,14 @@
 'use client';
 
-// PROTOTYPE, throwaway. The rotatable galaxy: three.js draws stars, territories
-// and the sector grid; places are DOM markers projected on top each frame.
+// The galaxy itself: three.js draws its shape, the territories and the sector grid;
+// places are DOM markers projected on top each frame.
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ANDROMEDA_DIR, DISK_R, H, MAP_ROT, N, OCTS, PPK, REGIONS, RIM_CELLS, S, regionAt, sectorOf, starOf, STAR_TYPES } from './data';
 import type { Place, Vec3 } from './data';
-import styles from './proto.module.scss';
+import styles from './galaxy.module.scss';
 
 export type ViewMode = 'tilt' | 'top';
 export interface Layers {
@@ -30,8 +30,8 @@ export interface Layers {
 
 interface Props {
     places: Place[];
-    selectedId: string | null;
-    onSelect: (id: string | null) => void;
+    selectedId: number | null;
+    onSelect: (id: number | null) => void;
     view: ViewMode;
     layers: Layers;
     /** When set, the next click on the map reports a position (top-down only). */
@@ -40,7 +40,7 @@ interface Props {
     /** Changing this number flies the camera to the selected place. */
     flyToken: number;
     /** Double-click on a marker. */
-    onOpen?: (id: string) => void;
+    onOpen?: (id: number) => void;
     /** Changing this number puts the camera back where it started. */
     resetToken?: number;
 }
@@ -205,11 +205,17 @@ const HOME: Vec3 = [44, -66, 44];
 const FLAT_FOV = 4;
 /** How much farther the long top-down lens stands to frame the same area. */
 const FLAT = Math.tan((24 * Math.PI) / 180) / Math.tan(((FLAT_FOV / 2) * Math.PI) / 180);
+/**
+ * Where the top-down camera sits from its focus: straight above, a hair toward -y so
+ * that +y (the line between the N and E octants) is always up on screen. The frame
+ * loop puts the camera back on this line every frame, so top-down cannot turn or tilt.
+ */
+const TOP_DIR = new THREE.Vector3(0, -0.0005, 1).normalize();
 
 export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen }: Props) {
     const hostRef = useRef<HTMLDivElement>(null);
-    const markerRefs = useRef(new Map<string, HTMLButtonElement>());
-    const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Record<'galaxy' | 'grid' | 'octants' | 'ring' | 'terr' | 'rim' | 'bearings', THREE.Object3D>; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; top: boolean; maxBase: number } | null>(null);
+    const markerRefs = useRef(new Map<number, HTMLButtonElement>());
+    const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Record<'galaxy' | 'grid' | 'octants' | 'ring' | 'terr' | 'rim' | 'bearings', THREE.Object3D>; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
     const live = useRef({ places, placing, onPlace, onSelect });
     const [readout, setReadout] = useState('');
     const [failed, setFailed] = useState(false);
@@ -261,7 +267,7 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
             textSprite('Galactic bar', '#8792a8', fontDisplay, [3.5, 13, 1.6], 2.6),
         );
         scene.add(galaxy, rim, terr, grid, octants, ring, bearings);
-        new THREE.TextureLoader().load('/prototype/territories.png', (tex) => {
+        new THREE.TextureLoader().load('/galaxy/territories.png', (tex) => {
             const plane = new THREE.Mesh(
                 new THREE.PlaneGeometry(800 / PPK, 600 / PPK),
                 new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide }),
@@ -278,7 +284,12 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
             grid.add(box);
         }
 
-        three.current = { camera, controls, groups: { galaxy, grid, octants, ring, terr, rim, bearings }, goal: null, camGoal: null, top: false, maxBase: 150 };
+        three.current = { camera, controls, groups: { galaxy, grid, octants, ring, terr, rim, bearings }, goal: null, camGoal: null, distGoal: null, top: false, maxBase: 150 };
+        // A drag or a scroll takes over from any camera move in progress
+        controls.addEventListener('start', () => {
+            const t = three.current;
+            if (t) t.goal = t.camGoal = t.distGoal = null;
+        });
 
         const resize = () => {
             const w = host.clientWidth;
@@ -333,13 +344,24 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         const frame = () => {
             raf = requestAnimationFrame(frame);
             const t = three.current!;
-            if (t.camGoal) {
+            let dist = camera.position.distanceTo(controls.target);
+            if (t.camGoal && !t.top) {
                 camera.position.lerp(t.camGoal, 0.12);
                 if (camera.position.distanceTo(t.camGoal) < 0.1) t.camGoal = null;
             }
             if (t.goal) {
+                // The camera travels with its focus, so flying to a place slides the map and never turns it
+                v.copy(controls.target);
                 controls.target.lerp(t.goal, 0.12);
+                if (!t.camGoal || t.top) camera.position.add(v.subVectors(controls.target, v));
                 if (controls.target.distanceTo(t.goal) < 0.05) t.goal = null;
+            }
+            if (t.top) {
+                if (t.distGoal !== null) {
+                    dist += (t.distGoal - dist) * 0.12;
+                    if (Math.abs(t.distGoal - dist) < 0.5) t.distGoal = null;
+                }
+                camera.position.copy(controls.target).addScaledVector(TOP_DIR, dist);
             }
             controls.update();
             // Keep the focus inside the disk, moving the camera with it, so panning stops at the edge.
@@ -393,16 +415,18 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         controls.enableRotate = !top;
         controls.mouseButtons.LEFT = top ? THREE.MOUSE.PAN : THREE.MOUSE.ROTATE;
         controls.touches.ONE = top ? THREE.TOUCH.PAN : THREE.TOUCH.ROTATE;
+        controls.touches.TWO = top ? THREE.TOUCH.DOLLY_PAN : THREE.TOUCH.DOLLY_ROTATE;
         // Top-down is drawn flat (no perspective): a very long lens from very far away.
         camera.fov = top ? FLAT_FOV : 48;
         camera.updateProjectionMatrix();
         controls.minDistance = 6 * f;
         controls.maxDistance = t.maxBase * f;
         t.camGoal = null;
+        t.distGoal = null;
         if (top) {
             // Far enough back that the whole disk fits a narrow (phone) viewport.
             const z = Math.min(t.maxBase, Math.max(dist, 30, camera.aspect < 1 ? 105 / camera.aspect : 0)) * f;
-            camera.position.set(controls.target.x, controls.target.y - z * 0.0005, z);
+            camera.position.copy(controls.target).addScaledVector(TOP_DIR, z);
         } else if (wasTop || camera.position.z > dist * 0.95) camera.position.set(controls.target.x + dist * 0.5, controls.target.y - dist * 0.7, dist * 0.5);
         controls.update();
     }, [view, placing]);
@@ -425,7 +449,8 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         const t = three.current;
         if (!t || !resetToken) return;
         t.goal = new THREE.Vector3(0, 0, 0);
-        t.camGoal = t.top ? new THREE.Vector3(0, -0.05, Math.min(t.maxBase, Math.max(110, 105 / t.camera.aspect)) * FLAT) : new THREE.Vector3(...HOME);
+        t.camGoal = t.top ? null : new THREE.Vector3(...HOME);
+        t.distGoal = t.top ? Math.min(t.maxBase, Math.max(110, 105 / t.camera.aspect)) * FLAT : null;
     }, [resetToken]);
 
     useEffect(() => {

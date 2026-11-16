@@ -15,6 +15,7 @@ const links = [
     { href: '/stories', label: 'Stories' },
     { href: '/characters', label: 'Characters' },
     { href: '/items', label: 'Items' },
+    { href: '/galaxy', label: 'Galaxy' },
     { href: '/convert', label: 'Convert' },
     { href: '/8ball', label: '8-Ball' },
 ];

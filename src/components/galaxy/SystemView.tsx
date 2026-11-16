@@ -1,18 +1,19 @@
 'use client';
 
-// PROTOTYPE. The full-screen system view: a rail (bodies, the system, telemetry
-// for the selection, travelogue) beside a diagram of the whole system, after
-// Space Builder's system console.
+// The full-screen view of one system: floating panels (bodies, telemetry for the
+// selection, travelogue) over a diagram of the whole system, after Space Builder's
+// system console.
 
 import { useEffect, useRef, useState } from 'react';
+import RichText from '@/components/RichText';
 import {
     COMPOSITIONS, STAR_TYPES, ZONES,
     bodyColor, describeSize, fmtNum, gravityG, habAU, habitability, massEarths, regionLabel, sectorOf, starOf, yearDays, zoneOf,
 } from './data';
 import type { Body, Place } from './data';
-import { BodyFields, BodyIcon, BodyTree, KIND_LABEL, designation, RenameRow, Travelogue, placeTitle } from './parts';
+import { BodyFields, BodyIcon, BodyTree, DeleteButton, KIND_LABEL, designation, RenameRow, Travelogue, placeTitle } from './parts';
 import type { Store } from './store';
-import styles from './proto.module.scss';
+import styles from './galaxy.module.scss';
 
 const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boolean).join(' ');
 
@@ -23,7 +24,7 @@ const LOG_SIZE = 1 / Math.log(1.25);
 const bodyPx = (b: Body) => Math.max(b.kind === 'planet' ? 4 : 2.2, Math.min(26, Math.log(Math.max(b.radiusKm, 1) / 1000) * LOG_SIZE));
 const MOON_GAP = 11;
 
-function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: Place; selBodyId: string | null; onSelect: (id: string | null) => void; onEdit: (id: string) => void; onAdd?: () => void }) {
+function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: Place; selBodyId: number | null; onSelect: (id: number | null) => void; onEdit: (id: number) => void; onAdd?: () => void }) {
     const hostRef = useRef<HTMLDivElement>(null);
     const [box, setBox] = useState({ w: 1000, h: 700 });
     useEffect(() => {
@@ -41,7 +42,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
     const c = { x: inset + (W - inset) / 2, y: Hh / 2 };
     const starPx = (STAR_TYPES[star?.type ?? '']?.px ?? 24) * 1.25;
     const maxR = Math.min(W - inset, Hh) / 2 - 40;
-    const kidsOf = (id: string) => place.bodies.filter((b) => b.parentId === id).sort((x, y) => x.orbit - y.orbit);
+    const kidsOf = (id: number) => place.bodies.filter((b) => b.parentId === id).sort((x, y) => x.orbit - y.orbit);
     // How much room a planet needs around its own center (its moons' rings included).
     const reach = (p: Body) => bodyPx(p) + kidsOf(p.id).length * MOON_GAP + 6;
     const base = starPx + 14;
@@ -59,8 +60,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
     const ringR = (i: number) => (over > 1 ? base + (radii[i] - base) / over : radii[i]);
     const addR = planets.length ? Math.min(maxR, ringR(planets.length - 1) + reach(planets[planets.length - 1]) + 28) : base + 60;
     // Spread around the star by the golden angle, starting somewhere that differs per system.
-    const hash = (id: string) => Array.from(id).reduce((n, ch) => (n * 31 + ch.charCodeAt(0)) % 3600, 7);
-    const angle = (id: string, index: number) => ((hash(id) % 360) * Math.PI) / 180 + index * 2.39996;
+    const angle = (id: number, index: number) => (((id * 137) % 360) * Math.PI) / 180 + index * 2.39996;
 
     return (
         <div ref={hostRef} className={styles.sysDiagram}>
@@ -196,7 +196,7 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
     const [editing, setEditing] = useState(false);
     const body = store.selBody;
     const star = starOf(place);
-    const mine = place.owner === store.me;
+    const mine = store.canEdit(place);
     const planets = place.bodies.filter((b) => b.kind === 'planet');
 
     useEffect(() => {
@@ -251,20 +251,19 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                                 <p className='pixel-label'>{KIND_LABEL[body.kind]}{body.kind !== 'star' && ` ${designation(place, body)}`}</p>
                             </div>
                         </header>
-                        {body.note && <p>{body.note}</p>}
-                        {body.wikiSlug && <p className={styles.muted}>Description and picture come from the wiki page <span className={styles.mono}>{body.wikiSlug}</span>.</p>}
+                        {body.note && <RichText html={body.note} />}
                         {editing && mine ? (
-                            <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} style='lineup' onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                            <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
                         ) : (
                             <Telemetry place={place} body={body} />
                         )}
                         {mine && (
                             <div className={styles.actions}>
                                 <button type='button' className={styles.btn} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
-                                {body.kind !== 'star' && <button type='button' className={styles.btnQuiet} onClick={() => store.removeBody(place.id, body.id)}>Delete</button>}
+                                {body.kind !== 'star' && <DeleteButton onDelete={() => store.removeBody(place.id, body.id)} />}
                             </div>
                         )}
-                        <Travelogue store={store} place={place} body={body} />
+                        <Travelogue place={place} body={body} />
                     </section>
                 ) : (
                     <section className={styles.sysSection}>
@@ -275,7 +274,7 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                                 <p className='pixel-label'>{place.placeholder ? 'System, star not named yet' : 'System'}</p>
                             </div>
                         </header>
-                        {place.note && <p>{place.note}</p>}
+                        {place.note && <RichText html={place.note} />}
                         {place.placeholder && mine && <RenameRow store={store} place={place} />}
                         <div className={styles.telemetry}>
                             <Row label='Region' value={regionLabel(place)} />
@@ -283,10 +282,9 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                             <Row label='Star' value={STAR_TYPES[star?.type ?? '']?.label ?? 'none'} />
                             <Row label='Planets' value={planets.length} />
                             <Row label='Moons and stations' value={Math.max(0, place.bodies.length - planets.length - 1)} />
-                            <Row label='Added by' value={place.owner} />
+                            <Row label='Added by' value={place.owner.username} />
                         </div>
-                        {!mine && <p className={styles.muted}>Only {place.owner} or an admin can change this system.</p>}
-                        <Travelogue store={store} place={place} body={null} />
+                        <Travelogue place={place} body={null} />
                     </section>
                 )}
               </div>

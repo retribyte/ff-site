@@ -1,53 +1,126 @@
-// PROTOTYPE, throwaway. Frame math lifted from the "Galactic Sector Grid"
-// artifact (draft 4): 1 unit = 1 klyr, Sag A at the origin, bar along +y.
-// All places and bodies below are in-memory sample data.
+// The galaxy map's frame math, regions and "no raw numbers" reference scales, and
+// the shape the map's components work with. Frame math is lifted from the "Galactic
+// Sector Grid" artifact (draft 4): 1 unit = 1 klyr, Sag A at the origin, bar along +y.
+// The key lists (STAR_TYPES, COMPOSITIONS, LANDMARK_CATEGORIES) must match ff-server's
+// src/galaxy/galaxy.validation.ts, which refuses keys it does not know.
 
 export type Vec3 = [number, number, number];
 export type RegionKey = 'gu' | 'ade' | 'lr' | 'rim';
 export type PlaceKind = 'system' | 'landmark';
 export type BodyKind = 'star' | 'planet' | 'moon' | 'station';
 export type Precision = 'exact' | 'region';
-export type InputStyle = 'slider' | 'chips' | 'lineup';
 
-export interface Episode {
-    season: string;
-    no: number;
-    title?: string;
+/** "This episode happened here." `episode` is null when that episode is gone from the archive. */
+export interface TravelTag {
+    id: number;
+    creatorId: number;
+    episodeSlug: string;
+    episode: { slug: string; title: string; episode_no: number; seasonTitle: string; seasonSlug: string } | null;
 }
 
 export interface Body {
-    id: string;
+    id: number;
     kind: BodyKind;
+    /** A star nobody has named reads "Unnamed star" (`unnamed`). */
     name: string;
-    parentId: string | null;
-    /** star: key of STAR_TYPES. planet/moon: key of COMPOSITIONS. */
+    unnamed?: boolean;
+    parentId: number | null;
+    /** star: key of STAR_TYPES. planet/moon/station: key of COMPOSITIONS. */
     type: string;
     /** radius in km (planets, moons). Stars take theirs from the type. */
     radiusKm: number;
     /** planets: AU from the star. moons and stations: km from the parent. */
     orbit: number;
     color?: string;
+    /** ff-server-sanitized HTML: render with RichText. */
     note?: string;
-    wikiSlug?: string;
-    travelogue: Episode[];
+    /** The wiki's slug for the same thing. */
+    slug?: string;
+    travelogue: TravelTag[];
 }
 
 export interface Place {
-    id: string;
+    id: number;
     kind: PlaceKind;
+    /** A system nobody has named reads "Unnamed system" (`placeholder`). */
     name: string;
     placeholder?: boolean;
     pos: Vec3;
     precision: Precision;
     /** Region picked with "somewhere in ...". Exact places derive theirs. */
     regionHint?: RegionKey;
+    /** Landmarks: key of LANDMARK_CATEGORIES. */
     category?: string;
     note?: string;
-    owner: string;
-    wikiSlug?: string;
+    owner: { id: number; username: string };
+    slug?: string;
     bodies: Body[];
-    travelogue: Episode[];
+    travelogue: TravelTag[];
 }
+
+// ---------- ff-server's shapes (GET /galaxy/places) ----------
+export interface ApiBody {
+    id: number;
+    parentId: number | null;
+    kind: 'STAR' | 'PLANET' | 'MOON' | 'STATION';
+    name: string | null;
+    slug: string | null;
+    type: string;
+    radiusKm: number | null;
+    orbit: number | null;
+    color: string | null;
+    description: string | null;
+}
+
+export interface ApiPlace {
+    id: number;
+    kind: 'SYSTEM' | 'LANDMARK';
+    name: string | null;
+    slug: string | null;
+    x: number;
+    y: number;
+    z: number;
+    region: 'GU' | 'ADE' | 'LR' | 'RIM' | null;
+    category: string | null;
+    description: string | null;
+    creator: { id: number; username: string; icon: string | null };
+    bodies: ApiBody[];
+    travelogue: (TravelTag & { bodyId: number | null })[];
+}
+
+export function fromApi(p: ApiPlace): Place {
+    const tagsOf = (bodyId: number | null) => p.travelogue.filter((t) => t.bodyId === bodyId).map((t) => ({ id: t.id, creatorId: t.creatorId, episodeSlug: t.episodeSlug, episode: t.episode }));
+    return {
+        id: p.id,
+        kind: p.kind === 'SYSTEM' ? 'system' : 'landmark',
+        name: p.name ?? 'Unnamed system',
+        placeholder: p.name === null,
+        pos: [p.x, p.y, p.z],
+        precision: p.region ? 'region' : 'exact',
+        regionHint: p.region ? (p.region.toLowerCase() as RegionKey) : undefined,
+        category: p.category ?? undefined,
+        note: p.description ?? undefined,
+        owner: { id: p.creator.id, username: p.creator.username },
+        slug: p.slug ?? undefined,
+        bodies: p.bodies.map((b) => ({
+            id: b.id,
+            kind: b.kind.toLowerCase() as BodyKind,
+            name: b.name ?? 'Unnamed star',
+            unnamed: b.name === null,
+            parentId: b.parentId,
+            type: b.type,
+            radiusKm: b.radiusKm ?? 696000,
+            orbit: b.orbit ?? 0,
+            color: b.color ?? undefined,
+            note: b.description ?? undefined,
+            slug: b.slug ?? undefined,
+            travelogue: tagsOf(b.id),
+        })),
+        travelogue: tagsOf(null),
+    };
+}
+
+export const LANDMARK_CATEGORIES: Record<string, string> = { landmark: 'Landmark', station: 'Station', cluster: 'Cluster', nebula: 'Nebula' };
 
 // ---------- Frame ----------
 export const S = 5;
@@ -66,29 +139,7 @@ export const SUN: Vec3 = [SUN_R * sHat[0], SUN_R * sHat[1], 0.066];
 export const MAP_ROT = SUN_ANG - Math.atan2(164, 94);
 export const PPK = 189 / 26.7;
 
-function galactic(l: number, b: number, d: number): Vec3 {
-    const dp = d * Math.cos(b * D2R);
-    const cl = Math.cos(l * D2R);
-    const sl = Math.sin(l * D2R);
-    return [SUN[0] + dp * (cl * e0[0] + sl * e90[0]), SUN[1] + dp * (cl * e0[1] + sl * e90[1]), SUN[2] + d * Math.sin(b * D2R)];
-}
-
 const rot = (x: number, y: number, a: number): [number, number] => [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)];
-
-/** FF4's old 26 x 25 grid (the "sector O-19" style addresses in the archive). */
-function oldGrid(col: string, row: number): Vec3 {
-    const c = col.charCodeAt(0) - 65 + 0.5;
-    const r = row - 1 + 0.5;
-    const p = rot((c - 13.42) * 2.94, -(r - 12.76) * 2.94, MAP_ROT);
-    return [p[0], p[1], 0.3];
-}
-
-/** Old wiki `Map:Milky Way Galaxy` pixels. PLACEHOLDER positions: that map does not convert cleanly (see handover). */
-function oldWikiMap(px: number, py: number): Vec3 {
-    const ang = SUN_ANG - Math.atan2(442.3, 194.7);
-    const p = rot((px - 1391) * 0.036, (py - 1347) * 0.036, ang);
-    return [p[0], p[1], 0];
-}
 
 /** The eight octants, with the Sector Grid artifact's colors. N, E, S, W sit above the plane; the Greek four sit below them. */
 export const OCTS: { key: string; sx: number; sy: number; sz: number; color: string }[] = [
@@ -193,7 +244,7 @@ export function loadTerritories(): Promise<void> {
             resolve();
         };
         img.onerror = () => resolve();
-        img.src = '/prototype/territories.png';
+        img.src = '/galaxy/territories.png';
     });
 }
 
@@ -376,92 +427,10 @@ export function habitability(place: Place, body: Body): number | null {
     return Math.round(100 * zoneScore * gravScore * (comp[body.type] ?? 0.5));
 }
 
-export const fmtNum = (v: number) => (v >= 100 ? Math.round(v).toLocaleString('en-US') : v >= 10 ? v.toFixed(1) : v.toFixed(2));
+export const fmtNum = (v: number) => (v > 0 && v < 0.01 ? v.toPrecision(1) : v >= 100 ? Math.round(v).toLocaleString('en-US') : v >= 10 ? v.toFixed(1) : v.toFixed(2));
 
 export function bodyColor(b: Body): string {
     if (b.color) return b.color;
     if (b.kind === 'star') return STAR_TYPES[b.type]?.color ?? '#ffe9a8';
     return COMPOSITIONS[b.type]?.color ?? '#9aa3b8';
 }
-
-
-// ---------- Sample data ----------
-let seq = 0;
-export const newId = (prefix: string) => `${prefix}${++seq}`;
-
-const ep = (season: string, no: number, title?: string): Episode => ({ season, no, title });
-
-function body(kind: BodyKind, name: string, parentId: string | null, type: string, radiusKm: number, orbit: number, extra: Partial<Body> = {}): Body {
-    return { id: newId('b'), kind, name, parentId, type, radiusKm, orbit, travelogue: [], ...extra };
-}
-
-function system(name: string, pos: Vec3, extra: Partial<Place>, build: (add: (b: Body) => Body) => void): Place {
-    const bodies: Body[] = [];
-    build((b) => {
-        bodies.push(b);
-        return b;
-    });
-    return { id: newId('p'), kind: 'system', name, pos, precision: 'exact', owner: 'Trey', bodies, travelogue: [], ...extra };
-}
-
-function landmark(name: string, category: string, pos: Vec3, note = '', extra: Partial<Place> = {}): Place {
-    return { id: newId('p'), kind: 'landmark', name, category, pos, precision: 'exact', owner: 'Trey', note, bodies: [], travelogue: [], ...extra };
-}
-
-export function seedPlaces(): Place[] {
-    return [
-        system('Sol', SUN, { note: 'A popular tourist trap, and where Earth is located.', wikiSlug: 'sol' }, (add) => {
-            const sun = add(body('star', 'Sol', null, 'sunlike', 696000, 0));
-            const earth = add(body('planet', 'Earth', sun.id, 'ocean', 6371, 1, {
-                wikiSlug: 'earth',
-                travelogue: [ep('FF2', 10, 'Toothache Troubles'), ep('FF2', 13, 'Seeing Double'), ep('FF2', 14, 'Crash and Burn'), ep('FF2', 15, 'Worm in the Hole')],
-            }));
-            add(body('moon', 'Luna', earth.id, 'rocky', 1737, 384400));
-            add(body('planet', 'Mars', sun.id, 'desert', 3390, 1.52));
-            add(body('planet', 'Jupiter', sun.id, 'gas', 69911, 5.2));
-        }),
-        system('Unnamed system', oldWikiMap(1433, 993.5), { placeholder: true, note: 'Placeholder: Barbona was added before anyone named its star.' }, (add) => {
-            const star = add(body('star', 'Unnamed star', null, 'orange', 500000, 0));
-            add(body('planet', 'Barbona', star.id, 'ocean', 7800, 0.62, {
-                note: 'An ocean planet, and home of the Torrid.',
-                wikiSlug: 'barbona',
-                travelogue: [ep('FF4', 3, 'Ambush'), ep('FF4', 4, 'Blackjack'), ep('FF4', 5, 'Diplomacy'), ep('FF4', 6, 'Obligatory Shopping Episode'), ep('FF4', 7, 'Marv Attacks'), ep('FF4', 23, 'Finale')],
-            }));
-        }),
-        system('Eflah', oldWikiMap(1505.5, 981), { note: 'A less-populated system, home of Fleex.' }, (add) => {
-            const star = add(body('star', 'Eflah', null, 'red_dwarf', 200000, 0));
-            add(body('planet', 'Fleex', star.id, 'rocky', 4100, 0.16, { wikiSlug: 'fleex', travelogue: [ep('FF4', 6, 'Obligatory Shopping Episode')] }));
-            add(body('planet', 'Eflah II', star.id, 'ice', 9000, 1.4));
-        }),
-        system('Eyacara', oldWikiMap(1342, 1036.5), { owner: 'Zander' }, (add) => {
-            const star = add(body('star', 'Eyacara', null, 'white', 1200000, 0));
-            const six = add(body('planet', 'Eyacara-6', star.id, 'gas', 52000, 9));
-            add(body('station', 'KYL Trade Center', six.id, 'artificial', 600, 90000, {
-                note: 'An artificial moon orbiting the planet Eyacara-6.',
-                travelogue: [ep('FF2', 13, 'Seeing Double'), ep('FF2', 14, 'Crash and Burn'), ep('FF2', 16, 'Barrier to Entria'), ep('FF2', 17, 'Take Two'), ep('FF2', 21, 'Deep Space Famine'), ep('FF2', 22, 'Dam Hooligans'), ep('FF2', 23, 'Bark and Bite')],
-            }));
-        }),
-        system('Unnamed system', [22, -18, 0], { placeholder: true, owner: 'Sean' }, (add) => {
-            const star = add(body('star', 'Unnamed star', null, 'sunlike', 696000, 0));
-            add(body('planet', 'Zarazoga-9', star.id, 'ocean', 5900, 0.95, { note: 'A tropical paradise, free from GU or ADE influence.', travelogue: [ep('FF3', 7), ep('FF3', 8)] }));
-        }),
-        system('Ophiuchus-D', oldGrid('O', 19), { note: 'A black hole in old sector O-19. Target of Operation EVENT HORIZON.', travelogue: [ep('FF4', 1, 'Welcome, New Recruits'), ep('FF4', 18, 'Mutiny')] }, (add) => {
-            add(body('star', 'Ophiuchus-D', null, 'black_hole', 60, 0));
-        }),
-        landmark('Sagittarius A', 'Black hole', [0, 0, 0], 'The 729 Core Worlds share one orbit 406 AU out. One lap is one GUY.'),
-        landmark('GU government site', 'Station', oldGrid('N', 12), 'Old sector N-12.'),
-        landmark('Independent station', 'Station', oldGrid('N', 15), 'Old sector N-15.'),
-        landmark('Omega Centauri', 'Cluster', galactic(309.1, 14.97, 17.0)),
-        landmark('M13', 'Cluster', galactic(59.0, 40.9, 22.2), 'Out in the halo, above the disk.'),
-        landmark('Ptorei Nebula', 'Nebula', oldWikiMap(1696, 1580)),
-        landmark('Bakree Nebula', 'Nebula', oldWikiMap(1389, 1960), 'Birthplace of the Novakids.'),
-        landmark('Bagriburg', 'Landmark', oldWikiMap(475, 2002), 'An invitation-only district where many reclusive species live.'),
-        landmark('Padox District', 'Landmark', oldWikiMap(761, 2186), 'A densely populated district.'),
-        landmark('Geche Customs', 'Station', oldWikiMap(928, 2234)),
-        landmark('Coterr Inner Junction', 'Landmark', oldWikiMap(1135, 1690)),
-        landmark('Vanta Outer Junction', 'Landmark', oldWikiMap(356, 1528)),
-        landmark('RSJENO base', 'Station', oldWikiMap(1181, 1296), "Base of the GU's research and journalism arm."),
-    ];
-}
-
-export const epLabel = (e: Episode) => `${e.season} episode ${e.no}${e.title ? `, ${e.title}` : ''}`;

@@ -1,79 +1,21 @@
 'use client';
 
-// PROTOTYPE, throwaway. Pieces the three layout variants arrange differently:
-// the system diagram, the "no raw numbers" inputs, detail blocks, the create flow.
+// Pieces of the galaxy map shared by the galaxy level and the system view: the "no
+// raw numbers" inputs, the detail blocks for a selection, and the add wizard.
 
 import { useState } from 'react';
+import Link from 'next/link';
+import RichText from '@/components/RichText';
 import {
-    COMPOSITIONS, MOON_ORBIT_RANGE, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
-    bodyColor, describeSize, epLabel, newId, fmtNum, fromT, fullAddress, gravityG, habAU, randomPointIn, regionAt, regionLabel, sectorOf, starOf, toT, yearDays, zoneOf,
+    COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_RANGE, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
+    bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, randomPointIn, regionAt, regionLabel, sectorOf, starOf, toT, yearDays, zoneOf,
 } from './data';
-import type { Body, BodyKind, InputStyle, Place, Precision, Ref, RegionKey, Vec3 } from './data';
-import type { Store } from './store';
-import styles from './proto.module.scss';
+import type { Body, BodyKind, Place, Ref, RegionKey } from './data';
+import type { Store, Where } from './store';
+import styles from './galaxy.module.scss';
 
 const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boolean).join(' ');
 export const KIND_LABEL: Record<string, string> = { star: 'Star', planet: 'Planet', moon: 'Moon', station: 'Station', system: 'System', landmark: 'Landmark' };
-
-// ---------- System diagram ----------
-// Schematic, not to scale: orbits are evenly spaced in order, sizes are compressed.
-export function SystemSchematic({ place, selBodyId, onSelect, compact }: { place: Place; selBodyId: string | null; onSelect: (id: string | null) => void; compact?: boolean }) {
-    const star = starOf(place);
-    const planets = place.bodies.filter((b) => b.kind === 'planet').sort((a, b) => a.orbit - b.orbit);
-    const W = compact ? 580 : 1000;
-    const Hh = compact ? 360 : 700;
-    const c = { x: W / 2, y: Hh / 2 };
-    const starPx = STAR_TYPES[star?.type ?? '']?.px ?? 24;
-    const maxR = Hh / 2 - (compact ? 24 : 60);
-    const step = planets.length ? Math.min(90, (maxR - starPx - 30) / planets.length) : 0;
-    const angle = (id: string) => ((Array.from(id).reduce((n, ch) => n * 31 + ch.charCodeAt(0), 7) % 360) * Math.PI) / 180;
-    const px = (b: Body) => 5 + 20 * Math.max(0, Math.min(1, toT(b.radiusKm, SIZE_RANGE)));
-
-    return (
-        <svg className={styles.schematic} viewBox={`0 0 ${W} ${Hh}`} onClick={() => onSelect(null)} role='img' aria-label={`Diagram of the ${place.name} system`}>
-            {star && (
-                <g className={cx(styles.orb, selBodyId === star.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(star.id))}>
-                    {star.type === 'black_hole' && <circle cx={c.x} cy={c.y} r={starPx + 10} fill='none' stroke='#f0b44c' strokeWidth='5' opacity='.7' />}
-                    <circle cx={c.x} cy={c.y} r={starPx} fill={bodyColor(star)} className={styles.starGlow} style={{ color: bodyColor(star) }} />
-                    <text x={c.x} y={c.y + starPx + 24} textAnchor='middle'>{star.name}</text>
-                </g>
-            )}
-            {planets.map((p, i) => {
-                const r = starPx + 40 + step * (i + 0.5);
-                const a = angle(p.id);
-                const bx = c.x + r * Math.cos(a);
-                const by = c.y + r * Math.sin(a);
-                const pr = px(p);
-                const zone = star ? zoneOf(p.orbit, star.type) : ZONES[2];
-                const kids = place.bodies.filter((b) => b.parentId === p.id).sort((x, y) => x.orbit - y.orbit);
-                return (
-                    <g key={p.id} className={cx(styles.orb, selBodyId === p.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(p.id))}>
-                        <circle cx={c.x} cy={c.y} r={r} className={styles.orbitLine} style={{ stroke: zone.color }} />
-                        <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} />
-                        <circle cx={bx} cy={by} r={pr} fill={bodyColor(p)} />
-                        <text x={bx} y={by - pr - 10 - kids.length * 9} textAnchor='middle'>{p.name}</text>
-                        {kids.map((m, j) => {
-                            const mr = pr + 10 + j * 9;
-                            const ma = angle(m.id);
-                            return (
-                                <g key={m.id} className={cx(styles.orb, selBodyId === m.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(m.id))}>
-                                    <circle cx={bx} cy={by} r={mr} className={styles.orbitLine} />
-                                    <circle cx={bx} cy={by} r={mr} className={styles.orbitHit} style={{ strokeWidth: 8 }} />
-                                    {m.kind === 'station' ? (
-                                        <rect x={bx + mr * Math.cos(ma) - 3.5} y={by + mr * Math.sin(ma) - 3.5} width='7' height='7' fill={bodyColor(m)} />
-                                    ) : (
-                                        <circle cx={bx + mr * Math.cos(ma)} cy={by + mr * Math.sin(ma)} r={Math.max(2.5, px(m) * 0.45)} fill={bodyColor(m)} />
-                                    )}
-                                </g>
-                            );
-                        })}
-                    </g>
-                );
-            })}
-            <text x={16} y={compact ? Hh - 10 : Hh - 56} className={styles.schematicNote}>Not to scale. Ring color shows how warm the orbit is.</text>
-        </svg>
-    );
-}
 
 // ---------- Inputs that never ask for a raw number ----------
 interface ScaleProps {
@@ -82,14 +24,14 @@ interface ScaleProps {
     onChange: (v: number) => void;
     refs: Ref[];
     range: [number, number];
-    style: InputStyle;
     readout: string;
-    /** Planet orbits only: draws warm-to-cold bands and offers zone chips. */
+    /** Planet orbits only: draws warm-to-cold bands. */
     starType?: string;
+    /** A lineup of reference bodies to pick from; otherwise a ruler to click along. */
     sizes?: boolean;
 }
 
-function ScaleInput({ label, value, onChange, refs, range, style, readout, starType, sizes }: ScaleProps) {
+function ScaleInput({ label, value, onChange, refs, range, readout, starType, sizes }: ScaleProps) {
     const t = Math.max(0, Math.min(1, toT(value, range)));
     const nearest = refs.reduce((best, r) => (Math.abs(Math.log(value / r.value)) < Math.abs(Math.log(value / best.value)) ? r : best), refs[0]);
     const hab = starType ? habAU(starType) : 1;
@@ -101,6 +43,7 @@ function ScaleInput({ label, value, onChange, refs, range, style, readout, starT
               return `${z.color} ${a}%, ${z.color} ${b}%`;
           }).join(', ')})`
         : undefined;
+    const nudge = (by: number) => onChange(fromT(Math.max(0, Math.min(1, t + by)), range));
 
     return (
         <div className={styles.field}>
@@ -108,35 +51,7 @@ function ScaleInput({ label, value, onChange, refs, range, style, readout, starT
                 <span className='pixel-label'>{label}</span>
                 <span className={styles.fieldReadout}>{readout}</span>
             </div>
-            {style === 'slider' && (
-                <div className={styles.slider}>
-                    {bands && <div className={styles.sliderBands} style={{ background: bands }} />}
-                    <input type='range' min={0} max={1000} value={Math.round(t * 1000)} onChange={(e) => onChange(fromT(Number(e.target.value) / 1000, range))} aria-label={label} />
-                    <div className={styles.ticks}>
-                        {refs.map((r) => (
-                            <button key={r.key} type='button' style={{ left: `${toT(r.value, range) * 100}%` }} onClick={() => onChange(r.value)}>
-                                {r.label.replace('the ', '')}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            )}
-            {style === 'chips' && (
-                <div className={styles.chips}>
-                    {starType
-                        ? ZONES.map((z) => (
-                              <button key={z.key} type='button' className={cx(styles.chip, zoneOf(value, starType).key === z.key && styles.chipOn)} style={{ '--chip': z.color } as React.CSSProperties} onClick={() => onChange(z.factor * hab)}>
-                                  {z.label}
-                              </button>
-                          ))
-                        : refs.map((r) => (
-                              <button key={r.key} type='button' className={cx(styles.chip, nearest.key === r.key && styles.chipOn)} onClick={() => onChange(r.value)}>
-                                  {sizes ? `Like ${r.label}` : `As far as ${r.label}`}
-                              </button>
-                          ))}
-                </div>
-            )}
-            {style === 'lineup' && sizes && (
+            {sizes ? (
                 <div className={styles.lineup}>
                     {refs.map((r) => (
                         <button key={r.key} type='button' className={cx(nearest.key === r.key && styles.lineupOn)} onClick={() => onChange(r.value)} title={`Like ${r.label}`}>
@@ -145,14 +60,17 @@ function ScaleInput({ label, value, onChange, refs, range, style, readout, starT
                         </button>
                     ))}
                 </div>
-            )}
-            {style === 'lineup' && !sizes && (
+            ) : (
                 <div
                     className={styles.ruler}
                     style={{ background: bands }}
                     onClick={(e) => {
                         const box = e.currentTarget.getBoundingClientRect();
                         onChange(fromT(Math.max(0, Math.min(1, (e.clientX - box.left) / box.width)), range));
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') nudge(-0.02);
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') nudge(0.02);
                     }}
                     role='slider'
                     aria-label={label}
@@ -175,7 +93,7 @@ export interface BodyDraft {
     orbit: number;
 }
 
-export function BodyFields({ kind, draft, onChange, starType, style }: { kind: BodyKind; draft: BodyDraft; onChange: (patch: Partial<BodyDraft>) => void; starType: string; style: InputStyle }) {
+export function BodyFields({ kind, draft, onChange, starType }: { kind: BodyKind; draft: BodyDraft; onChange: (patch: Partial<BodyDraft>) => void; starType: string }) {
     if (kind === 'star') {
         return (
             <div className={styles.field}>
@@ -213,7 +131,6 @@ export function BodyFields({ kind, draft, onChange, starType, style }: { kind: B
                 onChange={(v) => onChange({ radiusKm: v })}
                 refs={kind === 'planet' ? SIZE_REFS.slice(1) : SIZE_REFS.slice(0, 4)}
                 range={SIZE_RANGE}
-                style={style}
                 readout={`${describeSize(draft.radiusKm)}, ${fmtNum(draft.radiusKm)} km`}
             />
             {orbitsStar ? (
@@ -223,9 +140,8 @@ export function BodyFields({ kind, draft, onChange, starType, style }: { kind: B
                     onChange={(v) => onChange({ orbit: v })}
                     refs={ORBIT_REFS}
                     range={ORBIT_RANGE}
-                    style={style}
                     starType={starType}
-                    readout={`${zone.label}, ${fmtNum(draft.orbit)} AU, a year of ${fmtNum(yearDays(draft.orbit, starType))} days`}
+                    readout={`${zone.label}, ${fmtNum(draft.orbit)} AU, a year of ${fmtNum(yearDays(draft.orbit, starType))} equinoxes`}
                 />
             ) : (
                 <ScaleInput
@@ -234,7 +150,6 @@ export function BodyFields({ kind, draft, onChange, starType, style }: { kind: B
                     onChange={(v) => onChange({ orbit: v })}
                     refs={MOON_ORBIT_REFS}
                     range={MOON_ORBIT_RANGE}
-                    style={style}
                     readout={`${fmtNum(draft.orbit)} km`}
                 />
             )}
@@ -243,25 +158,28 @@ export function BodyFields({ kind, draft, onChange, starType, style }: { kind: B
 }
 
 // ---------- Detail blocks ----------
-export function Travelogue({ store, place, body }: { store: Store; place: Place; body: Body | null }) {
-    const own = body ? body.travelogue.map((e) => ({ e, via: '' })) : place.travelogue.map((e) => ({ e, via: '' }));
-    const fromBodies = body ? [] : place.bodies.flatMap((b) => b.travelogue.map((e) => ({ e, via: b.name })));
-    const rows = [...own, ...fromBodies].sort((a, b) => a.e.season.localeCompare(b.e.season) || a.e.no - b.e.no);
+/** The episodes tagged on a place (with those on its bodies) or on one body, in episode order. */
+export function Travelogue({ place, body }: { place: Place; body: Body | null }) {
+    const rows = body ? body.travelogue.map((tag) => ({ tag, via: '' })) : [...place.travelogue.map((tag) => ({ tag, via: '' })), ...place.bodies.flatMap((b) => b.travelogue.map((tag) => ({ tag, via: b.name })))];
+    rows.sort((a, b) => (a.tag.episode?.seasonTitle ?? '').localeCompare(b.tag.episode?.seasonTitle ?? '') || (a.tag.episode?.episode_no ?? 0) - (b.tag.episode?.episode_no ?? 0));
+    if (rows.length === 0) return null;
     return (
         <section className={styles.travelogue}>
             <h4 className='pixel-label'>Travelogue</h4>
-            {rows.length === 0 && <p className={styles.muted}>No episodes tagged here yet.</p>}
             <ol>
-                {rows.map(({ e, via }, i) => (
-                    <li key={i}>
-                        <a href='#' onClick={(ev) => ev.preventDefault()}>{epLabel(e)}</a>
+                {rows.map(({ tag, via }) => (
+                    <li key={tag.id}>
+                        {tag.episode ? (
+                            <Link href={`/archives/${tag.episode.seasonSlug}/${tag.episode.slug}`}>
+                                {tag.episode.seasonTitle} episode {tag.episode.episode_no}, {tag.episode.title}
+                            </Link>
+                        ) : (
+                            <span className={styles.muted}>{tag.episodeSlug}</span>
+                        )}
                         {via && <span className={styles.muted}> on {via}</span>}
                     </li>
                 ))}
             </ol>
-            <button type='button' className={styles.linkBtn} onClick={() => store.tagEpisode(place.id, body?.id ?? null, { season: 'FF4', no: 9 + rows.length, title: 'Sample tag' })}>
-                + tag an episode
-            </button>
         </section>
     );
 }
@@ -302,8 +220,8 @@ export function BodyIcon({ body, size = 16 }: { body: Body; size?: number }) {
     );
 }
 
-export function BodyTree({ place, selBodyId, onPick, onOpen }: { place: Place; selBodyId: string | null; onPick: (bodyId: string) => void; onOpen?: (bodyId: string) => void }) {
-    const kids = (parentId: string | null) => place.bodies.filter((b) => b.parentId === parentId).sort((a, b) => a.orbit - b.orbit);
+export function BodyTree({ place, selBodyId, onPick, onOpen }: { place: Place; selBodyId: number | null; onPick: (bodyId: number) => void; onOpen?: (bodyId: number) => void }) {
+    const kids = (parentId: number | null) => place.bodies.filter((b) => b.parentId === parentId).sort((a, b) => a.orbit - b.orbit);
     const row = (b: Body, depth: number): React.ReactNode => (
         <li key={b.id}>
             <button type='button' className={cx(styles.treeRow, selBodyId === b.id && styles.treeRowOn)} style={{ paddingLeft: 8 + depth * 16 }} onClick={() => onPick(b.id)} onDoubleClick={() => onOpen?.(b.id)}>
@@ -327,7 +245,7 @@ export function PlaceHeader({ place }: { place: Place }) {
             <div>
                 <h3>{place.placeholder && firstPlanet ? `${firstPlanet.name}'s system` : place.name}</h3>
                 <p className='pixel-label'>
-                    {place.kind === 'landmark' ? (place.category ?? 'Landmark') : place.placeholder ? 'System, star not named yet' : 'System'}
+                    {place.kind === 'landmark' ? (LANDMARK_CATEGORIES[place.category ?? ''] ?? 'Landmark') : place.placeholder ? 'System, star not named yet' : 'System'}
                 </p>
             </div>
         </header>
@@ -348,7 +266,7 @@ export function PlaceFacts({ place }: { place: Place }) {
                 </>
             )}
             <dt>Added by</dt>
-            <dd>{place.owner}</dd>
+            <dd>{place.owner.username}</dd>
         </dl>
     );
 }
@@ -392,60 +310,70 @@ export function BodyFacts({ place, body }: { place: Place; body: Body }) {
     );
 }
 
-/** Everything about the current selection, as one stack the variants can drop anywhere. */
-export function SelectionDetail({ store, style, showTree = true, noOpen }: { store: Store; style: InputStyle; showTree?: boolean; noOpen?: boolean }) {
+/** Asks once more before deleting. */
+export function DeleteButton({ onDelete }: { onDelete: () => void }) {
+    const [armed, setArmed] = useState(false);
+    return armed ? (
+        <>
+            <button type='button' className={styles.btn} onClick={() => (setArmed(false), onDelete())}>Yes, delete</button>
+            <button type='button' className={styles.btnQuiet} onClick={() => setArmed(false)}>Keep</button>
+        </>
+    ) : (
+        <button type='button' className={styles.btnQuiet} onClick={() => setArmed(true)}>Delete</button>
+    );
+}
+
+/** Everything about the current selection on the galaxy level. */
+export function SelectionDetail({ store }: { store: Store }) {
     const [editing, setEditing] = useState(false);
     const place = store.selPlace;
     if (!place) return null;
     const body = store.selBody;
     const star = starOf(place);
-    const mine = place.owner === store.me;
+    const mine = store.canEdit(place);
 
     return (
         <div className={styles.detail}>
             {body ? (
                 <>
                     <header className={styles.detailHead}>
-                        <i className={styles.bigDot} style={{ background: bodyColor(body), borderRadius: body.kind === 'station' ? 0 : '50%' }} />
+                        <BodyIcon body={body} size={40} />
                         <div>
                             <h3>{body.name}</h3>
                             <p className='pixel-label'>{KIND_LABEL[body.kind]} in {place.placeholder ? 'an unnamed system' : place.name}</p>
                         </div>
                     </header>
-                    {body.note && <p>{body.note}</p>}
-                    {body.wikiSlug && <p className={styles.muted}>Description and picture come from the wiki page <span className={styles.mono}>{body.wikiSlug}</span>.</p>}
+                    {body.note && <RichText html={body.note} />}
                     {editing && mine ? (
-                        <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} style={style} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                        <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
                     ) : (
                         <BodyFacts place={place} body={body} />
                     )}
-                    {mine ? (
+                    {mine && (
                         <div className={styles.actions}>
                             <button type='button' className={styles.btn} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
-                            {body.kind !== 'star' && <button type='button' className={styles.btnQuiet} onClick={() => store.removeBody(place.id, body.id)}>Delete</button>}
+                            {body.kind !== 'star' && <DeleteButton onDelete={() => store.removeBody(place.id, body.id)} />}
                         </div>
-                    ) : (
-                        <p className={styles.muted}>Added by {place.owner}. Only {place.owner} or an admin can change it.</p>
                     )}
-                    <Travelogue store={store} place={place} body={body} />
+                    <Travelogue place={place} body={body} />
                 </>
             ) : (
                 <>
                     <PlaceHeader place={place} />
-                    {place.note && <p>{place.note}</p>}
+                    {place.note && <RichText html={place.note} />}
                     <PlaceFacts place={place} />
                     {place.placeholder && mine && <RenameRow store={store} place={place} />}
-                    {showTree && place.kind === 'system' && <BodyTree place={place} selBodyId={null} onPick={(id) => store.openSystem(place.id, id)} />}
+                    {place.kind === 'system' && <BodyTree place={place} selBodyId={null} onPick={(id) => store.openSystem(place.id, id)} />}
                     <div className={styles.actions}>
-                        {place.kind === 'system' && store.level === 'galaxy' && !noOpen && <button type='button' className={styles.btn} onClick={() => store.openSystem(place.id)}>Open system</button>}
+                        {place.kind === 'system' && <button type='button' className={styles.btn} onClick={() => store.openSystem(place.id)}>Open system</button>}
                         {mine && (
-                            <button type='button' className={styles.btnQuiet} onClick={() => store.requestPlace((pos) => store.movePlace(place.id, { pos, precision: 'exact', regionHint: undefined }))}>
+                            <button type='button' className={styles.btnQuiet} onClick={() => store.requestPlace((pos) => store.movePlace(place.id, { pos, precision: 'exact' }))}>
                                 {place.precision === 'region' ? 'Pin it down' : 'Move'}
                             </button>
                         )}
-                        {mine && <button type='button' className={styles.btnQuiet} onClick={() => store.removePlace(place.id)}>Delete</button>}
+                        {mine && <DeleteButton onDelete={() => store.removePlace(place.id)} />}
                     </div>
-                    <Travelogue store={store} place={place} body={null} />
+                    <Travelogue place={place} body={null} />
                 </>
             )}
         </div>
@@ -456,19 +384,13 @@ export function RenameRow({ store, place }: { store: Store; place: Place }) {
     const [name, setName] = useState('');
     return (
         <form className={styles.inlineForm} onSubmit={(e) => (e.preventDefault(), name.trim() && store.renamePlace(place.id, name.trim()))}>
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder='Name this star system' aria-label='System name' />
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder='Name this star system' aria-label='System name' maxLength={100} />
             <button type='submit' className={styles.btn}>Name it</button>
         </form>
     );
 }
 
 // ---------- Where does it go? ----------
-export interface Where {
-    pos: Vec3;
-    precision: Precision;
-    regionHint?: RegionKey;
-}
-
 export function WherePicker({ store, where, onChange }: { store: Store; where: Where | null; onChange: (w: Where) => void }) {
     return (
         <div className={styles.field}>
@@ -499,7 +421,7 @@ export function WherePicker({ store, where, onChange }: { store: Store; where: W
     );
 }
 
-// ---------- Create flow ----------
+// ---------- Add wizard ----------
 type CreateKind = 'system' | 'planet' | 'moon' | 'station' | 'landmark';
 const CREATE_KINDS: { key: CreateKind; label: string; glyph: string }[] = [
     { key: 'system', label: 'Star system', glyph: '☀' },
@@ -509,30 +431,30 @@ const CREATE_KINDS: { key: CreateKind; label: string; glyph: string }[] = [
     { key: 'landmark', label: 'Landmark', glyph: '✦' },
 ];
 
-/**
- * One create flow for everything. `stepped` shows one question at a time (the
- * wizard); otherwise it is a single form. `tabs` puts the kind picker on a
- * vertical strip, as in the paper sketch.
- */
-export function CreateFlow({ store, style, stepped, tabs, onDone }: { store: Store; style: InputStyle; stepped?: boolean; tabs?: boolean; onDone: () => void }) {
+/** One wizard for everything a member can add, one question at a time. */
+export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void }) {
     const ctxPlanet = store.selBody?.kind === 'planet' ? store.selBody : null;
     const ctxSystem = store.level === 'system' && store.selPlace?.kind === 'system' ? store.selPlace : null;
     const [kind, setKind] = useState<CreateKind>(ctxPlanet ? 'moon' : ctxSystem ? 'planet' : 'system');
     const [name, setName] = useState('');
-    const [parent, setParent] = useState<string>(ctxPlanet?.id ?? ctxSystem?.id ?? 'new');
+    // A planet's system or a satellite's planet, by id; 'new' = a planet whose star is not known yet
+    const [parent, setParent] = useState<number | 'new'>(ctxPlanet?.id ?? ctxSystem?.id ?? 'new');
     const [where, setWhere] = useState<Where | null>(null);
     const [starType, setStarType] = useState('sunlike');
+    const [category, setCategory] = useState('landmark');
     const [draft, setDraft] = useState<BodyDraft>(ctxPlanet ? { type: 'rocky', radiusKm: 1737, orbit: 384400 } : { type: 'rocky', radiusKm: 6371, orbit: 1 });
     const [step, setStep] = useState(0);
+    const [saving, setSaving] = useState(false);
 
-    const systems = store.places.filter((p) => p.kind === 'system');
+    // Bodies go into systems the member may change
+    const systems = store.places.filter((p) => p.kind === 'system' && store.canEdit(p));
     const planets = systems.flatMap((p) => p.bodies.filter((b) => b.kind === 'planet').map((b) => ({ b, p })));
     const isSatellite = kind === 'moon' || kind === 'station';
     const parentPlanet = isSatellite ? (planets.find((x) => x.b.id === parent) ?? planets[0]) : null;
     const parentSystem = kind === 'planet' ? systems.find((p) => p.id === parent) : null;
     const needsWhere = kind === 'system' || kind === 'landmark' || (kind === 'planet' && !parentSystem);
     const hostStarType = kind === 'planet' ? (parentSystem ? (starOf(parentSystem)?.type ?? 'sunlike') : starType) : 'sunlike';
-    const canSave = name.trim() !== '' && (!needsWhere || where !== null) && (!isSatellite || parentPlanet);
+    const canSave = !saving && name.trim() !== '' && (!needsWhere || where !== null) && (!isSatellite || !!parentPlanet);
 
     const pickKind = (k: CreateKind) => {
         setKind(k);
@@ -540,39 +462,46 @@ export function CreateFlow({ store, style, stepped, tabs, onDone }: { store: Sto
         else if (k === 'station') setDraft({ type: 'artificial', radiusKm: 473, orbit: 42000 });
         else setDraft({ type: 'rocky', radiusKm: 6371, orbit: habAU(hostStarType) * 1.1 });
         if (k === 'planet' && !systems.some((p) => p.id === parent)) setParent(ctxSystem?.id ?? 'new');
-        if ((k === 'moon' || k === 'station') && !planets.some((x) => x.b.id === parent)) setParent(planets[0]?.b.id ?? '');
+        if ((k === 'moon' || k === 'station') && !planets.some((x) => x.b.id === parent)) setParent(planets[0]?.b.id ?? 'new');
     };
 
-    const save = () => {
+    const save = async () => {
         if (!canSave) return;
-        const base = { owner: store.me, travelogue: [], note: '' };
-        const mkStar = (starName: string, type: string): Body => ({ id: newId('b'), kind: 'star', name: starName, parentId: null, type, radiusKm: 696000, orbit: 0, travelogue: [] });
+        setSaving(true);
+        const called = name.trim();
+        let ok = false;
         if (kind === 'landmark') {
-            const p = store.addPlace({ ...base, kind: 'landmark', name: name.trim(), category: 'Landmark', bodies: [], ...where! });
-            store.select(p.id);
+            const p = await store.addPlace({ kind: 'landmark', name: called, category, where: where! });
+            if (p) store.select(p.id);
+            ok = !!p;
         } else if (kind === 'system') {
-            const p = store.addPlace({ ...base, kind: 'system', name: name.trim(), bodies: [mkStar(name.trim(), starType)], ...where! });
-            store.openSystem(p.id);
+            const p = await store.addPlace({ kind: 'system', name: called, where: where!, star: { kind: 'star', name: called, type: starType } });
+            if (p) store.openSystem(p.id);
+            ok = !!p;
         } else if (kind === 'planet' && !parentSystem) {
-            const star = mkStar('Unnamed star', starType);
-            const planet: Body = { id: newId('b'), kind: 'planet', name: name.trim(), parentId: star.id, travelogue: [], ...draft };
-            const p = store.addPlace({ ...base, kind: 'system', name: 'Unnamed system', placeholder: true, bodies: [star, planet], ...where! });
-            store.openSystem(p.id, planet.id);
+            const planet = { kind: 'planet' as const, name: called, ...draft };
+            const p = await store.addPlace({ kind: 'system', name: null, where: where!, star: { kind: 'star', name: null, type: starType, children: [planet] } });
+            if (p) store.openSystem(p.id, p.bodies.find((b) => b.kind === 'planet')?.id ?? null);
+            ok = !!p;
         } else if (kind === 'planet' && parentSystem) {
-            const b = store.addBody(parentSystem.id, { kind: 'planet', name: name.trim(), parentId: starOf(parentSystem)?.id ?? null, travelogue: [], ...draft });
-            store.openSystem(parentSystem.id, b.id);
+            const star = starOf(parentSystem);
+            const id = star ? await store.addBody(parentSystem.id, star.id, { kind: 'planet', name: called, ...draft }) : null;
+            if (id) store.openSystem(parentSystem.id, id);
+            ok = !!id;
         } else if (parentPlanet) {
-            const b = store.addBody(parentPlanet.p.id, { kind: kind as BodyKind, name: name.trim(), parentId: parentPlanet.b.id, travelogue: [], ...draft, type: kind === 'station' ? 'artificial' : draft.type });
-            store.openSystem(parentPlanet.p.id, b.id);
+            const id = await store.addBody(parentPlanet.p.id, parentPlanet.b.id, { kind: kind as BodyKind, name: called, ...draft, type: kind === 'station' ? 'artificial' : draft.type });
+            if (id) store.openSystem(parentPlanet.p.id, id);
+            ok = !!id;
         }
-        onDone();
+        setSaving(false);
+        if (ok) onDone();
     };
 
     const kindPicker = (
-        <div className={tabs ? styles.kindTabs : styles.chips} role='tablist' aria-label='What are you adding?'>
+        <div className={styles.chips} role='tablist' aria-label='What are you adding?'>
             {CREATE_KINDS.map((k) => (
-                <button key={k.key} type='button' role='tab' aria-selected={kind === k.key} title={k.label} className={cx(tabs ? styles.kindTab : styles.chip, kind === k.key && (tabs ? styles.kindTabOn : styles.chipOn))} onClick={() => pickKind(k.key)}>
-                    <span aria-hidden>{k.glyph}</span>{!tabs && ` ${k.label}`}
+                <button key={k.key} type='button' role='tab' aria-selected={kind === k.key} className={cx(styles.chip, kind === k.key && styles.chipOn)} onClick={() => pickKind(k.key)}>
+                    <span aria-hidden>{k.glyph}</span> {k.label}
                 </button>
             ))}
         </div>
@@ -580,98 +509,64 @@ export function CreateFlow({ store, style, stepped, tabs, onDone }: { store: Sto
 
     const nameField = (
         <div className={styles.field}>
-            <input className={styles.nameInput} value={name} onChange={(e) => setName(e.target.value)} placeholder={`New ${CREATE_KINDS.find((k) => k.key === kind)!.label.toLowerCase()}`} aria-label='Name' autoFocus />
+            <input className={styles.nameInput} value={name} onChange={(e) => setName(e.target.value)} placeholder={`New ${CREATE_KINDS.find((k) => k.key === kind)!.label.toLowerCase()}`} aria-label='Name' maxLength={100} autoFocus />
         </div>
     );
 
     const parentField = (kind === 'planet' || isSatellite) && (
         <div className={styles.field}>
             <div className={styles.fieldHead}><span className='pixel-label'>{kind === 'planet' ? 'Star system' : 'Orbits'}</span></div>
-            <select value={isSatellite ? (parentPlanet?.b.id ?? '') : parent} onChange={(e) => setParent(e.target.value)}>
+            <select value={isSatellite ? (parentPlanet?.b.id ?? '') : parent} onChange={(e) => setParent(e.target.value === 'new' ? 'new' : Number(e.target.value))}>
                 {kind === 'planet' && <option value='new'>I don&apos;t know its star yet</option>}
                 {kind === 'planet'
-                    ? systems.map((p) => <option key={p.id} value={p.id}>{p.placeholder ? `${p.bodies.find((b) => b.kind === 'planet')?.name ?? '?'}'s system` : p.name}</option>)
+                    ? systems.map((p) => <option key={p.id} value={p.id}>{placeTitle(p)}</option>)
                     : planets.map(({ b, p }) => <option key={b.id} value={b.id}>{b.name} ({p.placeholder ? 'unnamed system' : p.name})</option>)}
             </select>
+            {isSatellite && planets.length === 0 && <p className={styles.muted}>Add its planet first.</p>}
         </div>
     );
 
     const whereField = needsWhere && <WherePicker store={store} where={where} onChange={setWhere} />;
     const starField = (kind === 'system' || (kind === 'planet' && !parentSystem)) && (
-        <BodyFields kind='star' draft={{ ...draft, type: starType }} onChange={(p) => p.type && setStarType(p.type)} starType={starType} style={style} />
+        <BodyFields kind='star' draft={{ ...draft, type: starType }} onChange={(p) => p.type && setStarType(p.type)} starType={starType} />
     );
     const bodyFields = kind !== 'system' && kind !== 'landmark' && (
-        <BodyFields kind={kind as BodyKind} draft={draft} onChange={(p) => setDraft({ ...draft, ...p })} starType={hostStarType} style={style} />
+        <BodyFields kind={kind as BodyKind} draft={draft} onChange={(p) => setDraft({ ...draft, ...p })} starType={hostStarType} />
     );
-
-    const footer = (
-        <div className={styles.actions}>
-            <button type='button' className={styles.btn} disabled={!canSave} onClick={save}>Done</button>
-            <button type='button' className={styles.btnQuiet} onClick={onDone}>Cancel</button>
-            {!canSave && <span className={styles.muted}>{name.trim() === '' ? 'Needs a name.' : 'Needs a place on the map.'}</span>}
-        </div>
-    );
-
-    if (stepped) {
-        // Started from inside a system (or on a planet): where it goes is already known.
-        const whereKnown = (kind === 'planet' && !!ctxSystem && parentSystem?.id === ctxSystem.id) || (isSatellite && !!ctxPlanet && parentPlanet?.b.id === ctxPlanet.id);
-        const pages = [
-            { title: 'What are you adding?', body: <>{kindPicker}{nameField}</> },
-            ...(!whereKnown && (parentField || whereField) ? [{ title: 'Where does it go?', body: <>{parentField}{whereField}</> }] : []),
-            ...(starField || bodyFields ? [{ title: 'What is it like?', body: <>{kind === 'system' ? starField : bodyFields}</> }] : []),
-        ];
-        const at = Math.min(step, pages.length - 1);
-        return (
-            <div className={styles.create}>
-                <p className='pixel-label'>Step {at + 1} of {pages.length}</p>
-                <h3>{pages[at].title}</h3>
-                {pages[at].body}
-                <div className={styles.actions}>
-                    {at > 0 && <button type='button' className={styles.btnQuiet} onClick={() => setStep(at - 1)}>Back</button>}
-                    {at < pages.length - 1 ? (
-                        <button type='button' className={styles.btn} disabled={at === 0 && name.trim() === ''} onClick={() => setStep(at + 1)}>Next</button>
-                    ) : (
-                        <button type='button' className={styles.btn} disabled={!canSave} onClick={save}>Done</button>
-                    )}
-                    <button type='button' className={styles.btnQuiet} onClick={onDone}>Cancel</button>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <div className={cx(styles.create, tabs && styles.createTabbed)}>
-            {tabs && kindPicker}
-            <div className={styles.createBody}>
-                {!tabs && kindPicker}
-                {nameField}
-                {parentField}
-                {whereField}
-                {starField}
-                {bodyFields}
-                {footer}
+    const categoryField = kind === 'landmark' && (
+        <div className={styles.field}>
+            <div className={styles.fieldHead}><span className='pixel-label'>Kind of landmark</span></div>
+            <div className={styles.chips}>
+                {Object.entries(LANDMARK_CATEGORIES).map(([key, label]) => (
+                    <button key={key} type='button' className={cx(styles.chip, category === key && styles.chipOn)} onClick={() => setCategory(key)}>{label}</button>
+                ))}
             </div>
         </div>
     );
-}
 
-// ---------- Small shared controls ----------
-export function ViewButtons({ store }: { store: Store }) {
+    // Started from inside a system (or on a planet): where it goes is already known.
+    const whereKnown = (kind === 'planet' && !!ctxSystem && parentSystem?.id === ctxSystem.id) || (isSatellite && !!ctxPlanet && parentPlanet?.b.id === ctxPlanet.id);
+    const pages = [
+        { title: 'What are you adding?', body: <>{kindPicker}{nameField}</> },
+        ...(!whereKnown && (parentField || whereField) ? [{ title: 'Where does it go?', body: <>{parentField}{whereField}</> }] : []),
+        { title: 'What is it like?', body: <>{kind === 'system' ? starField : kind === 'landmark' ? categoryField : bodyFields}</> },
+    ];
+    const at = Math.min(step, pages.length - 1);
     return (
-        <div className={styles.seg} role='group' aria-label='Camera'>
-            <button type='button' aria-pressed={store.view === 'tilt'} onClick={() => store.setView('tilt')}>Rotate</button>
-            <button type='button' aria-pressed={store.view === 'top'} onClick={() => store.setView('top')}>Top-down</button>
-        </div>
-    );
-}
-
-export function LayerToggles({ store }: { store: Store }) {
-    const toggle = (key: 'grid' | 'territories' | 'labels') => store.setLayers({ ...store.layers, [key]: !store.layers[key] });
-    return (
-        <div className={styles.seg} role='group' aria-label='Layers'>
-            <button type='button' aria-pressed={store.layers.territories} onClick={() => toggle('territories')}>Regions</button>
-            <button type='button' aria-pressed={store.layers.grid} onClick={() => toggle('grid')}>Sectors</button>
-            <button type='button' aria-pressed={store.layers.labels} onClick={() => toggle('labels')}>Names</button>
+        <div className={styles.create}>
+            <p className='pixel-label'>Step {at + 1} of {pages.length}</p>
+            <h3>{pages[at].title}</h3>
+            {pages[at].body}
+            {store.error && <p className={styles.formError} role='alert'>{store.error}</p>}
+            <div className={styles.actions}>
+                {at > 0 && <button type='button' className={styles.btnQuiet} onClick={() => setStep(at - 1)}>Back</button>}
+                {at < pages.length - 1 ? (
+                    <button type='button' className={styles.btn} disabled={at === 0 && name.trim() === ''} onClick={() => setStep(at + 1)}>Next</button>
+                ) : (
+                    <button type='button' className={styles.btn} disabled={!canSave} onClick={save}>{saving ? 'Saving' : 'Done'}</button>
+                )}
+                <button type='button' className={styles.btnQuiet} onClick={() => (store.clearError(), onDone())}>Cancel</button>
+            </div>
         </div>
     );
 }
