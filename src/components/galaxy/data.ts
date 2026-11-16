@@ -24,9 +24,15 @@ export interface TravelTag {
 export interface Body {
     id: number;
     kind: BodyKind;
-    /** A star nobody has named reads "Unnamed star" (`unnamed`). */
+    /** With no name of its own (`unnamed`): a star reads "Unnamed star", a planet or moon its designation. */
     name: string;
     unnamed?: boolean;
+    /** Planets: "this is planet N of its star", stored for one whose inner neighbours are not on the map. */
+    ordinal: number | null;
+    /** Planets: the number counted out from the star. Moons and stations: 1 for a, 2 for b. Filled by `designate`. */
+    num: number;
+    /** GU designation: Sol-3 for a planet, Sol-3a for what orbits it. Filled by `designate`. */
+    gu: string;
     parentId: number | null;
     /** star: key of STAR_TYPES. planet/moon/station: key of COMPOSITIONS. */
     type: string;
@@ -99,6 +105,7 @@ export interface ApiBody {
     type: string;
     radiusKm: number | null;
     orbit: number | null;
+    ordinal?: number | null;
     color: string | null;
     description: string | null;
     wiki?: WikiData | null;
@@ -136,7 +143,7 @@ export function fromApi(p: ApiPlace): Place {
         owner: { id: p.creator.id, username: p.creator.username },
         slug: p.slug ?? undefined,
         wiki: wikiInfo(p.wiki),
-        bodies: p.bodies.map((b) => ({
+        bodies: designate(p.bodies.map((b) => ({
             id: b.id,
             kind: b.kind.toLowerCase() as BodyKind,
             name: b.name ?? 'Unnamed star',
@@ -145,14 +152,56 @@ export function fromApi(p: ApiPlace): Place {
             type: b.type,
             radiusKm: b.radiusKm ?? 696000,
             orbit: b.orbit ?? 0,
+            ordinal: b.ordinal ?? null,
+            num: 0,
+            gu: '',
             color: b.color ?? undefined,
             note: b.description ?? undefined,
             slug: b.slug ?? undefined,
             wiki: wikiInfo(b.wiki),
             travelogue: tagsOf(b.id),
-        })),
+        }))),
         travelogue: tagsOf(null),
     };
+}
+
+const byOrbit = (a: Body, b: Body) => a.orbit - b.orbit || a.id - b.id;
+
+/**
+ * Numbers a system's bodies. Planets count outward from the star, never below their
+ * stored `ordinal`, so a planet marked "planet 3" leaves 1 and 2 open inside it; what
+ * orbits a planet is lettered a, b, c. Sets each body's `num` and `gu` (Sol-3, Sol-3a),
+ * and the name of a planet or moon that has none. Run again after an orbit changes.
+ */
+export function designate(bodies: Body[]): Body[] {
+    const star = bodies.find((b) => b.kind === 'star');
+    const stem = star && !star.unnamed ? star.name : 'Unnamed';
+    const out = new Map<number, { num: number; gu: string }>();
+    const letter = (parent: Body | undefined, parentGu: string) => {
+        if (!parent) return;
+        bodies.filter((b) => b.parentId === parent.id && b.kind !== 'planet' && b.kind !== 'star').sort(byOrbit).forEach((b, i) => {
+            const gu = `${parentGu}${String.fromCharCode(97 + (i % 26))}`;
+            out.set(b.id, { num: i + 1, gu });
+            letter(b, gu);
+        });
+    };
+    let n = 0;
+    for (const p of bodies.filter((b) => b.kind === 'planet').sort(byOrbit)) {
+        n = Math.max(n + 1, p.ordinal ?? 0);
+        out.set(p.id, { num: n, gu: `${stem}-${n}` });
+        letter(p, `${stem}-${n}`);
+    }
+    letter(star, `${stem}-`);
+    return bodies.map((b) => {
+        const d = out.get(b.id) ?? { num: 0, gu: '' };
+        return { ...b, ...d, name: b.unnamed && b.kind !== 'star' ? d.gu : b.name };
+    });
+}
+
+/** The number a planet at `orbit` gets among the system's other planets when it claims `ordinal`, and the lowest it could have there. */
+export function planetNumber(others: Body[], orbit: number, ordinal: number | null): { n: number; min: number } {
+    const min = Math.max(0, ...others.filter((b) => b.kind === 'planet' && b.orbit < orbit).map((b) => b.num)) + 1;
+    return { n: Math.max(min, ordinal ?? 0), min };
 }
 
 export const LANDMARK_CATEGORIES: Record<string, string> = { landmark: 'Landmark', station: 'Station', cluster: 'Cluster', nebula: 'Nebula' };

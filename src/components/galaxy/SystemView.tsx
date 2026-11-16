@@ -10,7 +10,8 @@ import {
     bodyColor, describeSize, fmtNum, gravityG, habAU, habitability, massEarths, regionLabel, sectorOf, starOf, yearDays, zoneOf,
 } from './data';
 import type { Body, Place } from './data';
-import { BodyFields, BodyIcon, BodyTree, DeleteButton, KIND_LABEL, designation, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
+import { BodyFields, BodyIcon, BodyName, BodyTree, DeleteButton, KIND_LABEL, designation, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
+import type { PlanetSlot } from './parts';
 import type { Store } from './store';
 import styles from './galaxy.module.scss';
 
@@ -22,8 +23,10 @@ const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boo
 const LOG_SIZE = 1 / Math.log(1.25);
 const bodyPx = (b: Body) => Math.max(b.kind === 'planet' ? 4 : 2.2, Math.min(26, Math.log(Math.max(b.radiusKm, 1) / 1000) * LOG_SIZE));
 const MOON_GAP = 11;
+/** Room an open planet number's ring takes on each side. */
+const GAP_REACH = 11;
 
-function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: Place; selBodyId: number | null; onSelect: (id: number | null) => void; onEdit: (id: number) => void; onAdd?: () => void }) {
+function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: Place; selBodyId: number | null; onSelect: (id: number | null) => void; onEdit: (id: number) => void; onAdd?: (slot?: PlanetSlot) => void }) {
     const hostRef = useRef<HTMLDivElement>(null);
     const [box, setBox] = useState({ w: 1000, h: 700 });
     useEffect(() => {
@@ -48,22 +51,47 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
     const room = maxR - base - (onAdd ? 34 : 0);
     const farthest = Math.log((planets[planets.length - 1]?.orbit ?? 1) + 1);
     const k = Math.min(150, room / Math.max(farthest, 0.2));
-    // Log distance, then pushed outward wherever two planets would overlap.
-    const radii: number[] = [];
+    // Every ring from the star outward: the planets and, for whoever may add, the open
+    // numbers inside a planet that is "planet N" (spread evenly, in log distance,
+    // between its neighbours).
+    const rings: { planet?: Body; index: number; n: number; orbit: number; reach: number; r: number }[] = [];
     planets.forEach((p, i) => {
-        const want = base + Math.log(p.orbit + 1) * k;
-        const floor = i === 0 ? base + reach(p) : radii[i - 1] + reach(planets[i - 1]) + reach(p);
-        radii.push(Math.max(want, floor));
+        const before = planets[i - 1];
+        const gaps = onAdd ? p.num - (before?.num ?? 0) - 1 : 0;
+        const from = before?.orbit ?? p.orbit / 2 ** (gaps + 1);
+        for (let g = 1; g <= gaps; g++) rings.push({ index: i, n: (before?.num ?? 0) + g, orbit: from * (p.orbit / from) ** (g / (gaps + 1)), reach: GAP_REACH, r: 0 });
+        rings.push({ planet: p, index: i, n: p.num, orbit: p.orbit, reach: reach(p), r: 0 });
     });
-    const over = radii.length ? (radii[radii.length - 1] - base) / Math.max(room, 1) : 0;
-    const ringR = (i: number) => (over > 1 ? base + (radii[i] - base) / over : radii[i]);
-    const addR = planets.length ? Math.min(maxR, ringR(planets.length - 1) + reach(planets[planets.length - 1]) + 28) : base + 60;
+    // Log distance, then pushed outward wherever two rings would overlap.
+    rings.forEach((ring, i) => {
+        const want = base + Math.log(ring.orbit + 1) * k;
+        ring.r = Math.max(want, i === 0 ? base + ring.reach : rings[i - 1].r + rings[i - 1].reach + ring.reach);
+    });
+    const last = rings[rings.length - 1];
+    const over = Math.max(1, last ? (last.r - base) / Math.max(room, 1) : 0);
+    for (const ring of rings) ring.r = base + (ring.r - base) / over;
+    const addR = last ? Math.min(maxR, last.r + last.reach / over + 28) : base + 60;
+    // Where a distance from the star falls in the drawing: along the rings' own spacing, then on outward.
+    const auToPx = (au: number) => {
+        const at = Math.log(au + 1);
+        let [l0, r0] = [0, base];
+        for (const ring of rings) {
+            const l1 = Math.log(ring.orbit + 1);
+            if (at <= l1) return l1 > l0 ? r0 + ((at - l0) / (l1 - l0)) * (ring.r - r0) : ring.r;
+            [l0, r0] = [l1, ring.r];
+        }
+        return r0 + ((at - l0) * k) / over;
+    };
+    // The temperate band (the same bounds as zoneOf)
+    const hab = star && star.type !== 'black_hole' ? [auToPx(habAU(star.type) * 0.9), auToPx(habAU(star.type) * 1.6)] : null;
+    const stem = star && !star.unnamed ? star.name : 'Unnamed';
     // Spread around the star by the golden angle, starting somewhere that differs per system.
     const angle = (id: number, index: number) => (((id * 137) % 360) * Math.PI) / 180 + index * 2.39996;
 
     return (
         <div ref={hostRef} className={styles.sysDiagram}>
             <svg viewBox={`0 0 ${W} ${Hh}`} width={W} height={Hh} className={styles.schematic} onClick={() => onSelect(null)} role='img' aria-label={`Diagram of the ${placeTitle(place)}: ${planets.map((p) => p.name).join(', ') || 'no planets yet'}`}>
+                {hab && <circle cx={c.x} cy={c.y} r={(hab[0] + hab[1]) / 2} strokeWidth={hab[1] - hab[0]} className={styles.habZone} />}
                 {star && (
                     <g className={cx(styles.orb, selBodyId === star.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(star.id))} onDoubleClick={() => onEdit(star.id)}>
                         {star.type === 'black_hole' && <circle cx={c.x} cy={c.y} r={starPx + 10} fill='none' stroke='#f0b44c' strokeWidth='5' opacity='.7' />}
@@ -71,8 +99,22 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
                         <text x={c.x} y={c.y + starPx + 20} textAnchor='middle' className={styles.starName}>{star.name}</text>
                     </g>
                 )}
-                {planets.map((p, i) => {
-                    const r = ringR(i);
+                {rings.map((ring) => {
+                    const { r, index: i } = ring;
+                    const p = ring.planet;
+                    if (!p) {
+                        // Labelled across the star from the planet it sits inside, clear of that planet's name
+                        const far = angle(place.id, i) + Math.PI;
+                        return (
+                            <g key={`gap${ring.n}`} className={styles.addRing} onClick={(e) => (e.stopPropagation(), onAdd?.({ ordinal: ring.n, orbit: ring.orbit }))}>
+                                <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} style={{ strokeWidth: GAP_REACH * 1.6 }} />
+                                <circle cx={c.x} cy={c.y} r={r} />
+                                <title>Add {stem}-{ring.n}</title>
+                                {/* Squeezed rings (a phone) have no room for a label each */}
+                                {over <= 1.5 && <text x={c.x + r * Math.cos(far)} y={c.y + r * Math.sin(far) + 4} textAnchor='middle'>+ add {stem}-{ring.n}</text>}
+                            </g>
+                        );
+                    }
                     const a = angle(place.id, i);
                     const bx = c.x + r * Math.cos(a);
                     const by = c.y + r * Math.sin(a);
@@ -191,7 +233,7 @@ function Telemetry({ place, body }: { place: Place; body: Body }) {
 }
 
 // ---------- The view ----------
-export default function SystemView({ store, place, onAdd }: { store: Store; place: Place; onAdd: () => void }) {
+export default function SystemView({ store, place, onAdd }: { store: Store; place: Place; onAdd: (slot?: PlanetSlot) => void }) {
     const [editing, setEditing] = useState(false);
     const body = store.selBody;
     const star = starOf(place);
@@ -206,9 +248,9 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
         return () => window.removeEventListener('keydown', onKey);
     });
 
-    const addPlanet = () => {
+    const addPlanet = (slot?: PlanetSlot) => {
         store.select(place.id, null);
-        onAdd();
+        onAdd(slot);
     };
 
     return (
@@ -233,8 +275,8 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                     <BodyTree place={place} selBodyId={body?.id ?? null} onPick={(id) => (setEditing(false), store.select(place.id, id))} onOpen={(id) => (store.select(place.id, id), setEditing(mine))} />
                     {mine && (
                         <div className={styles.actions}>
-                            <button type='button' className={styles.btnQuiet} onClick={addPlanet}>+ Planet</button>
-                            {body?.kind === 'planet' && <button type='button' className={styles.btnQuiet} onClick={onAdd}>+ Moon or station at {body.name}</button>}
+                            <button type='button' className={styles.btnQuiet} onClick={() => addPlanet()}>+ Planet</button>
+                            {body?.kind === 'planet' && <button type='button' className={styles.btnQuiet} onClick={() => onAdd()}>+ Moon or station at {body.name}</button>}
                         </div>
                     )}
                 </section>
@@ -246,15 +288,15 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                         <header className={styles.detailHead}>
                             <BodyIcon body={body} size={40} />
                             <div>
-                                <h3>{body.name}</h3>
-                                <p className='pixel-label'>{KIND_LABEL[body.kind]}{body.kind !== 'star' && ` ${designation(place, body)}`}</p>
+                                <h3><BodyName body={body} paren /></h3>
+                                <p className='pixel-label'>{KIND_LABEL[body.kind]}{body.kind !== 'star' && ` ${designation(body)}`}</p>
                             </div>
                         </header>
                         {!(editing && mine) && <Writeup of={body} />}
                         {editing && mine ? (
                           <>
                             <TextFields key={body.id} store={store} place={place} body={body} />
-                            <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                            <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} system={place} selfId={body.id} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
                           </>
                         ) : (
                             <Telemetry place={place} body={body} />

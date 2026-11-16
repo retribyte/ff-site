@@ -5,7 +5,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSession } from '@/components/auth/SessionProvider';
-import { fromApi, loadTerritories } from './data';
+import { designate, fromApi, loadTerritories } from './data';
 import type { ApiBody, ApiPlace, Body, BodyKind, Place, Precision, RegionKey, Vec3 } from './data';
 import type { Layers, ViewMode } from './GalaxyScene';
 import { episodeNumberLabel, seasonOrder } from '@/lib/seasons';
@@ -52,6 +52,8 @@ export interface NewBody {
     type: string;
     radiusKm?: number;
     orbit?: number;
+    /** Planets: "this is planet N". */
+    ordinal?: number | null;
     children?: NewBody[];
 }
 
@@ -60,6 +62,7 @@ const bodyFields = (b: NewBody): Record<string, unknown> => ({
     name: b.name,
     type: b.type,
     ...(b.kind !== 'star' && { radiusKm: b.radiusKm, orbit: b.orbit }),
+    ...(b.kind === 'planet' && b.ordinal && { ordinal: b.ordinal }),
     ...(b.children && { children: b.children.map(bodyFields) }),
 });
 
@@ -70,7 +73,7 @@ export interface TextPatch {
     slug?: string;
 }
 
-type BodyPatch = Partial<Pick<Body, 'type' | 'radiusKm' | 'orbit'>>;
+type BodyPatch = Partial<Pick<Body, 'type' | 'radiusKm' | 'orbit' | 'ordinal'>>;
 
 export function useGalaxyStore(initial: ApiPlace[]) {
     const { user } = useSession();
@@ -228,7 +231,7 @@ export function useGalaxyStore(initial: ApiPlace[]) {
         },
         /** Shown at once; sent when the edits pause. */
         updateBody(placeId: number, bodyId: number, patch: BodyPatch) {
-            setPlaces((all) => all.map((p) => (p.id === placeId ? { ...p, bodies: p.bodies.map((b) => (b.id === bodyId ? { ...b, ...patch } : b)) } : p)));
+            setPlaces((all) => all.map((p) => (p.id === placeId ? { ...p, bodies: designate(p.bodies.map((b) => (b.id === bodyId ? { ...b, ...patch } : b))) } : p)));
             const before = pending.current.get(bodyId);
             if (before) clearTimeout(before.timer);
             pending.current.set(bodyId, { patch: { ...before?.patch, ...patch }, timer: setTimeout(() => sendBody(placeId, bodyId), 500) });

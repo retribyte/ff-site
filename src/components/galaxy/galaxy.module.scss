@@ -290,6 +290,37 @@
     font: 0.72rem var(--font-mono);
 }
 
+// A GU designation (Sol-3) beside a body's own name
+.gu {
+    margin-left: 0.6em;
+    color: var(--text-muted);
+    // Not the pixel face: it has no lowercase, and Sol-3a needs its "a"
+    font: 0.7rem var(--font-mono);
+    white-space: nowrap;
+
+    h3 & {
+        font-size: 0.8rem;
+        vertical-align: middle;
+    }
+}
+
+.stepper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    b {
+        min-width: 1.6em;
+        font: 1rem var(--font-mono);
+        text-align: center;
+    }
+
+    button:disabled {
+        opacity: 0.35;
+        cursor: default;
+    }
+}
+
 .facts {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -990,6 +1021,15 @@
     fill: rgba(0, 0, 0, 0);
     stroke: rgba(0, 0, 0, 0.35);
     stroke-width: 2;
+    pointer-events: none;
+}
+
+// The star's temperate band, behind the orbits
+.habZone {
+    fill: none;
+    stroke: #6fd18a;
+    opacity: 0.09;
+    filter: blur(7px);
     pointer-events: none;
 }
 

@@ -10,6 +10,7 @@ import type { ApiPlace, Body, Place, RegionKey } from './data';
 import GalaxyScene from './GalaxyScene';
 import type { Layers } from './GalaxyScene';
 import { BodyIcon, CreateFlow, LandmarkIcon, SelectionDetail, placeTitle } from './parts';
+import type { PlanetSlot } from './parts';
 import SystemView from './SystemView';
 import { useGalaxyStore } from './store';
 import type { Store } from './store';
@@ -111,7 +112,8 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
     const store = useGalaxyStore(places);
     const [query, setQuery] = useState('');
     const [region, setRegion] = useState<RegionKey | null>(null);
-    const [creating, setCreating] = useState(false);
+    // true = the add wizard is open; a slot = it adds the planet a gap ring stands for
+    const [creating, setCreating] = useState<boolean | PlanetSlot>(false);
     const [narrow, setNarrow] = useState<boolean | null>(null);
     useEffect(() => {
         // Followed, not read once: a window can be resized or a phone turned after the page loads
@@ -127,7 +129,7 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
     const found: Hit[] = q
         ? store.places.flatMap((p) => [
               ...(placeTitle(p).toLowerCase().includes(q) ? [placeHit(p)] : []),
-              ...p.bodies.filter((b) => b.kind !== 'star' && b.name.toLowerCase().includes(q)).map((b) => ({ p, body: b, label: b.name, sub: `in ${placeTitle(p)}`, group: b.kind })),
+              ...p.bodies.filter((b) => b.kind !== 'star' && (b.name.toLowerCase().includes(q) || b.gu.toLowerCase().includes(q))).map((b) => ({ p, body: b, label: b.name, sub: `in ${placeTitle(p)}`, group: b.kind })),
           ])
         : region
           ? store.places.filter((p) => (p.precision === 'region' ? p.regionHint === region : regionAt(p.pos) === region)).map(placeHit)
@@ -217,11 +219,11 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                     )}
                 </>
             )}
-            {inSystem && place && <SystemView store={store} place={place} onAdd={() => setCreating(true)} />}
+            {inSystem && place && <SystemView store={store} place={place} onAdd={(slot) => setCreating(slot ?? true)} />}
             {creating && (
                 <div className={cx(styles.cModalWrap, store.placing && styles.tucked)} onMouseDown={(e) => e.target === e.currentTarget && !store.placing && setCreating(false)}>
                     <div className={cx('pixel-panel', styles.cModal)}>
-                        <CreateFlow store={store} onDone={() => setCreating(false)} />
+                        <CreateFlow store={store} slot={creating === true ? undefined : creating} onDone={() => setCreating(false)} />
                     </div>
                 </div>
             )}

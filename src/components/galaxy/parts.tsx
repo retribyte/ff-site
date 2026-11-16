@@ -11,7 +11,7 @@ import { decodeEntities } from '@/lib/html';
 import { isValidSlug } from '@/lib/slug';
 import {
     COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_RANGE, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
-    bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, randomPointIn, regionAt, regionLabel, sectorOf, starOf, toT, yearDays, zoneOf,
+    bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, planetNumber, randomPointIn, regionAt, regionLabel, sectorOf, starOf, toT, yearDays, zoneOf,
 } from './data';
 import type { Body, BodyKind, Place, Ref, RegionKey } from './data';
 import type { Store, TextPatch, Where } from './store';
@@ -94,9 +94,36 @@ export interface BodyDraft {
     type: string;
     radiusKm: number;
     orbit: number;
+    /** Planets: "this is planet N". */
+    ordinal?: number | null;
 }
 
-export function BodyFields({ kind, draft, onChange, starType }: { kind: BodyKind; draft: BodyDraft; onChange: (patch: Partial<BodyDraft>) => void; starType: string }) {
+/** The planet a gap ring of the system diagram stands for. */
+export interface PlanetSlot {
+    ordinal: number;
+    orbit: number;
+}
+
+/** "This is planet N": steps up from the number the planet's orbit gives it, for one whose inner neighbours are not on the map. */
+function PlanetNumber({ draft, onChange, system, selfId }: { draft: BodyDraft; onChange: (patch: Partial<BodyDraft>) => void; system?: Place; selfId?: number }) {
+    const star = system && starOf(system);
+    const { n, min } = planetNumber((system?.bodies ?? []).filter((b) => b.id !== selfId), draft.orbit, draft.ordinal ?? null);
+    return (
+        <div className={styles.field}>
+            <div className={styles.fieldHead}>
+                <span className='pixel-label'>Planet number</span>
+                <span className={styles.fieldReadout}>{star && !star.unnamed ? `${star.name}-${n}` : `Planet ${n} of its star`}</span>
+            </div>
+            <div className={styles.stepper}>
+                <button type='button' className={styles.chip} disabled={n <= min} onClick={() => onChange({ ordinal: n - 1 > min ? n - 1 : null })} aria-label='One planet closer to the star'>-</button>
+                <b>{n}</b>
+                <button type='button' className={styles.chip} disabled={n >= 99} onClick={() => onChange({ ordinal: n + 1 })} aria-label='One planet farther from the star'>+</button>
+            </div>
+        </div>
+    );
+}
+
+export function BodyFields({ kind, draft, onChange, starType, system, selfId }: { kind: BodyKind; draft: BodyDraft; onChange: (patch: Partial<BodyDraft>) => void; starType: string; /** Planets: the system it is in, and its own id once it exists. */ system?: Place; selfId?: number }) {
     if (kind === 'star') {
         return (
             <div className={styles.field}>
@@ -156,6 +183,7 @@ export function BodyFields({ kind, draft, onChange, starType }: { kind: BodyKind
                     readout={`${fmtNum(draft.orbit)} km`}
                 />
             )}
+            {orbitsStar && <PlanetNumber draft={draft} onChange={onChange} system={system} selfId={selfId} />}
         </>
     );
 }
@@ -190,8 +218,9 @@ export function TextFields({ store, place, body }: { store: Store; place: Place;
     };
     const [draft, setDraft] = useState(saved);
     const [slugError, setSlugError] = useState(false);
-    // A name may be empty only where the map allows "not named yet": a system and its star
-    const nameless = body ? body.kind === 'star' : place.kind === 'system';
+    // A name may be empty where the map allows it: a system and its star ("not named
+    // yet"), and a planet or moon, which then goes by its designation
+    const nameless = body ? body.kind !== 'station' : place.kind === 'system';
 
     const send = (fields: TextPatch & { category?: string }) => (body ? store.editBody(place.id, body.id, fields) : store.editPlace(place.id, fields));
     async function commit(key: 'name' | 'description' | 'slug') {
@@ -213,7 +242,7 @@ export function TextFields({ store, place, body }: { store: Store; place: Place;
         <div className={styles.textFields}>
             <label className={styles.field}>
                 <span className='pixel-label'>Name</span>
-                <input {...field('name')} placeholder={nameless ? 'Not named yet' : undefined} />
+                <input {...field('name')} placeholder={!nameless ? undefined : body && body.kind !== 'star' ? body.gu : 'Not named yet'} />
             </label>
             {!body && place.kind === 'landmark' && (
                 <label className={styles.field}>
@@ -328,12 +357,20 @@ function EpisodePicker({ store, taken, onPick, onClose }: { store: Store; taken:
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
 
-/** Planets count outward from the star as I, II, III; whatever orbits a planet is a, b, c. */
-export function designation(place: Place, b: Body): string {
+/** A planet's number as I, II, III; whatever orbits it is a, b, c (`designate` in data.ts does the counting). */
+export function designation(b: Body): string {
     if (b.kind === 'star') return '';
-    const sibs = place.bodies.filter((x) => x.parentId === b.parentId && x.kind !== 'star').sort((x, y) => x.orbit - y.orbit);
-    const i = sibs.findIndex((x) => x.id === b.id);
-    return b.kind === 'planet' ? (ROMAN[i] ?? String(i + 1)) : String.fromCharCode(97 + (i % 26));
+    return b.kind === 'planet' ? (ROMAN[b.num - 1] ?? String(b.num)) : String.fromCharCode(97 + ((b.num - 1) % 26));
+}
+
+/** A body's name, with its GU designation after it when it has a name of its own. */
+export function BodyName({ body, paren }: { body: Body; paren?: boolean }) {
+    return (
+        <>
+            {body.name}
+            {!body.unnamed && body.gu && <span className={styles.gu}>{paren ? `(${body.gu})` : body.gu}</span>}
+        </>
+    );
 }
 
 /** Sun, planet, moon or station, in the body's own color. */
@@ -387,8 +424,8 @@ export function BodyTree({ place, selBodyId, onPick, onOpen }: { place: Place; s
         <li key={b.id}>
             <button type='button' className={cx(styles.treeRow, selBodyId === b.id && styles.treeRowOn)} style={{ paddingLeft: 8 + depth * 16 }} onClick={() => onPick(b.id)} onDoubleClick={() => onOpen?.(b.id)}>
                 <BodyIcon body={b} />
-                {b.kind !== 'star' && <span className={styles.desig}>{designation(place, b)}</span>}
-                {b.name}
+                {b.kind !== 'star' && <span className={styles.desig}>{designation(b)}</span>}
+                <BodyName body={b} />
                 <span className={styles.muted}>{KIND_LABEL[b.kind]}</span>
             </button>
             {kids(b.id).length > 0 && <ul>{kids(b.id).map((k) => row(k, depth + 1))}</ul>}
@@ -399,12 +436,11 @@ export function BodyTree({ place, selBodyId, onPick, onOpen }: { place: Place; s
 
 export function PlaceHeader({ place }: { place: Place }) {
     const star = starOf(place);
-    const firstPlanet = place.bodies.find((b) => b.kind === 'planet');
     return (
         <header className={styles.detailHead}>
             <i className={styles.bigDot} style={{ background: place.kind === 'system' && star ? bodyColor(star) : '#7fd3e8', borderRadius: place.kind === 'landmark' ? 0 : '50%' }} />
             <div>
-                <h3>{place.placeholder && firstPlanet ? `${firstPlanet.name}'s system` : place.name}</h3>
+                <h3>{placeTitle(place)}</h3>
                 <p className='pixel-label'>
                     {place.kind === 'landmark' ? (LANDMARK_CATEGORIES[place.category ?? ''] ?? 'Landmark') : place.placeholder ? 'System, star not named yet' : 'System'}
                 </p>
@@ -500,7 +536,7 @@ export function SelectionDetail({ store }: { store: Store }) {
                     <header className={styles.detailHead}>
                         <BodyIcon body={body} size={40} />
                         <div>
-                            <h3>{body.name}</h3>
+                            <h3><BodyName body={body} paren /></h3>
                             <p className='pixel-label'>{KIND_LABEL[body.kind]} in {place.placeholder ? 'an unnamed system' : place.name}</p>
                         </div>
                     </header>
@@ -508,7 +544,7 @@ export function SelectionDetail({ store }: { store: Store }) {
                     {editing && mine ? (
                       <>
                         <TextFields key={body.id} store={store} place={place} body={body} />
-                        <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                        <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} system={place} selfId={body.id} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
                       </>
                     ) : (
                         <BodyFacts place={place} body={body} />
@@ -597,7 +633,7 @@ const CREATE_KINDS: { key: CreateKind; label: string; glyph: string }[] = [
 ];
 
 /** One wizard for everything a member can add, one question at a time. */
-export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void }) {
+export function CreateFlow({ store, onDone, slot }: { store: Store; onDone: () => void; /** Opened from a gap ring: the planet that goes there. */ slot?: PlanetSlot }) {
     const ctxPlanet = store.selBody?.kind === 'planet' ? store.selBody : null;
     const ctxSystem = store.level === 'system' && store.selPlace?.kind === 'system' ? store.selPlace : null;
     const [kind, setKind] = useState<CreateKind>(ctxPlanet ? 'moon' : ctxSystem ? 'planet' : 'system');
@@ -607,7 +643,7 @@ export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void
     const [where, setWhere] = useState<Where | null>(null);
     const [starType, setStarType] = useState('sunlike');
     const [category, setCategory] = useState('landmark');
-    const [draft, setDraft] = useState<BodyDraft>(ctxPlanet ? { type: 'rocky', radiusKm: 1737, orbit: 384400 } : { type: 'rocky', radiusKm: 6371, orbit: 1 });
+    const [draft, setDraft] = useState<BodyDraft>(ctxPlanet ? { type: 'rocky', radiusKm: 1737, orbit: 384400 } : { type: 'rocky', radiusKm: 6371, orbit: 1, ...slot });
     const [step, setStep] = useState(0);
     const [saving, setSaving] = useState(false);
 
@@ -619,7 +655,9 @@ export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void
     const parentSystem = kind === 'planet' ? systems.find((p) => p.id === parent) : null;
     const needsWhere = kind === 'system' || kind === 'landmark' || (kind === 'planet' && !parentSystem);
     const hostStarType = kind === 'planet' ? (parentSystem ? (starOf(parentSystem)?.type ?? 'sunlike') : starType) : 'sunlike';
-    const canSave = !saving && name.trim() !== '' && (!needsWhere || where !== null) && (!isSatellite || !!parentPlanet);
+    // A planet of a known star, or a moon, may go by its designation alone
+    const nameOptional = (kind === 'planet' && !!parentSystem) || (kind === 'moon' && !!parentPlanet);
+    const canSave = !saving && (name.trim() !== '' || nameOptional) && (!needsWhere || where !== null) && (!isSatellite || !!parentPlanet);
 
     const pickKind = (k: CreateKind) => {
         setKind(k);
@@ -634,6 +672,9 @@ export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void
         if (!canSave) return;
         setSaving(true);
         const called = name.trim();
+        // Only a number above the one its orbit gives it is worth storing
+        const numbered = planetNumber(parentSystem?.bodies ?? [], draft.orbit, draft.ordinal ?? null);
+        const ordinal = kind === 'planet' && numbered.n > numbered.min ? numbered.n : null;
         let ok = false;
         if (kind === 'landmark') {
             const p = await store.addPlace({ kind: 'landmark', name: called, category, where: where! });
@@ -644,17 +685,17 @@ export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void
             if (p) store.openSystem(p.id);
             ok = !!p;
         } else if (kind === 'planet' && !parentSystem) {
-            const planet = { kind: 'planet' as const, name: called, ...draft };
+            const planet = { kind: 'planet' as const, name: called, ...draft, ordinal };
             const p = await store.addPlace({ kind: 'system', name: null, where: where!, star: { kind: 'star', name: null, type: starType, children: [planet] } });
             if (p) store.openSystem(p.id, p.bodies.find((b) => b.kind === 'planet')?.id ?? null);
             ok = !!p;
         } else if (kind === 'planet' && parentSystem) {
             const star = starOf(parentSystem);
-            const id = star ? await store.addBody(parentSystem.id, star.id, { kind: 'planet', name: called, ...draft }) : null;
+            const id = star ? await store.addBody(parentSystem.id, star.id, { kind: 'planet', name: called || null, ...draft, ordinal }) : null;
             if (id) store.openSystem(parentSystem.id, id);
             ok = !!id;
         } else if (parentPlanet) {
-            const id = await store.addBody(parentPlanet.p.id, parentPlanet.b.id, { kind: kind as BodyKind, name: called, ...draft, type: kind === 'station' ? 'artificial' : draft.type });
+            const id = await store.addBody(parentPlanet.p.id, parentPlanet.b.id, { kind: kind as BodyKind, name: called || null, ...draft, ordinal: null, type: kind === 'station' ? 'artificial' : draft.type });
             if (id) store.openSystem(parentPlanet.p.id, id);
             ok = !!id;
         }
@@ -675,6 +716,7 @@ export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void
     const nameField = (
         <div className={styles.field}>
             <input className={styles.nameInput} value={name} onChange={(e) => setName(e.target.value)} placeholder={`New ${CREATE_KINDS.find((k) => k.key === kind)!.label.toLowerCase()}`} aria-label='Name' maxLength={100} autoFocus />
+            {(kind === 'planet' || kind === 'moon') && <p className={styles.muted}>With no name it goes by its designation, like Sol-3{kind === 'moon' && 'a'}.</p>}
         </div>
     );
 
@@ -688,6 +730,7 @@ export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void
                     : planets.map(({ b, p }) => <option key={b.id} value={b.id}>{b.name} ({p.placeholder ? 'unnamed system' : p.name})</option>)}
             </select>
             {isSatellite && planets.length === 0 && <p className={styles.muted}>Add its planet first.</p>}
+            {kind === 'planet' && !parentSystem && name.trim() === '' && <p className={styles.formError}>A planet with no name needs its star: pick its system, or go back and name it.</p>}
         </div>
     );
 
@@ -696,7 +739,7 @@ export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void
         <BodyFields kind='star' draft={{ ...draft, type: starType }} onChange={(p) => p.type && setStarType(p.type)} starType={starType} />
     );
     const bodyFields = kind !== 'system' && kind !== 'landmark' && (
-        <BodyFields kind={kind as BodyKind} draft={draft} onChange={(p) => setDraft({ ...draft, ...p })} starType={hostStarType} />
+        <BodyFields kind={kind as BodyKind} draft={draft} onChange={(p) => setDraft({ ...draft, ...p })} starType={hostStarType} system={parentSystem ?? undefined} />
     );
     const categoryField = kind === 'landmark' && (
         <div className={styles.field}>
@@ -726,7 +769,7 @@ export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void
             <div className={styles.actions}>
                 {at > 0 && <button type='button' className={styles.btnQuiet} onClick={() => setStep(at - 1)}>Back</button>}
                 {at < pages.length - 1 ? (
-                    <button type='button' className={styles.btn} disabled={at === 0 && name.trim() === ''} onClick={() => setStep(at + 1)}>Next</button>
+                    <button type='button' className={styles.btn} disabled={at === 0 && name.trim() === '' && kind !== 'planet' && kind !== 'moon'} onClick={() => setStep(at + 1)}>Next</button>
                 ) : (
                     <button type='button' className={styles.btn} disabled={!canSave} onClick={save}>{saving ? 'Saving' : 'Done'}</button>
                 )}
@@ -737,6 +780,6 @@ export function CreateFlow({ store, onDone }: { store: Store; onDone: () => void
 }
 
 export function placeTitle(place: Place): string {
-    const planet = place.bodies.find((b) => b.kind === 'planet');
+    const planet = place.bodies.find((b) => b.kind === 'planet' && !b.unnamed);
     return place.placeholder && planet ? `${planet.name}'s system` : place.name;
 }
