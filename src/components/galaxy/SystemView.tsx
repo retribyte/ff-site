@@ -26,8 +26,15 @@ const MOON_GAP = 11;
 /** Room an open planet number's ring takes on each side. */
 const GAP_REACH = 11;
 
-function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: Place; selBodyId: number | null; onSelect: (id: number | null) => void; onEdit: (id: number) => void; onAdd?: (slot?: PlanetSlot) => void }) {
+const MAX_ZOOM = 6;
+/** Seconds the drawing takes over one year of a planet a year of 365 days out; other years go by the square root. */
+const YEAR_SECONDS = 40;
+/** Seconds a moon as far out as Luna takes to go round. */
+const MONTH_SECONDS = 8;
+
+function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMoving }: { place: Place; selBodyId: number | null; onSelect: (id: number | null) => void; onEdit: (id: number) => void; onAdd?: (slot?: PlanetSlot) => void; /** Bodies travel round their orbits. */ moving: boolean; onMoving: (on: boolean) => void }) {
     const hostRef = useRef<HTMLDivElement>(null);
+    const svgRef = useRef<SVGSVGElement>(null);
     const [box, setBox] = useState({ w: 1000, h: 700 });
     useEffect(() => {
         const host = hostRef.current!;
@@ -36,9 +43,90 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
         return () => ro.disconnect();
     }, []);
 
+    // Zoom and slide: the drawing scaled by `k` with its corner at (x, y); never smaller than the view nor off it
+    const [cam, setCam] = useState({ k: 1, x: 0, y: 0 });
+    const boxRef = useRef(box);
+    useEffect(() => {
+        boxRef.current = box;
+    });
+    const fit = (c: { k: number; x: number; y: number }, b = boxRef.current) => {
+        const k = Math.max(1, Math.min(MAX_ZOOM, c.k));
+        return { k, x: Math.min(0, Math.max(b.w * (1 - k), c.x)), y: Math.min(0, Math.max(b.h * (1 - k), c.y)) };
+    };
+    /** Zooms by `factor`, keeping the point (px, py) of the view where it is, then slides by (dx, dy). */
+    const zoomAt = (px: number, py: number, factor: number, dx = 0, dy = 0) =>
+        setCam((c) => {
+            const k = Math.max(1, Math.min(MAX_ZOOM, c.k * factor));
+            const f = k / c.k;
+            return fit({ k, x: px - (px - c.x) * f + dx, y: py - (py - c.y) * f + dy });
+        });
+    useEffect(() => {
+        const svg = svgRef.current!;
+        // Not passive: the wheel zooms the diagram, it must not scroll the page
+        const onWheel = (e: WheelEvent) => {
+            e.preventDefault();
+            const r = svg.getBoundingClientRect();
+            const factor = Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0015));
+            const [px, py] = [e.clientX - r.left, e.clientY - r.top];
+            setCam((c) => {
+                const k = Math.max(1, Math.min(MAX_ZOOM, c.k * factor));
+                const f = k / c.k;
+                const b = boxRef.current;
+                return { k, x: Math.min(0, Math.max(b.w * (1 - k), px - (px - c.x) * f)), y: Math.min(0, Math.max(b.h * (1 - k), py - (py - c.y) * f)) };
+            });
+        };
+        svg.addEventListener('wheel', onWheel, { passive: false });
+        return () => svg.removeEventListener('wheel', onWheel);
+    }, []);
+    // A drag slides the zoomed drawing; two fingers pinch it
+    const pointers = useRef(new Map<number, { x: number; y: number }>());
+    const dragged = useRef(false);
+    const onPointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
+        if (pointers.current.size === 0) dragged.current = false;
+        pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    };
+    const onPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
+        const was = pointers.current.get(e.pointerId);
+        if (!was) return;
+        const r = e.currentTarget.getBoundingClientRect();
+        const others = [...pointers.current.entries()].filter(([id]) => id !== e.pointerId).map(([, p]) => p);
+        const [dx, dy] = [e.clientX - was.x, e.clientY - was.y];
+        if (!dragged.current && others.length === 0 && Math.hypot(dx, dy) < 5) return;
+        if (!dragged.current) e.currentTarget.setPointerCapture(e.pointerId);
+        dragged.current = true;
+        pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (others.length === 0) return setCam((c) => fit({ ...c, x: c.x + dx, y: c.y + dy }));
+        const o = others[0];
+        const before = Math.hypot(was.x - o.x, was.y - o.y);
+        const after = Math.hypot(e.clientX - o.x, e.clientY - o.y);
+        zoomAt((e.clientX + o.x) / 2 - r.left, (e.clientY + o.y) / 2 - r.top, before > 0 ? after / before : 1, dx / 2, dy / 2);
+    };
+    const onPointerUp = (e: React.PointerEvent<SVGSVGElement>) => void pointers.current.delete(e.pointerId);
+    // A click that ends a slide selects nothing
+    const onClickCapture = (e: React.MouseEvent) => {
+        if (!dragged.current) return;
+        dragged.current = false;
+        e.stopPropagation();
+    };
+
+    // The orbits' clock, in seconds; it only runs while the bodies are moving, so a pause leaves them where they are
+    const [time, setTime] = useState(0);
+    useEffect(() => {
+        if (!moving) return;
+        let last = performance.now();
+        let raf = requestAnimationFrame(function step(now) {
+            setTime((t) => t + Math.min(0.1, (now - last) / 1000));
+            last = now;
+            raf = requestAnimationFrame(step);
+        });
+        return () => cancelAnimationFrame(raf);
+    }, [moving]);
+
     const star = starOf(place);
     const planets = place.bodies.filter((b) => b.kind === 'planet').sort((a, b) => a.orbit - b.orbit);
     const { w: W, h: Hh } = box;
+    // Fitted again here, in case the window shrank since the last zoom
+    const view = fit(cam, box);
     // On a wide screen the panels cover the left edge, so the star sits right of center.
     const inset = W > 900 ? 400 : 0;
     const c = { x: inset + (W - inset) / 2, y: Hh / 2 };
@@ -87,10 +175,29 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
     const stem = star && !star.unnamed ? star.name : 'Unnamed';
     // Spread around the star by the golden angle, starting somewhere that differs per system.
     const angle = (id: number, index: number) => (((id * 137) % 360) * Math.PI) / 180 + index * 2.39996;
+    // Where each is now: counterclockwise, the nearer the faster (Kepler's periods, with the square root taken so the far ones still move)
+    const turned = (seconds: number) => (-time * 2 * Math.PI) / seconds;
+    const planetAngle = (index: number) => angle(place.id, index) + turned(YEAR_SECONDS * Math.sqrt(yearDays(planets[index].orbit, star?.type ?? 'sunlike') / 365.25));
+    const moonAngle = (planet: Body, m: Body, j: number) => angle(planet.id, j + 1) + turned(Math.max(3, Math.min(24, MONTH_SECONDS * Math.sqrt(m.orbit / 384400))));
 
     return (
         <div ref={hostRef} className={styles.sysDiagram}>
-            <svg viewBox={`0 0 ${W} ${Hh}`} width={W} height={Hh} className={styles.schematic} onClick={() => onSelect(null)} role='img' aria-label={`Diagram of the ${placeTitle(place)}: ${planets.map((p) => p.name).join(', ') || 'no planets yet'}`}>
+            <svg
+                ref={svgRef}
+                viewBox={`0 0 ${W} ${Hh}`}
+                width={W}
+                height={Hh}
+                className={styles.schematic}
+                onClick={() => onSelect(null)}
+                onClickCapture={onClickCapture}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerCancel={onPointerUp}
+                role='img'
+                aria-label={`Diagram of the ${placeTitle(place)}: ${planets.map((p) => p.name).join(', ') || 'no planets yet'}`}
+            >
+              <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`}>
                 {hab && <circle cx={c.x} cy={c.y} r={(hab[0] + hab[1]) / 2} strokeWidth={hab[1] - hab[0]} className={styles.habZone} />}
                 {star && (
                     <g className={cx(styles.orb, selBodyId === star.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(star.id))} onDoubleClick={() => onEdit(star.id)}>
@@ -104,7 +211,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
                     const p = ring.planet;
                     if (!p) {
                         // Labelled across the star from the planet it sits inside, clear of that planet's name
-                        const far = angle(place.id, i) + Math.PI;
+                        const far = planetAngle(i) + Math.PI;
                         return (
                             <g key={`gap${ring.n}`} className={styles.addRing} onClick={(e) => (e.stopPropagation(), onAdd?.({ ordinal: ring.n, orbit: ring.orbit }))}>
                                 <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} style={{ strokeWidth: GAP_REACH * 1.6 }} />
@@ -115,7 +222,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
                             </g>
                         );
                     }
-                    const a = angle(place.id, i);
+                    const a = planetAngle(i);
                     const bx = c.x + r * Math.cos(a);
                     const by = c.y + r * Math.sin(a);
                     const pr = bodyPx(p);
@@ -131,7 +238,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
                             <text x={bx} y={by - pr - 8 - kids.length * MOON_GAP} textAnchor='middle'>{p.name}</text>
                             {kids.map((m, j) => {
                                 const mr = pr + MOON_GAP * (j + 1);
-                                const ma = angle(p.id, j + 1);
+                                const ma = moonAngle(p, m, j);
                                 const mx = bx + mr * Math.cos(ma);
                                 const my = by + mr * Math.sin(ma);
                                 const on = selBodyId === m.id;
@@ -161,7 +268,13 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: P
                         <text x={c.x} y={c.y - addR - 7} textAnchor='middle'>+ add a planet</text>
                     </g>
                 )}
+              </g>
             </svg>
+            <button type='button' className={cx(styles.iconBtn, styles.sysMotion)} onClick={() => onMoving(!moving)} title={moving ? 'Pause the orbits' : 'Set the orbits moving'} aria-label={moving ? 'Pause the orbits' : 'Set the orbits moving'} aria-pressed={moving}>
+                <svg width='14' height='14' viewBox='0 0 14 14' fill='currentColor' aria-hidden>
+                    {moving ? <path d='M2 1H6V13H2ZM8 1H12V13H8Z' /> : <path d='M2 1L13 7L2 13Z' />}
+                </svg>
+            </button>
             {star && star.type !== 'black_hole' && (
                 <div className={styles.sysLegend}>
                     {ZONES.map((z) => (
@@ -259,7 +372,7 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
 
     return (
         <div className={styles.sys}>
-            <SystemDiagram place={place} selBodyId={body?.id ?? null} onSelect={(id) => (setEditing(false), store.select(place.id, id))} onEdit={(id) => (store.select(place.id, id), setEditing(mine))} onAdd={mine ? addPlanet : undefined} />
+            <SystemDiagram place={place} selBodyId={body?.id ?? null} onSelect={(id) => (setEditing(false), store.select(place.id, id))} onEdit={(id) => (store.select(place.id, id), setEditing(mine))} onAdd={mine ? addPlanet : undefined} moving={store.motion} onMoving={store.setMotion} />
             <aside className={styles.sysPanels}>
               <div className={cx('pixel-panel', styles.sysCard)}>
                 <nav className={styles.crumbs} aria-label='Where you are'>

@@ -75,6 +75,10 @@ export interface TextPatch {
 
 type BodyPatch = Partial<Pick<Body, 'type' | 'radiusKm' | 'orbit' | 'ordinal'>>;
 
+/** localStorage: the view settings (camera, layers, starfield strength, orbit motion). */
+const VIEW_KEY = 'galaxyView';
+export const DEFAULT_SKY = 0.25;
+
 export function useGalaxyStore(initial: ApiPlace[]) {
     const { user } = useSession();
     const [places, setPlaces] = useState<Place[]>(() => initial.map(fromApi));
@@ -83,6 +87,11 @@ export function useGalaxyStore(initial: ApiPlace[]) {
     const [level, setLevel] = useState<'galaxy' | 'system'>('galaxy');
     const [view, setView] = useState<ViewMode>('tilt');
     const [layers, setLayers] = useState<Layers>({ galaxy: true, territories: true, rim: true, grid: true, octants: false, bearings: true, labels: true, transit: false });
+    // How strongly the starfield shows behind the map, 0 to 1 (full strength is dizzying to turn in)
+    const [sky, setSky] = useState(DEFAULT_SKY);
+    // Bodies travel round their orbits in the system view
+    const [motion, setMotion] = useState(true);
+    const [restored, setRestored] = useState(false);
     const [flyToken, setFlyToken] = useState(0);
     const [resetToken, setResetToken] = useState(0);
     const [placing, setPlacing] = useState(false);
@@ -96,12 +105,44 @@ export function useGalaxyStore(initial: ApiPlace[]) {
     const pending = useRef(new Map<number, { patch: BodyPatch; timer: ReturnType<typeof setTimeout> }>());
 
     useEffect(() => {
-        loadTerritories().then(() => {
-            setReady(true);
-            // Phones and other touch-first devices start in the cheaper flat view.
-            if (window.matchMedia('(pointer: coarse), (max-width: 700px)').matches) setView('top');
+        void loadTerritories().then(() => setReady(true));
+        // The view settings as this browser last left them (after the first paint, which the server drew without them)
+        queueMicrotask(() => {
+        let saved: Partial<{ view: unknown; layers: unknown; sky: unknown; motion: unknown }> = {};
+        try {
+            saved = JSON.parse(localStorage.getItem(VIEW_KEY) ?? '{}') ?? {};
+        } catch {
+            // Unreadable or blocked storage: the defaults stand
+        }
+        // Phones and other touch-first devices start in the cheaper flat view.
+        if (saved.view === 'tilt' || saved.view === 'top') setView(saved.view);
+        else if (window.matchMedia('(pointer: coarse), (max-width: 700px)').matches) setView('top');
+        const kept = saved.layers;
+        if (kept && typeof kept === 'object') {
+            setLayers((now) => {
+                const next = { ...now };
+                for (const key of Object.keys(now) as (keyof Layers)[]) {
+                    const on = (kept as Record<string, unknown>)[key];
+                    if (typeof on === 'boolean') next[key] = on;
+                }
+                return next;
+            });
+        }
+        if (typeof saved.sky === 'number' && saved.sky >= 0 && saved.sky <= 1) setSky(saved.sky);
+        if (typeof saved.motion === 'boolean') setMotion(saved.motion);
+        else if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setMotion(false);
+        setRestored(true);
         });
     }, []);
+
+    useEffect(() => {
+        if (!restored) return;
+        try {
+            localStorage.setItem(VIEW_KEY, JSON.stringify({ view, layers, sky, motion }));
+        } catch {
+            // Not kept, then
+        }
+    }, [restored, view, layers, sky, motion]);
 
     const selPlace = places.find((p) => p.id === selPlaceId) ?? null;
     const selBody = selPlace?.bodies.find((b) => b.id === selBodyId) ?? null;
@@ -161,6 +202,10 @@ export function useGalaxyStore(initial: ApiPlace[]) {
         setView,
         layers,
         setLayers,
+        sky,
+        setSky,
+        motion,
+        setMotion,
         flyToken,
         resetToken,
         resetView: () => setResetToken((n) => n + 1),

@@ -45,6 +45,8 @@ interface Props {
     onOpen?: (id: number) => void;
     /** Changing this number puts the camera back where it started. */
     resetToken?: number;
+    /** How strongly the starfield shows behind the map, 0 to 1. */
+    sky?: number;
     /** Called once when there is no WebGL and the still picture is shown instead. */
     onStill?: () => void;
 }
@@ -395,7 +397,6 @@ function loadStarfield(): Promise<THREE.Texture | null> {
             const g = c.getContext('2d')!;
             g.fillStyle = VOID;
             g.fillRect(0, 0, c.width, c.height);
-            g.globalAlpha = 0.45;
             g.drawImage(img, 0, 0, c.width, c.height);
             const tex = new THREE.CanvasTexture(c);
             tex.colorSpace = THREE.SRGBColorSpace;
@@ -414,26 +415,28 @@ function loadStarfield(): Promise<THREE.Texture | null> {
  * `flat` is for top-down and the still picture: the tile laid straight onto the
  * screen at its own size, `pixelRatio` device pixels to one of its own.
  */
-function buildSky(tex: THREE.Texture, pixelRatio: number): { box: THREE.Mesh; flat: THREE.Mesh } {
+function buildSky(tex: THREE.Texture, pixelRatio: number, opacity: number): Sky {
     const faces = tex.clone();
     // A face spans 90 degrees; this many tiles across it keeps a star about its drawn size at the map's lens
     faces.repeat.set(1.5, 2);
     faces.needsUpdate = true;
-    const box = new THREE.Mesh(new THREE.BoxGeometry(2000, 2000, 2000), new THREE.MeshBasicMaterial({ map: faces, side: THREE.BackSide, depthTest: false, depthWrite: false }));
+    const box = new THREE.Mesh(new THREE.BoxGeometry(2000, 2000, 2000), new THREE.MeshBasicMaterial({ map: faces, side: THREE.BackSide, depthTest: false, depthWrite: false, transparent: true, opacity }));
     const flat = new THREE.Mesh(
         new THREE.PlaneGeometry(2, 2),
         new THREE.ShaderMaterial({
-            uniforms: { map: { value: tex }, tile: { value: new THREE.Vector2(STAR_TILE.w * pixelRatio, STAR_TILE.h * pixelRatio) } },
+            uniforms: { map: { value: tex }, tile: { value: new THREE.Vector2(STAR_TILE.w * pixelRatio, STAR_TILE.h * pixelRatio) }, opacity: { value: opacity } },
             vertexShader: 'void main() { gl_Position = vec4(position.xy, 1.0, 1.0); }',
             fragmentShader: `
                 uniform sampler2D map;
                 uniform vec2 tile;
+                uniform float opacity;
                 void main() {
-                    gl_FragColor = texture2D(map, gl_FragCoord.xy / tile);
+                    gl_FragColor = vec4(texture2D(map, gl_FragCoord.xy / tile).rgb, opacity);
                     #include <colorspace_fragment>
                 }`,
             depthTest: false,
             depthWrite: false,
+            transparent: true,
         }),
     );
     for (const mesh of [box, flat]) {
@@ -443,8 +446,21 @@ function buildSky(tex: THREE.Texture, pixelRatio: number): { box: THREE.Mesh; fl
     return { box, flat };
 }
 
+interface Sky {
+    box: THREE.Mesh;
+    flat: THREE.Mesh;
+}
+
+/** Fades the starfield toward the map's black: 0 is none of it, 1 all of it. */
+function setSkyOpacity(sky: Sky, opacity: number) {
+    (sky.box.material as THREE.MeshBasicMaterial).opacity = opacity;
+    (sky.flat.material as THREE.ShaderMaterial).uniforms.opacity.value = opacity;
+}
+
 /** Half the width, in klyr, of the square the still picture covers (top-down, +y up, Sagittarius A in the middle). */
 export const STILL_HALF = 52;
+/** How strongly the still picture shows the starfield (the setting's default). */
+const STILL_SKY = 0.25;
 
 /**
  * The map as one top-down picture, for browsers without WebGL (which cannot run this:
@@ -464,7 +480,7 @@ export function renderStill(size: number, fontDisplay: string): Promise<string> 
         const stars = loadStarfield();
         const groups = buildWorld(fontDisplay, () => {
             void stars.then((tex) => {
-                if (tex) scene.add(buildSky(tex, 1).flat);
+                if (tex) scene.add(buildSky(tex, 1, STILL_SKY).flat);
                 renderer.render(scene, camera);
                 resolve(renderer.domElement.toDataURL('image/webp', 0.9));
                 renderer.dispose();
@@ -622,16 +638,17 @@ const FLAT = Math.tan((24 * Math.PI) / 180) / Math.tan(((FLAT_FOV / 2) * Math.PI
  */
 const TOP_DIR = new THREE.Vector3(0, -0.0005, 1).normalize();
 
-export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen, onStill }: Props) {
+export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen, onStill, sky = STILL_SKY }: Props) {
     const hostRef = useRef<HTMLDivElement>(null);
     const markerRefs = useRef(new Map<number, HTMLButtonElement>());
-    const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Groups; sky: { box: THREE.Mesh; flat: THREE.Mesh } | null; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
-    const live = useRef({ places, placing, onPlace, onSelect, selectedId });
+    const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Groups; sky: Sky | null; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
+    const live = useRef({ places, placing, onPlace, onSelect, selectedId, sky });
     const [readout, setReadout] = useState('');
     const [failed, setFailed] = useState(false);
 
     useEffect(() => {
-        live.current = { places, placing, onPlace, onSelect, selectedId };
+        live.current = { places, placing, onPlace, onSelect, selectedId, sky };
+        if (three.current?.sky) setSkyOpacity(three.current.sky, sky);
     });
 
     useEffect(() => {
@@ -655,6 +672,10 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         controls.dampingFactor = 0.08;
         controls.minDistance = 6;
         controls.maxDistance = 150;
+        // The wheel (or a pinch) zooms in on what is under it, not on the middle of the view
+        controls.zoomToCursor = true;
+        // The focus stays on the galactic plane (a right-drag slides along it), so zooming to a place keeps that place under the pointer
+        controls.screenSpacePanning = false;
 
         const groups = buildWorld(getComputedStyle(host).getPropertyValue('--font-display').trim() || 'sans-serif');
         scene.add(...Object.values(groups));
@@ -663,7 +684,7 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         void loadStarfield().then((tex) => {
             const t = three.current;
             if (!tex || !t || t.camera !== camera) return tex?.dispose();
-            t.sky = buildSky(tex, renderer.getPixelRatio());
+            t.sky = buildSky(tex, renderer.getPixelRatio(), live.current.sky);
             scene.add(t.sky.box, t.sky.flat);
         });
         // A drag or a scroll takes over from any camera move in progress
@@ -719,6 +740,13 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         el.addEventListener('pointerdown', onDown);
         el.addEventListener('pointerup', onUp);
         el.addEventListener('pointermove', onMove);
+        // A place's marker sits over the canvas: the wheel on one zooms the map there all the same
+        const onMarkerWheel = (e: WheelEvent) => {
+            if (e.target === el) return;
+            e.preventDefault();
+            el.dispatchEvent(new WheelEvent('wheel', { deltaX: e.deltaX, deltaY: e.deltaY, deltaMode: e.deltaMode, clientX: e.clientX, clientY: e.clientY, ctrlKey: e.ctrlKey, cancelable: true }));
+        };
+        host.addEventListener('wheel', onMarkerWheel, { passive: false });
 
         const v = new THREE.Vector3();
         let raf = 0;
@@ -788,6 +816,7 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         return () => {
             cancelAnimationFrame(raf);
             ro.disconnect();
+            host.removeEventListener('wheel', onMarkerWheel);
             controls.dispose();
             renderer.dispose();
             renderer.domElement.remove();
@@ -795,8 +824,8 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         };
     }, []);
 
-    // View lock: top-down is a straight-down camera that only zooms. It still slides to a
-    // place that is picked and back on Recenter; a drag pans only while placing something.
+    // View lock: top-down is a straight-down camera that a drag cannot move. Zooming goes
+    // to the pointer, and it still slides to a place that is picked and back on Recenter.
     useEffect(() => {
         const t = three.current;
         if (!t) return;
@@ -807,7 +836,7 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         const dist = camera.position.distanceTo(controls.target) / (wasTop ? FLAT : 1);
         const f = top ? FLAT : 1;
         controls.enableRotate = !top;
-        controls.enablePan = !top || placing;
+        controls.enablePan = !top;
         controls.mouseButtons.LEFT = top ? THREE.MOUSE.PAN : THREE.MOUSE.ROTATE;
         controls.touches.ONE = top ? THREE.TOUCH.PAN : THREE.TOUCH.ROTATE;
         controls.touches.TWO = top ? THREE.TOUCH.DOLLY_PAN : THREE.TOUCH.DOLLY_ROTATE;

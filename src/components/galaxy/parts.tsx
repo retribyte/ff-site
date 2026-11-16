@@ -227,7 +227,7 @@ export function BodyFields({ kind, draft, onChange, starType, system, selfId, pl
                     starType={starType}
                     unit='AU'
                     bounds={[0.001, 1e5]}
-                    readout={`${zone.label}, ${fmtNum(draft.orbit)} AU, a year of ${fmtNum(yearDays(draft.orbit, starType))} equinoxes`}
+                    readout={`${zone.label}, ${fmtNum(draft.orbit)} AU, year of ${fmtNum(yearDays(draft.orbit, starType))} eqx`}
                 />
             ) : (
                 <ScaleInput

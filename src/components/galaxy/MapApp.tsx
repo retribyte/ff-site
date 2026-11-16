@@ -1,7 +1,7 @@
 'use client';
 
 // The galaxy map: a search box and a side sheet over the full-bleed galaxy, the
-// layers panel, the add wizard, and the full-screen view of one system.
+// view settings panel, the add wizard, and the full-screen view of one system.
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -105,20 +105,31 @@ function LayerList({ store }: { store: Store }) {
     );
 }
 
-/** Wide screens: the layers, which fold away, over the view buttons, which do not. */
-export function LayersPanel({ store }: { store: Store }) {
+/** How strongly the starfield shows: at full strength it is dizzying to turn in. */
+function SkySlider({ store }: { store: Store }) {
+    return (
+        <label className={styles.skySlider} title='How strongly the stars behind the map show'>
+            Stars
+            <input type='range' min='0' max='1' step='0.05' value={store.sky} onChange={(e) => store.setSky(Number(e.target.value))} />
+        </label>
+    );
+}
+
+/** Wide screens: the layers, which fold away, over the view settings, which do not. */
+export function ViewSettings({ store }: { store: Store }) {
     const [open, setOpen] = useState(true);
     return (
-        <section className={cx('pixel-panel', styles.layers)} aria-label='Map layers and view'>
-            <button type='button' className={styles.layersHead} onClick={() => setOpen(!open)} aria-expanded={open}>
+        <section className={cx('pixel-panel', styles.viewPanel)} aria-label='View settings'>
+            <button type='button' className={styles.viewPanelHead} onClick={() => setOpen(!open)} aria-expanded={open}>
                 <span className='pixel-label'>Layers</span>
                 <span aria-hidden>{open ? '▾' : '▸'}</span>
             </button>
             {open && <LayerList store={store} />}
             {!store.still && (
-                <div className={styles.layersView}>
+                <div className={styles.viewPanelView}>
                     <span className='pixel-label'>View</span>
                     <ViewButtons store={store} />
+                    <SkySlider store={store} />
                 </div>
             )}
         </section>
@@ -159,8 +170,8 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
     // true = the add wizard is open; a slot = it adds the planet a gap ring stands for
     const [creating, setCreating] = useState<boolean | PlanetSlot>(false);
     const [narrow, setNarrow] = useState<boolean | null>(null);
-    // Phones: the layers list, opened from its button; holds the selection it was opened under, so picking a place folds it away
-    const [layersFor, setLayersFor] = useState<number | null>(null);
+    // Phones: the view settings, opened from their button; holds the selection they were opened under, so picking a place folds them away
+    const [settingsFor, setSettingsFor] = useState<number | null>(null);
     useEffect(() => {
         // Followed, not read once: a window can be resized or a phone turned after the page loads
         const media = window.matchMedia('(max-width: 760px)');
@@ -184,7 +195,7 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
     const place = store.selPlace;
     const inSystem = store.level === 'system' && place?.kind === 'system';
 
-    const layersOpen = layersFor === (place?.id ?? 0);
+    const settingsOpen = settingsFor === (place?.id ?? 0);
     // The same plain button the system view adds with; a phone has room for fewer words
     const addButton = store.user ? (
         <button type='button' className={cx(styles.btnQuiet, styles.cAdd)} onClick={() => setCreating(true)} title='Add a system or landmark'>{narrow ? '+ System' : '+ System or landmark'}</button>
@@ -193,7 +204,7 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
     );
 
     return (
-        <main className={styles.root}>
+        <main className={styles.root} style={{ '--sky': store.sky } as React.CSSProperties}>
         <div className={styles.shell}>
             <div className={styles.stage}>
                 <GalaxyScene
@@ -207,6 +218,7 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                     flyToken={store.flyToken}
                     resetToken={store.resetToken}
                     onStill={store.setStill}
+                    sky={store.sky}
                     onOpen={(id) => store.places.find((p) => p.id === id)?.kind === 'system' && store.openSystem(id)}
                 />
                 {store.placing && (
@@ -250,17 +262,18 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                                 </div>
                             )}
                         </div>
-                        {/* Phones: one row of buttons under the search box, the layers list opening beneath it */}
+                        {/* Phones: one row of buttons under the search box, the rest of the view settings opening beneath it */}
                         {narrow && !store.placing && (
                             <div className={styles.cBar}>
                                 {addButton}
                                 {!store.still && <ViewButtons store={store} />}
-                                <button type='button' className={styles.iconBtn} aria-pressed={layersOpen} onClick={() => setLayersFor(layersOpen ? null : (place?.id ?? 0))} title='Layers' aria-label='Layers'><LayersIcon /></button>
+                                <button type='button' className={styles.iconBtn} aria-pressed={settingsOpen} onClick={() => setSettingsFor(settingsOpen ? null : (place?.id ?? 0))} title='Layers and view settings' aria-label='Layers and view settings'><LayersIcon /></button>
                             </div>
                         )}
-                        {narrow && !store.placing && layersOpen && (
-                            <section className={cx('pixel-panel', styles.layers)} aria-label='Map layers'>
+                        {narrow && !store.placing && settingsOpen && (
+                            <section className={cx('pixel-panel', styles.viewPanel)} aria-label='View settings'>
                                 <LayerList store={store} />
+                                {!store.still && <div className={styles.viewPanelView}><SkySlider store={store} /></div>}
                             </section>
                         )}
                         {place && !store.placing && (
@@ -274,7 +287,7 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                     </div>
                     {narrow === false && (
                         <div className={styles.cRight}>
-                            <LayersPanel store={store} />
+                            <ViewSettings store={store} />
                         </div>
                     )}
                 </>

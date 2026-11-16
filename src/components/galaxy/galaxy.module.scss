@@ -50,7 +50,7 @@
     position: absolute;
     inset: 0;
     background: var(--starfield) 0 0 / var(--starfield-size);
-    opacity: 0.45;
+    opacity: 0.25;
 }
 
 // The picture shown when the browser has no WebGL
@@ -598,6 +598,7 @@
 .fieldReadout {
     font-size: 0.8rem;
     color: var(--accent-2);
+    white-space: nowrap;
 }
 
 // A readout is a button: a click swaps it for a box to type the number into
@@ -947,14 +948,14 @@ button.fieldReadout {
     padding: 18px;
 }
 
-// ---------- Chosen layout: layers panel ----------
-.layers {
-    width: 196px;
+// ---------- Chosen layout: view settings panel (layers, camera, starfield) ----------
+.viewPanel {
+    width: 224px;
     padding: 0;
     font-size: 0.82rem;
 }
 
-.layersHead {
+.viewPanelHead {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1022,7 +1023,7 @@ button.fieldReadout {
     }
 }
 
-.layersView {
+.viewPanelView {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -1031,7 +1032,24 @@ button.fieldReadout {
 }
 
 // Folded away: the view buttons sit straight under the heading
-.layersHead + .layersView {
+// Starfield strength
+.skySlider {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+
+    input {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+        accent-color: var(--accent-2);
+    }
+}
+
+.viewPanelHead + .viewPanelView {
     border-top: 1px dashed var(--border-loud);
 }
 
@@ -1048,7 +1066,7 @@ button.fieldReadout {
         position: absolute;
         inset: 0;
         background: var(--starfield) 0 0 / var(--starfield-size);
-        opacity: 0.4;
+        opacity: var(--sky, 0.25);
         pointer-events: none;
     }
 }
@@ -1114,6 +1132,8 @@ button.fieldReadout {
 
     svg {
         display: block;
+        // The wheel and a pinch zoom the diagram, a drag slides it
+        touch-action: none;
     }
 }
 
@@ -1175,6 +1195,13 @@ button.fieldReadout {
         fill: var(--map-nav);
         opacity: 1;
     }
+}
+
+// Play or pause the orbits: bottom right, clear of the legend
+.sysMotion {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
 }
 
 .sysLegend {
@@ -1279,6 +1306,12 @@ button.fieldReadout {
         pointer-events: auto;
     }
 
+    .sysMotion {
+        top: 8px;
+        right: 8px;
+        bottom: auto;
+    }
+
     // Along the bottom edge, clear of the "+ add a planet" label at the top of the rings
     .sysLegend {
         top: auto;
@@ -1299,7 +1332,7 @@ button.fieldReadout {
         }
     }
 
-    .layers {
+    .viewPanel {
         width: 176px;
     }
 }
@@ -1321,12 +1354,12 @@ button.fieldReadout {
     }
 
     // Under the row of buttons, at the right: a short, scrolling list
-    .cLeft > .layers {
+    .cLeft > .viewPanel {
         align-self: flex-end;
         width: 196px;
         flex: 0 1 auto;
         min-height: 60px;
-        max-height: 42vh;
+        max-height: 52vh;
         overflow-y: auto;
 
         .layerList {
