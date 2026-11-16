@@ -5,11 +5,11 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { LANDMARK_CATEGORIES, OCTS, REGIONS, regionAt, regionLabel } from './data';
-import type { ApiPlace, RegionKey } from './data';
+import { OCTS, REGIONS, regionAt, regionLabel, starOf } from './data';
+import type { ApiPlace, Body, Place, RegionKey } from './data';
 import GalaxyScene from './GalaxyScene';
 import type { Layers } from './GalaxyScene';
-import { CreateFlow, SelectionDetail, placeTitle } from './parts';
+import { BodyIcon, CreateFlow, LandmarkIcon, SelectionDetail, placeTitle } from './parts';
 import SystemView from './SystemView';
 import { useGalaxyStore } from './store';
 import type { Store } from './store';
@@ -79,6 +79,33 @@ export function LayersPanel({ store, startOpen = true }: { store: Store; startOp
     );
 }
 
+/** One search result: a place, or a body inside one. */
+interface Hit {
+    p: Place;
+    body: Body | null;
+    label: string;
+    sub: string;
+    /** Key of HIT_GROUPS. */
+    group: string;
+}
+
+// The order results are listed in, each under its heading
+const HIT_GROUPS: [key: string, title: string][] = [
+    ['system', 'Systems'],
+    ['planet', 'Planets'],
+    ['moon', 'Moons'],
+    ['station', 'Stations'],
+    ['cluster', 'Clusters'],
+    ['nebula', 'Nebulae'],
+    ['landmark', 'Landmarks'],
+];
+
+function HitIcon({ hit }: { hit: Hit }) {
+    if (hit.body) return <BodyIcon body={hit.body} />;
+    const star = starOf(hit.p);
+    return hit.p.kind === 'system' && star ? <BodyIcon body={star} /> : <LandmarkIcon category={hit.p.category} />;
+}
+
 export default function MapApp({ places }: { places: ApiPlace[] }) {
     const store = useGalaxyStore(places);
     const [query, setQuery] = useState('');
@@ -95,14 +122,16 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
     }, []);
 
     const q = query.trim().toLowerCase();
-    const hits = q
+    const placeHit = (p: Place): Hit => ({ p, body: null, label: placeTitle(p), sub: regionLabel(p), group: p.kind === 'system' ? 'system' : (p.category ?? 'landmark') });
+    const found: Hit[] = q
         ? store.places.flatMap((p) => [
-              ...(placeTitle(p).toLowerCase().includes(q) ? [{ p, bodyId: null as number | null, label: placeTitle(p), sub: regionLabel(p) }] : []),
-              ...p.bodies.filter((b) => b.kind !== 'star' && b.name.toLowerCase().includes(q)).map((b) => ({ p, bodyId: b.id as number | null, label: b.name, sub: `in ${placeTitle(p)}` })),
+              ...(placeTitle(p).toLowerCase().includes(q) ? [placeHit(p)] : []),
+              ...p.bodies.filter((b) => b.kind !== 'star' && b.name.toLowerCase().includes(q)).map((b) => ({ p, body: b, label: b.name, sub: `in ${placeTitle(p)}`, group: b.kind })),
           ])
         : region
-          ? store.places.filter((p) => (p.precision === 'region' ? p.regionHint === region : regionAt(p.pos) === region)).map((p) => ({ p, bodyId: null as number | null, label: placeTitle(p), sub: p.kind === 'landmark' ? (LANDMARK_CATEGORIES[p.category ?? ''] ?? 'Landmark') : 'System' }))
+          ? store.places.filter((p) => (p.precision === 'region' ? p.regionHint === region : regionAt(p.pos) === region)).map(placeHit)
           : [];
+    const groups = HIT_GROUPS.map(([key, title]) => ({ title, hits: found.filter((h) => h.group === key) })).filter((g) => g.hits.length > 0);
     const place = store.selPlace;
     const inSystem = store.level === 'system' && place?.kind === 'system';
 
@@ -143,17 +172,25 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                                 ))}
                             </div>
                             {(q || region) && (
-                                <ul className={styles.tree}>
-                                    {hits.length === 0 && <li className={styles.muted}>Nothing there yet.</li>}
-                                    {hits.map((h, i) => (
-                                        <li key={i}>
-                                            <button type='button' className={styles.treeRow} onClick={() => ((h.bodyId ? store.openSystem(h.p.id, h.bodyId) : store.select(h.p.id)), setQuery(''), setRegion(null))}>
-                                                {h.label}
-                                                <span className={styles.muted}>{h.sub}</span>
-                                            </button>
-                                        </li>
+                                <div className={styles.hits}>
+                                    {found.length === 0 && <p className={styles.muted}>Nothing there yet.</p>}
+                                    {groups.map((g) => (
+                                        <section key={g.title}>
+                                            <h4 className='pixel-label'>{g.title}</h4>
+                                            <ul className={styles.tree}>
+                                                {g.hits.map((h) => (
+                                                    <li key={`${h.p.id}-${h.body?.id ?? 0}`}>
+                                                        <button type='button' className={styles.treeRow} onClick={() => ((h.body ? store.openSystem(h.p.id, h.body.id) : store.select(h.p.id)), setQuery(''), setRegion(null))}>
+                                                            <HitIcon hit={h} />
+                                                            {h.label}
+                                                            <span className={styles.muted}>{h.sub}</span>
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </section>
                                     ))}
-                                </ul>
+                                </div>
                             )}
                         </div>
                         {/* Folds itself away when the selection changes, so it never sits over the sheet */}
@@ -164,23 +201,24 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                                 <SelectionDetail store={store} />
                             </aside>
                         )}
+                        {/* Under the open place, else under the search box: the same plain button the system view adds with */}
+                        {!store.placing &&
+                            (store.user ? (
+                                <button type='button' className={cx(styles.btnQuiet, styles.cAdd)} onClick={() => setCreating(true)}>+ System or landmark</button>
+                            ) : (
+                                <Link href='/login' className={cx(styles.btnQuiet, styles.cAdd)}>Sign in to add to the map</Link>
+                            ))}
                     </div>
                     {narrow === false && (
                         <div className={styles.cRight}>
                             <LayersPanel store={store} />
                         </div>
                     )}
-                    {/* On a phone the open sheet takes the corner the button sits in */}
-                    {narrow && place ? null : store.user ? (
-                        <button type='button' className={styles.cFab} onClick={() => setCreating(true)} aria-label='Add to the map'>+</button>
-                    ) : (
-                        <Link href='/login' className={styles.cSignIn}>Sign in to add to the map</Link>
-                    )}
                 </>
             )}
             {inSystem && place && <SystemView store={store} place={place} onAdd={() => setCreating(true)} />}
             {creating && (
-                <div className={cx(styles.cModalWrap, store.placing && styles.tucked)}>
+                <div className={cx(styles.cModalWrap, store.placing && styles.tucked)} onMouseDown={(e) => e.target === e.currentTarget && !store.placing && setCreating(false)}>
                     <div className={cx('pixel-panel', styles.cModal)}>
                         <CreateFlow store={store} onDone={() => setCreating(false)} />
                     </div>

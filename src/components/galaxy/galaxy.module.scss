@@ -375,8 +375,15 @@
     }
 }
 
+.tagRow {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
 .untag {
-    margin-left: 6px;
+    flex: none;
     padding: 0 5px;
     border: 0;
     background: none;
@@ -767,20 +774,30 @@
     z-index: 3;
 }
 
-.cFab {
-    position: absolute;
-    right: 20px;
-    bottom: 64px;
-    width: 56px;
-    height: 56px;
-    border: var(--px) solid var(--border-loud);
-    border-radius: 50%;
-    background: var(--accent-2);
-    color: #111;
-    font: 1.8rem var(--font-display);
-    cursor: pointer;
-    box-shadow: 0 4px 14px var(--shadow);
-    z-index: 4;
+
+.cAdd {
+    align-self: flex-start;
+    flex: none;
+    text-decoration: none;
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.hits {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    h4 {
+        margin: 0;
+        padding: 2px 8px;
+        color: var(--text-muted);
+        border-bottom: 1px dashed var(--border);
+    }
+
+    p {
+        margin: 0;
+        padding: 0 8px;
+    }
 }
 
 .cModalWrap {
@@ -1161,18 +1178,7 @@
     }
 }
 
-// ---------- Signed out, and failures ----------
-.cSignIn {
-    position: absolute;
-    right: 20px;
-    bottom: 64px;
-    padding: 6px 12px;
-    border: var(--px) solid var(--border-loud);
-    background: var(--bg);
-    color: var(--text);
-    font: 0.8rem var(--font-display);
-    z-index: 4;
-}
+// ---------- Failures ----------
 
 .toast {
     position: absolute;

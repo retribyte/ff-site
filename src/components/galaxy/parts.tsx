@@ -253,19 +253,23 @@ export function Travelogue({ store, place, body }: { store: Store; place: Place;
                 <ol>
                     {rows.map(({ tag, via }) => (
                         <li key={tag.id}>
-                            {tag.episode ? (
-                                <Link href={`/archives/${tag.episode.seasonSlug}/${tag.episode.slug}`}>
-                                    {tag.episode.seasonTitle} episode {tag.episode.episode_no}, {tag.episode.title}
-                                </Link>
-                            ) : (
-                                <span className={styles.muted}>{tag.episodeSlug}</span>
-                            )}
-                            {via && <span className={styles.muted}> on {via}</span>}
-                            {user && (user.id === tag.creatorId || store.canEdit(place)) && (
-                                <button type='button' className={styles.untag} title='Remove from the travelogue' aria-label={`Remove ${tag.episode?.title ?? tag.episodeSlug} from the travelogue`} onClick={() => store.untagEpisode(place.id, tag.id)}>
-                                    ×
-                                </button>
-                            )}
+                            <div className={styles.tagRow}>
+                                <span>
+                                    {tag.episode ? (
+                                        <Link href={`/archives/${tag.episode.seasonSlug}/${tag.episode.slug}`}>
+                                            {tag.episode.seasonTitle} episode {tag.episode.episode_no}, {tag.episode.title}
+                                        </Link>
+                                    ) : (
+                                        <span className={styles.muted}>{tag.episodeSlug}</span>
+                                    )}
+                                    {via && <span className={styles.muted}> on {via}</span>}
+                                </span>
+                                {user && (user.id === tag.creatorId || store.canEdit(place)) && (
+                                    <button type='button' className={styles.untag} title='Remove from the travelogue' aria-label={`Remove ${tag.episode?.title ?? tag.episodeSlug} from the travelogue`} onClick={() => store.untagEpisode(place.id, tag.id)}>
+                                        ×
+                                    </button>
+                                )}
+                            </div>
                         </li>
                     ))}
                 </ol>
@@ -354,6 +358,25 @@ export function BodyIcon({ body, size = 16 }: { body: Body; size?: number }) {
             )}
             {body.kind === 'moon' && <path d='M10.5 1.8a6.4 6.4 0 1 0 0 12.4a5 5 0 1 1 0-12.4z' fill={c} />}
             {body.kind === 'station' && <path d='M8 1.5l6.5 6.5L8 14.5 1.5 8z M8 5.5L5.5 8 8 10.5 10.5 8z' fill={c} fillRule='evenodd' />}
+        </svg>
+    );
+}
+
+/** A landmark by its category: station, star cluster, nebula, or a plain marker. */
+export function LandmarkIcon({ category, size = 16 }: { category?: string; size?: number }) {
+    const c = '#7fd3e8';
+    return (
+        <svg className={styles.bodyIcon} width={size} height={size} viewBox='0 0 16 16' aria-hidden>
+            {category === 'station' && <path d='M8 1.5l6.5 6.5L8 14.5 1.5 8z M8 5.5L5.5 8 8 10.5 10.5 8z' fill={c} fillRule='evenodd' />}
+            {category === 'cluster' && [[8, 8, 2.4], [3.6, 5.2, 1.5], [12.2, 4.6, 1.3], [4.6, 11.8, 1.3], [12, 11.6, 1.6], [8, 2.6, 1]].map(([x, y, r]) => <circle key={`${x}-${y}`} cx={x} cy={y} r={r} fill={c} />)}
+            {category === 'nebula' && (
+                <>
+                    <circle cx='6' cy='9' r='4.4' fill={c} opacity='0.55' />
+                    <circle cx='10.4' cy='6.6' r='3.8' fill={c} opacity='0.55' />
+                    <circle cx='10' cy='10.6' r='2.8' fill={c} opacity='0.55' />
+                </>
+            )}
+            {category !== 'station' && category !== 'cluster' && category !== 'nebula' && <path d='M8 2l6 6-6 6-6-6z' fill={c} />}
         </svg>
     );
 }
