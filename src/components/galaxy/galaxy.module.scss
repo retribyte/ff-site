@@ -1104,6 +1104,17 @@
         pointer-events: auto;
     }
 
+    // Along the bottom edge, clear of the "+ add a planet" label at the top of the rings
+    .sysLegend {
+        top: auto;
+        left: 8px;
+        right: 8px;
+        bottom: 4px;
+        justify-content: center;
+        gap: 2px 10px;
+        font-size: 0.64rem;
+    }
+
     .sysCard {
         flex: none;
         overflow: visible;
@@ -1132,6 +1143,18 @@
 
     .cRight {
         top: 100px;
+    }
+
+    // Under the search box, at the right: a small button that opens into a short, scrolling list
+    .cLeft > .layers {
+        align-self: flex-end;
+        width: auto;
+        min-width: 110px;
+        max-width: 200px;
+        flex: 0 1 auto;
+        min-height: 30px;
+        max-height: 42vh;
+        overflow-y: auto;
     }
 }
 

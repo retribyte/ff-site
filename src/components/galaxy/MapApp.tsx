@@ -150,7 +150,8 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                                 </ul>
                             )}
                         </div>
-                        {narrow && <LayersPanel store={store} startOpen={false} />}
+                        {/* Folds itself away when the selection changes, so it never sits over the sheet */}
+                        {narrow && !store.placing && <LayersPanel key={place?.id ?? 0} store={store} startOpen={false} />}
                         {place && !store.placing && (
                             <aside className={cx('pixel-panel', styles.cSheet)}>
                                 <button type='button' className={styles.close} onClick={() => store.select(null)} aria-label='Close'>x</button>
@@ -163,7 +164,8 @@ export default function MapApp({ places }: { places: ApiPlace[] }) {
                             <LayersPanel store={store} />
                         </div>
                     )}
-                    {store.user ? (
+                    {/* On a phone the open sheet takes the corner the button sits in */}
+                    {narrow && place ? null : store.user ? (
                         <button type='button' className={styles.cFab} onClick={() => setCreating(true)} aria-label='Add to the map'>+</button>
                     ) : (
                         <Link href='/login' className={styles.cSignIn}>Sign in to add to the map</Link>
