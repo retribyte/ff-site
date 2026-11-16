@@ -250,7 +250,7 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                                 <p className='pixel-label'>{KIND_LABEL[body.kind]}{body.kind !== 'star' && ` ${designation(place, body)}`}</p>
                             </div>
                         </header>
-                        {!(editing && mine) && <Writeup note={body.note} slug={body.slug} />}
+                        {!(editing && mine) && <Writeup of={body} />}
                         {editing && mine ? (
                           <>
                             <TextFields key={body.id} store={store} place={place} body={body} />
@@ -276,7 +276,7 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                                 <p className='pixel-label'>{place.placeholder ? 'System, star not named yet' : 'System'}</p>
                             </div>
                         </header>
-                        {editing && mine ? <TextFields key={place.id} store={store} place={place} body={null} /> : <Writeup note={place.note} slug={place.slug} />}
+                        {editing && mine ? <TextFields key={place.id} store={store} place={place} body={null} /> : <Writeup of={place} />}
                         {place.placeholder && mine && !editing && <RenameRow store={store} place={place} />}
                         <div className={styles.telemetry}>
                             <Row label='Region' value={regionLabel(place)} />

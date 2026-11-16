@@ -161,12 +161,21 @@ export function BodyFields({ kind, draft, onChange, starType }: { kind: BodyKind
 }
 
 // ---------- Detail blocks ----------
-/** A place's or body's description, with the link to its wiki article when it has a slug. */
-export function Writeup({ note, slug }: { note?: string; slug?: string }) {
+/** A place's or body's description, then what the wiki has on it: picture, opening paragraph and the link to the article. */
+export function Writeup({ of }: { of: Place | Body }) {
+    const wiki = of.wiki;
     return (
         <>
-            {note && <RichText html={note} />}
-            {slug && <WikiLink slug={slug} />}
+            {of.note && <RichText html={of.note} />}
+            {wiki && (
+                <div className={styles.wiki}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    {wiki.image && <img src={wiki.image} alt='' loading='lazy' />}
+                    {wiki.intro && <p>{wiki.intro}</p>}
+                    {wiki.faction && <p><span className='pixel-label'>Faction</span> {wiki.faction}</p>}
+                    <WikiLink slug={of.slug ?? ''} page={wiki.page} />
+                </div>
+            )}
         </>
     );
 }
@@ -472,7 +481,7 @@ export function SelectionDetail({ store }: { store: Store }) {
                             <p className='pixel-label'>{KIND_LABEL[body.kind]} in {place.placeholder ? 'an unnamed system' : place.name}</p>
                         </div>
                     </header>
-                    {!(editing && mine) && <Writeup note={body.note} slug={body.slug} />}
+                    {!(editing && mine) && <Writeup of={body} />}
                     {editing && mine ? (
                       <>
                         <TextFields key={body.id} store={store} place={place} body={body} />
@@ -492,7 +501,7 @@ export function SelectionDetail({ store }: { store: Store }) {
             ) : (
                 <>
                     <PlaceHeader place={place} />
-                    {editing && mine ? <TextFields key={place.id} store={store} place={place} body={null} /> : <Writeup note={place.note} slug={place.slug} />}
+                    {editing && mine ? <TextFields key={place.id} store={store} place={place} body={null} /> : <Writeup of={place} />}
                     <PlaceFacts place={place} />
                     {place.placeholder && mine && !editing && <RenameRow store={store} place={place} />}
                     {place.kind === 'system' && <BodyTree place={place} selBodyId={null} onPick={(id) => store.openSystem(place.id, id)} />}

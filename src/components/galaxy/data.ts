@@ -4,6 +4,9 @@
 // The key lists (STAR_TYPES, COMPOSITIONS, LANDMARK_CATEGORIES) must match ff-server's
 // src/galaxy/galaxy.validation.ts, which refuses keys it does not know.
 
+import { decodeEntities } from '@/lib/html';
+import type { WikiData, WikiValue } from '@/lib/types';
+
 export type Vec3 = [number, number, number];
 export type RegionKey = 'gu' | 'ade' | 'lr' | 'rim';
 export type PlaceKind = 'system' | 'landmark';
@@ -36,6 +39,7 @@ export interface Body {
     note?: string;
     /** The wiki's slug for the same thing. */
     slug?: string;
+    wiki?: WikiInfo;
     travelogue: TravelTag[];
 }
 
@@ -54,11 +58,38 @@ export interface Place {
     note?: string;
     owner: { id: number; username: string };
     slug?: string;
+    wiki?: WikiInfo;
     bodies: Body[];
     travelogue: TravelTag[];
 }
 
 // ---------- ff-server's shapes (GET /galaxy/places) ----------
+/** What the wiki says about the same slug (ff-server's cached row), ready to show. */
+export interface WikiInfo {
+    /** The article's title. */
+    page: string;
+    /** Address of its picture, at card width. */
+    image?: string;
+    /** The article's first paragraph. */
+    intro?: string;
+    faction?: string;
+}
+
+function wikiInfo(wiki: WikiData | null | undefined): WikiInfo | undefined {
+    if (!wiki || typeof wiki.page_name !== 'string') return undefined;
+    const text = (value: WikiValue | undefined) => {
+        const s = decodeEntities(Array.isArray(value) ? value.join(', ') : typeof value === 'string' ? value : '').trim();
+        return s || undefined;
+    };
+    const image = text(wiki.image_url);
+    return {
+        page: decodeEntities(wiki.page_name),
+        image: image?.startsWith('https://') ? image : undefined,
+        intro: text(wiki.intro)?.split(/\n+/)[0],
+        faction: text(wiki.faction),
+    };
+}
+
 export interface ApiBody {
     id: number;
     parentId: number | null;
@@ -70,6 +101,7 @@ export interface ApiBody {
     orbit: number | null;
     color: string | null;
     description: string | null;
+    wiki?: WikiData | null;
 }
 
 export interface ApiPlace {
@@ -84,6 +116,7 @@ export interface ApiPlace {
     category: string | null;
     description: string | null;
     creator: { id: number; username: string; icon: string | null };
+    wiki?: WikiData | null;
     bodies: ApiBody[];
     travelogue: (TravelTag & { bodyId: number | null })[];
 }
@@ -102,6 +135,7 @@ export function fromApi(p: ApiPlace): Place {
         note: p.description ?? undefined,
         owner: { id: p.creator.id, username: p.creator.username },
         slug: p.slug ?? undefined,
+        wiki: wikiInfo(p.wiki),
         bodies: p.bodies.map((b) => ({
             id: b.id,
             kind: b.kind.toLowerCase() as BodyKind,
@@ -114,6 +148,7 @@ export function fromApi(p: ApiPlace): Place {
             color: b.color ?? undefined,
             note: b.description ?? undefined,
             slug: b.slug ?? undefined,
+            wiki: wikiInfo(b.wiki),
             travelogue: tagsOf(b.id),
         })),
         travelogue: tagsOf(null),
