@@ -78,7 +78,7 @@ function buildGalaxy(): THREE.Group {
             const t = (n / 260) * tMax;
             const r = R0 * Math.exp(b * t);
             const w = (2.2 + r / 12) * (major ? 1 : 0.75);
-            blob(r * Math.cos(off + t), r * Math.sin(off + t), w, '150,185,255', (major ? 0.05 : 0.032) * (1 - (0.6 * n) / 260));
+            blob(r * Math.cos(off + t), r * Math.sin(off + t), w, '150,185,255', (major ? 0.03 : 0.02) * (1 - (0.6 * n) / 260));
         }
     }
     // Bar along +y, then the bulge.
@@ -98,6 +98,13 @@ function buildGalaxy(): THREE.Group {
     disc.position.z = -0.12;
     disc.renderOrder = -2;
     group.add(disc);
+    // The arms, bar and bulge again as round, glowing bodies over the painted disc, so the galaxy has depth when tilted.
+    for (let arm = 0; arm < 4; arm++) group.add(glowMesh(armGeometry(Math.PI / 2 + (arm * Math.PI) / 2, arm % 2 === 0), 0x96b9ff, 0.32));
+    const bar = glowMesh(solidSphere(), 0xffd6a0, 0.4);
+    bar.scale.set(2.6, 12, 1.8);
+    const bulge = glowMesh(solidSphere(), 0xffe2b4, 0.7);
+    bulge.scale.set(5.5, 5.5, 3.4);
+    group.add(bar, bulge);
     // A glow that still shows edge-on, where the flat disc vanishes.
     const gc = document.createElement('canvas');
     gc.width = gc.height = 128;
@@ -112,6 +119,97 @@ function buildGalaxy(): THREE.Group {
     glow.renderOrder = -1;
     group.add(glow);
     return group;
+}
+
+/**
+ * One spiral arm as a tube along the same log spiral the disc is painted with: it
+ * widens outward, is about half as thick as it is wide, and closes to a point at both ends.
+ */
+function armGeometry(off: number, major: boolean): THREE.BufferGeometry {
+    const b = Math.tan((12 * Math.PI) / 180);
+    const R0 = 11;
+    const tMax = Math.log((DISK_R * 0.94) / R0) / b;
+    const STEPS = 150;
+    const SIDES = 14;
+    const position: number[] = [];
+    const normal: number[] = [];
+    const fade: number[] = [];
+    const index: number[] = [];
+    for (let n = 0; n <= STEPS; n++) {
+        const u = n / STEPS;
+        const t = u * tMax;
+        const r = R0 * Math.exp(b * t);
+        const [cx, cy] = [r * Math.cos(off + t), r * Math.sin(off + t)];
+        // Across the arm: the spiral's tangent turned a quarter
+        const tx = b * Math.cos(off + t) - Math.sin(off + t);
+        const ty = b * Math.sin(off + t) + Math.cos(off + t);
+        const tl = Math.hypot(tx, ty);
+        const [nx, ny] = [ty / tl, -tx / tl];
+        const ends = Math.sin(Math.PI * Math.min(1, u * 6, (1 - u) * 4) * 0.5);
+        const w = (1.5 + r / 16) * (major ? 1 : 0.72) * ends;
+        const h = w * 0.5;
+        for (let m = 0; m < SIDES; m++) {
+            const a = (m / SIDES) * Math.PI * 2;
+            const [ca, sa] = [Math.cos(a), Math.sin(a)];
+            position.push(cx + nx * w * ca, cy + ny * w * ca, h * sa);
+            const nl = Math.hypot(ca / 1, sa * 2);
+            normal.push((nx * ca) / nl, (ny * ca) / nl, (sa * 2) / nl);
+            fade.push((major ? 1 : 0.7) * (1 - 0.55 * u));
+            if (n < STEPS) {
+                const [i0, i1] = [n * SIDES + m, n * SIDES + ((m + 1) % SIDES)];
+                index.push(i0, i0 + SIDES, i1, i1, i0 + SIDES, i1 + SIDES);
+            }
+        }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(position, 3));
+    geo.setAttribute('normal', new THREE.Float32BufferAttribute(normal, 3));
+    geo.setAttribute('fade', new THREE.Float32BufferAttribute(fade, 1));
+    geo.setIndex(index);
+    return geo;
+}
+
+function solidSphere(): THREE.BufferGeometry {
+    const geo = new THREE.SphereGeometry(1, 32, 20);
+    geo.setAttribute('fade', new THREE.Float32BufferAttribute(new Float32Array(geo.attributes.position.count).fill(1), 1));
+    return geo;
+}
+
+/** A body of light: brightest where its surface faces the camera and gone at its outline, so it reads as round with no hard edge. */
+function glowMesh(geo: THREE.BufferGeometry, color: number, opacity: number): THREE.Mesh {
+    const mesh = new THREE.Mesh(
+        geo,
+        new THREE.ShaderMaterial({
+            uniforms: { color: { value: new THREE.Color(color) }, opacity: { value: opacity } },
+            vertexShader: `
+                attribute float fade;
+                varying float vFade;
+                varying vec3 vNormal;
+                varying vec3 vView;
+                void main() {
+                    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+                    vFade = fade;
+                    vNormal = normalize(normalMatrix * normal);
+                    vView = normalize(-mv.xyz);
+                    gl_Position = projectionMatrix * mv;
+                }`,
+            fragmentShader: `
+                uniform vec3 color;
+                uniform float opacity;
+                varying float vFade;
+                varying vec3 vNormal;
+                varying vec3 vView;
+                void main() {
+                    float facing = abs(dot(normalize(vNormal), normalize(vView)));
+                    gl_FragColor = vec4(color, opacity * vFade * facing * facing);
+                }`,
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+        }),
+    );
+    mesh.renderOrder = -1.5;
+    return mesh;
 }
 
 /** A marker on screen this frame: its dot's centre and half-size. */
