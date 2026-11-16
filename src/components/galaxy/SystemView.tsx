@@ -5,13 +5,12 @@
 // system console.
 
 import { useEffect, useRef, useState } from 'react';
-import RichText from '@/components/RichText';
 import {
     COMPOSITIONS, STAR_TYPES, ZONES,
     bodyColor, describeSize, fmtNum, gravityG, habAU, habitability, massEarths, regionLabel, sectorOf, starOf, yearDays, zoneOf,
 } from './data';
 import type { Body, Place } from './data';
-import { BodyFields, BodyIcon, BodyTree, DeleteButton, KIND_LABEL, designation, RenameRow, Travelogue, placeTitle } from './parts';
+import { BodyFields, BodyIcon, BodyTree, DeleteButton, KIND_LABEL, designation, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
 import type { Store } from './store';
 import styles from './galaxy.module.scss';
 
@@ -251,9 +250,12 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                                 <p className='pixel-label'>{KIND_LABEL[body.kind]}{body.kind !== 'star' && ` ${designation(place, body)}`}</p>
                             </div>
                         </header>
-                        {body.note && <RichText html={body.note} />}
+                        {!(editing && mine) && <Writeup note={body.note} slug={body.slug} />}
                         {editing && mine ? (
+                          <>
+                            <TextFields key={body.id} store={store} place={place} body={body} />
                             <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                          </>
                         ) : (
                             <Telemetry place={place} body={body} />
                         )}
@@ -274,8 +276,8 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                                 <p className='pixel-label'>{place.placeholder ? 'System, star not named yet' : 'System'}</p>
                             </div>
                         </header>
-                        {place.note && <RichText html={place.note} />}
-                        {place.placeholder && mine && <RenameRow store={store} place={place} />}
+                        {editing && mine ? <TextFields key={place.id} store={store} place={place} body={null} /> : <Writeup note={place.note} slug={place.slug} />}
+                        {place.placeholder && mine && !editing && <RenameRow store={store} place={place} />}
                         <div className={styles.telemetry}>
                             <Row label='Region' value={regionLabel(place)} />
                             <Row label='Position' value={place.precision === 'region' ? 'not pinned down' : sectorOf(place.pos)} />
@@ -284,6 +286,11 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                             <Row label='Moons and stations' value={Math.max(0, place.bodies.length - planets.length - 1)} />
                             <Row label='Added by' value={place.owner.username} />
                         </div>
+                        {mine && (
+                            <div className={styles.actions}>
+                                <button type='button' className={styles.btn} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
+                            </div>
+                        )}
                         <Travelogue store={store} place={place} body={null} />
                     </section>
                 )}

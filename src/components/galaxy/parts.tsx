@@ -6,12 +6,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import RichText from '@/components/RichText';
+import WikiLink from '@/components/WikiLink';
+import { decodeEntities } from '@/lib/html';
+import { isValidSlug } from '@/lib/slug';
 import {
     COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_RANGE, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
     bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, randomPointIn, regionAt, regionLabel, sectorOf, starOf, toT, yearDays, zoneOf,
 } from './data';
 import type { Body, BodyKind, Place, Ref, RegionKey } from './data';
-import type { Store, Where } from './store';
+import type { Store, TextPatch, Where } from './store';
 import styles from './galaxy.module.scss';
 
 const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boolean).join(' ');
@@ -158,6 +161,74 @@ export function BodyFields({ kind, draft, onChange, starType }: { kind: BodyKind
 }
 
 // ---------- Detail blocks ----------
+/** A place's or body's description, with the link to its wiki article when it has a slug. */
+export function Writeup({ note, slug }: { note?: string; slug?: string }) {
+    return (
+        <>
+            {note && <RichText html={note} />}
+            {slug && <WikiLink slug={slug} />}
+        </>
+    );
+}
+
+/** Name, description and wiki slug of a place (`body` null) or of one body. Each field is saved when it is left. */
+export function TextFields({ store, place, body }: { store: Store; place: Place; body: Body | null }) {
+    const of = body ?? place;
+    const saved = {
+        name: (body ? body.unnamed : place.placeholder) ? '' : of.name,
+        description: decodeEntities(of.note ?? ''),
+        slug: of.slug ?? '',
+    };
+    const [draft, setDraft] = useState(saved);
+    const [slugError, setSlugError] = useState(false);
+    // A name may be empty only where the map allows "not named yet": a system and its star
+    const nameless = body ? body.kind === 'star' : place.kind === 'system';
+
+    const send = (fields: TextPatch & { category?: string }) => (body ? store.editBody(place.id, body.id, fields) : store.editPlace(place.id, fields));
+    async function commit(key: 'name' | 'description' | 'slug') {
+        const value = key === 'description' ? draft[key] : draft[key].trim();
+        setSlugError(false);
+        if (value === saved[key]) return setDraft({ ...draft, [key]: value });
+        if (key === 'slug' && value && !isValidSlug(value)) return setSlugError(true);
+        if ((key === 'name' && !value && !nameless) || !(await send({ [key]: value }))) setDraft({ ...draft, [key]: saved[key] });
+    }
+    const field = (key: 'name' | 'slug') => ({
+        value: draft[key],
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) => setDraft({ ...draft, [key]: e.target.value }),
+        onBlur: () => void commit(key),
+        onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && e.currentTarget.blur(),
+        maxLength: 100,
+    });
+
+    return (
+        <div className={styles.textFields}>
+            <label className={styles.field}>
+                <span className='pixel-label'>Name</span>
+                <input {...field('name')} placeholder={nameless ? 'Not named yet' : undefined} />
+            </label>
+            {!body && place.kind === 'landmark' && (
+                <label className={styles.field}>
+                    <span className='pixel-label'>Kind</span>
+                    <select value={place.category ?? 'landmark'} onChange={(e) => void send({ category: e.target.value })}>
+                        {Object.entries(LANDMARK_CATEGORIES).map(([key, label]) => (
+                            <option key={key} value={key}>{label}</option>
+                        ))}
+                    </select>
+                </label>
+            )}
+            <label className={styles.field}>
+                <span className='pixel-label'>Description</span>
+                <textarea value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} onBlur={() => void commit('description')} rows={4} maxLength={5000} />
+            </label>
+            <label className={styles.field}>
+                <span className='pixel-label'>Wiki slug</span>
+                <input {...field('slug')} placeholder='lowercase_with_underscores' spellCheck={false} aria-invalid={slugError} />
+                {slugError && <span className={styles.fieldError}>Lowercase letters and digits, joined by underscores</span>}
+            </label>
+        </div>
+    );
+}
+
 /** The episodes tagged on a place (with those on its bodies) or on one body, in episode order. Members tag more. */
 export function Travelogue({ store, place, body }: { store: Store; place: Place; body: Body | null }) {
     const [adding, setAdding] = useState(false);
@@ -401,9 +472,12 @@ export function SelectionDetail({ store }: { store: Store }) {
                             <p className='pixel-label'>{KIND_LABEL[body.kind]} in {place.placeholder ? 'an unnamed system' : place.name}</p>
                         </div>
                     </header>
-                    {body.note && <RichText html={body.note} />}
+                    {!(editing && mine) && <Writeup note={body.note} slug={body.slug} />}
                     {editing && mine ? (
+                      <>
+                        <TextFields key={body.id} store={store} place={place} body={body} />
                         <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                      </>
                     ) : (
                         <BodyFacts place={place} body={body} />
                     )}
@@ -418,12 +492,13 @@ export function SelectionDetail({ store }: { store: Store }) {
             ) : (
                 <>
                     <PlaceHeader place={place} />
-                    {place.note && <RichText html={place.note} />}
+                    {editing && mine ? <TextFields key={place.id} store={store} place={place} body={null} /> : <Writeup note={place.note} slug={place.slug} />}
                     <PlaceFacts place={place} />
-                    {place.placeholder && mine && <RenameRow store={store} place={place} />}
+                    {place.placeholder && mine && !editing && <RenameRow store={store} place={place} />}
                     {place.kind === 'system' && <BodyTree place={place} selBodyId={null} onPick={(id) => store.openSystem(place.id, id)} />}
                     <div className={styles.actions}>
                         {place.kind === 'system' && <button type='button' className={styles.btn} onClick={() => store.openSystem(place.id)}>Open system</button>}
+                        {mine && <button type='button' className={styles.btnQuiet} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>}
                         {mine && (
                             <button type='button' className={styles.btnQuiet} onClick={() => store.requestPlace((pos) => store.movePlace(place.id, { pos, precision: 'exact' }))}>
                                 {place.precision === 'region' ? 'Pin it down' : 'Move'}

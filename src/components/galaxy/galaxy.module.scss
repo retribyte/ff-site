@@ -473,6 +473,27 @@
     gap: 5px;
 }
 
+.textFields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    textarea {
+        padding: 5px 8px;
+        border: 1px solid var(--border-loud);
+        background: var(--bg);
+        color: var(--text);
+        font: inherit;
+        font-size: 0.85rem;
+        resize: vertical;
+    }
+}
+
+.fieldError {
+    color: var(--gold);
+    font-size: 0.8rem;
+}
+
 .fieldHead {
     display: flex;
     flex-wrap: wrap;

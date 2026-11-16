@@ -63,6 +63,13 @@ const bodyFields = (b: NewBody): Record<string, unknown> => ({
     ...(b.children && { children: b.children.map(bodyFields) }),
 });
 
+/** The written parts of a place or body; "" clears a description or slug. */
+export interface TextPatch {
+    name?: string;
+    description?: string;
+    slug?: string;
+}
+
 type BodyPatch = Partial<Pick<Body, 'type' | 'radiusKm' | 'orbit'>>;
 
 export function useGalaxyStore(initial: ApiPlace[]) {
@@ -193,6 +200,15 @@ export function useGalaxyStore(initial: ApiPlace[]) {
         },
         renamePlace(id: number, name: string) {
             return attempt(async () => putPlace(await call<ApiPlace>('PATCH', `/places/${id}`, { name })));
+        },
+        /** Name, description, wiki slug or (landmarks) category. Answers whether ff-server took it. */
+        async editPlace(id: number, fields: TextPatch & { category?: string }) {
+            return (await attempt(async () => putPlace(await call<ApiPlace>('PATCH', `/places/${id}`, fields)))) !== null;
+        },
+        async editBody(placeId: number, bodyId: number, fields: TextPatch) {
+            if ((await attempt(() => call<ApiBody>('PATCH', `/bodies/${bodyId}`, fields))) === null) return false;
+            await refreshPlace(placeId);
+            return true;
         },
         async removePlace(id: number) {
             if ((await attempt(() => call<void>('DELETE', `/places/${id}`).then(() => true))) === null) return;
