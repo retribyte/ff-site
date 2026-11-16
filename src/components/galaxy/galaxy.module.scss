@@ -94,6 +94,26 @@
     &:hover span {
         opacity: 1;
     }
+
+    // Set each frame by declutter() in GalaxyScene
+    &[data-label='left'] span {
+        left: auto;
+        right: 20px;
+    }
+
+    &[data-label='hidden'] span {
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    &[data-label='hidden']:hover,
+    &[data-label='hidden']:focus-visible {
+        z-index: 2;
+
+        span {
+            visibility: visible;
+        }
+    }
 }
 
 .markerLandmark i {

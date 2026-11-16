@@ -114,6 +114,53 @@ function buildGalaxy(): THREE.Group {
     return group;
 }
 
+/** A marker on screen this frame: its dot's centre and half-size. */
+interface Spot {
+    node: HTMLButtonElement;
+    x: number;
+    y: number;
+    r: number;
+    /** The selection's name is placed before all others. */
+    first: boolean;
+    system: boolean;
+}
+
+const labelWidths = new WeakMap<HTMLElement, { text: string; width: number }>();
+
+/**
+ * Keeps name labels off other places' dots and off each other, so a label never takes a
+ * neighbour's clicks: each name goes right of its dot, else left, else it is hidden
+ * (`data-label`; a hidden name still shows on hover). The selection is placed first,
+ * then systems, then landmarks.
+ */
+function declutter(spots: Spot[]) {
+    spots.sort((a, b) => Number(b.first) - Number(a.first) || Number(b.system) - Number(a.system));
+    const taken: [number, number, number, number][] = [];
+    const free = (x0: number, y0: number, x1: number, y1: number, self: Spot) =>
+        spots.every((s) => s === self || x1 < s.x - s.r || x0 > s.x + s.r || y1 < s.y - s.r || y0 > s.y + s.r) && taken.every((t) => x1 < t[0] || x0 > t[2] || y1 < t[1] || y0 > t[3]);
+    for (const spot of spots) {
+        const span = spot.node.lastElementChild as HTMLElement | null;
+        if (!span || span.tagName !== 'SPAN') continue;
+        let known = labelWidths.get(span);
+        if (!known || known.text !== span.textContent) {
+            known = { text: span.textContent ?? '', width: span.offsetWidth };
+            labelWidths.set(span, known);
+        }
+        const [y0, y1] = [spot.y - 8, spot.y + 8];
+        const right = spot.x + 11;
+        const left = spot.x - 11 - known.width;
+        let side = 'hidden';
+        if (spot.first || free(right, y0, right + known.width, y1, spot)) {
+            side = 'right';
+            taken.push([right, y0, right + known.width, y1]);
+        } else if (free(left, y0, left + known.width, y1, spot)) {
+            side = 'left';
+            taken.push([left, y0, left + known.width, y1]);
+        }
+        if (spot.node.dataset.label !== side) spot.node.dataset.label = side;
+    }
+}
+
 /** Text that lives in the scene (so it sits under the place markers and scales with the map). */
 function textSprite(text: string, color: string, font: string, at: [number, number, number], scale: number): THREE.Sprite {
     const c = document.createElement('canvas');
@@ -216,12 +263,12 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
     const hostRef = useRef<HTMLDivElement>(null);
     const markerRefs = useRef(new Map<number, HTMLButtonElement>());
     const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Record<'galaxy' | 'grid' | 'octants' | 'ring' | 'terr' | 'rim' | 'bearings', THREE.Object3D>; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
-    const live = useRef({ places, placing, onPlace, onSelect });
+    const live = useRef({ places, placing, onPlace, onSelect, selectedId });
     const [readout, setReadout] = useState('');
     const [failed, setFailed] = useState(false);
 
     useEffect(() => {
-        live.current = { places, placing, onPlace, onSelect };
+        live.current = { places, placing, onPlace, onSelect, selectedId };
     });
 
     useEffect(() => {
@@ -341,6 +388,7 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
 
         const v = new THREE.Vector3();
         let raf = 0;
+        const shown: Spot[] = [];
         const frame = () => {
             raf = requestAnimationFrame(frame);
             const t = three.current!;
@@ -387,8 +435,13 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
                 v.set(place.pos[0], place.pos[1], place.pos[2]).project(camera);
                 const hidden = v.z > 1 || Math.abs(v.x) > 1.1 || Math.abs(v.y) > 1.1;
                 node.style.display = hidden ? 'none' : '';
-                node.style.transform = `translate(${((v.x + 1) / 2) * w}px, ${((1 - v.y) / 2) * h}px)`;
+                const x = ((v.x + 1) / 2) * w;
+                const y = ((1 - v.y) / 2) * h;
+                node.style.transform = `translate(${x}px, ${y}px)`;
+                if (!hidden) shown.push({ node, x, y, r: place.precision === 'region' ? 14 : 8, first: place.id === live.current.selectedId, system: place.kind === 'system' });
             }
+            declutter(shown);
+            shown.length = 0;
         };
         frame();
 
