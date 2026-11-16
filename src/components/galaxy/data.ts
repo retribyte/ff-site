@@ -165,6 +165,43 @@ export function fromApi(p: ApiPlace): Place {
     };
 }
 
+// ---------- Addresses ----------
+/** What the page's address says is open: nothing, a place picked on the galaxy, or a system's own view with perhaps a body picked. */
+export interface Address {
+    placeId: number | null;
+    bodyId: number | null;
+    level: 'galaxy' | 'system';
+}
+
+// A slug has no hyphen, so these can never be taken for one
+const placeKey = (p: { id: number; slug?: string | null }) => p.slug ?? `system-${p.id}`;
+const bodyKey = (b: { id: number; slug?: string | null }) => b.slug ?? `body-${b.id}`;
+
+/** The address of what is open: /galaxy, /galaxy?at=rsjeno_base, /galaxy/sol or /galaxy/sol/earth. A thing with no slug goes by its number (system-22, body-51). */
+export function addressUrl(place: Place | null, body: Body | null, level: 'galaxy' | 'system'): string {
+    if (!place) return '/galaxy';
+    if (level === 'system' && place.kind === 'system') return `/galaxy/${placeKey(place)}${body ? `/${bodyKey(body)}` : ''}`;
+    return `/galaxy?at=${placeKey(place)}`;
+}
+
+/** Reads an address back (the path after /galaxy and the `at` of its query); null when it names something that is not on the map. */
+export function readAddress(path: string[], at: string | null, places: { id: number; kind: string; slug?: string | null; bodies: { id: number; slug?: string | null }[] }[]): Address | null {
+    const [placePart, bodyPart, ...rest] = path;
+    if (rest.length > 0) return null;
+    if (!placePart) {
+        if (!at) return { placeId: null, bodyId: null, level: 'galaxy' };
+        const place = places.find((p) => placeKey(p) === at);
+        return place ? { placeId: place.id, bodyId: null, level: 'galaxy' } : null;
+    }
+    const place = places.find((p) => placeKey(p) === placePart);
+    if (!place) return null;
+    // A landmark has no view of its own: it is picked on the galaxy
+    if (place.kind.toLowerCase() !== 'system') return bodyPart ? null : { placeId: place.id, bodyId: null, level: 'galaxy' };
+    const body = bodyPart ? place.bodies.find((b) => bodyKey(b) === bodyPart) : null;
+    if (bodyPart && !body) return null;
+    return { placeId: place.id, bodyId: body?.id ?? null, level: 'system' };
+}
+
 const byOrbit = (a: Body, b: Body) => a.orbit - b.orbit || a.id - b.id;
 
 /**

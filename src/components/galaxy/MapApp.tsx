@@ -6,7 +6,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { OCTS, REGIONS, regionAt, regionLabel, starOf } from './data';
-import type { ApiPlace, Body, Place, RegionKey, Vec3 } from './data';
+import type { Address, ApiPlace, Body, Place, RegionKey, Vec3 } from './data';
 import GalaxyScene from './GalaxyScene';
 import type { Layers } from './GalaxyScene';
 import { BodyIcon, CreateFlow, LandmarkIcon, SelectionDetail, placeTitle } from './parts';
@@ -163,8 +163,8 @@ function HitIcon({ hit }: { hit: Hit }) {
     return hit.p.kind === 'system' && star ? <BodyIcon body={star} /> : <LandmarkIcon category={hit.p.category} />;
 }
 
-export default function MapApp({ places }: { places: ApiPlace[] }) {
-    const store = useGalaxyStore(places);
+export default function MapApp({ places, start }: { places: ApiPlace[]; /** What the page's address says is open. */ start: Address }) {
+    const store = useGalaxyStore(places, start);
     const [query, setQuery] = useState('');
     const [region, setRegion] = useState<RegionKey | null>(null);
     // true = the add wizard is open; a slot = it adds the planet a gap ring stands for

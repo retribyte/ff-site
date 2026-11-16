@@ -5,8 +5,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSession } from '@/components/auth/SessionProvider';
-import { designate, fromApi, loadTerritories } from './data';
-import type { ApiBody, ApiPlace, Body, BodyKind, Place, Precision, RegionKey, Vec3 } from './data';
+import { designate, fromApi, loadTerritories, addressUrl, readAddress } from './data';
+import type { ApiBody, ApiPlace, Body, BodyKind, Place, Precision, RegionKey, Vec3, Address } from './data';
 import type { Layers, ViewMode } from './GalaxyScene';
 import { episodeNumberLabel, seasonOrder } from '@/lib/seasons';
 import type { Season } from '@/lib/types';
@@ -79,12 +79,13 @@ type BodyPatch = Partial<Pick<Body, 'type' | 'radiusKm' | 'orbit' | 'ordinal'>>;
 const VIEW_KEY = 'galaxyView';
 export const DEFAULT_SKY = 0.25;
 
-export function useGalaxyStore(initial: ApiPlace[]) {
+export function useGalaxyStore(initial: ApiPlace[], start: Address) {
     const { user } = useSession();
     const [places, setPlaces] = useState<Place[]>(() => initial.map(fromApi));
-    const [selPlaceId, setSelPlaceId] = useState<number | null>(null);
-    const [selBodyId, setSelBodyId] = useState<number | null>(null);
-    const [level, setLevel] = useState<'galaxy' | 'system'>('galaxy');
+    // What is open starts as the page's address says (`start`) and the address follows it from then on
+    const [selPlaceId, setSelPlaceId] = useState<number | null>(start.placeId);
+    const [selBodyId, setSelBodyId] = useState<number | null>(start.bodyId);
+    const [level, setLevel] = useState<'galaxy' | 'system'>(start.level);
     const [view, setView] = useState<ViewMode>('tilt');
     const [layers, setLayers] = useState<Layers>({ galaxy: true, territories: true, rim: true, grid: true, octants: false, bearings: true, labels: true, transit: false });
     // How strongly the starfield shows behind the map, 0 to 1 (full strength is dizzying to turn in)
@@ -146,6 +147,34 @@ export function useGalaxyStore(initial: ApiPlace[]) {
 
     const selPlace = places.find((p) => p.id === selPlaceId) ?? null;
     const selBody = selPlace?.bodies.find((b) => b.id === selBodyId) ?? null;
+
+    // The address follows what is open. Opening or leaving a system is a step Back can undo;
+    // picking something else on the same level only rewrites the address.
+    const url = addressUrl(selPlace, selBody, level);
+    useEffect(() => {
+        const head = (u: string) => u.split('?')[0].split('/').slice(0, 3).join('/');
+        const now = window.location.pathname + window.location.search;
+        if (url === now) return;
+        if (head(url) === head(now)) window.history.replaceState(null, '', url);
+        else window.history.pushState(null, '', url);
+    }, [url]);
+    // Back and Forward: open what the address they land on says
+    const placesRef = useRef(places);
+    useEffect(() => {
+        placesRef.current = places;
+    });
+    useEffect(() => {
+        const onPop = () => {
+            const path = window.location.pathname.split('/').filter(Boolean).slice(1).map(decodeURIComponent);
+            const to = readAddress(path, new URLSearchParams(window.location.search).get('at'), placesRef.current);
+            if (!to) return;
+            setSelPlaceId(to.placeId);
+            setSelBodyId(to.bodyId);
+            setLevel(to.level);
+        };
+        window.addEventListener('popstate', onPop);
+        return () => window.removeEventListener('popstate', onPop);
+    }, []);
 
     const select = useCallback((placeId: number | null, bodyId: number | null = null) => {
         setSelPlaceId(placeId);

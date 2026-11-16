@@ -912,7 +912,14 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         if (!t || !place) return;
         // Wait out the double-click interval, so the marker holds still for a second click.
         const timer = setTimeout(() => {
-            if (three.current) three.current.goal = new THREE.Vector3(place.pos[0], place.pos[1], 0);
+            const now = three.current;
+            if (!now) return;
+            // Top-down with the whole galaxy in view: the place is already on screen, so the map holds still
+            if (now.top) {
+                const half = (now.camera.position.distanceTo(now.controls.target) / FLAT) * Math.tan((24 * Math.PI) / 180);
+                if (Math.min(half, half * now.camera.aspect) >= DISK_R * 0.9) return;
+            }
+            now.goal = new THREE.Vector3(place.pos[0], place.pos[1], 0);
         }, 420);
         return () => clearTimeout(timer);
         // eslint-disable-next-line react-hooks/exhaustive-deps
