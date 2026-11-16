@@ -1,0 +1,296 @@
+'use client';
+
+// PROTOTYPE. The full-screen system view: a rail (bodies, the system, telemetry
+// for the selection, travelogue) beside a diagram of the whole system, after
+// Space Builder's system console.
+
+import { useEffect, useRef, useState } from 'react';
+import {
+    COMPOSITIONS, STAR_TYPES, ZONES,
+    bodyColor, describeSize, fmtNum, gravityG, habAU, habitability, massEarths, regionLabel, sectorOf, starOf, yearDays, zoneOf,
+} from './data';
+import type { Body, Place } from './data';
+import { BodyFields, BodyIcon, BodyTree, KIND_LABEL, designation, RenameRow, Travelogue, placeTitle } from './parts';
+import type { Store } from './store';
+import styles from './proto.module.scss';
+
+const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boolean).join(' ');
+
+// ---------- Diagram ----------
+// Not to scale, but sizes and distances keep their order of magnitude: both go
+// through a logarithm, as Space Builder's diagram did.
+const LOG_SIZE = 1 / Math.log(1.25);
+const bodyPx = (b: Body) => Math.max(b.kind === 'planet' ? 4 : 2.2, Math.min(26, Math.log(Math.max(b.radiusKm, 1) / 1000) * LOG_SIZE));
+const MOON_GAP = 11;
+
+function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd }: { place: Place; selBodyId: string | null; onSelect: (id: string | null) => void; onEdit: (id: string) => void; onAdd?: () => void }) {
+    const hostRef = useRef<HTMLDivElement>(null);
+    const [box, setBox] = useState({ w: 1000, h: 700 });
+    useEffect(() => {
+        const host = hostRef.current!;
+        const ro = new ResizeObserver(() => setBox({ w: Math.max(320, host.clientWidth), h: Math.max(320, host.clientHeight) }));
+        ro.observe(host);
+        return () => ro.disconnect();
+    }, []);
+
+    const star = starOf(place);
+    const planets = place.bodies.filter((b) => b.kind === 'planet').sort((a, b) => a.orbit - b.orbit);
+    const { w: W, h: Hh } = box;
+    // On a wide screen the panels cover the left edge, so the star sits right of center.
+    const inset = W > 900 ? 400 : 0;
+    const c = { x: inset + (W - inset) / 2, y: Hh / 2 };
+    const starPx = (STAR_TYPES[star?.type ?? '']?.px ?? 24) * 1.25;
+    const maxR = Math.min(W - inset, Hh) / 2 - 40;
+    const kidsOf = (id: string) => place.bodies.filter((b) => b.parentId === id).sort((x, y) => x.orbit - y.orbit);
+    // How much room a planet needs around its own center (its moons' rings included).
+    const reach = (p: Body) => bodyPx(p) + kidsOf(p.id).length * MOON_GAP + 6;
+    const base = starPx + 14;
+    const room = maxR - base - (onAdd ? 34 : 0);
+    const farthest = Math.log((planets[planets.length - 1]?.orbit ?? 1) + 1);
+    const k = Math.min(150, room / Math.max(farthest, 0.2));
+    // Log distance, then pushed outward wherever two planets would overlap.
+    const radii: number[] = [];
+    planets.forEach((p, i) => {
+        const want = base + Math.log(p.orbit + 1) * k;
+        const floor = i === 0 ? base + reach(p) : radii[i - 1] + reach(planets[i - 1]) + reach(p);
+        radii.push(Math.max(want, floor));
+    });
+    const over = radii.length ? (radii[radii.length - 1] - base) / Math.max(room, 1) : 0;
+    const ringR = (i: number) => (over > 1 ? base + (radii[i] - base) / over : radii[i]);
+    const addR = planets.length ? Math.min(maxR, ringR(planets.length - 1) + reach(planets[planets.length - 1]) + 28) : base + 60;
+    // Spread around the star by the golden angle, starting somewhere that differs per system.
+    const hash = (id: string) => Array.from(id).reduce((n, ch) => (n * 31 + ch.charCodeAt(0)) % 3600, 7);
+    const angle = (id: string, index: number) => ((hash(id) % 360) * Math.PI) / 180 + index * 2.39996;
+
+    return (
+        <div ref={hostRef} className={styles.sysDiagram}>
+            <svg viewBox={`0 0 ${W} ${Hh}`} width={W} height={Hh} className={styles.schematic} onClick={() => onSelect(null)} role='img' aria-label={`Diagram of the ${placeTitle(place)}: ${planets.map((p) => p.name).join(', ') || 'no planets yet'}`}>
+                {star && (
+                    <g className={cx(styles.orb, selBodyId === star.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(star.id))} onDoubleClick={() => onEdit(star.id)}>
+                        {star.type === 'black_hole' && <circle cx={c.x} cy={c.y} r={starPx + 10} fill='none' stroke='#f0b44c' strokeWidth='5' opacity='.7' />}
+                        <circle cx={c.x} cy={c.y} r={starPx} fill={bodyColor(star)} className={styles.starGlow} style={{ color: bodyColor(star) }} />
+                        <text x={c.x} y={c.y + starPx + 20} textAnchor='middle' className={styles.starName}>{star.name}</text>
+                    </g>
+                )}
+                {planets.map((p, i) => {
+                    const r = ringR(i);
+                    const a = angle(place.id, i);
+                    const bx = c.x + r * Math.cos(a);
+                    const by = c.y + r * Math.sin(a);
+                    const pr = bodyPx(p);
+                    const zone = star ? zoneOf(p.orbit, star.type) : ZONES[2];
+                    const kids = kidsOf(p.id);
+                    return (
+                        <g key={p.id} className={cx(styles.orb, selBodyId === p.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(p.id))} onDoubleClick={() => onEdit(p.id)}>
+                            <circle cx={c.x} cy={c.y} r={r} className={styles.orbitLine} style={{ stroke: zone.color }} />
+                            <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} />
+                            <circle cx={bx} cy={by} r={pr} fill={bodyColor(p)} />
+                            <circle cx={bx} cy={by} r={pr} className={styles.shade} />
+                            <text x={bx} y={by - pr - 8 - kids.length * MOON_GAP} textAnchor='middle'>{p.name}</text>
+                            {kids.map((m, j) => {
+                                const mr = pr + MOON_GAP * (j + 1);
+                                const ma = angle(p.id, j + 1);
+                                const mx = bx + mr * Math.cos(ma);
+                                const my = by + mr * Math.sin(ma);
+                                const on = selBodyId === m.id;
+                                return (
+                                    <g key={m.id} className={cx(styles.orb, on && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(m.id))} onDoubleClick={(e) => (e.stopPropagation(), onEdit(m.id))}>
+                                        <circle cx={bx} cy={by} r={mr} className={styles.orbitLine} />
+                                        <circle cx={bx} cy={by} r={mr} className={styles.orbitHit} style={{ strokeWidth: MOON_GAP * 0.8 }} />
+                                        {m.kind === 'station' ? (
+                                            <rect x={mx - 3} y={my - 3} width='6' height='6' fill={bodyColor(m)} transform={`rotate(45 ${mx} ${my})`} />
+                                        ) : (
+                                            <circle cx={mx} cy={my} r={Math.min(bodyPx(m), MOON_GAP / 2)} fill={bodyColor(m)} />
+                                        )}
+                                        <text x={bx} y={by + pr + MOON_GAP * kids.length + 14 + j * 13} textAnchor='middle' className={cx(styles.moonName, on && styles.moonNameOn)}>{m.name}</text>
+                                    </g>
+                                );
+                            })}
+                        </g>
+                    );
+                })}
+                {onAdd && (
+                    <g className={styles.addRing} onClick={(e) => (e.stopPropagation(), onAdd())}>
+                        <circle cx={c.x} cy={c.y} r={addR} className={styles.orbitHit} />
+                        <circle cx={c.x} cy={c.y} r={addR} />
+                        <text x={c.x} y={c.y - addR - 7} textAnchor='middle'>+ add a planet</text>
+                    </g>
+                )}
+            </svg>
+            {star && star.type !== 'black_hole' && (
+                <div className={styles.sysLegend}>
+                    {ZONES.map((z) => (
+                        <span key={z.key}><i style={{ background: z.color }} />{z.label}</span>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
+// ---------- Telemetry ----------
+function Row({ label, value }: { label: string; value: React.ReactNode }) {
+    return (
+        <div className={styles.trow}>
+            <span className={styles.tk}>{label}</span>
+            <span className={styles.tleader} aria-hidden />
+            <span className={styles.tv}>{value}</span>
+        </div>
+    );
+}
+
+function Meter({ score }: { score: number }) {
+    const lit = Math.round((score / 100) * 8);
+    return (
+        <div className={styles.trow}>
+            <span className={styles.tk}>Habitability</span>
+            <span className={styles.meter} role='img' aria-label={`Habitability ${score} percent`}>
+                {Array.from({ length: 8 }, (_, i) => (
+                    <i key={i} className={cx(i < lit && (i === 0 ? styles.meterLow : i < 4 ? styles.meterMid : styles.meterHigh))} />
+                ))}
+            </span>
+            <span className={styles.tv}>{score}%</span>
+        </div>
+    );
+}
+
+function Telemetry({ place, body }: { place: Place; body: Body }) {
+    const star = starOf(place);
+    const parent = place.bodies.find((b) => b.id === body.parentId);
+    if (body.kind === 'star') {
+        const type = STAR_TYPES[body.type];
+        const planets = place.bodies.filter((b) => b.kind === 'planet');
+        return (
+            <div className={styles.telemetry}>
+                <Row label='Kind' value={type?.label ?? 'Star'} />
+                {body.type !== 'black_hole' && <Row label='Brightness' value={type.lum >= 0.95 && type.lum <= 1.05 ? 'like the Sun' : `${fmtNum(type.lum)} times the Sun`} />}
+                <Row label='Mass' value={`${fmtNum(type?.mass ?? 1)} Suns`} />
+                {body.type !== 'black_hole' && <Row label='Temperate orbit' value={`about ${fmtNum(habAU(body.type) * 1.1)} AU out`} />}
+                <Row label='Planets' value={planets.length} />
+                <Row label='Moons and stations' value={place.bodies.length - planets.length - 1} />
+            </div>
+        );
+    }
+    const hab = habitability(place, body);
+    return (
+        <div className={styles.telemetry}>
+            <Row label='Type' value={COMPOSITIONS[body.type]?.label ?? 'Unknown'} />
+            <Row label='Size' value={`${describeSize(body.radiusKm)} (${fmtNum(body.radiusKm)} km)`} />
+            <Row label='Orbits' value={`${parent?.name ?? 'nothing'}${body.kind === 'planet' ? ` at ${fmtNum(body.orbit)} AU` : `, ${fmtNum(body.orbit)} km out`}`} />
+            {body.kind !== 'station' && <Row label='Gravity' value={`about ${fmtNum(gravityG(body))} g`} />}
+            {body.kind !== 'station' && <Row label='Mass' value={`${fmtNum(massEarths(body))} Earths`} />}
+            {body.kind === 'planet' && star && (
+                <>
+                    <Row label='Year' value={`${fmtNum(yearDays(body.orbit, star.type))} equinoxes`} />
+                    {star.type !== 'black_hole' && <Row label='Climate' value={`${zoneOf(body.orbit, star.type).label} orbit`} />}
+                </>
+            )}
+            {body.kind !== 'planet' && <Row label='Bodies around it' value={place.bodies.filter((b) => b.parentId === body.id).length} />}
+            {hab !== null && <Meter score={hab} />}
+        </div>
+    );
+}
+
+// ---------- The view ----------
+export default function SystemView({ store, place, onAdd }: { store: Store; place: Place; onAdd: () => void }) {
+    const [editing, setEditing] = useState(false);
+    const body = store.selBody;
+    const star = starOf(place);
+    const mine = place.owner === store.me;
+    const planets = place.bodies.filter((b) => b.kind === 'planet');
+
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && !(e.target as HTMLElement).closest('input, textarea, select')) store.closeSystem();
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    });
+
+    const addPlanet = () => {
+        store.select(place.id, null);
+        onAdd();
+    };
+
+    return (
+        <div className={styles.sys}>
+            <SystemDiagram place={place} selBodyId={body?.id ?? null} onSelect={(id) => (setEditing(false), store.select(place.id, id))} onEdit={(id) => (store.select(place.id, id), setEditing(mine))} onAdd={mine ? addPlanet : undefined} />
+            <aside className={styles.sysPanels}>
+              <div className={cx('pixel-panel', styles.sysCard)}>
+                <nav className={styles.crumbs} aria-label='Where you are'>
+                    <button type='button' onClick={store.closeSystem}>Galaxy</button>
+                    <span aria-hidden>&gt;</span>
+                    {body ? <button type='button' onClick={() => store.select(place.id)}>{placeTitle(place)}</button> : <b>{placeTitle(place)}</b>}
+                    {body && (
+                        <>
+                            <span aria-hidden>&gt;</span>
+                            <b>{body.name}</b>
+                        </>
+                    )}
+                </nav>
+
+                <section className={styles.sysSection}>
+                    <h4 className='pixel-label'>Bodies</h4>
+                    <BodyTree place={place} selBodyId={body?.id ?? null} onPick={(id) => (setEditing(false), store.select(place.id, id))} onOpen={(id) => (store.select(place.id, id), setEditing(mine))} />
+                    {mine && (
+                        <div className={styles.actions}>
+                            <button type='button' className={styles.btnQuiet} onClick={addPlanet}>+ Planet</button>
+                            {body?.kind === 'planet' && <button type='button' className={styles.btnQuiet} onClick={onAdd}>+ Moon or station at {body.name}</button>}
+                        </div>
+                    )}
+                </section>
+              </div>
+
+              <div className={cx('pixel-panel', styles.sysCard)}>
+                {body ? (
+                    <section className={styles.sysSection}>
+                        <header className={styles.detailHead}>
+                            <BodyIcon body={body} size={40} />
+                            <div>
+                                <h3>{body.name}</h3>
+                                <p className='pixel-label'>{KIND_LABEL[body.kind]}{body.kind !== 'star' && ` ${designation(place, body)}`}</p>
+                            </div>
+                        </header>
+                        {body.note && <p>{body.note}</p>}
+                        {body.wikiSlug && <p className={styles.muted}>Description and picture come from the wiki page <span className={styles.mono}>{body.wikiSlug}</span>.</p>}
+                        {editing && mine ? (
+                            <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} style='lineup' onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                        ) : (
+                            <Telemetry place={place} body={body} />
+                        )}
+                        {mine && (
+                            <div className={styles.actions}>
+                                <button type='button' className={styles.btn} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
+                                {body.kind !== 'star' && <button type='button' className={styles.btnQuiet} onClick={() => store.removeBody(place.id, body.id)}>Delete</button>}
+                            </div>
+                        )}
+                        <Travelogue store={store} place={place} body={body} />
+                    </section>
+                ) : (
+                    <section className={styles.sysSection}>
+                        <header className={styles.detailHead}>
+                            <i className={styles.bigDot} style={{ background: star ? bodyColor(star) : '#7fd3e8', borderRadius: '50%' }} />
+                            <div>
+                                <h3>{placeTitle(place)}</h3>
+                                <p className='pixel-label'>{place.placeholder ? 'System, star not named yet' : 'System'}</p>
+                            </div>
+                        </header>
+                        {place.note && <p>{place.note}</p>}
+                        {place.placeholder && mine && <RenameRow store={store} place={place} />}
+                        <div className={styles.telemetry}>
+                            <Row label='Region' value={regionLabel(place)} />
+                            <Row label='Position' value={place.precision === 'region' ? 'not pinned down' : sectorOf(place.pos)} />
+                            <Row label='Star' value={STAR_TYPES[star?.type ?? '']?.label ?? 'none'} />
+                            <Row label='Planets' value={planets.length} />
+                            <Row label='Moons and stations' value={Math.max(0, place.bodies.length - planets.length - 1)} />
+                            <Row label='Added by' value={place.owner} />
+                        </div>
+                        {!mine && <p className={styles.muted}>Only {place.owner} or an admin can change this system.</p>}
+                        <Travelogue store={store} place={place} body={null} />
+                    </section>
+                )}
+              </div>
+            </aside>
+        </div>
+    );
+}
