@@ -27,12 +27,23 @@ const MOON_GAP = 11;
 const GAP_REACH = 11;
 /** Room a belt round the star takes on each side; its band is drawn no wider than twice this. */
 const BELT_REACH = 14;
-/** The lanes of dots a belt is drawn as: where across the band, how far apart the dots, and how fast against the belt's own year. */
+/** The lanes of dots a belt is drawn as: where across the band and how far apart the dots. They hold still (the user's ruling, 2026-11-16): only planets, moons and stations travel. */
 const BELT_LANES = [
-    { at: -0.3, gap: 9, speed: 1.15 },
-    { at: 0, gap: 13, speed: 1 },
-    { at: 0.3, gap: 7, speed: 0.88 },
+    { at: -0.3, gap: 9 },
+    { at: 0, gap: 13 },
+    { at: 0.3, gap: 7 },
 ];
+
+/** How far the temperate band's edges fade, and how far the star's glow reaches past its disc. */
+const HAB_SOFT = 10;
+const HAB_COLOR = '#6fd18a';
+const STAR_GLOW = 30;
+
+/** How many times a second the bodies step along their orbits. */
+const ORBIT_FPS = 15;
+
+/** How long after the last zoom step the orbits start moving again, in milliseconds. */
+const ZOOM_REST_MS = 300;
 
 const MAX_ZOOM = 6;
 /** Seconds the drawing takes over one year of a planet a year of 365 days out; other years go by the square root. */
@@ -53,6 +64,9 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
 
     // Zoom and slide: the drawing scaled by `k` with its corner at (x, y); never smaller than the view nor off it
     const [cam, setCam] = useState({ k: 1, x: 0, y: 0 });
+    // When the zoom last changed: the orbits hold still during a zoom and for a moment after (`ZOOM_REST_MS`),
+    // so the browser has only the zoom's own redraws to do
+    const zoomedAt = useRef(0);
     const boxRef = useRef(box);
     useEffect(() => {
         boxRef.current = box;
@@ -62,29 +76,48 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
         return { k, x: Math.min(0, Math.max(b.w * (1 - k), c.x)), y: Math.min(0, Math.max(b.h * (1 - k), c.y)) };
     };
     /** Zooms by `factor`, keeping the point (px, py) of the view where it is, then slides by (dx, dy). */
-    const zoomAt = (px: number, py: number, factor: number, dx = 0, dy = 0) =>
+    const zoomAt = (px: number, py: number, factor: number, dx = 0, dy = 0) => {
+        if (factor !== 1) zoomedAt.current = performance.now();
         setCam((c) => {
             const k = Math.max(1, Math.min(MAX_ZOOM, c.k * factor));
             const f = k / c.k;
             return fit({ k, x: px - (px - c.x) * f + dx, y: py - (py - c.y) * f + dy });
         });
+    };
     useEffect(() => {
         const svg = svgRef.current!;
-        // Not passive: the wheel zooms the diagram, it must not scroll the page
+        // Not passive: the wheel zooms the diagram, it must not scroll the page. A fast wheel or a touchpad sends
+        // many events between two frames; they are gathered into one zoom step per frame, because every step
+        // makes the browser draw the whole diagram again at a new size.
+        let pending: { px: number; py: number; factor: number } | null = null;
+        let raf = 0;
         const onWheel = (e: WheelEvent) => {
             e.preventDefault();
+            zoomedAt.current = performance.now();
             const r = svg.getBoundingClientRect();
             const factor = Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0015));
             const [px, py] = [e.clientX - r.left, e.clientY - r.top];
-            setCam((c) => {
-                const k = Math.max(1, Math.min(MAX_ZOOM, c.k * factor));
-                const f = k / c.k;
-                const b = boxRef.current;
-                return { k, x: Math.min(0, Math.max(b.w * (1 - k), px - (px - c.x) * f)), y: Math.min(0, Math.max(b.h * (1 - k), py - (py - c.y) * f)) };
+            if (pending) {
+                pending = { px, py, factor: pending.factor * factor };
+                return;
+            }
+            pending = { px, py, factor };
+            raf = requestAnimationFrame(() => {
+                const step = pending!;
+                pending = null;
+                setCam((c) => {
+                    const k = Math.max(1, Math.min(MAX_ZOOM, c.k * step.factor));
+                    const f = k / c.k;
+                    const b = boxRef.current;
+                    return { k, x: Math.min(0, Math.max(b.w * (1 - k), step.px - (step.px - c.x) * f)), y: Math.min(0, Math.max(b.h * (1 - k), step.py - (step.py - c.y) * f)) };
+                });
             });
         };
         svg.addEventListener('wheel', onWheel, { passive: false });
-        return () => svg.removeEventListener('wheel', onWheel);
+        return () => {
+            cancelAnimationFrame(raf);
+            svg.removeEventListener('wheel', onWheel);
+        };
     }, []);
     // A drag slides the zoomed drawing; two fingers pinch it
     const pointers = useRef(new Map<number, { x: number; y: number }>());
@@ -117,15 +150,35 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
         e.stopPropagation();
     };
 
-    // The orbits' clock, in seconds; it only runs while the bodies are moving, so a pause leaves them where they are
-    const [time, setTime] = useState(0);
+    // The orbits' clock, in seconds; it only runs while the bodies are moving, so a pause leaves them where they are.
+    // It is not state: each tick writes the moving parts' `transform` attribute straight to the page (`movers`), so
+    // React does not draw the diagram again sixty times a second. Plain SVG attributes on purpose: with CSS
+    // transforms and `will-change` the browser makes each moving part a layer, as large as what it holds times the
+    // zoom and drawn again at every zoom step; that ran LibreWolf to 28 GB and froze the machine (2026-11-16).
+    const clock = useRef(0);
+    const movers = useRef(new Map<string, { node: SVGGElement | SVGCircleElement; at: (time: number) => string }>());
+    /** Marks a part that travels: `at` gives its `transform` at a time on the clock. Spread onto the element. */
+    const mover = (key: string, at: (time: number) => string) => ({
+        ref: (node: SVGGElement | SVGCircleElement | null) => {
+            if (node) movers.current.set(key, { node, at });
+            else movers.current.delete(key);
+        },
+        transform: at(clock.current),
+    });
     useEffect(() => {
         if (!moving) return;
         let last = performance.now();
         let raf = requestAnimationFrame(function step(now) {
-            setTime((t) => t + Math.min(0.1, (now - last) / 5000));
-            last = now;
             raf = requestAnimationFrame(step);
+            // Every move paints the diagram again, so the bodies step a few times a second, not at the screen's rate (the user's ruling, 2026-11-16: the orbits need no high frame rate)
+            if (now - last < 1000 / ORBIT_FPS) return;
+            if (now - zoomedAt.current < ZOOM_REST_MS) {
+                last = now;
+                return;
+            }
+            clock.current += Math.min(0.1, (now - last) / 5000);
+            last = now;
+            for (const { node, at } of movers.current.values()) node.setAttribute('transform', at(clock.current));
         });
         return () => cancelAnimationFrame(raf);
     }, [moving]);
@@ -187,9 +240,14 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
     // Spread around the star by the golden angle, starting somewhere that differs per system.
     const angle = (id: number, index: number) => (((id * 137) % 360) * Math.PI) / 180 + index * 2.39996;
     // Where each is now: counterclockwise, the nearer the faster (Kepler's periods, with the square root taken so the far ones still move)
-    const turned = (seconds: number) => (-time * 2 * Math.PI) / seconds;
-    const planetAngle = (index: number) => angle(place.id, index) + turned(YEAR_SECONDS * Math.sqrt(yearDays(planets[index].orbit, star?.type ?? 'sunlike') / 365.25));
-    const moonAngle = (planet: Body, m: Body, j: number) => angle(planet.id, j + 1) + turned(Math.max(3, Math.min(24, MONTH_SECONDS * Math.sqrt(m.orbit / 384400))));
+    const turned = (time: number, seconds: number) => (-time * 2 * Math.PI) / seconds;
+    /** The `transform` that carries a part round (cx, cy) at radius r, once in `seconds`, starting from `from`. */
+    const round = (cx: number, cy: number, r: number, from: number, seconds: number) => (time: number) => {
+        const a = from + turned(time, seconds);
+        return `translate(${(cx + r * Math.cos(a)).toFixed(2)} ${(cy + r * Math.sin(a)).toFixed(2)})`;
+    };
+    const planetYear = (index: number) => YEAR_SECONDS * Math.sqrt(yearDays(planets[index].orbit, star?.type ?? 'sunlike') / 365.25);
+    const moonMonth = (m: Body) => Math.max(3, Math.min(24, MONTH_SECONDS * Math.sqrt(m.orbit / 384400)));
 
     return (
         <div ref={hostRef} className={styles.sysDiagram}>
@@ -209,11 +267,30 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                 aria-label={`Diagram of the ${placeTitle(place)}: ${planets.map((p) => p.name).join(', ') || 'no planets yet'}`}
             >
               <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`}>
-                {hab && <circle cx={c.x} cy={c.y} r={(hab[0] + hab[1]) / 2} strokeWidth={hab[1] - hab[0]} className={styles.habZone} />}
+                <defs>
+                    {/* Soft edges by gradient, not by a blur filter: a filter is worked out again on every frame the orbits move, over an area that grows with the zoom */}
+                    {hab && (
+                        <radialGradient id='galaxy-hab-zone' gradientUnits='userSpaceOnUse' cx={c.x} cy={c.y} r={hab[1] + HAB_SOFT}>
+                            <stop offset={Math.max(0, hab[0] - HAB_SOFT) / (hab[1] + HAB_SOFT)} stopColor={HAB_COLOR} stopOpacity='0' />
+                            <stop offset={(hab[0] + HAB_SOFT) / (hab[1] + HAB_SOFT)} stopColor={HAB_COLOR} stopOpacity='1' />
+                            <stop offset={Math.max(hab[0] + HAB_SOFT, hab[1] - HAB_SOFT) / (hab[1] + HAB_SOFT)} stopColor={HAB_COLOR} stopOpacity='1' />
+                            <stop offset='1' stopColor={HAB_COLOR} stopOpacity='0' />
+                        </radialGradient>
+                    )}
+                    {star && (
+                        <radialGradient id='galaxy-star-glow' gradientUnits='userSpaceOnUse' cx={c.x} cy={c.y} r={starPx + STAR_GLOW}>
+                            <stop offset={(starPx - 2) / (starPx + STAR_GLOW)} stopColor={bodyColor(star)} stopOpacity='0.75' />
+                            <stop offset={(starPx + STAR_GLOW * 0.4) / (starPx + STAR_GLOW)} stopColor={bodyColor(star)} stopOpacity='0.22' />
+                            <stop offset='1' stopColor={bodyColor(star)} stopOpacity='0' />
+                        </radialGradient>
+                    )}
+                </defs>
+                {hab && <circle cx={c.x} cy={c.y} r={hab[1] + HAB_SOFT} fill='url(#galaxy-hab-zone)' className={styles.habZone} />}
                 {star && (
                     <g className={cx(styles.orb, selBodyId === star.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(star.id))} onDoubleClick={() => onEdit(star.id)}>
                         {star.type === 'black_hole' && <circle cx={c.x} cy={c.y} r={starPx + 10} fill='none' stroke='#f0b44c' strokeWidth='5' opacity='.7' />}
-                        <circle cx={c.x} cy={c.y} r={starPx} fill={bodyColor(star)} className={styles.starGlow} style={{ color: bodyColor(star) }} />
+                        <circle cx={c.x} cy={c.y} r={starPx + STAR_GLOW} fill='url(#galaxy-star-glow)' className={styles.starGlow} />
+                        <circle cx={c.x} cy={c.y} r={starPx} fill={bodyColor(star)} />
                         <text x={c.x} y={c.y + starPx + 20} textAnchor='middle' className={styles.starName}>{star.name}</text>
                     </g>
                 )}
@@ -221,15 +298,14 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                     const { r, index: i } = ring;
                     const p = ring.planet;
                     if (ring.belt) {
-                        // A band as wide as the belt is (within the room it was given), with lanes of dots drifting round it
+                        // A band as wide as the belt is (within the room it was given), with lanes of dots in it
                         const b = ring.belt;
                         const band = Math.max(8, Math.min(BELT_REACH * 2 - 2, auToPx(b.orbit + (b.width ?? 0) / 2) - auToPx(b.orbit - (b.width ?? 0) / 2)));
-                        const year = YEAR_SECONDS * Math.sqrt(yearDays(b.orbit, star?.type ?? 'sunlike') / 365.25);
                         return (
                             <g key={b.id} className={cx(styles.orb, styles.belt, selBodyId === b.id && styles.orbSelected)} style={{ color: bodyColor(b) }} onClick={(e) => (e.stopPropagation(), onSelect(b.id))} onDoubleClick={() => onEdit(b.id)}>
                                 <circle cx={c.x} cy={c.y} r={r} className={styles.beltBand} style={{ strokeWidth: band }} />
                                 {BELT_LANES.map((lane) => (
-                                    <circle key={lane.at} cx={c.x} cy={c.y} r={r + lane.at * band} className={styles.beltDots} strokeDasharray={`0.1 ${lane.gap}`} transform={`rotate(${(turned(year / lane.speed) * 180) / Math.PI + lane.gap * 20} ${c.x} ${c.y})`} />
+                                    <circle key={lane.at} cx={c.x} cy={c.y} r={r + lane.at * band} className={styles.beltDots} strokeDasharray={`0.1 ${lane.gap}`} transform={`rotate(${lane.gap * 20} ${c.x} ${c.y})`} />
                                 ))}
                                 <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} style={{ strokeWidth: band + 4 }} />
                                 <text x={c.x} y={c.y + r + 4} textAnchor='middle' className={styles.beltName}>{b.name}</text>
@@ -248,9 +324,8 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                             </g>
                         );
                     }
-                    const a = planetAngle(i);
-                    const bx = c.x + r * Math.cos(a);
-                    const by = c.y + r * Math.sin(a);
+                    // The planet and all that goes round it are drawn about (0, 0) and carried along its orbit
+                    const [bx, by] = [0, 0];
                     const pr = bodyPx(p);
                     const zone = star ? zoneOf(p.orbit, star.type) : ZONES[2];
                     const kids = kidsOf(p.id);
@@ -258,15 +333,14 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                         <g key={p.id} className={cx(styles.orb, selBodyId === p.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(p.id))} onDoubleClick={() => onEdit(p.id)}>
                             <circle cx={c.x} cy={c.y} r={r} className={styles.orbitLine} style={{ stroke: zone.color }} />
                             <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} />
+                          <g className={styles.mover} {...mover(`planet${p.id}`, round(c.x, c.y, r, angle(place.id, i), planetYear(i)))}>
                             <circle cx={bx} cy={by} r={pr} fill={bodyColor(p)} />
                             <BodyTexture body={p} x={bx} y={by} r={pr} />
                             <circle cx={bx} cy={by} r={pr} className={styles.shade} />
                             <text x={bx} y={by - pr - 8 - kids.length * MOON_GAP} textAnchor='middle'>{p.name}</text>
                             {kids.map((m, j) => {
                                 const mr = pr + MOON_GAP * (j + 1);
-                                const ma = moonAngle(p, m, j);
-                                const mx = bx + mr * Math.cos(ma);
-                                const my = by + mr * Math.sin(ma);
+                                const [mx, my] = [0, 0];
                                 const on = selBodyId === m.id;
                                 const moonPx = Math.min(bodyPx(m), MOON_GAP / 2);
                                 if (m.kind === 'belt') {
@@ -284,6 +358,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                     <g key={m.id} className={cx(styles.orb, on && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(m.id))} onDoubleClick={(e) => (e.stopPropagation(), onEdit(m.id))}>
                                         <circle cx={bx} cy={by} r={mr} className={styles.orbitLine} />
                                         <circle cx={bx} cy={by} r={mr} className={styles.orbitHit} style={{ strokeWidth: MOON_GAP * 0.8 }} />
+                                      <g className={styles.mover} {...mover(`moon${m.id}`, round(0, 0, mr, angle(p.id, j + 1), moonMonth(m)))}>
                                         {m.kind === 'station' ? (
                                             <rect x={mx - 3} y={my - 3} width='6' height='6' fill={bodyColor(m)} transform={`rotate(45 ${mx} ${my})`} />
                                         ) : (
@@ -296,10 +371,12 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                                 ))}
                                             </>
                                         )}
+                                      </g>
                                         <text x={bx} y={by + pr + MOON_GAP * kids.length + 14 + row * 13} textAnchor='middle' className={cx(styles.moonName, on && styles.moonNameOn)}>{m.name}</text>
                                     </g>
                                 );
                             })}
+                          </g>
                         </g>
                     );
                 })}

@@ -51,6 +51,8 @@ interface Props {
     sky?: number;
     /** Called once when there is no WebGL and the still picture is shown instead. */
     onStill?: () => void;
+    /** Something covers the whole map (the system view): nothing is drawn meanwhile. */
+    paused?: boolean;
 }
 
 /**
@@ -103,7 +105,11 @@ function buildGalaxy(): THREE.Group {
     group.add(disc);
     // The galaxy's body: clouds of large soft puffs with real thickness, over the painted disc.
     const { light, dust } = galaxyClouds();
-    group.add(puffMesh(light, THREE.AdditiveBlending, -1.6), puffMesh(dust, THREE.NormalBlending, -1.5));
+    // Named, because the live scene takes them out and draws them at half size (`cloudLayer`).
+    const clouds = new THREE.Group();
+    clouds.name = 'clouds';
+    clouds.add(puffMesh(light, false, -1.6), puffMesh(dust, true, -1.5));
+    group.add(clouds);
     // A glow that still shows edge-on, where the flat disc vanishes.
     const gc = document.createElement('canvas');
     gc.width = gc.height = 128;
@@ -226,8 +232,15 @@ function galaxyClouds(): { light: Puff[]; dust: Puff[] } {
     return { light, dust };
 }
 
-/** Draws puffs as camera-facing discs that are solid at the middle and gone at the rim, all in one call. */
-function puffMesh(puffs: Puff[], blending: THREE.Blending, renderOrder: number): THREE.Mesh {
+/**
+ * Draws puffs as camera-facing discs that are solid at the middle and gone at the rim, all
+ * in one call. Light adds to what is behind it and dust covers it; both also keep count, in
+ * the alpha channel, of how much of the background is left, so the same meshes can be drawn
+ * straight onto the map or into a picture of their own that is laid over it afterwards
+ * (`cloudLayer`). A puff that would fill the screen thins out and then is not drawn at all:
+ * up close it would be a wash over everything, at the price of the whole screen per puff.
+ */
+function puffMesh(puffs: Puff[], dust: boolean, renderOrder: number): THREE.Mesh {
     const geo = new THREE.InstancedBufferGeometry();
     geo.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], 3));
     geo.setIndex([0, 1, 2, 0, 2, 3]);
@@ -247,10 +260,13 @@ function puffMesh(puffs: Puff[], blending: THREE.Blending, renderOrder: number):
                 varying vec4 vTint;
                 void main() {
                     vAt = position.xy;
-                    vTint = tint;
                     vec4 mv = modelViewMatrix * vec4(center.xyz, 1.0);
+                    // The puff's width in screen heights
+                    float span = center.w * projectionMatrix[1][1] / (2.0 * max(-mv.z, 0.001));
+                    float keep = 1.0 - smoothstep(1.0, 2.5, span);
+                    vTint = vec4(tint.rgb, tint.a * keep);
                     mv.xy += position.xy * center.w * 0.5;
-                    gl_Position = projectionMatrix * mv;
+                    gl_Position = keep > 0.0 ? projectionMatrix * mv : vec4(2.0, 2.0, 2.0, 1.0);
                 }`,
             fragmentShader: `
                 varying vec2 vAt;
@@ -264,12 +280,48 @@ function puffMesh(puffs: Puff[], blending: THREE.Blending, renderOrder: number):
             transparent: true,
             depthWrite: false,
             depthTest: false,
-            blending,
+            blending: THREE.CustomBlending,
+            blendSrc: THREE.SrcAlphaFactor,
+            blendDst: dust ? THREE.OneMinusSrcAlphaFactor : THREE.OneFactor,
+            blendSrcAlpha: dust ? THREE.OneFactor : THREE.ZeroFactor,
+            blendDstAlpha: dust ? THREE.OneMinusSrcAlphaFactor : THREE.OneFactor,
         }),
     );
     mesh.frustumCulled = false;
     mesh.renderOrder = renderOrder;
     return mesh;
+}
+
+/** The clouds' picture is this fraction of the map's own size each way: they are soft, so it does not show. */
+const CLOUD_SCALE = 0.5;
+
+/**
+ * Where the live scene draws the clouds: a picture of their own, smaller than the screen
+ * (thousands of overlapping puffs are most of the map's cost, and it goes by the pixel), and
+ * the full-screen sheet that lays that picture over the painted disc.
+ */
+function cloudLayer(): { target: THREE.WebGLRenderTarget; sheet: THREE.Mesh } {
+    const target = new THREE.WebGLRenderTarget(1, 1, { depthBuffer: false });
+    const sheet = new THREE.Mesh(
+        new THREE.PlaneGeometry(2, 2),
+        new THREE.ShaderMaterial({
+            uniforms: { map: { value: target.texture } },
+            vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 1.0, 1.0); }',
+            fragmentShader: 'uniform sampler2D map; varying vec2 vUv; void main() { gl_FragColor = texture2D(map, vUv); }',
+            depthTest: false,
+            depthWrite: false,
+            transparent: true,
+            // The picture's color already has its strength in it; its alpha is how much it hides
+            blending: THREE.CustomBlending,
+            blendSrc: THREE.OneFactor,
+            blendDst: THREE.OneMinusSrcAlphaFactor,
+            blendSrcAlpha: THREE.OneFactor,
+            blendDstAlpha: THREE.OneMinusSrcAlphaFactor,
+        }),
+    );
+    sheet.frustumCulled = false;
+    sheet.renderOrder = -1.55;
+    return { target, sheet };
 }
 
 type Groups = Record<'galaxy' | 'grid' | 'octants' | 'ring' | 'terr' | 'rim' | 'bearings' | 'transit', THREE.Object3D>;
@@ -640,33 +692,39 @@ const FLAT = Math.tan((24 * Math.PI) / 180) / Math.tan(((FLAT_FOV / 2) * Math.PI
  */
 const TOP_DIR = new THREE.Vector3(0, -0.0005, 1).normalize();
 
-export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen, onStill, onAddAt, sky = STILL_SKY }: Props) {
+export default function GalaxyScene({ places, selectedId, onSelect, view, layers, placing, onPlace, flyToken, resetToken = 0, onOpen, onStill, onAddAt, sky = STILL_SKY, paused = false }: Props) {
     const hostRef = useRef<HTMLDivElement>(null);
     const markerRefs = useRef(new Map<number, HTMLButtonElement>());
-    const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Groups; sky: Sky | null; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number } | null>(null);
+    const three = useRef<{ camera: THREE.PerspectiveCamera; controls: OrbitControls; groups: Groups; sky: Sky | null; goal: THREE.Vector3 | null; camGoal: THREE.Vector3 | null; distGoal: number | null; top: boolean; maxBase: number; /** Something changed that the camera does not show: draw the next frame. */ dirty: boolean } | null>(null);
     // The empty spot last clicked, which the "+ Add here" button hangs over
     const [spot, setSpot] = useState<Vec3 | null>(null);
     const spotRef = useRef<HTMLButtonElement>(null);
-    const live = useRef({ places, placing, onPlace, onSelect, selectedId, sky, spot, canAdd: !!onAddAt });
-    const [readout, setReadout] = useState('');
+    const live = useRef({ places, placing, onPlace, onSelect, selectedId, sky, spot, canAdd: !!onAddAt, paused });
+    // Written straight to the page: the pointer moves far too often to draw the whole map's markers again each time
+    const readoutRef = useRef<HTMLSpanElement>(null);
     const [failed, setFailed] = useState(false);
 
     useEffect(() => {
-        live.current = { places, placing, onPlace, onSelect, selectedId, sky, spot, canAdd: !!onAddAt };
+        live.current = { places, placing, onPlace, onSelect, selectedId, sky, spot, canAdd: !!onAddAt, paused };
         if (three.current?.sky) setSkyOpacity(three.current.sky, sky);
+        // Whatever this render changed (places, layers, the view, the stars), the next frame draws it
+        if (three.current) three.current.dirty = true;
     });
 
     useEffect(() => {
         const host = hostRef.current!;
         let renderer: THREE.WebGLRenderer;
+        // A phone or tablet: no edge smoothing and fewer pixels, which its screen is too dense to miss
+        const coarse = window.matchMedia('(pointer: coarse)').matches;
         try {
-            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer = new THREE.WebGLRenderer({ antialias: !coarse });
         } catch {
             queueMicrotask(() => setFailed(true));
             return;
         }
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-        renderer.setClearColor(new THREE.Color(VOID));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2));
+        const voidColor = new THREE.Color(VOID);
+        renderer.setClearColor(voidColor);
         host.prepend(renderer.domElement);
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 6000);
@@ -682,15 +740,23 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         // The focus stays on the galactic plane (a right-drag slides along it), so zooming to a place keeps that place under the pointer
         controls.screenSpacePanning = false;
 
-        const groups = buildWorld(getComputedStyle(host).getPropertyValue('--font-display').trim() || 'sans-serif');
+        const groups = buildWorld(getComputedStyle(host).getPropertyValue('--font-display').trim() || 'sans-serif', () => {
+            if (three.current) three.current.dirty = true;
+        });
         scene.add(...Object.values(groups));
+        // The clouds leave the map's scene for one of their own, drawn small and laid back over the disc
+        const cloudScene = new THREE.Scene();
+        cloudScene.add(groups.galaxy.getObjectByName('clouds')!);
+        const clouds = cloudLayer();
+        groups.galaxy.add(clouds.sheet);
 
-        three.current = { camera, controls, groups, sky: null, goal: null, camGoal: null, distGoal: null, top: false, maxBase: 150 };
+        three.current = { camera, controls, groups, sky: null, goal: null, camGoal: null, distGoal: null, top: false, maxBase: 150, dirty: true };
         void loadStarfield().then((tex) => {
             const t = three.current;
             if (!tex || !t || t.camera !== camera) return tex?.dispose();
             t.sky = buildSky(tex, renderer.getPixelRatio(), live.current.sky);
             scene.add(t.sky.box, t.sky.flat);
+            t.dirty = true;
         });
         // A drag or a scroll takes over from any camera move in progress
         controls.addEventListener('start', () => {
@@ -702,12 +768,15 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
             const w = host.clientWidth;
             const h = host.clientHeight;
             renderer.setSize(w, h);
+            const px = renderer.getDrawingBufferSize(new THREE.Vector2());
+            clouds.target.setSize(Math.max(1, Math.round(px.x * CLOUD_SCALE)), Math.max(1, Math.round(px.y * CLOUD_SCALE)));
             camera.aspect = w / Math.max(h, 1);
             camera.updateProjectionMatrix();
             // Far enough to see the whole disk (more on a tall phone screen), and no farther.
             const t = three.current!;
             t.maxBase = Math.max(150, 105 / camera.aspect);
             controls.maxDistance = t.maxBase * (t.top ? FLAT : 1);
+            t.dirty = true;
         };
         const ro = new ResizeObserver(resize);
         ro.observe(host);
@@ -740,9 +809,11 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         };
         const onMove = (e: PointerEvent) => {
             const p = hitPlane(e);
-            if (!p || Math.hypot(p[0], p[1]) > DISK_R + 6) return setReadout('');
-            const region = regionAt(p);
-            setReadout(`${sectorOf(p)}, ${region ? REGIONS[region].short : 'unclaimed space'}`);
+            const node = readoutRef.current;
+            if (!node) return;
+            const region = p && Math.hypot(p[0], p[1]) <= DISK_R + 6 ? regionAt(p) : undefined;
+            const text = !p || region === undefined ? '' : `${sectorOf(p)}, ${region ? REGIONS[region].short : 'unclaimed space'}`;
+            if (node.textContent !== text) node.textContent = text;
         };
         const el = renderer.domElement;
         el.addEventListener('pointerdown', onDown);
@@ -759,9 +830,12 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
         const v = new THREE.Vector3();
         let raf = 0;
         const shown: Spot[] = [];
+        // The camera as the picture on screen was drawn from
+        const drawn = { position: new THREE.Vector3(Infinity, 0, 0), turn: new THREE.Quaternion() };
         const frame = () => {
             raf = requestAnimationFrame(frame);
             const t = three.current!;
+            if (live.current.paused) return;
             let dist = camera.position.distanceTo(controls.target);
             if (t.camGoal && !t.top) {
                 camera.position.lerp(t.camGoal, 0.12);
@@ -802,6 +876,19 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
                 t.sky.flat.visible = t.top;
                 t.sky.box.position.copy(camera.position);
             }
+            // The camera has not moved (by a tenth of a pixel on a large screen, measured from the last
+            // picture drawn, so slow drift still adds up) and nothing else changed: that picture and the markers over it still stand
+            if (!t.dirty && camera.position.distanceToSquared(drawn.position) < 2.5e-8 && Math.abs(camera.quaternion.dot(drawn.turn)) > 1 - 2e-10) return;
+            t.dirty = false;
+            drawn.position.copy(camera.position);
+            drawn.turn.copy(camera.quaternion);
+            if (groups.galaxy.visible) {
+                renderer.setRenderTarget(clouds.target);
+                renderer.setClearColor(0x000000, 0);
+                renderer.render(cloudScene, camera);
+                renderer.setRenderTarget(null);
+                renderer.setClearColor(voidColor, 1);
+            }
             renderer.render(scene, camera);
             const w = host.clientWidth;
             const h = host.clientHeight;
@@ -831,6 +918,7 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
             ro.disconnect();
             host.removeEventListener('wheel', onMarkerWheel);
             controls.dispose();
+            clouds.target.dispose();
             renderer.dispose();
             renderer.domElement.remove();
             three.current = null;
@@ -1021,7 +1109,7 @@ export default function GalaxyScene({ places, selectedId, onSelect, view, layers
                     <span>+ Add here</span>
                 </button>
             )}
-            <div className={styles.readout}>{placing ? `Click to place. ${readout}` : readout}</div>
+            <div className={styles.readout}>{placing && 'Click to place. '}<span ref={readoutRef} /></div>
         </div>
     );
 }

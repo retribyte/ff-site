@@ -229,6 +229,7 @@ export default function MapApp({ places, start }: { places: ApiPlace[]; /** What
                     resetToken={store.resetToken}
                     onStill={store.setStill}
                     sky={store.sky}
+                    paused={inSystem}
                     onAddAt={store.user ? (at) => setCreating({ at }) : undefined}
                     onOpen={(id) => store.places.find((p) => p.id === id)?.kind === 'system' && store.openSystem(id)}
                 />

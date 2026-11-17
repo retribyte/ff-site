@@ -18,6 +18,10 @@ function gitVersion() {
 const appVersion = gitVersion() ?? { version: 'unknown', commit: 'unknown' };
 
 const nextConfig: NextConfig = {
+    // Dev only: other machines allowed to load the dev server's own assets, for trying the
+    // site on a phone over the LAN. A comma-separated list of hostnames or addresses, e.g.
+    // DEV_ORIGINS=192.168.1.110 (this machine's LAN address, which is what the phone types).
+    allowedDevOrigins: process.env.DEV_ORIGINS?.split(',').map((host) => host.trim()).filter(Boolean),
     env: {
         NEXT_PUBLIC_APP_VERSION: appVersion.version,
         NEXT_PUBLIC_APP_COMMIT: appVersion.commit,

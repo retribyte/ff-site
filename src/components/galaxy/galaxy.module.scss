@@ -249,9 +249,12 @@
     }
 }
 
+// The star's glow is a gradient disc under it (SystemView's `galaxy-star-glow`), never a
+// filter: a filter is worked out again on every frame the orbits move, and grows with the zoom
 .starGlow {
-    filter: drop-shadow(0 0 18px currentColor);
+    pointer-events: none;
 }
+
 
 .orbitLine {
     fill: none;
@@ -270,16 +273,21 @@
 .orb {
     cursor: pointer;
 
-    // Glow on hover, select by clicking the orbit.
+    // Brighter on hover (a stroke, not a glow filter, which costs a blur per frame); select by clicking the orbit.
     &:hover > .orbitLine {
         opacity: 1;
         stroke-width: 3;
-        filter: drop-shadow(0 0 6px currentColor);
     }
 
-    &:hover > circle:not(.orbitLine):not(.orbitHit),
-    &:hover > rect {
-        filter: drop-shadow(0 0 8px #fff);
+    // The body's own disc only: a belt's band and dots and a ring's band are circles too, and an outline would redraw them as thin white lines
+    &:hover > circle:not(.orbitLine):not(.orbitHit):not(.starGlow):not(.beltBand):not(.beltDots):not(.ringBand),
+    // `.mover`: a planet or moon with what travels with it (its place on the orbit is written each tick)
+    &:hover > .mover > circle:not(.ringBand),
+    &:hover > .mover > rect {
+        stroke: rgba(255, 255, 255, 0.85);
+        stroke-width: 2;
+        // As thin zoomed in as zoomed out
+        vector-effect: non-scaling-stroke;
     }
 }
 
@@ -290,7 +298,8 @@
         stroke-width: 2.5;
     }
 
-    > text {
+    > text,
+    > .mover > text {
         fill: var(--map-nav);
     }
 }
@@ -1254,6 +1263,10 @@ button.fieldReadout {
     opacity: 0.6;
 }
 
+.orb:hover > .ringBand {
+    opacity: 0.9;
+}
+
 .orbSelected > .ringBand {
     stroke: var(--map-nav);
     opacity: 0.9;
@@ -1261,10 +1274,7 @@ button.fieldReadout {
 
 // The star's temperate band, behind the orbits
 .habZone {
-    fill: none;
-    stroke: #6fd18a;
     opacity: 0.09;
-    filter: blur(7px);
     pointer-events: none;
 }
 
