@@ -10,7 +10,7 @@ import type { WikiData, WikiValue } from '@/lib/types';
 export type Vec3 = [number, number, number];
 export type RegionKey = 'gu' | 'ade' | 'lr' | 'rim';
 export type PlaceKind = 'system' | 'landmark';
-export type BodyKind = 'star' | 'planet' | 'moon' | 'station';
+export type BodyKind = 'star' | 'planet' | 'moon' | 'station' | 'belt';
 export type Precision = 'exact' | 'region';
 
 /** "This episode happened here." `episode` is null when that episode is gone from the archive. */
@@ -29,17 +29,21 @@ export interface Body {
     unnamed?: boolean;
     /** Planets: "this is planet N of its star", stored for one whose inner neighbours are not on the map. */
     ordinal: number | null;
-    /** Planets: the number counted out from the star. Moons and stations: 1 for a, 2 for b. Filled by `designate`. */
+    /** Planets: the number counted out from the star. Moons and stations: 1 for a, 2 for b. Belts: 1 for I, 2 for II. Filled by `designate`. */
     num: number;
-    /** GU designation: Sol-3 for a planet, Sol-3a for what orbits it. Filled by `designate`. */
+    /** GU designation: Sol-3 for a planet, Sol-3a for what orbits it, Sol-I for a belt (Sol-6-I for a ring). Filled by `designate`. */
     gu: string;
     parentId: number | null;
     /** star: key of STAR_TYPES. planet/moon/station: key of COMPOSITIONS. */
     type: string;
     /** radius in km (planets, moons). Stars take theirs from the type. */
     radiusKm: number;
-    /** planets: AU from the star. moons and stations: km from the parent. */
+    /** planets: AU from the star. moons and stations: km from the parent. belts: the middle of the band, AU from a star, km from a planet or moon. */
     orbit: number;
+    /** Belts: how wide the band is, in the unit of its orbit. */
+    width?: number;
+    /** Belts: it circles a planet or moon, so it is a ring. Filled by `designate`. */
+    ring?: boolean;
     color?: string;
     /** ff-server-sanitized HTML: render with RichText. */
     note?: string;
@@ -99,12 +103,13 @@ function wikiInfo(wiki: WikiData | null | undefined): WikiInfo | undefined {
 export interface ApiBody {
     id: number;
     parentId: number | null;
-    kind: 'STAR' | 'PLANET' | 'MOON' | 'STATION';
+    kind: 'STAR' | 'PLANET' | 'MOON' | 'STATION' | 'BELT';
     name: string | null;
     slug: string | null;
     type: string;
     radiusKm: number | null;
     orbit: number | null;
+    width?: number | null;
     ordinal?: number | null;
     color: string | null;
     description: string | null;
@@ -152,6 +157,7 @@ export function fromApi(p: ApiPlace): Place {
             type: b.type,
             radiusKm: b.radiusKm ?? 696000,
             orbit: b.orbit ?? 0,
+            width: b.width ?? undefined,
             ordinal: b.ordinal ?? null,
             num: 0,
             gu: '',
@@ -202,24 +208,32 @@ export function readAddress(path: string[], at: string | null, places: { id: num
     return { placeId: place.id, bodyId: body?.id ?? null, level: 'system' };
 }
 
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
+export const roman = (n: number) => ROMAN[n - 1] ?? String(n);
+
 const byOrbit = (a: Body, b: Body) => a.orbit - b.orbit || a.id - b.id;
 
 /**
  * Numbers a system's bodies. Planets count outward from the star, never below their
  * stored `ordinal`, so a planet marked "planet 3" leaves 1 and 2 open inside it; what
- * orbits a planet is lettered a, b, c. Sets each body's `num` and `gu` (Sol-3, Sol-3a),
- * and the name of a planet or moon that has none. Run again after an orbit changes.
+ * orbits a planet is lettered a, b, c; the belts round any one body count outward in
+ * Roman numerals. Sets each body's `num` and `gu` (Sol-3, Sol-3a, Sol-I, Sol-6-I), and
+ * the name of a planet, moon or belt that has none. Run again after an orbit changes.
  */
 export function designate(bodies: Body[]): Body[] {
     const star = bodies.find((b) => b.kind === 'star');
     const stem = star && !star.unnamed ? star.name : 'Unnamed';
-    const out = new Map<number, { num: number; gu: string }>();
+    const out = new Map<number, { num: number; gu: string; ring?: boolean }>();
+    const belts = (parent: Body, parentGu: string) => {
+        bodies.filter((b) => b.parentId === parent.id && b.kind === 'belt').sort(byOrbit).forEach((b, i) => out.set(b.id, { num: i + 1, gu: `${parentGu}-${roman(i + 1)}`, ring: parent.kind !== 'star' }));
+    };
     const letter = (parent: Body | undefined, parentGu: string) => {
         if (!parent) return;
-        bodies.filter((b) => b.parentId === parent.id && b.kind !== 'planet' && b.kind !== 'star').sort(byOrbit).forEach((b, i) => {
+        bodies.filter((b) => b.parentId === parent.id && (b.kind === 'moon' || b.kind === 'station')).sort(byOrbit).forEach((b, i) => {
             const gu = `${parentGu}${String.fromCharCode(97 + (i % 26))}`;
             out.set(b.id, { num: i + 1, gu });
             letter(b, gu);
+            belts(b, gu);
         });
     };
     let n = 0;
@@ -227,8 +241,10 @@ export function designate(bodies: Body[]): Body[] {
         n = Math.max(n + 1, p.ordinal ?? 0);
         out.set(p.id, { num: n, gu: `${stem}-${n}` });
         letter(p, `${stem}-${n}`);
+        belts(p, `${stem}-${n}`);
     }
     letter(star, `${stem}-`);
+    if (star) belts(star, stem);
     return bodies.map((b) => {
         const d = out.get(b.id) ?? { num: 0, gu: '' };
         return { ...b, ...d, name: b.unnamed && b.kind !== 'star' ? d.gu : b.name };
@@ -462,6 +478,36 @@ export const MOON_ORBIT_REFS: Ref[] = [
 ];
 export const MOON_ORBIT_RANGE: [number, number] = [5000, 4000000];
 
+/** What a belt or ring may be made of (keys of COMPOSITIONS). */
+export const BELT_TYPES = ['rocky', 'ice'];
+/** Belt widths round a star, AU. */
+export const BELT_WIDTH_REFS: Ref[] = [
+    { key: 'asteroid', label: 'the asteroid belt', value: 1 },
+    { key: 'kuiper', label: 'the Kuiper belt', value: 20 },
+];
+export const BELT_WIDTH_RANGE: [number, number] = [0.01, 60];
+/** Ring widths round a planet or moon, km. */
+export const RING_WIDTH_REFS: Ref[] = [
+    { key: 'thin', label: 'a thin ring', value: 500 },
+    { key: 'saturn', label: "Saturn's rings", value: 66000 },
+];
+export const RING_WIDTH_RANGE: [number, number] = [10, 1000000];
+
+/** How near and how far a ring's middle may be from the planet or moon it circles, km. */
+export function ringRange(primary: { radiusKm: number }): [number, number] {
+    const lo = Math.ceil(primary.radiusKm * 1.05);
+    return [lo, Math.max(MOON_ORBIT_RANGE[1], lo * 100)];
+}
+
+/** The widest a belt may be at this orbit: its inner edge stays clear of what it circles (`primaryRadius` in the orbit's unit; 0 for a star, whose belts are measured in AU). */
+export const beltWidthMax = (orbit: number, primaryRadius = 0) => Math.max(0, 2 * (orbit - primaryRadius * 1.02) * 0.98);
+
+/** A belt to start a new one from: an asteroid belt round a star, an icy ring round anything else. */
+export function beltDraft(primary: { kind: BodyKind; radiusKm: number } | undefined): { type: string; radiusKm: number; orbit: number; width: number } {
+    if (!primary || primary.kind === 'star') return { type: 'rocky', radiusKm: 0, orbit: 2.7, width: 1 };
+    return { type: 'ice', radiusKm: 0, orbit: Math.round(primary.radiusKm * 1.8), width: Math.round(primary.radiusKm * 1.1) };
+}
+
 export const STAR_TYPES: Record<string, { label: string; color: string; lum: number; mass: number; px: number }> = {
     red_dwarf: { label: 'Red dwarf', color: '#ff7a5c', lum: 0.02, mass: 0.3, px: 16 },
     orange: { label: 'Orange dwarf', color: '#ffb36b', lum: 0.3, mass: 0.75, px: 20 },
@@ -558,7 +604,7 @@ export function massEarths(body: Body): number {
 /** A rough 0 to 100 "could people live here" score. Moons take their planet's orbit. */
 export function habitability(place: Place, body: Body): number | null {
     const star = starOf(place);
-    if (!star || body.kind === 'star' || star.type === 'black_hole') return null;
+    if (!star || body.kind === 'star' || body.kind === 'belt' || star.type === 'black_hole') return null;
     const planet = body.kind === 'planet' ? body : place.bodies.find((b) => b.id === body.parentId);
     if (!planet) return null;
     const zone = zoneOf(planet.orbit, star.type).key;

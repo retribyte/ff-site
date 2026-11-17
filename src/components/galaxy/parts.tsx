@@ -10,15 +10,17 @@ import WikiLink from '@/components/WikiLink';
 import { decodeEntities } from '@/lib/html';
 import { isValidSlug } from '@/lib/slug';
 import {
-    COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
-    bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, planetNumber, randomPointIn, regionAt, regionLabel, satelliteRange, sectorOf, starOf, toT, yearDays, zoneOf,
+    BELT_TYPES, BELT_WIDTH_RANGE, BELT_WIDTH_REFS, COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, RING_WIDTH_RANGE, RING_WIDTH_REFS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
+    beltDraft, beltWidthMax, bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, planetNumber, randomPointIn, regionAt, regionLabel, ringRange, roman, satelliteRange, sectorOf, starOf, toT, yearDays, zoneOf,
 } from './data';
 import type { Body, BodyKind, Place, Ref, RegionKey, Vec3 } from './data';
 import type { Store, TextPatch, Where } from './store';
 import styles from './galaxy.module.scss';
 
 const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boolean).join(' ');
-export const KIND_LABEL: Record<string, string> = { star: 'Star', planet: 'Planet', moon: 'Moon', station: 'Station', system: 'System', landmark: 'Landmark' };
+export const KIND_LABEL: Record<string, string> = { star: 'Star', planet: 'Planet', moon: 'Moon', station: 'Station', belt: 'Belt', system: 'System', landmark: 'Landmark' };
+/** What a body is called: a planet with its number (Planet 3), and a belt round a planet or moon is a ring. */
+export const kindLabel = (b: Body) => (b.kind === 'planet' ? `Planet ${b.num}` : b.kind === 'belt' && b.ring ? 'Ring' : KIND_LABEL[b.kind]);
 
 // ---------- Inputs that never ask for a raw number ----------
 interface ScaleProps {
@@ -139,6 +141,8 @@ export interface BodyDraft {
     type: string;
     radiusKm: number;
     orbit: number;
+    /** Belts: how wide the band is. */
+    width?: number;
     /** Planets: "this is planet N". */
     ordinal?: number | null;
 }
@@ -168,7 +172,7 @@ function PlanetNumber({ draft, onChange, system, selfId }: { draft: BodyDraft; o
     );
 }
 
-export function BodyFields({ kind, draft, onChange, starType, system, selfId, planet }: { kind: BodyKind; draft: BodyDraft; onChange: (patch: Partial<BodyDraft>) => void; starType: string; /** Planets: the system it is in, and its own id once it exists. */ system?: Place; selfId?: number; /** Moons and stations: the planet it orbits. */ planet?: Body }) {
+export function BodyFields({ kind, draft, onChange, starType, system, selfId, planet, primary }: { kind: BodyKind; draft: BodyDraft; onChange: (patch: Partial<BodyDraft>) => void; starType: string; /** Planets: the system it is in, and its own id once it exists. */ system?: Place; selfId?: number; /** Moons and stations: the planet it orbits. */ planet?: Body; /** Belts: the star, planet or moon it circles. */ primary?: Body }) {
     if (kind === 'star') {
         return (
             <div className={styles.field}>
@@ -181,6 +185,50 @@ export function BodyFields({ kind, draft, onChange, starType, system, selfId, pl
                     ))}
                 </div>
             </div>
+        );
+    }
+    if (kind === 'belt') {
+        // Round a star a belt is measured in AU; round a planet or moon it is a ring, in km, clear of the surface
+        const ring = primary && primary.kind !== 'star' ? primary : null;
+        const unit = ring ? 'km' : 'AU';
+        const range: [number, number] = ring ? ringRange(ring) : ORBIT_RANGE;
+        const orbit = Math.max(draft.orbit, range[0]);
+        const widest = (at: number) => beltWidthMax(at, ring ? ring.radiusKm : 0);
+        const width = Math.min(draft.width ?? 1, widest(orbit));
+        return (
+            <>
+                <div className={styles.field}>
+                    <div className={styles.fieldHead}><span className='pixel-label'>Made of</span></div>
+                    <div className={styles.chips}>
+                        {BELT_TYPES.map((key) => (
+                            <button key={key} type='button' className={cx(styles.chip, draft.type === key && styles.chipOn)} style={{ '--chip': COMPOSITIONS[key].color } as React.CSSProperties} onClick={() => onChange({ type: key })}>
+                                <i className={styles.chipDot} />{key === 'rocky' ? 'Rock' : COMPOSITIONS[key].label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <ScaleInput
+                    label={ring ? 'Distance from what it circles' : 'Distance from its star'}
+                    value={orbit}
+                    onChange={(v) => onChange({ orbit: v, width: Math.min(width, widest(v)) })}
+                    refs={ring ? MOON_ORBIT_REFS.filter((r) => r.value > range[0] * 1.15 && r.value <= range[1]) : ORBIT_REFS}
+                    range={range}
+                    starType={ring ? undefined : starType}
+                    unit={unit}
+                    bounds={ring ? [range[0], 1e9] : [0.001, 1e5]}
+                    readout={ring ? `${fmtNum(orbit)} km, ${fmtNum(orbit / ring.radiusKm)} radii out` : `${zoneOf(orbit, starType).label}, ${fmtNum(orbit)} AU`}
+                />
+                <ScaleInput
+                    label='Width'
+                    value={width}
+                    onChange={(v) => onChange({ width: Math.min(v, widest(orbit)) })}
+                    refs={ring ? RING_WIDTH_REFS : BELT_WIDTH_REFS}
+                    range={ring ? RING_WIDTH_RANGE : BELT_WIDTH_RANGE}
+                    unit={unit}
+                    bounds={[ring ? 1 : 0.001, widest(orbit)]}
+                    readout={`${fmtNum(width)} ${unit}, from ${fmtNum(orbit - width / 2)} to ${fmtNum(orbit + width / 2)}`}
+                />
+            </>
         );
     }
     const orbitsStar = kind === 'planet';
@@ -413,12 +461,11 @@ function EpisodePicker({ store, taken, onPick, onClose }: { store: Store; taken:
     );
 }
 
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
 
-/** A planet's number as I, II, III; whatever orbits it is a, b, c (`designate` in data.ts does the counting). */
+/** The mark beside a body's kind: I, II, III for a belt among the belts round the same body; a, b, c for a moon or station; none for a planet, whose number is in its kind ("Planet 3") (`designate` in data.ts does the counting). */
 export function designation(b: Body): string {
-    if (b.kind === 'star') return '';
-    return b.kind === 'planet' ? (ROMAN[b.num - 1] ?? String(b.num)) : String.fromCharCode(97 + ((b.num - 1) % 26));
+    if (b.kind === 'star' || b.kind === 'planet') return '';
+    return b.kind === 'belt' ? roman(b.num) : String.fromCharCode(97 + ((b.num - 1) % 26));
 }
 
 /** A body's name, with its GU designation after it when it has a name of its own. */
@@ -535,6 +582,12 @@ export function BodyIcon({ body, size = 16 }: { body: Body; size?: number }) {
             )}
             {body.kind === 'moon' && <path d='M10.5 1.8a6.4 6.4 0 1 0 0 12.4a5 5 0 1 1 0-12.4z' fill={c} />}
             {body.kind === 'station' && <path d='M8 1.5l6.5 6.5L8 14.5 1.5 8z M8 5.5L5.5 8 8 10.5 10.5 8z' fill={c} fillRule='evenodd' />}
+            {body.kind === 'belt' && (
+                <>
+                    <circle cx='8' cy='8' r='6.2' fill='none' stroke={c} strokeWidth='2.2' strokeDasharray='1.7 1.55' />
+                    {body.ring && <circle cx='8' cy='8' r='2.6' fill={c} opacity='0.55' />}
+                </>
+            )}
         </svg>
     );
 }
@@ -566,7 +619,7 @@ export function BodyTree({ place, selBodyId, onPick, onOpen }: { place: Place; s
                 <BodyIcon body={b} />
                 {b.kind !== 'star' && <span className={styles.desig}>{designation(b)}</span>}
                 <BodyName body={b} />
-                <span className={styles.muted}>{KIND_LABEL[b.kind]}</span>
+                <span className={styles.muted}>{kindLabel(b)}</span>
             </button>
             {kids(b.id).length > 0 && <ul>{kids(b.id).map((k) => row(k, depth + 1))}</ul>}
         </li>
@@ -618,6 +671,19 @@ export function BodyFacts({ place, body }: { place: Place; body: Body }) {
                 <dd>{STAR_TYPES[body.type]?.label}</dd>
                 <dt>Planets</dt>
                 <dd>{place.bodies.filter((b) => b.kind === 'planet').length}</dd>
+            </dl>
+        );
+    }
+    if (body.kind === 'belt') {
+        const unit = body.ring ? 'km' : 'AU';
+        return (
+            <dl className={styles.facts}>
+                <dt>Made of</dt>
+                <dd>{body.type === 'rocky' ? 'Rock' : COMPOSITIONS[body.type]?.label}</dd>
+                <dt>Circles</dt>
+                <dd>{parent?.name ?? 'nothing'} at {fmtNum(body.orbit)} {unit}</dd>
+                <dt>Width</dt>
+                <dd>{fmtNum(body.width ?? 0)} {unit}</dd>
             </dl>
         );
     }
@@ -677,14 +743,14 @@ export function SelectionDetail({ store }: { store: Store }) {
                         <BodyPortrait body={body} />
                         <div>
                             <h3><BodyName body={body} paren /></h3>
-                            <p className='pixel-label'>{KIND_LABEL[body.kind]} in {place.placeholder ? 'an unnamed system' : place.name}</p>
+                            <p className='pixel-label'>{kindLabel(body)} in {place.placeholder ? 'an unnamed system' : place.name}</p>
                         </div>
                     </header>
                     {!(editing && mine) && <Writeup of={body} />}
                     {editing && mine ? (
                       <>
                         <TextFields key={body.id} store={store} place={place} body={body} />
-                        <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} system={place} selfId={body.id} planet={place.bodies.find((b) => b.id === body.parentId && b.kind === 'planet')} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                        <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} system={place} selfId={body.id} planet={place.bodies.find((b) => b.id === body.parentId && b.kind === 'planet')} primary={place.bodies.find((b) => b.id === body.parentId)} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
                       </>
                     ) : (
                         <BodyFacts place={place} body={body} />
@@ -763,27 +829,31 @@ export function WherePicker({ store, where, onChange }: { store: Store; where: W
 }
 
 // ---------- Add wizard ----------
-type CreateKind = 'system' | 'planet' | 'moon' | 'station' | 'landmark';
+export type CreateKind = 'system' | 'planet' | 'moon' | 'station' | 'belt' | 'landmark';
 const CREATE_KINDS: { key: CreateKind; label: string; glyph: string }[] = [
     { key: 'system', label: 'Star system', glyph: '☀' },
     { key: 'planet', label: 'Planet', glyph: '◐' },
     { key: 'moon', label: 'Moon', glyph: '☾' },
     { key: 'station', label: 'Station', glyph: '▣' },
+    { key: 'belt', label: 'Belt or ring', glyph: '◌' },
     { key: 'landmark', label: 'Landmark', glyph: '✦' },
 ];
 
 /** One wizard for everything a member can add, one question at a time. */
-export function CreateFlow({ store, onDone, slot, at: spot }: { store: Store; onDone: () => void; /** Opened from a gap ring: the planet that goes there. */ slot?: PlanetSlot; /** Opened from a spot clicked on the map: where it goes. */ at?: Vec3 }) {
+export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { store: Store; onDone: () => void; /** Opened from a gap ring: the planet that goes there. */ slot?: PlanetSlot; /** Opened from a spot clicked on the map: where it goes. */ at?: Vec3; /** What to start on, when the button that opened this says. */ kind?: CreateKind }) {
     const ctxPlanet = store.selBody?.kind === 'planet' ? store.selBody : null;
     const ctxSystem = store.level === 'system' && store.selPlace?.kind === 'system' ? store.selPlace : null;
-    const [kind, setKind] = useState<CreateKind>(ctxPlanet ? 'moon' : ctxSystem ? 'planet' : 'system');
+    // A belt circles the body that is picked, or else the open system's star
+    const canCircle = (b: Body) => b.kind === 'star' || b.kind === 'planet' || b.kind === 'moon';
+    const ctxPrimary = store.selBody && canCircle(store.selBody) ? store.selBody : ctxSystem ? (starOf(ctxSystem) ?? null) : null;
+    const [kind, setKind] = useState<CreateKind>(asked ?? (ctxPlanet ? 'moon' : ctxSystem ? 'planet' : 'system'));
     const [name, setName] = useState('');
     // A planet's system or a satellite's planet, by id; 'new' = a planet whose star is not known yet
-    const [parent, setParent] = useState<number | 'new'>(ctxPlanet?.id ?? ctxSystem?.id ?? 'new');
+    const [parent, setParent] = useState<number | 'new'>(asked === 'belt' ? (ctxPrimary?.id ?? 'new') : (ctxPlanet?.id ?? ctxSystem?.id ?? 'new'));
     const [where, setWhere] = useState<Where | null>(spot ? { pos: spot, precision: 'exact' } : null);
     const [starType, setStarType] = useState('sunlike');
     const [category, setCategory] = useState('landmark');
-    const [draft, setDraft] = useState<BodyDraft>(ctxPlanet ? { type: 'rocky', radiusKm: 1737, orbit: 384400 } : { type: 'rocky', radiusKm: 6371, orbit: 1, ...slot });
+    const [draft, setDraft] = useState<BodyDraft>(asked === 'belt' ? beltDraft(ctxPrimary ?? undefined) : ctxPlanet ? { type: 'rocky', radiusKm: 1737, orbit: 384400 } : { type: 'rocky', radiusKm: 6371, orbit: 1, ...slot });
     const [step, setStep] = useState(0);
     const [saving, setSaving] = useState(false);
 
@@ -791,17 +861,23 @@ export function CreateFlow({ store, onDone, slot, at: spot }: { store: Store; on
     const systems = store.places.filter((p) => p.kind === 'system' && store.canEdit(p));
     const planets = systems.flatMap((p) => p.bodies.filter((b) => b.kind === 'planet').map((b) => ({ b, p })));
     const isSatellite = kind === 'moon' || kind === 'station';
+    const primaries = systems.flatMap((p) => p.bodies.filter(canCircle).map((b) => ({ b, p })));
+    const parentPrimary = kind === 'belt' ? (primaries.find((x) => x.b.id === parent) ?? primaries[0]) : null;
     const parentPlanet = isSatellite ? (planets.find((x) => x.b.id === parent) ?? planets[0]) : null;
     const parentSystem = kind === 'planet' ? systems.find((p) => p.id === parent) : null;
     const needsWhere = kind === 'system' || kind === 'landmark' || (kind === 'planet' && !parentSystem);
     const hostStarType = kind === 'planet' ? (parentSystem ? (starOf(parentSystem)?.type ?? 'sunlike') : starType) : 'sunlike';
     // A planet of a known star, or a moon, may go by its designation alone
-    const nameOptional = (kind === 'planet' && !!parentSystem) || (kind === 'moon' && !!parentPlanet);
-    const canSave = !saving && (name.trim() !== '' || nameOptional) && (!needsWhere || where !== null) && (!isSatellite || !!parentPlanet);
+    const nameOptional = (kind === 'planet' && !!parentSystem) || (kind === 'moon' && !!parentPlanet) || (kind === 'belt' && !!parentPrimary);
+    const canSave = !saving && (name.trim() !== '' || nameOptional) && (!needsWhere || where !== null) && (!isSatellite || !!parentPlanet) && (kind !== 'belt' || !!parentPrimary);
 
     const pickKind = (k: CreateKind) => {
         setKind(k);
-        if (k === 'moon') setDraft({ type: 'rocky', radiusKm: 1737, orbit: 384400 });
+        if (k === 'belt') {
+            const primary = primaries.find((x) => x.b.id === parent)?.b ?? ctxPrimary ?? primaries[0]?.b;
+            setParent(primary?.id ?? 'new');
+            setDraft(beltDraft(primary));
+        } else if (k === 'moon') setDraft({ type: 'rocky', radiusKm: 1737, orbit: 384400 });
         else if (k === 'station') setDraft({ type: 'artificial', radiusKm: 473, orbit: 42000 });
         else setDraft({ type: 'rocky', radiusKm: 6371, orbit: habAU(hostStarType) * 1.1 });
         if (k === 'planet' && !systems.some((p) => p.id === parent)) setParent(ctxSystem?.id ?? 'new');
@@ -834,6 +910,13 @@ export function CreateFlow({ store, onDone, slot, at: spot }: { store: Store; on
             const id = star ? await store.addBody(parentSystem.id, star.id, { kind: 'planet', name: called || null, ...draft, ordinal }) : null;
             if (id) store.openSystem(parentSystem.id, id);
             ok = !!id;
+        } else if (kind === 'belt' && parentPrimary) {
+            const ring = parentPrimary.b.kind !== 'star';
+            const orbit = ring ? Math.max(draft.orbit, ringRange(parentPrimary.b)[0]) : draft.orbit;
+            const width = Math.min(draft.width ?? 1, beltWidthMax(orbit, ring ? parentPrimary.b.radiusKm : 0));
+            const id = await store.addBody(parentPrimary.p.id, parentPrimary.b.id, { kind: 'belt', name: called || null, type: draft.type, orbit, width });
+            if (id) store.openSystem(parentPrimary.p.id, id);
+            ok = !!id;
         } else if (parentPlanet) {
             const type = kind === 'station' ? 'artificial' : draft.type;
             // Never inside the planet's Roche limit (a station: the planet itself)
@@ -860,10 +943,20 @@ export function CreateFlow({ store, onDone, slot, at: spot }: { store: Store; on
         <div className={styles.field}>
             <input className={styles.nameInput} value={name} onChange={(e) => setName(e.target.value)} placeholder={`New ${CREATE_KINDS.find((k) => k.key === kind)!.label.toLowerCase()}`} aria-label='Name' maxLength={100} autoFocus />
             {(kind === 'planet' || kind === 'moon') && <p className={styles.muted}>With no name it goes by its designation, like Sol-3{kind === 'moon' && 'a'}.</p>}
+            {kind === 'belt' && <p className={styles.muted}>With no name it goes by its designation, like Sol-I.</p>}
         </div>
     );
 
-    const parentField = (kind === 'planet' || isSatellite) && (
+    const parentField = kind === 'belt' ? (
+        <div className={styles.field}>
+            <div className={styles.fieldHead}><span className='pixel-label'>Circles</span></div>
+            {/* A star's belt is measured in AU and a ring in km, so a new choice starts the belt over */}
+            <select value={parentPrimary?.b.id ?? ''} onChange={(e) => (setParent(Number(e.target.value)), setDraft(beltDraft(primaries.find((x) => x.b.id === Number(e.target.value))?.b)))}>
+                {primaries.map(({ b, p }) => <option key={b.id} value={b.id}>{b.kind === 'star' ? `${placeTitle(p)} (the star)` : `${b.name} (${p.placeholder ? 'unnamed system' : p.name})`}</option>)}
+            </select>
+            {primaries.length === 0 && <p className={styles.muted}>Add its star system first.</p>}
+        </div>
+    ) : (kind === 'planet' || isSatellite) && (
         <div className={styles.field}>
             <div className={styles.fieldHead}><span className='pixel-label'>{kind === 'planet' ? 'Star system' : 'Orbits'}</span></div>
             <select value={isSatellite ? (parentPlanet?.b.id ?? '') : parent} onChange={(e) => setParent(e.target.value === 'new' ? 'new' : Number(e.target.value))}>
@@ -882,7 +975,7 @@ export function CreateFlow({ store, onDone, slot, at: spot }: { store: Store; on
         <BodyFields kind='star' draft={{ ...draft, type: starType }} onChange={(p) => p.type && setStarType(p.type)} starType={starType} />
     );
     const bodyFields = kind !== 'system' && kind !== 'landmark' && (
-        <BodyFields kind={kind as BodyKind} draft={draft} onChange={(p) => setDraft({ ...draft, ...p })} starType={hostStarType} system={parentSystem ?? undefined} planet={parentPlanet?.b} />
+        <BodyFields kind={kind as BodyKind} draft={draft} onChange={(p) => setDraft({ ...draft, ...p })} starType={kind === 'belt' ? (parentPrimary ? (starOf(parentPrimary.p)?.type ?? 'sunlike') : 'sunlike') : hostStarType} system={parentSystem ?? undefined} planet={parentPlanet?.b} primary={parentPrimary?.b} />
     );
     const categoryField = kind === 'landmark' && (
         <div className={styles.field}>
@@ -896,7 +989,7 @@ export function CreateFlow({ store, onDone, slot, at: spot }: { store: Store; on
     );
 
     // Started from inside a system (or on a planet): where it goes is already known.
-    const whereKnown = (kind === 'planet' && !!ctxSystem && parentSystem?.id === ctxSystem.id) || (isSatellite && !!ctxPlanet && parentPlanet?.b.id === ctxPlanet.id);
+    const whereKnown = (kind === 'planet' && !!ctxSystem && parentSystem?.id === ctxSystem.id) || (isSatellite && !!ctxPlanet && parentPlanet?.b.id === ctxPlanet.id) || (kind === 'belt' && !!ctxPrimary && parentPrimary?.b.id === ctxPrimary.id);
     const pages = [
         { title: 'What are you adding?', body: <>{kindPicker}{nameField}</> },
         ...(!whereKnown && (parentField || whereField) ? [{ title: 'Where does it go?', body: <>{parentField}{whereField}</> }] : []),
@@ -912,7 +1005,7 @@ export function CreateFlow({ store, onDone, slot, at: spot }: { store: Store; on
             <div className={styles.actions}>
                 {at > 0 && <button type='button' className={styles.btnQuiet} onClick={() => setStep(at - 1)}>Back</button>}
                 {at < pages.length - 1 ? (
-                    <button type='button' className={styles.btn} disabled={at === 0 && name.trim() === '' && kind !== 'planet' && kind !== 'moon'} onClick={() => setStep(at + 1)}>Next</button>
+                    <button type='button' className={styles.btn} disabled={at === 0 && name.trim() === '' && kind !== 'planet' && kind !== 'moon' && kind !== 'belt'} onClick={() => setStep(at + 1)}>Next</button>
                 ) : (
                     <button type='button' className={styles.btn} disabled={!canSave} onClick={save}>{saving ? 'Saving' : 'Done'}</button>
                 )}

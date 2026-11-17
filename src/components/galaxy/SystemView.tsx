@@ -10,8 +10,8 @@ import {
     bodyColor, describeSize, fmtNum, gravityG, habAU, habitability, massEarths, regionLabel, sectorOf, starOf, yearDays, zoneOf,
 } from './data';
 import type { Body, Place } from './data';
-import { BodyFields, BodyName, BodyPortrait, BodyTexture, BodyTree, DeleteButton, KIND_LABEL, designation, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
-import type { PlanetSlot } from './parts';
+import { BodyFields, BodyName, BodyPortrait, BodyTexture, BodyTree, DeleteButton, designation, kindLabel, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
+import type { CreateKind, PlanetSlot } from './parts';
 import type { Store } from './store';
 import styles from './galaxy.module.scss';
 
@@ -25,6 +25,14 @@ const bodyPx = (b: Body) => Math.max(b.kind === 'planet' ? 4 : 2.2, Math.min(26,
 const MOON_GAP = 11;
 /** Room an open planet number's ring takes on each side. */
 const GAP_REACH = 11;
+/** Room a belt round the star takes on each side; its band is drawn no wider than twice this. */
+const BELT_REACH = 14;
+/** The lanes of dots a belt is drawn as: where across the band, how far apart the dots, and how fast against the belt's own year. */
+const BELT_LANES = [
+    { at: -0.3, gap: 9, speed: 1.15 },
+    { at: 0, gap: 13, speed: 1 },
+    { at: 0.3, gap: 7, speed: 0.88 },
+];
 
 const MAX_ZOOM = 6;
 /** Seconds the drawing takes over one year of a planet a year of 365 days out; other years go by the square root. */
@@ -124,6 +132,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
 
     const star = starOf(place);
     const planets = place.bodies.filter((b) => b.kind === 'planet').sort((a, b) => a.orbit - b.orbit);
+    const starBelts = place.bodies.filter((b) => b.kind === 'belt' && b.parentId === star?.id);
     const { w: W, h: Hh } = box;
     // Fitted again here, in case the window shrank since the last zoom
     const view = fit(cam, box);
@@ -137,12 +146,12 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
     const reach = (p: Body) => bodyPx(p) + kidsOf(p.id).length * MOON_GAP + 6;
     const base = starPx + 14;
     const room = maxR - base - (onAdd ? 34 : 0);
-    const farthest = Math.log((planets[planets.length - 1]?.orbit ?? 1) + 1);
+    const farthest = Math.log(Math.max(1, ...planets.map((p) => p.orbit), ...starBelts.map((b) => b.orbit)) + 1);
     const k = Math.min(150, room / Math.max(farthest, 0.2));
-    // Every ring from the star outward: the planets and, for whoever may add, the open
-    // numbers inside a planet that is "planet N" (spread evenly, in log distance,
-    // between its neighbours).
-    const rings: { planet?: Body; index: number; n: number; orbit: number; reach: number; r: number }[] = [];
+    // Every ring from the star outward: the planets, the star's belts and, for whoever
+    // may add, the open numbers inside a planet that is "planet N" (spread evenly, in
+    // log distance, between its neighbours).
+    const rings: { planet?: Body; belt?: Body; index: number; n: number; orbit: number; reach: number; r: number }[] = [];
     planets.forEach((p, i) => {
         const before = planets[i - 1];
         const gaps = onAdd ? p.num - (before?.num ?? 0) - 1 : 0;
@@ -150,6 +159,8 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
         for (let g = 1; g <= gaps; g++) rings.push({ index: i, n: (before?.num ?? 0) + g, orbit: from * (p.orbit / from) ** (g / (gaps + 1)), reach: GAP_REACH, r: 0 });
         rings.push({ planet: p, index: i, n: p.num, orbit: p.orbit, reach: reach(p), r: 0 });
     });
+    for (const b of starBelts) rings.push({ belt: b, index: -1, n: b.num, orbit: b.orbit, reach: BELT_REACH, r: 0 });
+    rings.sort((a, b) => a.orbit - b.orbit);
     // Log distance, then pushed outward wherever two rings would overlap.
     rings.forEach((ring, i) => {
         const want = base + Math.log(ring.orbit + 1) * k;
@@ -209,6 +220,22 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                 {rings.map((ring) => {
                     const { r, index: i } = ring;
                     const p = ring.planet;
+                    if (ring.belt) {
+                        // A band as wide as the belt is (within the room it was given), with lanes of dots drifting round it
+                        const b = ring.belt;
+                        const band = Math.max(8, Math.min(BELT_REACH * 2 - 2, auToPx(b.orbit + (b.width ?? 0) / 2) - auToPx(b.orbit - (b.width ?? 0) / 2)));
+                        const year = YEAR_SECONDS * Math.sqrt(yearDays(b.orbit, star?.type ?? 'sunlike') / 365.25);
+                        return (
+                            <g key={b.id} className={cx(styles.orb, styles.belt, selBodyId === b.id && styles.orbSelected)} style={{ color: bodyColor(b) }} onClick={(e) => (e.stopPropagation(), onSelect(b.id))} onDoubleClick={() => onEdit(b.id)}>
+                                <circle cx={c.x} cy={c.y} r={r} className={styles.beltBand} style={{ strokeWidth: band }} />
+                                {BELT_LANES.map((lane) => (
+                                    <circle key={lane.at} cx={c.x} cy={c.y} r={r + lane.at * band} className={styles.beltDots} strokeDasharray={`0.1 ${lane.gap}`} transform={`rotate(${(turned(year / lane.speed) * 180) / Math.PI + lane.gap * 20} ${c.x} ${c.y})`} />
+                                ))}
+                                <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} style={{ strokeWidth: band + 4 }} />
+                                <text x={c.x} y={c.y + r + 4} textAnchor='middle' className={styles.beltName}>{b.name}</text>
+                            </g>
+                        );
+                    }
                     if (!p) {
                         // Labelled at the top of its ring, where "+ add a planet" is, and holding still
                         return (
@@ -241,6 +268,18 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                 const mx = bx + mr * Math.cos(ma);
                                 const my = by + mr * Math.sin(ma);
                                 const on = selBodyId === m.id;
+                                const moonPx = Math.min(bodyPx(m), MOON_GAP / 2);
+                                if (m.kind === 'belt') {
+                                    // A ring: a band round the planet in place of an orbit and a dot
+                                    return (
+                                        <g key={m.id} className={cx(styles.orb, on && styles.orbSelected)} style={{ color: bodyColor(m) }} onClick={(e) => (e.stopPropagation(), onSelect(m.id))} onDoubleClick={(e) => (e.stopPropagation(), onEdit(m.id))}>
+                                            <circle cx={bx} cy={by} r={mr} className={styles.ringBand} />
+                                            <circle cx={bx} cy={by} r={mr} className={styles.orbitHit} style={{ strokeWidth: MOON_GAP * 0.8 }} />
+                                        </g>
+                                    );
+                                }
+                                // Rings carry no name in the drawing, so the names below skip them
+                                const row = kids.slice(0, j).filter((kid) => kid.kind !== 'belt').length;
                                 return (
                                     <g key={m.id} className={cx(styles.orb, on && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(m.id))} onDoubleClick={(e) => (e.stopPropagation(), onEdit(m.id))}>
                                         <circle cx={bx} cy={by} r={mr} className={styles.orbitLine} />
@@ -249,11 +288,15 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                             <rect x={mx - 3} y={my - 3} width='6' height='6' fill={bodyColor(m)} transform={`rotate(45 ${mx} ${my})`} />
                                         ) : (
                                             <>
-                                                <circle cx={mx} cy={my} r={Math.min(bodyPx(m), MOON_GAP / 2)} fill={bodyColor(m)} />
-                                                <BodyTexture body={m} x={mx} y={my} r={Math.min(bodyPx(m), MOON_GAP / 2)} />
+                                                <circle cx={mx} cy={my} r={moonPx} fill={bodyColor(m)} />
+                                                <BodyTexture body={m} x={mx} y={my} r={moonPx} />
+                                                {/* A moon's own rings: a thin band round its dot */}
+                                                {place.bodies.filter((b) => b.kind === 'belt' && b.parentId === m.id).slice(0, 1).map((b) => (
+                                                    <circle key={b.id} cx={mx} cy={my} r={moonPx + 2.5} className={styles.ringBand} style={{ color: bodyColor(b), strokeWidth: 1.5 }} />
+                                                ))}
                                             </>
                                         )}
-                                        <text x={bx} y={by + pr + MOON_GAP * kids.length + 14 + j * 13} textAnchor='middle' className={cx(styles.moonName, on && styles.moonNameOn)}>{m.name}</text>
+                                        <text x={bx} y={by + pr + MOON_GAP * kids.length + 14 + row * 13} textAnchor='middle' className={cx(styles.moonName, on && styles.moonNameOn)}>{m.name}</text>
                                     </g>
                                 );
                             })}
@@ -324,7 +367,26 @@ function Telemetry({ place, body }: { place: Place; body: Body }) {
                 <Row label='Mass' value={`${fmtNum(type?.mass ?? 1)} Suns`} />
                 {body.type !== 'black_hole' && <Row label='Temperate orbit' value={`about ${fmtNum(habAU(body.type) * 1.1)} AU out`} />}
                 <Row label='Planets' value={planets.length} />
-                <Row label='Moons and stations' value={place.bodies.length - planets.length - 1} />
+                <Row label='Moons and stations' value={place.bodies.filter((b) => b.kind === 'moon' || b.kind === 'station').length} />
+                <Row label='Belts and rings' value={place.bodies.filter((b) => b.kind === 'belt').length} />
+            </div>
+        );
+    }
+    if (body.kind === 'belt') {
+        const unit = body.ring ? 'km' : 'AU';
+        const width = body.width ?? 0;
+        return (
+            <div className={styles.telemetry}>
+                <Row label='Made of' value={body.type === 'rocky' ? 'Rock' : (COMPOSITIONS[body.type]?.label ?? 'Unknown')} />
+                <Row label='Circles' value={`${parent?.name ?? 'nothing'} at ${fmtNum(body.orbit)} ${unit}`} />
+                <Row label='Width' value={`${fmtNum(width)} ${unit}`} />
+                <Row label='Reaches' value={`${fmtNum(body.orbit - width / 2)} to ${fmtNum(body.orbit + width / 2)} ${unit}`} />
+                {!body.ring && star && (
+                    <>
+                        <Row label='Year' value={`${fmtNum(yearDays(body.orbit, star.type))} equinoxes`} />
+                        {star.type !== 'black_hole' && <Row label='Climate' value={`${zoneOf(body.orbit, star.type).label} orbit`} />}
+                    </>
+                )}
             </div>
         );
     }
@@ -349,7 +411,7 @@ function Telemetry({ place, body }: { place: Place; body: Body }) {
 }
 
 // ---------- The view ----------
-export default function SystemView({ store, place, onAdd }: { store: Store; place: Place; onAdd: (slot?: PlanetSlot) => void }) {
+export default function SystemView({ store, place, onAdd }: { store: Store; place: Place; onAdd: (slot?: PlanetSlot, kind?: CreateKind) => void }) {
     const [editing, setEditing] = useState(false);
     const body = store.selBody;
     const star = starOf(place);
@@ -390,9 +452,15 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                     <h4 className='pixel-label'>Bodies</h4>
                     <BodyTree place={place} selBodyId={body?.id ?? null} onPick={(id) => (setEditing(false), store.select(place.id, id))} onOpen={(id) => (store.select(place.id, id), setEditing(mine))} />
                     {mine && (
-                        <div className={styles.actions}>
+                        <div className={cx(styles.actions, styles.sysAdd)}>
                             <button type='button' className={styles.btnQuiet} onClick={() => addPlanet()}>+ Planet</button>
-                            {body?.kind === 'planet' && <button type='button' className={styles.btnQuiet} onClick={() => onAdd()}>+ Moon or station at {body.name}</button>}
+                            {body?.kind === 'planet' && <button type='button' className={styles.btnQuiet} onClick={() => onAdd()}>+ Moon / station</button>}
+                            {/* Round the body that is picked (a ring), else round the star (a belt) */}
+                            {body && (body.kind === 'planet' || body.kind === 'moon') ? (
+                                <button type='button' className={styles.btnQuiet} onClick={() => onAdd(undefined, 'belt')}>+ Ring</button>
+                            ) : (
+                                <button type='button' className={styles.btnQuiet} onClick={() => (store.select(place.id, null), onAdd(undefined, 'belt'))}>+ Belt</button>
+                            )}
                         </div>
                     )}
                 </section>
@@ -405,14 +473,14 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                             <BodyPortrait body={body} />
                             <div>
                                 <h3><BodyName body={body} paren /></h3>
-                                <p className='pixel-label'>{KIND_LABEL[body.kind]}{body.kind !== 'star' && ` ${designation(body)}`}</p>
+                                <p className='pixel-label'>{`${kindLabel(body)} ${designation(body)}`.trim()}</p>
                             </div>
                         </header>
                         {!(editing && mine) && <Writeup of={body} />}
                         {editing && mine ? (
                           <>
                             <TextFields key={body.id} store={store} place={place} body={body} />
-                            <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} system={place} selfId={body.id} planet={place.bodies.find((b) => b.id === body.parentId && b.kind === 'planet')} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
+                            <BodyFields kind={body.kind} draft={body} starType={star?.type ?? 'sunlike'} system={place} selfId={body.id} planet={place.bodies.find((b) => b.id === body.parentId && b.kind === 'planet')} primary={place.bodies.find((b) => b.id === body.parentId)} onChange={(patch) => store.updateBody(place.id, body.id, patch)} />
                           </>
                         ) : (
                             <Telemetry place={place} body={body} />
@@ -441,7 +509,8 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                             <Row label='Position' value={place.precision === 'region' ? 'not pinned down' : sectorOf(place.pos)} />
                             <Row label='Star' value={STAR_TYPES[star?.type ?? '']?.label ?? 'none'} />
                             <Row label='Planets' value={planets.length} />
-                            <Row label='Moons and stations' value={Math.max(0, place.bodies.length - planets.length - 1)} />
+                            <Row label='Moons and stations' value={place.bodies.filter((b) => b.kind === 'moon' || b.kind === 'station').length} />
+                            <Row label='Belts and rings' value={place.bodies.filter((b) => b.kind === 'belt').length} />
                             <Row label='Added by' value={place.owner.username} />
                         </div>
                         {mine && (

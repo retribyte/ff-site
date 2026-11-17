@@ -52,6 +52,8 @@ export interface NewBody {
     type: string;
     radiusKm?: number;
     orbit?: number;
+    /** Belts: how wide the band is. */
+    width?: number;
     /** Planets: "this is planet N". */
     ordinal?: number | null;
     children?: NewBody[];
@@ -61,7 +63,7 @@ const bodyFields = (b: NewBody): Record<string, unknown> => ({
     kind: b.kind.toUpperCase(),
     name: b.name,
     type: b.type,
-    ...(b.kind !== 'star' && { radiusKm: b.radiusKm, orbit: b.orbit }),
+    ...(b.kind === 'belt' ? { orbit: b.orbit, width: b.width } : b.kind !== 'star' && { radiusKm: b.radiusKm, orbit: b.orbit }),
     ...(b.kind === 'planet' && b.ordinal && { ordinal: b.ordinal }),
     ...(b.children && { children: b.children.map(bodyFields) }),
 });
@@ -73,7 +75,7 @@ export interface TextPatch {
     slug?: string;
 }
 
-type BodyPatch = Partial<Pick<Body, 'type' | 'radiusKm' | 'orbit' | 'ordinal'>>;
+type BodyPatch = Partial<Pick<Body, 'type' | 'radiusKm' | 'orbit' | 'width' | 'ordinal'>>;
 
 /** localStorage: the view settings (camera, layers, starfield strength, orbit motion). */
 const VIEW_KEY = 'galaxyView';

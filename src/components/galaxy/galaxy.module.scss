@@ -1171,6 +1171,17 @@ button.fieldReadout {
     }
 }
 
+// The add buttons under the body list: always in view at the foot of the panel, however long the list
+.sysAdd {
+    position: sticky;
+    bottom: 0;
+    margin: 0 -12px -12px;
+    padding: 8px 12px 12px;
+    border-top: 1px dashed var(--border-loud);
+    background: var(--surface);
+    z-index: 1;
+}
+
 .sysDiagram {
     position: absolute;
     inset: 0;
@@ -1203,6 +1214,49 @@ button.fieldReadout {
     stroke: rgba(0, 0, 0, 0.35);
     stroke-width: 2;
     pointer-events: none;
+}
+
+// A belt round the star: a faint band in its own color, with lanes of dots in it
+.beltBand {
+    fill: none;
+    stroke: currentColor;
+    opacity: 0.13;
+}
+
+.beltDots {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.beltName {
+    font-size: 12px !important;
+    fill: var(--map-muted) !important;
+}
+
+.belt:hover > .beltBand,
+.belt.orbSelected > .beltBand {
+    opacity: 0.32;
+}
+
+.belt.orbSelected > .beltName {
+    fill: var(--map-nav) !important;
+}
+
+// A ring round a planet or moon
+.ringBand {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 5;
+    opacity: 0.6;
+}
+
+.orbSelected > .ringBand {
+    stroke: var(--map-nav);
+    opacity: 0.9;
 }
 
 // The star's temperate band, behind the orbits
@@ -1350,6 +1404,11 @@ button.fieldReadout {
         padding: 8px;
         overflow-y: auto;
         pointer-events: auto;
+    }
+
+    // The panels scroll as one on a phone, so the buttons stay under their list
+    .sysAdd {
+        position: static;
     }
 
     .sysMotion {

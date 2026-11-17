@@ -10,7 +10,7 @@ import type { Address, ApiPlace, Body, Place, RegionKey, Vec3 } from './data';
 import GalaxyScene from './GalaxyScene';
 import type { Layers } from './GalaxyScene';
 import { BodyIcon, CreateFlow, LandmarkIcon, SelectionDetail, placeTitle } from './parts';
-import type { PlanetSlot } from './parts';
+import type { CreateKind, PlanetSlot } from './parts';
 import SystemView from './SystemView';
 import { useGalaxyStore } from './store';
 import type { Store } from './store';
@@ -136,6 +136,13 @@ export function ViewSettings({ store }: { store: Store }) {
     );
 }
 
+/** The add wizard is open (null: it is not), perhaps on a gap ring's planet, on a spot clicked on the map, or on one kind of thing. */
+interface Creating {
+    slot?: PlanetSlot;
+    at?: Vec3;
+    kind?: CreateKind;
+}
+
 /** One search result: a place, or a body inside one. */
 interface Hit {
     p: Place;
@@ -152,6 +159,7 @@ const HIT_GROUPS: [key: string, title: string][] = [
     ['planet', 'Planets'],
     ['moon', 'Moons'],
     ['station', 'Stations'],
+    ['belt', 'Belts and rings'],
     ['cluster', 'Clusters'],
     ['nebula', 'Nebulae'],
     ['landmark', 'Landmarks'],
@@ -167,8 +175,7 @@ export default function MapApp({ places, start }: { places: ApiPlace[]; /** What
     const store = useGalaxyStore(places, start);
     const [query, setQuery] = useState('');
     const [region, setRegion] = useState<RegionKey | null>(null);
-    // true = the add wizard is open; a slot = it adds the planet a gap ring stands for
-    const [creating, setCreating] = useState<boolean | PlanetSlot | { at: Vec3 }>(false);
+    const [creating, setCreating] = useState<Creating | null>(null);
     const [narrow, setNarrow] = useState<boolean | null>(null);
     // Phones: the view settings, opened from their button; holds the selection they were opened under, so picking a place folds them away
     const [settingsFor, setSettingsFor] = useState<number | null>(null);
@@ -198,7 +205,7 @@ export default function MapApp({ places, start }: { places: ApiPlace[]; /** What
     const settingsOpen = settingsFor === (place?.id ?? 0);
     // The same plain button the system view adds with; a phone has room for fewer words
     const addButton = store.user ? (
-        <button type='button' className={cx(styles.btnQuiet, styles.cAdd)} onClick={() => setCreating(true)} title='Add a system or landmark'>{narrow ? '+ System' : '+ System or landmark'}</button>
+        <button type='button' className={cx(styles.btnQuiet, styles.cAdd)} onClick={() => setCreating({})} title='Add a system or landmark'>{narrow ? '+ System' : '+ System or landmark'}</button>
     ) : (
         <Link href='/login' className={cx(styles.btnQuiet, styles.cAdd)}>{narrow ? 'Sign in to add' : 'Sign in to add to the map'}</Link>
     );
@@ -296,11 +303,11 @@ export default function MapApp({ places, start }: { places: ApiPlace[]; /** What
                     )}
                 </>
             )}
-            {inSystem && place && <SystemView store={store} place={place} onAdd={(slot) => setCreating(slot ?? true)} />}
+            {inSystem && place && <SystemView store={store} place={place} onAdd={(slot, kind) => setCreating({ slot, kind })} />}
             {creating && (
-                <div className={cx(styles.cModalWrap, store.placing && styles.tucked)} onMouseDown={(e) => e.target === e.currentTarget && !store.placing && setCreating(false)}>
+                <div className={cx(styles.cModalWrap, store.placing && styles.tucked)} onMouseDown={(e) => e.target === e.currentTarget && !store.placing && setCreating(null)}>
                     <div className={cx('pixel-panel', styles.cModal)}>
-                        <CreateFlow store={store} slot={typeof creating === 'object' && 'ordinal' in creating ? creating : undefined} at={typeof creating === 'object' && 'at' in creating ? creating.at : undefined} onDone={() => setCreating(false)} />
+                        <CreateFlow store={store} {...creating} onDone={() => setCreating(null)} />
                     </div>
                 </div>
             )}
