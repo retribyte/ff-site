@@ -3,7 +3,7 @@
 // Pieces of the galaxy map shared by the galaxy level and the system view: the "no
 // raw numbers" inputs, the detail blocks for a selection, and the add wizard.
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import Link from 'next/link';
 import RichText from '@/components/RichText';
 import WikiLink from '@/components/WikiLink';
@@ -11,7 +11,7 @@ import { decodeEntities } from '@/lib/html';
 import { isValidSlug } from '@/lib/slug';
 import {
     BELT_TYPES, BELT_WIDTH_RANGE, PAIR_PLANET_RANGE, PAIR_PLANET_REFS, PAIR_STAR_RANGE, PAIR_STAR_REFS, BELT_WIDTH_REFS, COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, RING_WIDTH_RANGE, RING_WIDTH_REFS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
-    beltDraft, beltWidthMax, bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, lifted, planetNumber, randomPointIn, regionAt, regionLabel, letters, ringRange, roman, satelliteRange, stationMark, hostOf, isSlot, isStarry, massOf, massEarths, orbitAU, primaryOf, unitOf, sectorOf, starOf, toT, yearDays, zoneOf,
+    beltDraft, beltWidthMax, bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, lifted, planetNumber, randomPointIn, regionAt, regionLabel, letters, ringRange, roman, satelliteRange, stationMark, hostOf, isSlot, isStarry, massOf, massEarths, orbitAU, primaryOf, unitOf, sectorOf, toT, yearDays, zoneOf,
 } from './data';
 import type { Body, BodyKind, Host, Place, Ref, RegionKey, Vec3 } from './data';
 import type { Store, TextPatch, Where } from './store';
@@ -728,11 +728,49 @@ export function BodyTree({ place, selBodyId, onPick, onOpen }: { place: Place; s
     return <ul className={styles.tree}>{kids(null).map((b) => row(b, 0))}</ul>;
 }
 
+/**
+ * A system's big dot: its star, or every one of its stars (companions too) overlapping
+ * from the top left, A in front, each sized a little by its kind.
+ */
+export function SystemDot({ place }: { place: Place }) {
+    // useId's characters are not all safe in a url(#...) reference
+    const shade = `dots${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
+    const stars = place.bodies.filter((b) => b.kind === 'star').sort((a, b) => (a.letter ?? '').localeCompare(b.letter ?? '') || a.id - b.id);
+    if (stars.length < 2) {
+        const star = stars[0];
+        return <i className={styles.bigDot} style={{ background: star ? bodyColor(star) : '#7fd3e8', borderRadius: '50%' }} />;
+    }
+    const size = 44;
+    const r = size / (stars.length * 0.9 + 1.3);
+    const step = (size - 2 * r) / (stars.length - 1);
+    const biggest = Math.max(...stars.map((b) => STAR_TYPES[b.type]?.px ?? 24));
+    return (
+        <svg className={styles.starDots} width={size} height={size} viewBox={`0 0 ${size} ${size}`} role='img' aria-label={`${stars.length} stars`}>
+            <defs>
+                <radialGradient id={shade} cx='0.35' cy='0.35' r='0.75'>
+                    <stop offset='0.55' stopColor='#000' stopOpacity='0' />
+                    <stop offset='1' stopColor='#000' stopOpacity='0.45' />
+                </radialGradient>
+            </defs>
+            {/* B and the rest behind, A last so it sits in front */}
+            {stars.map((b, i) => ({ b, i })).reverse().map(({ b, i }) => {
+                const at = r + i * step;
+                const rr = r * (0.75 + 0.25 * ((STAR_TYPES[b.type]?.px ?? 24) / biggest));
+                return (
+                    <g key={b.id}>
+                        <circle cx={at} cy={at} r={rr} fill={bodyColor(b)} stroke={b.type === 'black_hole' ? '#f0b44c' : 'rgba(0, 0, 0, 0.5)'} strokeWidth='1.5' />
+                        <circle cx={at} cy={at} r={rr} fill={`url(#${shade})`} />
+                    </g>
+                );
+            })}
+        </svg>
+    );
+}
+
 export function PlaceHeader({ place }: { place: Place }) {
-    const star = starOf(place);
     return (
         <header className={styles.detailHead}>
-            <i className={styles.bigDot} style={{ background: place.kind === 'system' && star ? bodyColor(star) : '#7fd3e8', borderRadius: place.kind === 'landmark' ? 0 : '50%' }} />
+            {place.kind === 'system' ? <SystemDot place={place} /> : <i className={styles.bigDot} style={{ background: '#7fd3e8', borderRadius: 0 }} />}
             <div>
                 <h3>{placeTitle(place)}</h3>
                 <p className='pixel-label'>

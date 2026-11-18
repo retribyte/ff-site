@@ -10,7 +10,7 @@ import {
     bodyColor, componentsOf, describeSize, fmtNum, gravityG, habAU, habitability, hostOf, isSlot, isStarry, lumOf, massEarths, massOf, orbitAU, primaryOf, regionLabel, sectorOf, unitOf, yearDays, zoneOf,
 } from './data';
 import type { Body, Place } from './data';
-import { BodyFields, BodyIcon, BodyName, BodyPortrait, BodyTexture, BodyTree, DeleteButton, designation, kindLabel, pairOf, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
+import { BodyFields, BodyIcon, BodyName, SystemDot, BodyPortrait, BodyTexture, BodyTree, DeleteButton, designation, kindLabel, pairOf, RenameRow, TextFields, Travelogue, Writeup, placeTitle } from './parts';
 import type { CreateKind, PlanetSlot } from './parts';
 import type { Store } from './store';
 import styles from './galaxy.module.scss';
@@ -313,10 +313,18 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
     /** A star's disc and glow at (x, y): `glowId` is an objectBoundingBox gradient, so it fits wherever the disc is carried. */
     const starDisc = (b: Body, x: number, y: number, px: number, glowId: string) => (
         <>
-            {b.type === 'black_hole' && <circle cx={x} cy={y} r={px + 6} fill='none' stroke='#f0b44c' strokeWidth='3' opacity='.7' />}
+            {b.type === 'black_hole' && <circle cx={x} cy={y} r={px + 6} fill='none' stroke='#f0b44c' strokeWidth='3' opacity='.7' className={styles.starGlow} />}
             <circle cx={x} cy={y} r={px + STAR_GLOW * 0.6} fill={`url(#${glowId})`} className={styles.starGlow} />
-            <circle cx={x} cy={y} r={px} fill={bodyColor(b)} />
+            <circle cx={x} cy={y} r={px} fill={bodyColor(b)} className={styles.partDisc} />
         </>
+    );
+    /** One partner of a pair, carried round the pair's center: selectable on its own, ringed only when it is the one pointed at or picked. */
+    const partner = (k: Body, carry: { ref: (node: SVGGElement | SVGCircleElement | null) => void; transform: string }, drawn: React.ReactNode) => (
+        <g key={k.id} className={styles.mover} {...carry}>
+            <g className={cx(styles.part, selBodyId === k.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(k.id))} onDoubleClick={(e) => (e.stopPropagation(), onEdit(k.id))}>
+                {drawn}
+            </g>
+        </g>
     );
     // Every star drawn away from the center gets a glow of its own color
     const glowStars = [...core, ...companions].flatMap((b) => (b.kind === 'star' ? [b] : componentsOf(place.bodies, b).filter((k) => k.kind === 'star')));
@@ -381,16 +389,17 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                 {root && core.length > 0 && (
                     // A pair of stars at the center: the barycenter's mark, and its stars going round it opposite each other
                     <g className={cx(styles.orb, selBodyId === root.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(root.id))} onDoubleClick={() => onEdit(root.id)}>
-                        <circle cx={c.x} cy={c.y} r={coreR} className={styles.orbitLine} />
-                        <circle cx={c.x} cy={c.y} r={coreR} className={styles.orbitHit} />
-                        <path d={`M${c.x - 4} ${c.y}h8M${c.x} ${c.y - 4}v8`} stroke='currentColor' strokeWidth='1.2' opacity='0.6' />
+                        {/* One ring round the whole pair (and the pair's hit area), then the path the stars share and the barycenter's mark */}
+                        <circle cx={c.x} cy={c.y} r={starPx + 6} className={styles.pairRing} />
+                        <circle cx={c.x} cy={c.y} r={coreR} className={styles.orbitLine} style={{ pointerEvents: 'none' }} />
+                        <path d={`M${c.x - 4} ${c.y}h8M${c.x} ${c.y - 4}v8`} stroke='currentColor' strokeWidth='1.2' opacity='0.6' pointerEvents='none' />
                         {core.map((k, j) => {
                             const at = j * ((2 * Math.PI) / core.length) + angle(place.id, 0);
                             const px = k.kind === 'star' ? typePx(k) * 0.8 : 10;
-                            return (
-                                <g key={k.id} className={cx(styles.mover, selBodyId === k.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(k.id))} onDoubleClick={(e) => (e.stopPropagation(), onEdit(k.id))} {...mover(`core${k.id}`, inline ? held(c.x, c.y, coreR, Math.PI + at) : round(c.x, c.y, coreR, at, PAIR_SECONDS))}>
-                                    {k.kind === 'star' ? starDisc(k, 0, 0, px, `galaxy-glow-${k.id}`) : <g transform='translate(-8 -8)'><BodyIcon body={k} size={16} /></g>}
-                                </g>
+                            return partner(
+                                k,
+                                mover(`core${k.id}`, inline ? held(c.x, c.y, coreR, Math.PI + at) : round(c.x, c.y, coreR, at, PAIR_SECONDS)),
+                                k.kind === 'star' ? starDisc(k, 0, 0, px, `galaxy-glow-${k.id}`) : <g transform='translate(-8 -8)'><BodyIcon body={k} size={16} /></g>,
                             );
                         })}
                         {inline ? (
@@ -412,13 +421,20 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                 <circle cx={c.x} cy={c.y} r={r} className={styles.orbitLine} style={{ stroke: bodyColor(pair[0] ?? b), strokeDasharray: '2 4' }} />
                                 <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} />
                               <g className={styles.mover} {...mover(`companion${b.id}`, inline ? held(c.x, c.y, r, Math.PI / 2) : round(c.x, c.y, r, angle(place.id, i + 50), companionYear(b)))}>
-                                {b.kind === 'star'
-                                    ? starDisc(b, 0, 0, px, `galaxy-glow-${b.id}`)
-                                    : pair.map((k, j) => (
-                                          <g key={k.id} className={cx(styles.mover, selBodyId === k.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(k.id))} onDoubleClick={(e) => (e.stopPropagation(), onEdit(k.id))} {...mover(`pair${k.id}`, inline ? held(0, 0, px / 2, j * Math.PI) : round(0, 0, px / 2, j * ((2 * Math.PI) / pair.length), PAIR_SECONDS))}>
-                                              {k.kind === 'star' ? starDisc(k, 0, 0, Math.max(3, typePx(k) * COMPANION_SCALE * 0.6), `galaxy-glow-${k.id}`) : <g transform='translate(-6 -6)'><BodyIcon body={k} size={12} /></g>}
-                                          </g>
-                                      ))}
+                                {b.kind === 'star' ? (
+                                    starDisc(b, 0, 0, px, `galaxy-glow-${b.id}`)
+                                ) : (
+                                    <>
+                                        <circle cx={0} cy={0} r={px + 4} className={styles.pairRing} />
+                                        {pair.map((k, j) =>
+                                            partner(
+                                                k,
+                                                mover(`pair${k.id}`, inline ? held(0, 0, px / 2, j * Math.PI) : round(0, 0, px / 2, j * ((2 * Math.PI) / pair.length), PAIR_SECONDS)),
+                                                k.kind === 'star' ? starDisc(k, 0, 0, Math.max(3, typePx(k) * COMPANION_SCALE * 0.6), `galaxy-glow-${k.id}`) : <g transform='translate(-6 -6)'><BodyIcon body={k} size={12} /></g>,
+                                            ),
+                                        )}
+                                    </>
+                                )}
                                 {sats.map((m, j) => {
                                     const sr = px + SAT_GAP * (j + 1);
                                     const on = selBodyId === m.id;
@@ -506,16 +522,21 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                     <circle cx={bx} cy={by} r={pr} className={styles.shade} />
                                 </>
                             ) : (
-                                pair.map((k, j) => {
-                                    const kr = Math.max(2.5, Math.min(bodyPx(k), pr));
-                                    return (
-                                        <g key={k.id} className={cx(styles.mover, selBodyId === k.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(k.id))} onDoubleClick={(e) => (e.stopPropagation(), onEdit(k.id))} {...mover(`pair${k.id}`, inline ? held(0, 0, pairR, j * Math.PI) : round(0, 0, pairR, j * ((2 * Math.PI) / pair.length), PAIR_SECONDS / 2))}>
-                                            <circle cx={0} cy={0} r={kr} fill={bodyColor(k)} />
-                                            <BodyTexture body={k} x={0} y={0} r={kr} />
-                                            <circle cx={0} cy={0} r={kr} className={styles.shade} />
-                                        </g>
-                                    );
-                                })
+                                <>
+                                    <circle cx={0} cy={0} r={inner + 3} className={styles.pairRing} />
+                                    {pair.map((k, j) => {
+                                        const kr = Math.max(2.5, Math.min(bodyPx(k), pr));
+                                        return partner(
+                                            k,
+                                            mover(`pair${k.id}`, inline ? held(0, 0, pairR, j * Math.PI) : round(0, 0, pairR, j * ((2 * Math.PI) / pair.length), PAIR_SECONDS / 2)),
+                                            <>
+                                                <circle cx={0} cy={0} r={kr} fill={bodyColor(k)} className={styles.partDisc} />
+                                                <BodyTexture body={k} x={0} y={0} r={kr} />
+                                                <circle cx={0} cy={0} r={kr} className={styles.shade} />
+                                            </>,
+                                        );
+                                    })}
+                                </>
                             )}
                             {/* In line the names go beside the bodies, not over and under them, where the next orbits are: the planet's on the left, its moons' on the right */}
                             {inline ? (
@@ -795,7 +816,7 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                 ) : (
                     <section className={styles.sysSection}>
                         <header className={styles.detailHead}>
-                            {root?.kind === 'barycenter' ? <BodyIcon body={root} size={40} /> : <i className={styles.bigDot} style={{ background: root ? bodyColor(root) : '#7fd3e8', borderRadius: '50%' }} />}
+                            <SystemDot place={place} />
                             <div>
                                 <h3>{placeTitle(place)}</h3>
                                 <p className='pixel-label'>{place.placeholder ? 'System, star not named yet' : 'System'}</p>

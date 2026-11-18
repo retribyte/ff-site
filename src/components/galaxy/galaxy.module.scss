@@ -274,15 +274,16 @@
     cursor: pointer;
 
     // Brighter on hover (a stroke, not a glow filter, which costs a blur per frame); select by clicking the orbit.
-    &:hover > .orbitLine {
+    // Not while one partner of a pair is pointed at: that lights the partner alone.
+    &:hover:not(:has(.part:hover)) > .orbitLine {
         opacity: 1;
         stroke-width: 3;
     }
 
     // The body's own disc only: a belt's band and dots and a ring's band are circles too, and an outline would redraw them as thin white lines
-    &:hover > circle:not(.orbitLine):not(.orbitHit):not(.starGlow):not(.beltBand):not(.beltDots):not(.ringBand),
+    &:hover > circle:not(.orbitLine):not(.orbitHit):not(.starGlow):not(.beltBand):not(.beltDots):not(.ringBand):not(.pairRing),
     // `.mover`: a planet or moon with what travels with it (its place on the orbit is written each tick)
-    &:hover > .mover > circle:not(.ringBand),
+    &:hover > .mover > circle:not(.ringBand):not(.starGlow):not(.pairRing),
     &:hover > .mover > rect {
         stroke: rgba(255, 255, 255, 0.85);
         stroke-width: 2;
@@ -301,6 +302,44 @@
     > text,
     > .mover > text {
         fill: var(--map-nav);
+    }
+}
+
+// A pair (its barycenter): one ring round both partners, lit when the pair itself is pointed at (not one of
+// its partners) or picked. Its transparent fill is the pair's own hit area, under the partners.
+.pairRing {
+    fill: transparent;
+    stroke: transparent;
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+    pointer-events: all;
+}
+
+.orb:hover:not(:has(.part:hover)) > .pairRing,
+.orb:hover:not(:has(.part:hover)) > .mover > .pairRing {
+    stroke: rgba(255, 255, 255, 0.85);
+}
+
+.orbSelected > .pairRing,
+.orbSelected > .mover > .pairRing {
+    stroke: var(--map-nav);
+    stroke-width: 2.5;
+}
+
+// One partner of a pair: its own disc is ringed when it is pointed at or picked
+.part {
+    cursor: pointer;
+
+    &:hover > .partDisc {
+        stroke: rgba(255, 255, 255, 0.85);
+        stroke-width: 2;
+        vector-effect: non-scaling-stroke;
+    }
+
+    &.orbSelected > .partDisc {
+        stroke: var(--map-nav);
+        stroke-width: 2.5;
+        vector-effect: non-scaling-stroke;
     }
 }
 
@@ -342,6 +381,11 @@
     width: 44px;
     height: 44px;
     box-shadow: inset -8px -8px 14px rgba(0, 0, 0, 0.45);
+}
+
+// A system's stars, overlapping, for its header (in place of .bigDot)
+.starDots {
+    flex: none;
 }
 
 .bodyIcon {
