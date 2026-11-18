@@ -2120,7 +2120,7 @@ _Dutch's eyes extend 50 feet outwards, forcing him to go "AWOOGA!" They retract 
 
 **Maxwell** _(31-May-22 07:16 PM)_ [981350491831291945]
 
-> Our next location is a jungle planet. EY-916. Heavy rainfall and large canopies.
+> Our next location is a jungle planet. Eyacara-6. Heavy rainfall and large canopies.
 
 **Maxwell** _(31-May-22 07:16 PM)_ [981350526090375218]
 
@@ -2194,7 +2194,7 @@ _Bellow finally relaxes a bit._
 
 **Maxwell** _(31-May-22 07:18 PM)_ [981350874511204402]
 
-> Secure yourself. We are travelling towards EY-916.
+> Secure yourself. We are travelling towards Eyacara-6.
 
 **Sean** _(31-May-22 07:18 PM)_ [981350926617018408]
 
