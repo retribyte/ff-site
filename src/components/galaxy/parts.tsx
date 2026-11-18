@@ -502,7 +502,8 @@ function EpisodePicker({ store, taken, onPick, onClose }: { store: Store; taken:
 export function designation(b: Body): string {
     if (b.kind === 'belt') return `${roman(b.num)}${b.sub ? `.${b.sub}` : ''}`;
     if (b.kind === 'moon') return letters(b.num);
-    if (b.kind === 'station') return stationMark(b);
+    // Only when the station is designated: its year and iteration mean nothing without its primary's part
+    if (b.kind === 'station') return b.gu ? stationMark(b) : '';
     return '';
 }
 

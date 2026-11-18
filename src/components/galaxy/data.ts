@@ -297,7 +297,8 @@ export function designate(bodies: Body[]): Body[] {
     }
     return bodies.map((b) => {
         const d = out.get(b.id) ?? { num: 0, gu: '' };
-        return { ...b, ...d, name: b.unnamed && b.kind !== 'star' ? d.gu : b.name };
+        // An unnamed body nothing designated (it orbits something `designate` does not number) still needs something to read
+        return { ...b, ...d, name: b.unnamed && b.kind !== 'star' ? d.gu || `Unnamed ${b.kind === 'belt' ? (b.ring ? 'ring' : 'belt') : b.kind}` : b.name };
     });
 }
 
