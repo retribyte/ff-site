@@ -9,7 +9,7 @@ import { OCTS, REGIONS, regionAt, regionLabel, starOf } from './data';
 import type { Address, ApiPlace, Body, Place, RegionKey, Vec3 } from './data';
 import GalaxyScene from './GalaxyScene';
 import type { Layers } from './GalaxyScene';
-import { BodyIcon, CreateFlow, LandmarkIcon, SelectionDetail, placeTitle } from './parts';
+import { BodyIcon, CreateFlow, LandmarkIcon, PairFlow, SelectionDetail, placeTitle } from './parts';
 import type { CreateKind, PlanetSlot } from './parts';
 import SystemView from './SystemView';
 import { useGalaxyStore } from './store';
@@ -308,7 +308,7 @@ export default function MapApp({ places, start }: { places: ApiPlace[]; /** What
             {creating && (
                 <div className={cx(styles.cModalWrap, store.placing && styles.tucked)} onMouseDown={(e) => e.target === e.currentTarget && !store.placing && setCreating(null)}>
                     <div className={cx('pixel-panel', styles.cModal)}>
-                        <CreateFlow store={store} {...creating} onDone={() => setCreating(null)} />
+                        {creating.kind === 'pair' ? <PairFlow store={store} onDone={() => setCreating(null)} /> : <CreateFlow store={store} {...creating} kind={creating.kind} onDone={() => setCreating(null)} />}
                     </div>
                 </div>
             )}

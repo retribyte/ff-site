@@ -5,7 +5,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSession } from '@/components/auth/SessionProvider';
-import { designate, fromApi, loadTerritories, addressUrl, readAddress } from './data';
+import { designate, fromApi, loadTerritories, addressUrl, readAddress, systemName } from './data';
 import type { ApiBody, ApiPlace, Body, BodyKind, Place, Precision, RegionKey, Vec3, Address } from './data';
 import type { Layers, ViewMode } from './GalaxyScene';
 import { episodeNumberLabel, seasonOrder } from '@/lib/seasons';
@@ -66,7 +66,8 @@ const bodyFields = (b: NewBody): Record<string, unknown> => ({
     kind: b.kind.toUpperCase(),
     name: b.name,
     type: b.type,
-    ...(b.kind === 'belt' ? { orbit: b.orbit, width: b.width } : b.kind !== 'star' && { radiusKm: b.radiusKm, orbit: b.orbit }),
+    // A star sends an orbit only as a companion (the primary has none)
+    ...(b.kind === 'belt' ? { orbit: b.orbit, width: b.width } : b.kind === 'star' ? b.orbit && { orbit: b.orbit } : { radiusKm: b.radiusKm, orbit: b.orbit }),
     ...(b.kind === 'planet' && b.ordinal && { ordinal: b.ordinal }),
     ...(b.kind === 'station' && b.builtYear != null && { builtYear: b.builtYear, iteration: b.iteration ?? 1 }),
     ...(b.children && { children: b.children.map(bodyFields) }),
@@ -311,9 +312,16 @@ export function useGalaxyStore(initial: ApiPlace[], start: Address) {
             await refreshPlace(placeId);
             return made.id;
         },
+        /** Makes a star or planet one of a pair (ff-server POST /bodies/:id/pair); answers whether it worked. */
+        async pairBody(placeId: number, bodyId: number, pair: { orbit: number; companion: Record<string, unknown>; circumbinary: boolean }): Promise<boolean> {
+            const place = await attempt(() => call<ApiPlace>('POST', `/bodies/${bodyId}/pair`, pair));
+            if (!place) return false;
+            await refreshPlace(placeId);
+            return true;
+        },
         /** Shown at once; sent when the edits pause. */
         updateBody(placeId: number, bodyId: number, patch: BodyPatch) {
-            setPlaces((all) => all.map((p) => (p.id === placeId ? { ...p, bodies: designate(p.bodies.map((b) => (b.id === bodyId ? { ...b, ...patch } : b))) } : p)));
+            setPlaces((all) => all.map((p) => (p.id === placeId ? { ...p, bodies: designate(p.bodies.map((b) => (b.id === bodyId ? { ...b, ...patch } : b)), systemName(p)) } : p)));
             const before = pending.current.get(bodyId);
             if (before) clearTimeout(before.timer);
             pending.current.set(bodyId, { patch: { ...before?.patch, ...patch }, timer: setTimeout(() => sendBody(placeId, bodyId), 500) });

@@ -649,6 +649,15 @@
     }
 }
 
+/* A checkbox with its sentence beside it */
+.check {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
 .fieldError {
     color: var(--gold);
     font-size: 0.8rem;

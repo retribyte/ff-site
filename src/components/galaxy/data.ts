@@ -10,7 +10,7 @@ import type { WikiData, WikiValue } from '@/lib/types';
 export type Vec3 = [number, number, number];
 export type RegionKey = 'gu' | 'ade' | 'lr' | 'rim';
 export type PlaceKind = 'system' | 'landmark';
-export type BodyKind = 'star' | 'planet' | 'moon' | 'station' | 'belt';
+export type BodyKind = 'star' | 'planet' | 'moon' | 'station' | 'belt' | 'barycenter';
 export type Precision = 'exact' | 'region';
 
 /** "This episode happened here." `episode` is null when that episode is gone from the archive. */
@@ -33,14 +33,18 @@ export interface Body {
     num: number;
     /** Belts sharing a zone with others: 1, 2, ... outward (Sol-IX.1). Filled by `designate`. */
     sub?: number;
+    /** A star of a system with several (A, B), or one of a pair of planets (the A of Sol-3A). Filled by `designate`. */
+    letter?: string;
+    /** Barycenters: the colors of the pair, heaviest first, for its icon. Filled by `designate`. */
+    pairColors?: string[];
     /** GU designation: Sol-3 for a planet, Sol-3a for a moon, Sol-V for a belt (Sol-6-I for a ring, Sol-IX.1 for one of a zone's belts), Sol-3.3016-02 for a station ('' until its build year is known). Filled by `designate`. */
     gu: string;
     parentId: number | null;
-    /** star: key of STAR_TYPES. planet/moon/station: key of COMPOSITIONS. */
+    /** star: key of STAR_TYPES. barycenter: 'stars' or 'planets'. planet/moon/station: key of COMPOSITIONS. */
     type: string;
-    /** radius in km (planets, moons). Stars take theirs from the type. */
+    /** radius in km (planets, moons). Stars take theirs from the type. A barycenter's is how far out its pair reaches, set by `designate`. */
     radiusKm: number;
-    /** planets: AU from the star. moons and stations: km from the parent. belts: the middle of the band, AU from a star, km from a planet or moon. */
+    /** AU round a star or a pair of stars, km round anything else (`unitOf`); belts: the middle of the band. 0 for the system's primary. */
     orbit: number;
     /** Belts: how wide the band is, in the unit of its orbit. */
     width?: number;
@@ -108,7 +112,7 @@ function wikiInfo(wiki: WikiData | null | undefined): WikiInfo | undefined {
 export interface ApiBody {
     id: number;
     parentId: number | null;
-    kind: 'STAR' | 'PLANET' | 'MOON' | 'STATION' | 'BELT';
+    kind: 'STAR' | 'PLANET' | 'MOON' | 'STATION' | 'BELT' | 'BARYCENTER';
     name: string | null;
     slug: string | null;
     type: string;
@@ -139,6 +143,9 @@ export interface ApiPlace {
     bodies: ApiBody[];
     travelogue: (TravelTag & { bodyId: number | null })[];
 }
+
+/** What `designate` needs of the place besides its bodies: the name designations fall back on when the primary has none. */
+export const systemName = (p: { name: string; placeholder?: boolean }) => (p.placeholder ? null : p.name);
 
 export function fromApi(p: ApiPlace): Place {
     const tagsOf = (bodyId: number | null) => p.travelogue.filter((t) => t.bodyId === bodyId).map((t) => ({ id: t.id, creatorId: t.creatorId, episodeSlug: t.episodeSlug, episode: t.episode }));
@@ -175,7 +182,7 @@ export function fromApi(p: ApiPlace): Place {
             slug: b.slug ?? undefined,
             wiki: wikiInfo(b.wiki),
             travelogue: tagsOf(b.id),
-        }))),
+        })), p.name),
         travelogue: tagsOf(null),
     };
 }
@@ -237,22 +244,68 @@ export const stationMark = (b: { builtYear?: number | null; iteration?: number |
 
 const byOrbit = (a: Body, b: Body) => a.orbit - b.orbit || a.id - b.id;
 
+/** A star, or the barycenter of a pair of stars: what planets count out from. */
+export const isStarry = (b: Body) => b.kind === 'star' || (b.kind === 'barycenter' && b.type === 'stars');
+/** A planet, or a pair of planets: what takes a planet number. */
+export const isSlot = (b: Body) => b.kind === 'planet' || (b.kind === 'barycenter' && b.type === 'planets');
+/** The pair a barycenter is the center of: its stars (or inner pairs of stars), or its planets. */
+export const componentsOf = (bodies: Body[], b: Body) => (b.kind !== 'barycenter' ? [] : bodies.filter((k) => k.parentId === b.id && (b.type === 'stars' ? isStarry(k) : k.kind === 'planet')));
+/** Suns for a star or a pair of stars, Earths for anything else (a pair of planets: both). */
+export function massOf(bodies: Body[], b: Body): number {
+    if (b.kind === 'star') return STAR_TYPES[b.type]?.mass ?? 1;
+    if (b.kind === 'barycenter') return componentsOf(bodies, b).reduce((sum, k) => sum + massOf(bodies, k), 0);
+    return massEarths(b);
+}
+/** Suns' worth of light: a star's, or both of a pair's. */
+export function lumOf(bodies: Body[], b: Body): number {
+    if (b.kind === 'star') return STAR_TYPES[b.type]?.lum ?? 1;
+    return componentsOf(bodies, b).reduce((sum, k) => sum + lumOf(bodies, k), 0);
+}
+const byMass = (bodies: Body[]) => (a: Body, b: Body) => massOf(bodies, b) - massOf(bodies, a) || a.id - b.id;
+/** What an orbit round this body is measured in. */
+export const unitOf = (bodies: Body[], b: Body): 'AU' | 'km' => {
+    const parent = bodies.find((p) => p.id === b.parentId);
+    return parent && isStarry(parent) ? 'AU' : 'km';
+};
+const AU_KM = 1.496e8;
+
 /**
- * Numbers a system's bodies. Planets count outward from the star, never below their
- * stored `ordinal`, so a planet marked "planet 3" leaves 1 and 2 open inside it. The
- * moons of a planet are lettered a, b, c (then aa, ab). Belts and rings take no slot:
- * a belt's numeral names the owned orbit its zone sits inside (Sol-V, inside planet 5),
- * one past the last beyond them all (Sol-IX), and the belts sharing a zone are .1, .2
- * outward (Sol-IX.1). A ring's zone is counted against its planet's moons (Sol-6-I,
- * inside moon a). A station is its primary, then its build year and iteration
- * (Sol-3.3016-02, Sol.3016-02 round the star). Sets each body's `num`, `sub` and `gu`,
- * and the name of a planet, moon or belt that has none. Run again after an orbit changes.
+ * Numbers a system's bodies by the designation rules (wiki/reports/astronomical-designations.md).
+ * Each star and each pair of stars counts its own planets outward, never below a stored
+ * `ordinal` ("planet 3" leaves 1 and 2 open inside it); a pair of planets takes one
+ * planet number and its planets are lettered by mass (Sol-3A, Sol-3B; the pair is
+ * Sol-3AB). A planet's moons are lettered a, b, c (then aa, ab). Belts and rings take no
+ * slot: a belt's numeral names the owned orbit its zone sits inside (Sol-V, inside planet
+ * 5), one past the last beyond them all (Sol-IX), and the belts sharing a zone are .1,
+ * .2 outward (Sol-IX.1); a ring counts against its planet's moons (Sol-6-I). A station is
+ * its primary, then its build year and iteration (Sol-3.3016-02, Sol.3016-02 round the
+ * star). With more than one star, the stars are lettered (the primary A, its companions
+ * outward, a pair's stars heaviest first) and every designation goes through its star:
+ * Vortox-A-3 round A, Vortox-AB-3 round the pair. `systemName` stands in for the
+ * primary's name when it has none. Sets each body's `num`, `sub`, `letter` and `gu`, the
+ * name of anything unnamed, and how far a barycenter's pair reaches (`radiusKm`). Run
+ * again after an orbit changes.
  */
-export function designate(bodies: Body[]): Body[] {
-    const star = bodies.find((b) => b.kind === 'star');
-    const stem = star && !star.unnamed ? star.name : 'Unnamed';
-    const out = new Map<number, { num: number; sub?: number; gu: string; ring?: boolean }>();
+export function designate(bodies: Body[], systemName: string | null = null): Body[] {
+    const root = bodies.find((b) => b.parentId === null);
+    const multi = bodies.filter((b) => b.kind === 'star').length > 1;
+    const stem = root && !root.unnamed ? root.name : (systemName ?? 'Unnamed');
+    const out = new Map<number, { num: number; sub?: number; letter?: string; gu: string; ring?: boolean }>();
     const kids = (parent: Body, kind: BodyKind) => bodies.filter((b) => b.parentId === parent.id && b.kind === kind).sort(byOrbit);
+    const heaviest = byMass(bodies);
+    const upper = (n: number) => letters(n).toUpperCase();
+
+    // The stars' letters, only when there are several: the primary first, then each star's companions outward and each pair's stars heaviest first
+    const starLetter = new Map<number, string>();
+    const visit = (b: Body) => {
+        if (b.kind === 'star') starLetter.set(b.id, upper(starLetter.size + 1));
+        bodies.filter((k) => k.parentId === b.id && isStarry(k)).sort(b.kind === 'barycenter' ? heaviest : byOrbit).forEach(visit);
+    };
+    if (root && multi) visit(root);
+    const pairLetters = (b: Body): string => [...componentsOf(bodies, b).map((k) => (k.kind === 'star' ? (starLetter.get(k.id) ?? '') : pairLetters(k))).join('')].sort().join('');
+    /** What everything round this star or pair of stars starts with. */
+    const prefix = (p: Body) => (!multi ? stem : `${stem}-${p.kind === 'star' ? starLetter.get(p.id) : pairLetters(p)}`);
+
     /** `owned`: the parent's planets or moons, outward, with their numbers. */
     const belts = (parent: Body, parentGu: string, owned: { orbit: number; num: number }[]) => {
         const zones = new Map<number, Body[]>();
@@ -263,7 +316,7 @@ export function designate(bodies: Body[]): Body[] {
         for (const [zone, members] of zones) {
             members.forEach((b, i) => {
                 const sub = members.length > 1 ? i + 1 : undefined;
-                out.set(b.id, { num: zone, sub, gu: `${parentGu}-${roman(zone)}${sub ? `.${sub}` : ''}`, ring: parent.kind !== 'star' });
+                out.set(b.id, { num: zone, sub, gu: `${parentGu}-${roman(zone)}${sub ? `.${sub}` : ''}`, ring: !isStarry(parent) });
             });
         }
     };
@@ -283,28 +336,46 @@ export function designate(bodies: Body[]): Body[] {
         stations(parent, parentGu);
         belts(parent, parentGu, moons.map((m, i) => ({ orbit: m.orbit, num: i + 1 })));
     };
-    let n = 0;
-    const planets: { orbit: number; num: number }[] = [];
-    for (const p of bodies.filter((b) => b.kind === 'planet').sort(byOrbit)) {
-        n = Math.max(n + 1, p.ordinal ?? 0);
-        out.set(p.id, { num: n, gu: `${stem}-${n}` });
-        planets.push({ orbit: p.orbit, num: n });
-        satellites(p, `${stem}-${n}`);
+    for (const p of bodies.filter(isStarry)) {
+        const pre = prefix(p);
+        if (multi) out.set(p.id, { num: 0, letter: starLetter.get(p.id), gu: pre });
+        let n = 0;
+        const owned: { orbit: number; num: number }[] = [];
+        for (const slot of bodies.filter((b) => b.parentId === p.id && isSlot(b)).sort(byOrbit)) {
+            n = Math.max(n + 1, slot.ordinal ?? 0);
+            owned.push({ orbit: slot.orbit, num: n });
+            if (slot.kind === 'planet') {
+                out.set(slot.id, { num: n, gu: `${pre}-${n}` });
+                satellites(slot, `${pre}-${n}`);
+                continue;
+            }
+            const pair = componentsOf(bodies, slot).sort(heaviest);
+            const gu = `${pre}-${n}${pair.map((_, i) => upper(i + 1)).join('')}`;
+            out.set(slot.id, { num: n, gu });
+            pair.forEach((c, i) => {
+                out.set(c.id, { num: n, letter: upper(i + 1), gu: `${pre}-${n}${upper(i + 1)}` });
+                satellites(c, `${pre}-${n}${upper(i + 1)}`);
+            });
+            satellites(slot, gu);
+        }
+        stations(p, pre);
+        belts(p, pre, owned);
     }
-    if (star) {
-        stations(star, stem);
-        belts(star, stem, planets);
-    }
+    const unnamed = (b: Body, d: { gu: string; ring?: boolean }) =>
+        d.gu || (b.kind === 'star' ? 'Unnamed star' : b.kind === 'barycenter' ? 'Unnamed pair' : `Unnamed ${b.kind === 'belt' ? (d.ring ? 'ring' : 'belt') : b.kind}`);
     return bodies.map((b) => {
         const d = out.get(b.id) ?? { num: 0, gu: '' };
-        // An unnamed body nothing designated (it orbits something `designate` does not number) still needs something to read
-        return { ...b, ...d, name: b.unnamed && b.kind !== 'star' ? d.gu || `Unnamed ${b.kind === 'belt' ? (b.ring ? 'ring' : 'belt') : b.kind}` : b.name };
+        const reach = b.kind === 'barycenter' ? Math.max(0, ...componentsOf(bodies, b).map((k) => (b.type === 'stars' ? k.orbit * AU_KM : k.orbit + k.radiusKm))) : b.radiusKm;
+        // An unnamed body nothing designated still needs something to read
+        const lead = (k: Body): Body => (k.kind === 'barycenter' ? (componentsOf(bodies, k).sort(heaviest).map(lead)[0] ?? k) : k);
+        const pairColors = b.kind === 'barycenter' ? componentsOf(bodies, b).sort(heaviest).map((k) => bodyColor(lead(k))) : undefined;
+        return { ...b, num: d.num, sub: d.sub, letter: d.letter, gu: d.gu, ring: d.ring, radiusKm: reach, pairColors, name: b.unnamed ? unnamed(b, d) : b.name };
     });
 }
 
-/** The number a planet at `orbit` gets among the system's other planets when it claims `ordinal`, and the lowest it could have there. */
-export function planetNumber(others: Body[], orbit: number, ordinal: number | null): { n: number; min: number } {
-    const min = Math.max(0, ...others.filter((b) => b.kind === 'planet' && b.orbit < orbit).map((b) => b.num)) + 1;
+/** The number a planet at `orbit` round `parentId` gets among that star's other planets when it claims `ordinal`, and the lowest it could have there. */
+export function planetNumber(bodies: Body[], parentId: number | null, orbit: number, ordinal: number | null): { n: number; min: number } {
+    const min = Math.max(0, ...bodies.filter((b) => b.parentId === parentId && isSlot(b) && b.orbit < orbit).map((b) => b.num)) + 1;
     return { n: Math.max(min, ordinal ?? 0), min };
 }
 
@@ -549,6 +620,21 @@ export const MOON_ORBIT_REFS: Ref[] = [
 ];
 export const MOON_ORBIT_RANGE: [number, number] = [5000, 4000000];
 
+/** How far apart a pair of stars may be, AU, against known pairs. */
+export const PAIR_STAR_REFS: Ref[] = [
+    { key: 'close', label: 'a close pair', value: 0.05 },
+    { key: 'mercury', label: "Mercury's orbit", value: 0.39 },
+    { key: 'earth', label: "Earth's orbit", value: 1 },
+    { key: 'alphacen', label: 'Alpha Centauri A and B', value: 23 },
+];
+export const PAIR_STAR_RANGE: [number, number] = [0.01, 1000];
+/** How far apart a pair of planets may be, km. */
+export const PAIR_PLANET_REFS: Ref[] = [
+    { key: 'pluto', label: 'Pluto and Charon', value: 19600 },
+    { key: 'luna', label: 'Earth and the Moon', value: 384400 },
+];
+export const PAIR_PLANET_RANGE: [number, number] = [2000, 5000000];
+
 /** What a belt or ring may be made of (keys of COMPOSITIONS). */
 export const BELT_TYPES = ['rocky', 'ice'];
 /** Belt widths round a star, AU. */
@@ -620,7 +706,44 @@ export function satelliteRange(kind: BodyKind, planet: { radiusKm: number; type:
     return [lo, Math.max(MOON_ORBIT_RANGE[1], lo * 100)];
 }
 
-export const starOf = (place: Place) => place.bodies.find((b) => b.kind === 'star');
+/** The system's primary: its star, or the barycenter of its pair of stars. */
+export const primaryOf = (place: Place) => place.bodies.find((b) => b.parentId === null);
+
+/** The star that stands for the system (its marker's color, its header): the primary, or the heaviest star of the primary pair. */
+export function starOf(place: Place): Body | undefined {
+    let b = primaryOf(place);
+    while (b?.kind === 'barycenter') b = componentsOf(place.bodies, b).sort(byMass(place.bodies))[0];
+    return b;
+}
+
+/** What lights and holds a body's orbit: a star, or both stars of a pair. */
+export interface Host {
+    lum: number;
+    mass: number;
+    hole: boolean;
+}
+
+/** The star or pair of stars a body circles, itself if it is one (a moon: its planet's). */
+export function hostOf(bodies: Body[], body: Body | undefined): Host | null {
+    for (let b = body; b; b = bodies.find((p) => p.id === b!.parentId)) {
+        if (isStarry(b)) {
+            const lum = lumOf(bodies, b);
+            return { lum, mass: massOf(bodies, b), hole: lum === 0 };
+        }
+    }
+    return null;
+}
+
+/** How far from its star (AU) a body is, through whatever it orbits (a moon: its planet's distance; one of a pair of planets: the pair's). */
+export function orbitAU(bodies: Body[], body: Body): number {
+    let b: Body | undefined = body;
+    while (b) {
+        const parent = bodies.find((p) => p.id === b!.parentId);
+        if (!parent || isStarry(parent)) return b.orbit;
+        b = parent;
+    }
+    return 0;
+}
 
 export const toT = (v: number, [lo, hi]: [number, number]) => Math.log(v / lo) / Math.log(hi / lo);
 export const fromT = (t: number, [lo, hi]: [number, number]) => lo * Math.pow(hi / lo, t);
@@ -647,11 +770,14 @@ export const ZONES: { key: Zone; label: string; color: string; factor: number }[
     { key: 'frozen', label: 'Frozen', color: '#b9c6e8', factor: 15 },
 ];
 
-/** Distance (AU) at which a planet gets Earth's sunlight from this star. */
-export const habAU = (starType: string) => Math.sqrt(Math.max(STAR_TYPES[starType]?.lum ?? 1, 0.0005));
+/** A star's type as a Host. */
+const hostFrom = (h: string | Host): Host => (typeof h === 'string' ? { lum: STAR_TYPES[h]?.lum ?? 1, mass: STAR_TYPES[h]?.mass ?? 1, hole: h === 'black_hole' } : h);
 
-export function zoneOf(au: number, starType: string): (typeof ZONES)[number] {
-    const rel = au / habAU(starType);
+/** Distance (AU) at which a planet gets Earth's sunlight from this star (a type) or Host. */
+export const habAU = (host: string | Host) => Math.sqrt(Math.max(hostFrom(host).lum, 0.0005));
+
+export function zoneOf(au: number, host: string | Host): (typeof ZONES)[number] {
+    const rel = au / habAU(host);
     if (rel < 0.5) return ZONES[0];
     if (rel < 0.9) return ZONES[1];
     if (rel < 1.6) return ZONES[2];
@@ -659,8 +785,8 @@ export function zoneOf(au: number, starType: string): (typeof ZONES)[number] {
     return ZONES[4];
 }
 
-export function yearDays(au: number, starType: string): number {
-    return 365.25 * Math.sqrt(au ** 3 / (STAR_TYPES[starType]?.mass ?? 1));
+export function yearDays(au: number, host: string | Host): number {
+    return 365.25 * Math.sqrt(au ** 3 / Math.max(hostFrom(host).mass, 0.01));
 }
 
 export function gravityG(body: Body): number {
@@ -674,11 +800,9 @@ export function massEarths(body: Body): number {
 
 /** A rough 0 to 100 "could people live here" score. Moons take their planet's orbit. */
 export function habitability(place: Place, body: Body): number | null {
-    const star = starOf(place);
-    if (!star || body.kind === 'star' || body.kind === 'belt' || star.type === 'black_hole') return null;
-    const planet = body.kind === 'planet' ? body : place.bodies.find((b) => b.id === body.parentId);
-    if (!planet) return null;
-    const zone = zoneOf(planet.orbit, star.type).key;
+    const host = hostOf(place.bodies, body);
+    if (!host || host.hole || body.kind === 'star' || body.kind === 'belt' || body.kind === 'barycenter') return null;
+    const zone = zoneOf(orbitAU(place.bodies, body), host).key;
     const zoneScore = zone === 'temperate' ? 1 : zone === 'hot' || zone === 'cold' ? 0.45 : 0.05;
     const g = gravityG(body);
     const gravScore = body.kind === 'station' ? 1 : g >= 0.5 && g <= 1.5 ? 1 : g < 0.5 ? Math.max(0.15, g / 0.5) : Math.max(0.1, 1.5 / g);
