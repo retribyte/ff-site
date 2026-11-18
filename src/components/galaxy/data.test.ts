@@ -95,9 +95,9 @@ describe('designate with several stars', () => {
         expect(byId[b.id].gu).toBe('Gemella-B');
         expect(byId[b.id].name).toBe('Gemella-B');
         expect(byId[a1.id].gu).toBe('Gemella-A-1');
-        expect(byId[pair.id].gu).toBe('Gemella-A-2AB');
-        expect([byId[big.id].gu, byId[small.id].gu]).toEqual(['Gemella-A-2A', 'Gemella-A-2B']);
-        expect(byId[pairMoon.id].gu).toBe('Gemella-A-2ABa');
+        expect(byId[pair.id].gu).toBe('Gemella-A-2-AB');
+        expect([byId[big.id].gu, byId[small.id].gu]).toEqual(['Gemella-A-2-A', 'Gemella-A-2-B']);
+        expect(byId[pairMoon.id].gu).toBe('Gemella-A-2-ABa');
         expect([byId[b1.id].gu, byId[b2.id].gu]).toEqual(['Gemella-B-1', 'Gemella-B-2']);
         expect(byId[belt.id].gu).toBe('Gemella-B-II');
         expect(byId[dock.id].gu).toBe('Gemella-B.3016-02');

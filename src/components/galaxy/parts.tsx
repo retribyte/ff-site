@@ -19,9 +19,9 @@ import styles from './galaxy.module.scss';
 
 const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boolean).join(' ');
 export const KIND_LABEL: Record<string, string> = { star: 'Star', planet: 'Planet', moon: 'Moon', station: 'Station', belt: 'Belt', barycenter: 'Pair', system: 'System', landmark: 'Landmark' };
-/** What a body is called: a planet with its number (Planet 3, Planet 3A for one of a pair), a star of several with its letter, a belt round a planet or moon a ring. */
+/** What a body is called: a planet with its number (Planet 3, Planet 3-A for one of a pair), a star of several with its letter, a belt round a planet or moon a ring. */
 export function kindLabel(b: Body): string {
-    if (b.kind === 'planet') return `Planet ${b.num}${b.letter ?? ''}`;
+    if (b.kind === 'planet') return `Planet ${b.num}${b.letter ? `-${b.letter}` : ''}`;
     if (b.kind === 'star' && b.letter) return `Star ${b.letter}`;
     if (b.kind === 'barycenter') return b.type === 'stars' ? 'Pair of stars' : `Pair of planets, planet ${b.num}`;
     if (b.kind === 'belt' && b.ring) return 'Ring';

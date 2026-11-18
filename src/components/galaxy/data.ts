@@ -33,7 +33,7 @@ export interface Body {
     num: number;
     /** Belts sharing a zone with others: 1, 2, ... outward (Sol-IX.1). Filled by `designate`. */
     sub?: number;
-    /** A star of a system with several (A, B), or one of a pair of planets (the A of Sol-3A). Filled by `designate`. */
+    /** A star of a system with several (A, B), or one of a pair of planets (the A of Sol-3-A). Filled by `designate`. */
     letter?: string;
     /** Barycenters: the colors of the pair, heaviest first, for its icon. Filled by `designate`. */
     pairColors?: string[];
@@ -273,8 +273,8 @@ const AU_KM = 1.496e8;
  * Numbers a system's bodies by the designation rules (wiki/reports/astronomical-designations.md).
  * Each star and each pair of stars counts its own planets outward, never below a stored
  * `ordinal` ("planet 3" leaves 1 and 2 open inside it); a pair of planets takes one
- * planet number and its planets are lettered by mass (Sol-3A, Sol-3B; the pair is
- * Sol-3AB). A planet's moons are lettered a, b, c (then aa, ab). Belts and rings take no
+ * planet number and its planets are lettered by mass (Sol-3-A, Sol-3-B; the pair is
+ * Sol-3-AB), the same form as a pair of stars. A planet's moons are lettered a, b, c (then aa, ab). Belts and rings take no
  * slot: a belt's numeral names the owned orbit its zone sits inside (Sol-V, inside planet
  * 5), one past the last beyond them all (Sol-IX), and the belts sharing a zone are .1,
  * .2 outward (Sol-IX.1); a ring counts against its planet's moons (Sol-6-I). A station is
@@ -350,11 +350,11 @@ export function designate(bodies: Body[], systemName: string | null = null): Bod
                 continue;
             }
             const pair = componentsOf(bodies, slot).sort(heaviest);
-            const gu = `${pre}-${n}${pair.map((_, i) => upper(i + 1)).join('')}`;
+            const gu = `${pre}-${n}-${pair.map((_, i) => upper(i + 1)).join('')}`;
             out.set(slot.id, { num: n, gu });
             pair.forEach((c, i) => {
-                out.set(c.id, { num: n, letter: upper(i + 1), gu: `${pre}-${n}${upper(i + 1)}` });
-                satellites(c, `${pre}-${n}${upper(i + 1)}`);
+                out.set(c.id, { num: n, letter: upper(i + 1), gu: `${pre}-${n}-${upper(i + 1)}` });
+                satellites(c, `${pre}-${n}-${upper(i + 1)}`);
             });
             satellites(slot, gu);
         }
