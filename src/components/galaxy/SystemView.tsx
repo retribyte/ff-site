@@ -771,13 +771,14 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
         return () => window.removeEventListener('keydown', onKey);
     });
 
-    // The add buttons for what is picked; none (nothing picked, a belt or a station) leaves just "+ Add"
+    // The add buttons for what is picked; none (nothing picked, a belt or a station) leaves just "+ Add". A belt round a star
+    // or pair of stars, a ring round a planet, pair of planets or moon (the wizard's `belt` kind either way, round the selection)
     const shortcuts: { label: string; kind: CreateKind }[] = !body
         ? []
         : isStarry(body)
-          ? [{ label: '+ Planet', kind: 'planet' }, ...(pairable ? [{ label: 'Make it a pair', kind: 'pair' as const }] : [])]
+          ? [{ label: '+ Planet', kind: 'planet' }, { label: '+ Belt', kind: 'belt' }, ...(pairable ? [{ label: 'Make it a pair', kind: 'pair' as const }] : [])]
           : isSlot(body)
-            ? [{ label: '+ Moon', kind: 'moon' }, ...(pairable ? [{ label: 'Make it a pair', kind: 'pair' as const }] : [])]
+            ? [{ label: '+ Moon', kind: 'moon' }, { label: '+ Ring', kind: 'belt' }, ...(pairable ? [{ label: 'Make it a pair', kind: 'pair' as const }] : [])]
             : body.kind === 'moon'
               ? [{ label: '+ Ring', kind: 'belt' }]
               : [];
