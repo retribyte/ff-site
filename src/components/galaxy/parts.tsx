@@ -11,7 +11,7 @@ import { decodeEntities } from '@/lib/html';
 import { isValidSlug } from '@/lib/slug';
 import {
     BELT_TYPES, BELT_WIDTH_RANGE, BELT_WIDTH_REFS, COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, RING_WIDTH_RANGE, RING_WIDTH_REFS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
-    beltDraft, beltWidthMax, bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, lifted, planetNumber, randomPointIn, regionAt, regionLabel, ringRange, roman, satelliteRange, sectorOf, starOf, toT, yearDays, zoneOf,
+    beltDraft, beltWidthMax, bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, lifted, planetNumber, randomPointIn, regionAt, regionLabel, letters, ringRange, roman, satelliteRange, stationMark, sectorOf, starOf, toT, yearDays, zoneOf,
 } from './data';
 import type { Body, BodyKind, Place, Ref, RegionKey, Vec3 } from './data';
 import type { Store, TextPatch, Where } from './store';
@@ -145,6 +145,9 @@ export interface BodyDraft {
     width?: number;
     /** Planets: "this is planet N". */
     ordinal?: number | null;
+    /** Stations: the GUY year it was built, and its iteration. */
+    builtYear?: number | null;
+    iteration?: number | null;
 }
 
 /** The planet a gap ring of the system diagram stands for. */
@@ -167,6 +170,38 @@ function PlanetNumber({ draft, onChange, system, selfId }: { draft: BodyDraft; o
                 <button type='button' className={styles.chip} disabled={n <= min} onClick={() => onChange({ ordinal: n - 1 > min ? n - 1 : null })} aria-label='One planet closer to the star'>-</button>
                 <b>{n}</b>
                 <button type='button' className={styles.chip} disabled={n >= 99} onClick={() => onChange({ ordinal: n + 1 })} aria-label='One planet farther from the star'>+</button>
+            </div>
+        </div>
+    );
+}
+
+/**
+ * A station's build year (GUY) and iteration, which make its designation (Sol-3.3016-02).
+ * The member enters both: the map never makes them up. `prefix`: what it orbits, as designated.
+ */
+function StationBuilt({ draft, onChange, prefix }: { draft: BodyDraft; onChange: (patch: Partial<BodyDraft>) => void; prefix?: string }) {
+    const [text, setText] = useState(draft.builtYear == null ? '' : String(draft.builtYear));
+    const iteration = draft.iteration ?? 1;
+    const known = draft.builtYear != null;
+    const mark = stationMark(draft);
+    const typed = (value: string) => {
+        setText(value);
+        const t = value.trim();
+        if (t === '') onChange({ builtYear: null, iteration: null });
+        else if (/^-?\d{1,9}$/.test(t)) onChange({ builtYear: Number(t), iteration });
+    };
+    return (
+        <div className={styles.field}>
+            <div className={styles.fieldHead}>
+                <span className='pixel-label'>Built</span>
+                <span className={styles.fieldReadout}>{known ? (prefix ? `${prefix}.${mark}` : mark) : 'No designation until the year is known'}</span>
+            </div>
+            <input inputMode='numeric' value={text} onChange={(e) => typed(e.target.value)} placeholder='GUY year it was built, e.g. 3016' aria-label='The GUY year it was built' />
+            <div className={styles.stepper}>
+                <span className='pixel-label'>Iteration</span>
+                <button type='button' className={styles.chip} disabled={!known || iteration <= 1} onClick={() => onChange({ iteration: iteration - 1 })} aria-label='An earlier iteration'>-</button>
+                <b>{iteration}</b>
+                <button type='button' className={styles.chip} disabled={!known || iteration >= 99} onClick={() => onChange({ iteration: iteration + 1 })} aria-label='A later iteration'>+</button>
             </div>
         </div>
     );
@@ -290,6 +325,7 @@ export function BodyFields({ kind, draft, onChange, starType, system, selfId, pl
                 />
             )}
             {orbitsStar && <PlanetNumber draft={draft} onChange={onChange} system={system} selfId={selfId} />}
+            {kind === 'station' && <StationBuilt key={selfId ?? 'new'} draft={draft} onChange={onChange} prefix={primary?.kind === 'star' ? (primary.unnamed ? 'Unnamed' : primary.name) : primary?.gu || planet?.gu || undefined} />}
         </>
     );
 }
@@ -464,8 +500,10 @@ function EpisodePicker({ store, taken, onPick, onClose }: { store: Store; taken:
 
 /** The mark beside a body's kind: I, II, III for a belt among the belts round the same body; a, b, c for a moon or station; none for a planet, whose number is in its kind ("Planet 3") (`designate` in data.ts does the counting). */
 export function designation(b: Body): string {
-    if (b.kind === 'star' || b.kind === 'planet') return '';
-    return b.kind === 'belt' ? roman(b.num) : String.fromCharCode(97 + ((b.num - 1) % 26));
+    if (b.kind === 'belt') return `${roman(b.num)}${b.sub ? `.${b.sub}` : ''}`;
+    if (b.kind === 'moon') return letters(b.num);
+    if (b.kind === 'station') return stationMark(b);
+    return '';
 }
 
 /** A body's name, with its GU designation after it when it has a name of its own. */

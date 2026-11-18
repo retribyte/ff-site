@@ -29,9 +29,11 @@ export interface Body {
     unnamed?: boolean;
     /** Planets: "this is planet N of its star", stored for one whose inner neighbours are not on the map. */
     ordinal: number | null;
-    /** Planets: the number counted out from the star. Moons and stations: 1 for a, 2 for b. Belts: 1 for I, 2 for II. Filled by `designate`. */
+    /** Planets: the number counted out from the star. Moons: 1 for a, 2 for b. Belts: the zone's numeral, 5 for V (inside planet 5's orbit). Stations: 0. Filled by `designate`. */
     num: number;
-    /** GU designation: Sol-3 for a planet, Sol-3a for what orbits it, Sol-I for a belt (Sol-6-I for a ring). Filled by `designate`. */
+    /** Belts sharing a zone with others: 1, 2, ... outward (Sol-IX.1). Filled by `designate`. */
+    sub?: number;
+    /** GU designation: Sol-3 for a planet, Sol-3a for a moon, Sol-V for a belt (Sol-6-I for a ring, Sol-IX.1 for one of a zone's belts), Sol-3.3016-02 for a station ('' until its build year is known). Filled by `designate`. */
     gu: string;
     parentId: number | null;
     /** star: key of STAR_TYPES. planet/moon/station: key of COMPOSITIONS. */
@@ -42,6 +44,9 @@ export interface Body {
     orbit: number;
     /** Belts: how wide the band is, in the unit of its orbit. */
     width?: number;
+    /** Stations: the GUY year it was built, and which iteration of the station it is (entered by the member). */
+    builtYear?: number | null;
+    iteration?: number | null;
     /** Belts: it circles a planet or moon, so it is a ring. Filled by `designate`. */
     ring?: boolean;
     color?: string;
@@ -111,6 +116,8 @@ export interface ApiBody {
     orbit: number | null;
     width?: number | null;
     ordinal?: number | null;
+    builtYear?: number | null;
+    iteration?: number | null;
     color: string | null;
     description: string | null;
     wiki?: WikiData | null;
@@ -159,6 +166,8 @@ export function fromApi(p: ApiPlace): Place {
             orbit: b.orbit ?? 0,
             width: b.width ?? undefined,
             ordinal: b.ordinal ?? null,
+            builtYear: b.builtYear ?? null,
+            iteration: b.iteration ?? null,
             num: 0,
             gu: '',
             color: b.color ?? undefined,
@@ -208,43 +217,84 @@ export function readAddress(path: string[], at: string | null, places: { id: num
     return { placeId: place.id, bodyId: body?.id ?? null, level: 'system' };
 }
 
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
-export const roman = (n: number) => ROMAN[n - 1] ?? String(n);
+const ROMAN: [number, string][] = [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+/** 1 -> I, 99 -> XCIX; nothing for 0. */
+export function roman(n: number): string {
+    let out = '';
+    for (const [value, digits] of ROMAN) for (; n >= value; n -= value) out += digits;
+    return out;
+}
+
+/** The moon letters: 1 -> a, 26 -> z, 27 -> aa, 28 -> ab. */
+export function letters(n: number): string {
+    let out = '';
+    for (; n > 0; n = Math.floor((n - 1) / 26)) out = String.fromCharCode(97 + ((n - 1) % 26)) + out;
+    return out;
+}
+
+/** A station's part of its designation, its build year and iteration: 3016-02. '' while the year is not known. */
+export const stationMark = (b: { builtYear?: number | null; iteration?: number | null }) => (b.builtYear == null ? '' : `${b.builtYear}-${String(b.iteration ?? 1).padStart(2, '0')}`);
 
 const byOrbit = (a: Body, b: Body) => a.orbit - b.orbit || a.id - b.id;
 
 /**
  * Numbers a system's bodies. Planets count outward from the star, never below their
- * stored `ordinal`, so a planet marked "planet 3" leaves 1 and 2 open inside it; what
- * orbits a planet is lettered a, b, c; the belts round any one body count outward in
- * Roman numerals. Sets each body's `num` and `gu` (Sol-3, Sol-3a, Sol-I, Sol-6-I), and
- * the name of a planet, moon or belt that has none. Run again after an orbit changes.
+ * stored `ordinal`, so a planet marked "planet 3" leaves 1 and 2 open inside it. The
+ * moons of a planet are lettered a, b, c (then aa, ab). Belts and rings take no slot:
+ * a belt's numeral names the owned orbit its zone sits inside (Sol-V, inside planet 5),
+ * one past the last beyond them all (Sol-IX), and the belts sharing a zone are .1, .2
+ * outward (Sol-IX.1). A ring's zone is counted against its planet's moons (Sol-6-I,
+ * inside moon a). A station is its primary, then its build year and iteration
+ * (Sol-3.3016-02, Sol.3016-02 round the star). Sets each body's `num`, `sub` and `gu`,
+ * and the name of a planet, moon or belt that has none. Run again after an orbit changes.
  */
 export function designate(bodies: Body[]): Body[] {
     const star = bodies.find((b) => b.kind === 'star');
     const stem = star && !star.unnamed ? star.name : 'Unnamed';
-    const out = new Map<number, { num: number; gu: string; ring?: boolean }>();
-    const belts = (parent: Body, parentGu: string) => {
-        bodies.filter((b) => b.parentId === parent.id && b.kind === 'belt').sort(byOrbit).forEach((b, i) => out.set(b.id, { num: i + 1, gu: `${parentGu}-${roman(i + 1)}`, ring: parent.kind !== 'star' }));
+    const out = new Map<number, { num: number; sub?: number; gu: string; ring?: boolean }>();
+    const kids = (parent: Body, kind: BodyKind) => bodies.filter((b) => b.parentId === parent.id && b.kind === kind).sort(byOrbit);
+    /** `owned`: the parent's planets or moons, outward, with their numbers. */
+    const belts = (parent: Body, parentGu: string, owned: { orbit: number; num: number }[]) => {
+        const zones = new Map<number, Body[]>();
+        for (const b of kids(parent, 'belt')) {
+            const zone = owned.find((o) => o.orbit > b.orbit)?.num ?? (owned.at(-1)?.num ?? 0) + 1;
+            zones.set(zone, [...(zones.get(zone) ?? []), b]);
+        }
+        for (const [zone, members] of zones) {
+            members.forEach((b, i) => {
+                const sub = members.length > 1 ? i + 1 : undefined;
+                out.set(b.id, { num: zone, sub, gu: `${parentGu}-${roman(zone)}${sub ? `.${sub}` : ''}`, ring: parent.kind !== 'star' });
+            });
+        }
     };
-    const letter = (parent: Body | undefined, parentGu: string) => {
-        if (!parent) return;
-        bodies.filter((b) => b.parentId === parent.id && (b.kind === 'moon' || b.kind === 'station')).sort(byOrbit).forEach((b, i) => {
-            const gu = `${parentGu}${String.fromCharCode(97 + (i % 26))}`;
-            out.set(b.id, { num: i + 1, gu });
-            letter(b, gu);
-            belts(b, gu);
+    const stations = (parent: Body, parentGu: string) => {
+        for (const b of kids(parent, 'station')) {
+            const mark = stationMark(b);
+            out.set(b.id, { num: 0, gu: mark ? `${parentGu}.${mark}` : '' });
+        }
+    };
+    const satellites = (parent: Body, parentGu: string) => {
+        const moons = kids(parent, 'moon');
+        moons.forEach((m, i) => {
+            const gu = `${parentGu}${letters(i + 1)}`;
+            out.set(m.id, { num: i + 1, gu });
+            satellites(m, gu);
         });
+        stations(parent, parentGu);
+        belts(parent, parentGu, moons.map((m, i) => ({ orbit: m.orbit, num: i + 1 })));
     };
     let n = 0;
+    const planets: { orbit: number; num: number }[] = [];
     for (const p of bodies.filter((b) => b.kind === 'planet').sort(byOrbit)) {
         n = Math.max(n + 1, p.ordinal ?? 0);
         out.set(p.id, { num: n, gu: `${stem}-${n}` });
-        letter(p, `${stem}-${n}`);
-        belts(p, `${stem}-${n}`);
+        planets.push({ orbit: p.orbit, num: n });
+        satellites(p, `${stem}-${n}`);
     }
-    letter(star, `${stem}-`);
-    if (star) belts(star, stem);
+    if (star) {
+        stations(star, stem);
+        belts(star, stem, planets);
+    }
     return bodies.map((b) => {
         const d = out.get(b.id) ?? { num: 0, gu: '' };
         return { ...b, ...d, name: b.unnamed && b.kind !== 'star' ? d.gu : b.name };
