@@ -23,6 +23,8 @@ const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boo
 const LOG_SIZE = 1 / Math.log(1.25);
 const bodyPx = (b: Body) => Math.max(b.kind === 'planet' ? 4 : 2.2, Math.min(26, Math.log(Math.max(b.radiusKm, 1) / 1000) * LOG_SIZE));
 const MOON_GAP = 11;
+/** The most of the gap to the nearest neighbouring ring that a planet's disc may take up. */
+const PLANET_FILL = 0.85;
 /** Room an open planet number's ring takes on each side. */
 const GAP_REACH = 11;
 /** Room a belt round the star takes on each side; its band is drawn no wider than twice this. */
@@ -44,6 +46,9 @@ const ORBIT_FPS = 15;
 
 /** How long after the last zoom step the orbits start moving again, in milliseconds. */
 const ZOOM_REST_MS = 300;
+
+/** At this width or under (a phone, the same breakpoint as the stylesheet's) the diagram is drawn in line: see `inline` in `SystemDiagram`. */
+const INLINE_MAX_W = 760;
 
 const MAX_ZOOM = 6;
 /** Seconds the drawing takes over one year of a planet a year of 365 days out; other years go by the square root. */
@@ -68,8 +73,14 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
     // so the browser has only the zoom's own redraws to do
     const zoomedAt = useRef(0);
     const boxRef = useRef(box);
+    // Phones: the star sits at the top edge and only the half of the system under it is drawn, the planets in one line
+    // straight down from it and their moons in a line beside them. Nothing travels and nothing zooms: with the whole
+    // height for the orbits, the drawing is already several times the size the full circles would get.
+    const inline = box.w <= INLINE_MAX_W;
+    const inlineRef = useRef(inline);
     useEffect(() => {
         boxRef.current = box;
+        inlineRef.current = inline;
     });
     const fit = (c: { k: number; x: number; y: number }, b = boxRef.current) => {
         const k = Math.max(1, Math.min(MAX_ZOOM, c.k));
@@ -93,6 +104,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
         let raf = 0;
         const onWheel = (e: WheelEvent) => {
             e.preventDefault();
+            if (inlineRef.current) return;
             zoomedAt.current = performance.now();
             const r = svg.getBoundingClientRect();
             const factor = Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0015));
@@ -128,7 +140,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
     };
     const onPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
         const was = pointers.current.get(e.pointerId);
-        if (!was) return;
+        if (!was || inline) return;
         const r = e.currentTarget.getBoundingClientRect();
         const others = [...pointers.current.entries()].filter(([id]) => id !== e.pointerId).map(([, p]) => p);
         const [dx, dy] = [e.clientX - was.x, e.clientY - was.y];
@@ -166,7 +178,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
         transform: at(clock.current),
     });
     useEffect(() => {
-        if (!moving) return;
+        if (!moving || inline) return;
         let last = performance.now();
         let raf = requestAnimationFrame(function step(now) {
             raf = requestAnimationFrame(step);
@@ -181,19 +193,20 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
             for (const { node, at } of movers.current.values()) node.setAttribute('transform', at(clock.current));
         });
         return () => cancelAnimationFrame(raf);
-    }, [moving]);
+    }, [moving, inline]);
 
     const star = starOf(place);
     const planets = place.bodies.filter((b) => b.kind === 'planet').sort((a, b) => a.orbit - b.orbit);
     const starBelts = place.bodies.filter((b) => b.kind === 'belt' && b.parentId === star?.id);
     const { w: W, h: Hh } = box;
     // Fitted again here, in case the window shrank since the last zoom
-    const view = fit(cam, box);
+    const view = inline ? { k: 1, x: 0, y: 0 } : fit(cam, box);
     // On a wide screen the panels cover the left edge, so the star sits right of center.
     const inset = W > 900 ? 400 : 0;
-    const c = { x: inset + (W - inset) / 2, y: Hh / 2 };
+    const c = { x: inset + (W - inset) / 2, y: inline ? 0 : Hh / 2 };
     const starPx = (STAR_TYPES[star?.type ?? '']?.px ?? 24) * 1.25;
-    const maxR = Math.min(W - inset, Hh) / 2 - 40;
+    // In line, the orbits have the height down to the legend and the folded sheet
+    const maxR = inline ? Hh - 120 : Math.min(W - inset, Hh) / 2 - 40;
     const kidsOf = (id: number) => place.bodies.filter((b) => b.parentId === id).sort((x, y) => x.orbit - y.orbit);
     // How much room a planet needs around its own center (its moons' rings included).
     const reach = (p: Body) => bodyPx(p) + kidsOf(p.id).length * MOON_GAP + 6;
@@ -204,15 +217,15 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
     // Every ring from the star outward: the planets, the star's belts and, for whoever
     // may add, the open numbers inside a planet that is "planet N" (spread evenly, in
     // log distance, between its neighbours).
-    const rings: { planet?: Body; belt?: Body; index: number; n: number; orbit: number; reach: number; r: number }[] = [];
+    const rings: { planet?: Body; belt?: Body; index: number; n: number; orbit: number; reach: number; r: number; px: number }[] = [];
     planets.forEach((p, i) => {
         const before = planets[i - 1];
         const gaps = onAdd ? p.num - (before?.num ?? 0) - 1 : 0;
         const from = before?.orbit ?? p.orbit / 2 ** (gaps + 1);
-        for (let g = 1; g <= gaps; g++) rings.push({ index: i, n: (before?.num ?? 0) + g, orbit: from * (p.orbit / from) ** (g / (gaps + 1)), reach: GAP_REACH, r: 0 });
-        rings.push({ planet: p, index: i, n: p.num, orbit: p.orbit, reach: reach(p), r: 0 });
+        for (let g = 1; g <= gaps; g++) rings.push({ index: i, n: (before?.num ?? 0) + g, orbit: from * (p.orbit / from) ** (g / (gaps + 1)), reach: GAP_REACH, r: 0, px: 0 });
+        rings.push({ planet: p, index: i, n: p.num, orbit: p.orbit, reach: reach(p), r: 0, px: bodyPx(p) });
     });
-    for (const b of starBelts) rings.push({ belt: b, index: -1, n: b.num, orbit: b.orbit, reach: BELT_REACH, r: 0 });
+    for (const b of starBelts) rings.push({ belt: b, index: -1, n: b.num, orbit: b.orbit, reach: BELT_REACH, r: 0, px: 0 });
     rings.sort((a, b) => a.orbit - b.orbit);
     // Log distance, then pushed outward wherever two rings would overlap.
     rings.forEach((ring, i) => {
@@ -222,6 +235,11 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
     const last = rings[rings.length - 1];
     const over = Math.max(1, last ? (last.r - base) / Math.max(room, 1) : 0);
     for (const ring of rings) ring.r = base + (ring.r - base) / over;
+    // Squeezed rings (a small screen) sit closer than a big planet is wide: no planet's disc may reach the ring on either side of its own (or the star)
+    rings.forEach((ring, i) => {
+        const gap = Math.min(ring.r - (rings[i - 1]?.r ?? starPx), (rings[i + 1]?.r ?? Infinity) - ring.r);
+        ring.px = Math.max(2.5, Math.min(ring.px, gap * PLANET_FILL));
+    });
     const addR = last ? Math.min(maxR, last.r + last.reach / over + 28) : base + 60;
     // Where a distance from the star falls in the drawing: along the rings' own spacing, then on outward.
     const auToPx = (au: number) => {
@@ -246,6 +264,8 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
         const a = from + turned(time, seconds);
         return `translate(${(cx + r * Math.cos(a)).toFixed(2)} ${(cy + r * Math.sin(a)).toFixed(2)})`;
     };
+    /** In line: where a part at radius r from (cx, cy) holds still, along the angle `a` (straight down for planets, sideways for moons). */
+    const held = (cx: number, cy: number, r: number, a: number) => () => `translate(${(cx + r * Math.cos(a)).toFixed(2)} ${(cy + r * Math.sin(a)).toFixed(2)})`;
     const planetYear = (index: number) => YEAR_SECONDS * Math.sqrt(yearDays(planets[index].orbit, star?.type ?? 'sunlike') / 365.25);
     const moonMonth = (m: Body) => Math.max(3, Math.min(24, MONTH_SECONDS * Math.sqrt(m.orbit / 384400)));
 
@@ -291,7 +311,11 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                         {star.type === 'black_hole' && <circle cx={c.x} cy={c.y} r={starPx + 10} fill='none' stroke='#f0b44c' strokeWidth='5' opacity='.7' />}
                         <circle cx={c.x} cy={c.y} r={starPx + STAR_GLOW} fill='url(#galaxy-star-glow)' className={styles.starGlow} />
                         <circle cx={c.x} cy={c.y} r={starPx} fill={bodyColor(star)} />
-                        <text x={c.x} y={c.y + starPx + 20} textAnchor='middle' className={styles.starName}>{star.name}</text>
+                        {inline ? (
+                            <text x={c.x - starPx - 12} y={c.y + 22} textAnchor='end' className={styles.starName}>{star.name}</text>
+                        ) : (
+                            <text x={c.x} y={c.y + starPx + 20} textAnchor='middle' className={styles.starName}>{star.name}</text>
+                        )}
                     </g>
                 )}
                 {rings.map((ring) => {
@@ -320,24 +344,29 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                 <circle cx={c.x} cy={c.y} r={r} />
                                 <title>Add {stem}-{ring.n}</title>
                                 {/* Squeezed rings (a phone) have no room for a label each */}
-                                {over <= 1.5 && <text x={c.x} y={c.y - r + 4} textAnchor='middle'>+ add {stem}-{ring.n}</text>}
+                                {over <= 1.5 && <text x={c.x} y={inline ? c.y + r + 4 : c.y - r + 4} textAnchor='middle'>+ add {stem}-{ring.n}</text>}
                             </g>
                         );
                     }
                     // The planet and all that goes round it are drawn about (0, 0) and carried along its orbit
                     const [bx, by] = [0, 0];
-                    const pr = bodyPx(p);
+                    const pr = ring.px;
                     const zone = star ? zoneOf(p.orbit, star.type) : ZONES[2];
                     const kids = kidsOf(p.id);
                     return (
                         <g key={p.id} className={cx(styles.orb, selBodyId === p.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(p.id))} onDoubleClick={() => onEdit(p.id)}>
                             <circle cx={c.x} cy={c.y} r={r} className={styles.orbitLine} style={{ stroke: zone.color }} />
                             <circle cx={c.x} cy={c.y} r={r} className={styles.orbitHit} />
-                          <g className={styles.mover} {...mover(`planet${p.id}`, round(c.x, c.y, r, angle(place.id, i), planetYear(i)))}>
+                          <g className={styles.mover} {...mover(`planet${p.id}`, inline ? held(c.x, c.y, r, Math.PI / 2) : round(c.x, c.y, r, angle(place.id, i), planetYear(i)))}>
                             <circle cx={bx} cy={by} r={pr} fill={bodyColor(p)} />
                             <BodyTexture body={p} x={bx} y={by} r={pr} />
                             <circle cx={bx} cy={by} r={pr} className={styles.shade} />
-                            <text x={bx} y={by - pr - 8 - kids.length * MOON_GAP} textAnchor='middle'>{p.name}</text>
+                            {/* In line the names go beside the bodies, not over and under them, where the next orbits are: the planet's on the left, its moons' on the right */}
+                            {inline ? (
+                                <text x={bx - pr - kids.length * MOON_GAP - 10} y={by + 5} textAnchor='end'>{p.name}</text>
+                            ) : (
+                                <text x={bx} y={by - pr - 8 - kids.length * MOON_GAP} textAnchor='middle'>{p.name}</text>
+                            )}
                             {kids.map((m, j) => {
                                 const mr = pr + MOON_GAP * (j + 1);
                                 const [mx, my] = [0, 0];
@@ -354,11 +383,12 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                 }
                                 // Rings carry no name in the drawing, so the names below skip them
                                 const row = kids.slice(0, j).filter((kid) => kid.kind !== 'belt').length;
+                                const rows = kids.filter((kid) => kid.kind !== 'belt').length;
                                 return (
                                     <g key={m.id} className={cx(styles.orb, on && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(m.id))} onDoubleClick={(e) => (e.stopPropagation(), onEdit(m.id))}>
                                         <circle cx={bx} cy={by} r={mr} className={styles.orbitLine} />
                                         <circle cx={bx} cy={by} r={mr} className={styles.orbitHit} style={{ strokeWidth: MOON_GAP * 0.8 }} />
-                                      <g className={styles.mover} {...mover(`moon${m.id}`, round(0, 0, mr, angle(p.id, j + 1), moonMonth(m)))}>
+                                      <g className={styles.mover} {...mover(`moon${m.id}`, inline ? held(0, 0, mr, 0) : round(0, 0, mr, angle(p.id, j + 1), moonMonth(m)))}>
                                         {m.kind === 'station' ? (
                                             <rect x={mx - 3} y={my - 3} width='6' height='6' fill={bodyColor(m)} transform={`rotate(45 ${mx} ${my})`} />
                                         ) : (
@@ -372,7 +402,11 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                             </>
                                         )}
                                       </g>
-                                        <text x={bx} y={by + pr + MOON_GAP * kids.length + 14 + row * 13} textAnchor='middle' className={cx(styles.moonName, on && styles.moonNameOn)}>{m.name}</text>
+                                        {inline ? (
+                                            <text x={bx + pr + MOON_GAP * kids.length + 10} y={by + 4 + (row - (rows - 1) / 2) * 13} textAnchor='start' className={cx(styles.moonName, on && styles.moonNameOn)}>{m.name}</text>
+                                        ) : (
+                                            <text x={bx} y={by + pr + MOON_GAP * kids.length + 14 + row * 13} textAnchor='middle' className={cx(styles.moonName, on && styles.moonNameOn)}>{m.name}</text>
+                                        )}
                                     </g>
                                 );
                             })}
@@ -384,16 +418,16 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                     <g className={styles.addRing} onClick={(e) => (e.stopPropagation(), onAdd())}>
                         <circle cx={c.x} cy={c.y} r={addR} className={styles.orbitHit} />
                         <circle cx={c.x} cy={c.y} r={addR} />
-                        <text x={c.x} y={c.y - addR - 7} textAnchor='middle'>+ add a planet</text>
+                        <text x={c.x} y={inline ? c.y + addR + 16 : c.y - addR - 7} textAnchor='middle'>+ add a planet</text>
                     </g>
                 )}
               </g>
             </svg>
-            <button type='button' className={cx(styles.iconBtn, styles.sysMotion)} onClick={() => onMoving(!moving)} title={moving ? 'Pause the orbits' : 'Set the orbits moving'} aria-label={moving ? 'Pause the orbits' : 'Set the orbits moving'} aria-pressed={moving}>
+            {!inline && <button type='button' className={cx(styles.iconBtn, styles.sysMotion)} onClick={() => onMoving(!moving)} title={moving ? 'Pause the orbits' : 'Set the orbits moving'} aria-label={moving ? 'Pause the orbits' : 'Set the orbits moving'} aria-pressed={moving}>
                 <svg width='14' height='14' viewBox='0 0 14 14' fill='currentColor' aria-hidden>
                     {moving ? <path d='M2 1H6V13H2ZM8 1H12V13H8Z' /> : <path d='M2 1L13 7L2 13Z' />}
                 </svg>
-            </button>
+            </button>}
             {star && star.type !== 'black_hole' && (
                 <div className={styles.sysLegend}>
                     {ZONES.map((z) => (
@@ -490,6 +524,8 @@ function Telemetry({ place, body }: { place: Place; body: Body }) {
 // ---------- The view ----------
 export default function SystemView({ store, place, onAdd }: { store: Store; place: Place; onAdd: (slot?: PlanetSlot, kind?: CreateKind) => void }) {
     const [editing, setEditing] = useState(false);
+    // Phones: the panels are one sheet over the foot of the diagram, folded down to its crumbs until asked for
+    const [sheet, setSheet] = useState(false);
     const body = store.selBody;
     const star = starOf(place);
     const mine = store.canEdit(place);
@@ -510,8 +546,8 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
 
     return (
         <div className={styles.sys}>
-            <SystemDiagram place={place} selBodyId={body?.id ?? null} onSelect={(id) => (setEditing(false), store.select(place.id, id))} onEdit={(id) => (store.select(place.id, id), setEditing(mine))} onAdd={mine ? addPlanet : undefined} moving={store.motion} onMoving={store.setMotion} />
-            <aside className={styles.sysPanels}>
+            <SystemDiagram place={place} selBodyId={body?.id ?? null} onSelect={(id) => (setEditing(false), store.select(place.id, id))} onEdit={(id) => (store.select(place.id, id), setEditing(mine), setSheet(true))} onAdd={mine ? addPlanet : undefined} moving={store.motion} onMoving={store.setMotion} />
+            <aside className={cx(styles.sysPanels, !sheet && styles.sysShut)}>
               <div className={cx('pixel-panel', styles.sysCard)}>
                 <nav className={styles.crumbs} aria-label='Where you are'>
                     <button type='button' onClick={store.closeSystem}>Galaxy</button>
@@ -523,6 +559,9 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                             <b>{body.name}</b>
                         </>
                     )}
+                    <button type='button' className={styles.sysToggle} onClick={() => setSheet(!sheet)} aria-expanded={sheet} aria-label={sheet ? 'Fold the details away' : 'Show the details'}>
+                        <svg viewBox='0 0 24 12' width='24' height='12' aria-hidden><path d={sheet ? 'M2 2l10 8 10-8' : 'M2 10l10-8 10 8'} fill='none' stroke='currentColor' strokeWidth='2.5' /></svg>
+                    </button>
                 </nav>
 
                 <section className={styles.sysSection}>

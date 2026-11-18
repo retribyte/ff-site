@@ -34,9 +34,9 @@ const LAYER_ROWS: { key: keyof Layers; label: string; swatch: string; hint: stri
 const ICON = { fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinejoin: 'miter' as const, 'aria-hidden': true };
 /** A slab seen from a corner: the view that turns. */
 const TiltIcon = () => (
-    <svg width='36' height='22' viewBox='0 0 36 22' {...ICON}>
+    <svg width='36' height='22' viewBox='0 0 36 24' {...ICON}>
         <path d='M18 2L34 10L18 18L2 10Z' />
-        <path d='M2 10V13L18 21L34 13V10' />
+        <path d='M1 10V15L18 23L35 15V10' />
     </svg>
 );
 /** The same slab from straight above. */

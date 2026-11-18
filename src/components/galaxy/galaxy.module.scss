@@ -417,6 +417,18 @@
     align-items: center;
 }
 
+// The buttons at the foot of the galaxy level's sheet: in view however far the sheet is scrolled
+.sheetActions {
+    position: sticky;
+    // Down over the sheet's own padding, or the rows would show through under the buttons
+    bottom: -12px;
+    margin: 0 -12px -12px;
+    padding: 8px 12px 12px;
+    border-top: 1px dashed var(--border-loud);
+    background: var(--surface);
+    z-index: 1;
+}
+
 .btn,
 .btnQuiet {
     padding: 5px 12px;
@@ -823,6 +835,8 @@ button.fieldReadout {
     gap: 8px;
     align-items: stretch;
     flex: none;
+    justify-content: space-between;
+    width: 100%;
 
     .seg button {
         display: grid;
@@ -1163,6 +1177,11 @@ button.fieldReadout {
     }
 }
 
+// Phones only: folds the sheet up and down
+.sysToggle {
+    display: none;
+}
+
 .sysSection {
     display: flex;
     flex-direction: column;
@@ -1398,27 +1417,64 @@ button.fieldReadout {
 }
 
 @media (max-width: 760px) {
-    .sys {
-        display: grid;
-        grid-template-rows: minmax(0, 44%) minmax(0, 1fr);
-    }
-
-    .sysDiagram {
-        position: relative;
-        inset: auto;
-    }
-
+    // The diagram keeps the whole screen; the panels are one sheet over its foot, folded down to the crumbs until asked for
     .sysPanels {
-        position: static;
+        top: auto;
+        left: 8px;
+        right: 8px;
+        bottom: 0;
         width: auto;
-        padding: 8px;
+        max-height: 55%;
+        gap: 0;
         overflow-y: auto;
+        overscroll-behavior: contain;
         pointer-events: auto;
+        background: var(--surface);
+        border: var(--px) solid var(--border-loud);
+        border-bottom: 0;
     }
 
-    // The panels scroll as one on a phone, so the buttons stay under their list
-    .sysAdd {
-        position: static;
+    // One panel, not two cards: the cards' own boxes go, so the crumbs can stay at the sheet's top
+    .sysCard {
+        display: contents;
+
+        > .crumbs {
+            position: sticky;
+            top: 0;
+            flex: none;
+            flex-wrap: nowrap;
+            background: var(--surface);
+            z-index: 2;
+        }
+
+        + .sysCard > .sysSection {
+            border-top: 1px dashed var(--border-loud);
+        }
+    }
+
+    .sysSection {
+        flex: none;
+    }
+
+    .crumbs .sysToggle {
+        display: flex;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        min-width: 44px;
+        min-height: 28px;
+    }
+
+    .sysShut {
+        overflow: hidden;
+
+        .sysSection {
+            display: none;
+        }
+
+        .sysCard > .crumbs {
+            border-bottom: 0;
+        }
     }
 
     .sysMotion {
@@ -1427,28 +1483,23 @@ button.fieldReadout {
         bottom: auto;
     }
 
-    // Along the bottom edge, clear of the "+ add a planet" label at the top of the rings
+    // Along the bottom, just over the folded sheet, clear of the "+ add a planet" label at the top of the rings
     .sysLegend {
         top: auto;
         left: 8px;
         right: 8px;
-        bottom: 4px;
+        bottom: 56px;
         justify-content: center;
         gap: 2px 10px;
         font-size: 0.64rem;
     }
 
-    .sysCard {
-        flex: none;
-        overflow: visible;
-
-        &:first-child {
-            max-height: none;
-        }
-    }
-
     .viewPanel {
         width: 176px;
+    }
+
+    .viewBtns {
+        width: unset;
     }
 }
 

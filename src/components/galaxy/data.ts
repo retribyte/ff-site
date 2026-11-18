@@ -417,14 +417,34 @@ export function regionAt(p: Vec3): RegionKey | null {
     return i < N && j < N && rimCell(i, j) ? 'rim' : null;
 }
 
+/** How far off the plane a place picked on the flat map tends to sit, in klyr: about the thin disk's scale height, more in the bulge. */
+const DISK_THICK = 0.8;
+const BULGE_THICK = 1.6;
+const BULGE_R = 6;
+
+/**
+ * A height off the galactic plane for a spot picked in two dimensions (the map is placed on from above, so nobody
+ * chooses one): bell-shaped round the plane, never past half a sector's height. Sol's own, for scale, is +0.066.
+ */
+export function randomHeight(x: number, y: number): number {
+    const bell = (Math.random() + Math.random() + Math.random() - 1.5) * 2;
+    const z = bell * (Math.hypot(x, y) < BULGE_R ? BULGE_THICK : DISK_THICK);
+    return Math.round(Math.max(-H / 2, Math.min(H / 2, z)) * 1000) / 1000;
+}
+
+/** A spot clicked on the flat map, given a height. */
+export function lifted(p: Vec3): Vec3 {
+    return [p[0], p[1], randomHeight(p[0], p[1])];
+}
+
 export function randomPointIn(region: RegionKey): Vec3 {
     if (region === 'rim' || !terrCells[region].length) {
         for (let tries = 0; tries < 200; tries++) {
             const [i, j] = RIM_CELLS[Math.floor(Math.random() * RIM_CELLS.length)];
             const p: Vec3 = [(Math.random() < 0.5 ? -1 : 1) * (i + Math.random()) * S, (Math.random() < 0.5 ? -1 : 1) * (j + Math.random()) * S, 0];
-            if (Math.hypot(p[0], p[1]) < DISK_R - 0.5 && (region !== 'rim' || regionAt(p) === 'rim')) return p;
+            if (Math.hypot(p[0], p[1]) < DISK_R - 0.5 && (region !== 'rim' || regionAt(p) === 'rim')) return lifted(p);
         }
-        return [0, RIM_R + 2, 0];
+        return lifted([0, RIM_R + 2, 0]);
     }
     const cells = terrCells[region];
     for (let tries = 0; tries < 40; tries++) {
@@ -432,7 +452,7 @@ export function randomPointIn(region: RegionKey): Vec3 {
         const u = ((k % TW) + Math.random()) / TW;
         const v = (Math.floor(k / TW) + Math.random()) / TH;
         const [x, y] = rot((u - 0.5) * PLANE.w + PLANE.cx, (0.5 - v) * PLANE.h + PLANE.cy, MAP_ROT);
-        if (Math.hypot(x, y) < DISK_R) return [x, y, 0];
+        if (Math.hypot(x, y) < DISK_R) return lifted([x, y, 0]);
     }
     return [0, 0, 0];
 }

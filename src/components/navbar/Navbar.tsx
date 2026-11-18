@@ -39,7 +39,7 @@ function SessionArea() {
         <span className={styles.session}>
             <Link href='/account' className={styles.sessionLink} title='Your account'>
                 {user.icon && (
-                    <Image src={imageSrc(user.icon)} alt='' width={22} height={22} className={styles.sessionIcon} unoptimized />
+                    <Image src={imageSrc(user.icon)} alt='' width={33} height={33} className={styles.sessionIcon} unoptimized />
                 )}
                 <span className={styles.sessionName}>{user.username}</span>
             </Link>

@@ -11,7 +11,7 @@ import { decodeEntities } from '@/lib/html';
 import { isValidSlug } from '@/lib/slug';
 import {
     BELT_TYPES, BELT_WIDTH_RANGE, BELT_WIDTH_REFS, COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, RING_WIDTH_RANGE, RING_WIDTH_REFS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
-    beltDraft, beltWidthMax, bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, planetNumber, randomPointIn, regionAt, regionLabel, ringRange, roman, satelliteRange, sectorOf, starOf, toT, yearDays, zoneOf,
+    beltDraft, beltWidthMax, bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, lifted, planetNumber, randomPointIn, regionAt, regionLabel, ringRange, roman, satelliteRange, sectorOf, starOf, toT, yearDays, zoneOf,
 } from './data';
 import type { Body, BodyKind, Place, Ref, RegionKey, Vec3 } from './data';
 import type { Store, TextPatch, Where } from './store';
@@ -755,13 +755,13 @@ export function SelectionDetail({ store }: { store: Store }) {
                     ) : (
                         <BodyFacts place={place} body={body} />
                     )}
+                    <Travelogue store={store} place={place} body={body} />
                     {mine && (
-                        <div className={styles.actions}>
+                        <div className={cx(styles.actions, styles.sheetActions)}>
                             <button type='button' className={styles.btn} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
                             {body.kind !== 'star' && <DeleteButton onDelete={() => store.removeBody(place.id, body.id)} />}
                         </div>
                     )}
-                    <Travelogue store={store} place={place} body={body} />
                 </>
             ) : (
                 <>
@@ -770,17 +770,18 @@ export function SelectionDetail({ store }: { store: Store }) {
                     <PlaceFacts place={place} />
                     {place.placeholder && mine && !editing && <RenameRow store={store} place={place} />}
                     {place.kind === 'system' && <BodyTree place={place} selBodyId={null} onPick={(id) => store.openSystem(place.id, id)} />}
-                    <div className={styles.actions}>
+                    <Travelogue store={store} place={place} body={null} />
+                    {/* Last and pinned to the sheet's foot, so Open system is in reach however long the sheet */}
+                    <div className={cx(styles.actions, styles.sheetActions)}>
                         {place.kind === 'system' && <button type='button' className={styles.btn} onClick={() => store.openSystem(place.id)}>Open system</button>}
                         {mine && <button type='button' className={styles.btnQuiet} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>}
                         {mine && (
-                            <button type='button' className={styles.btnQuiet} onClick={() => store.requestPlace((pos) => store.movePlace(place.id, { pos, precision: 'exact' }))}>
+                            <button type='button' className={styles.btnQuiet} onClick={() => store.requestPlace((pos) => store.movePlace(place.id, { pos: [pos[0], pos[1], place.pos[2]], precision: 'exact' }))}>
                                 {place.precision === 'region' ? 'Pin it down' : 'Move'}
                             </button>
                         )}
                         {mine && <DeleteButton onDelete={() => store.removePlace(place.id)} />}
                     </div>
-                    <Travelogue store={store} place={place} body={null} />
                 </>
             )}
         </div>
@@ -820,7 +821,7 @@ export function WherePicker({ store, where, onChange }: { store: Store; where: W
                         <i className={styles.chipDot} />{where?.regionHint === key ? `${REGIONS[key].short} (re-roll)` : REGIONS[key].short}
                     </button>
                 ))}
-                <button type='button' className={cx(styles.chip, where?.precision === 'exact' && styles.chipOn)} onClick={() => store.requestPlace((pos) => onChange({ pos, precision: 'exact' }))}>
+                <button type='button' className={cx(styles.chip, where?.precision === 'exact' && styles.chipOn)} onClick={() => store.requestPlace((pos) => onChange({ pos: lifted(pos), precision: 'exact' }))}>
                     Pick the spot on the map
                 </button>
             </div>
@@ -850,7 +851,7 @@ export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { sto
     const [name, setName] = useState('');
     // A planet's system or a satellite's planet, by id; 'new' = a planet whose star is not known yet
     const [parent, setParent] = useState<number | 'new'>(asked === 'belt' ? (ctxPrimary?.id ?? 'new') : (ctxPlanet?.id ?? ctxSystem?.id ?? 'new'));
-    const [where, setWhere] = useState<Where | null>(spot ? { pos: spot, precision: 'exact' } : null);
+    const [where, setWhere] = useState<Where | null>(() => (spot ? { pos: lifted(spot), precision: 'exact' } : null));
     const [starType, setStarType] = useState('sunlike');
     const [category, setCategory] = useState('landmark');
     const [draft, setDraft] = useState<BodyDraft>(asked === 'belt' ? beltDraft(ctxPrimary ?? undefined) : ctxPlanet ? { type: 'rocky', radiusKm: 1737, orbit: 384400 } : { type: 'rocky', radiusKm: 6371, orbit: 1, ...slot });
