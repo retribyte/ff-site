@@ -830,7 +830,8 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                             <BodyPortrait body={body} />
                             <div>
                                 <h3><BodyName body={body} paren /></h3>
-                                <p className='pixel-label'>{`${kindLabel(body)} ${designation(body)}`.trim()}</p>
+                                {/* A star's kind already carries its letter (Star A), so its designation is not added again */}
+                                <p className='pixel-label'>{body.kind === 'star' ? kindLabel(body) : `${kindLabel(body)} ${designation(body)}`.trim()}</p>
                             </div>
                         </header>
                         {!(editing && mine) && <Writeup of={body} />}
