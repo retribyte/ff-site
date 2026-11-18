@@ -1084,6 +1084,38 @@ function KindCards({ kind, onPick }: { kind: Exclude<CreateKind, 'pair'> | null;
 /** "Name (system)", for the pickers that list bodies of every system the member may change. */
 const inSystem = (b: Body, p: Place) => `${b.name} (${p.placeholder ? 'unnamed system' : p.name})`;
 
+/** The order of the "Where does it go?" lists: stars, pairs of stars, planets, pairs of planets, moons. */
+const BODY_GROUPS: { label: string; test: (b: Body) => boolean }[] = [
+    { label: 'stars', test: (b) => b.kind === 'star' },
+    { label: 'pairs of stars', test: (b) => b.kind === 'barycenter' && b.type === 'stars' },
+    { label: 'planets', test: (b) => b.kind === 'planet' },
+    { label: 'pairs of planets', test: (b) => b.kind === 'barycenter' && b.type === 'planets' },
+    { label: 'moons', test: (b) => b.kind === 'moon' },
+];
+const groupOf = (b: Body) => BODY_GROUPS.findIndex((g) => g.test(b));
+const byDesignation = (a: Body, b: Body) => (a.gu || a.name).localeCompare(b.gu || b.name, undefined, { numeric: true });
+
+/**
+ * The options of a "Where does it go?" list: the bodies of `here` (the system being worked
+ * in) first, by type, then everyone else's, one group per type.
+ */
+function BodyOptions({ items, here }: { items: { b: Body; p: Place }[]; here: Place | null }) {
+    const own = items.filter((x) => x.p.id === here?.id).sort((x, y) => groupOf(x.b) - groupOf(y.b) || byDesignation(x.b, y.b));
+    const rest = items.filter((x) => x.p.id !== here?.id);
+    const option = ({ b, p }: { b: Body; p: Place }, local: boolean) => (
+        <option key={b.id} value={b.id}>{local ? (b.unnamed || !b.gu ? b.name : `${b.name} (${b.gu})`) : inSystem(b, p)}</option>
+    );
+    return (
+        <>
+            {own.length > 0 && <optgroup label='This system'>{own.map((x) => option(x, true))}</optgroup>}
+            {BODY_GROUPS.map((g) => {
+                const these = rest.filter((x) => g.test(x.b)).sort((x, y) => placeTitle(x.p).localeCompare(placeTitle(y.p)) || byDesignation(x.b, y.b));
+                return these.length > 0 && <optgroup key={g.label} label={`${here ? 'Other ' : ''}${g.label}`.replace(/^./, (c) => c.toUpperCase())}>{these.map((x) => option(x, false))}</optgroup>;
+            })}
+        </>
+    );
+}
+
 /** One wizard for everything a member can add, one question at a time. */
 export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { store: Store; onDone: () => void; /** Opened from a gap ring: the planet that goes there. */ slot?: PlanetSlot; /** Opened from a spot clicked on the map: where it goes. */ at?: Vec3; /** What to start on, when the button that opened this says. */ kind?: Exclude<CreateKind, 'pair'> }) {
     const sel = store.selBody;
@@ -1096,8 +1128,11 @@ export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { sto
     // Opened from a system with nothing picked ("+ Add"): no kind is chosen for the member
     const [kind, setKind] = useState<Exclude<CreateKind, 'pair'> | null>(asked ?? (ctxPlanet ? 'moon' : ctxSystem ? (sel ? 'planet' : null) : 'system'));
     const [name, setName] = useState('');
-    // A planet's system, a satellite's planet, a belt's or companion's primary, by id; 'new' = a planet whose star is not known yet
-    const [parent, setParent] = useState<number | 'new'>(asked === 'belt' ? (ctxPrimary?.id ?? 'new') : asked === 'companion' ? (ctxHost?.id ?? (ctxSystem && primaryOf(ctxSystem)?.id) ?? 'new') : (ctxPlanet?.id ?? ctxSystem?.id ?? 'new'));
+    // Where it goes, kept as two choices because systems and bodies are numbered separately (a system and a body can
+    // share a number, so one choice read as the other picks the wrong thing): a planet's system ('new' = a planet
+    // whose star is not known yet), and the body a moon, station, belt or companion star goes round.
+    const [systemId, setSystemId] = useState<number | 'new'>(ctxSystem?.id ?? 'new');
+    const [bodyId, setBodyId] = useState<number | null>(asked === 'belt' ? (ctxPrimary?.id ?? null) : asked === 'companion' ? (ctxHost?.id ?? (ctxSystem && primaryOf(ctxSystem)?.id) ?? null) : (ctxPlanet?.id ?? null));
     // A planet's star (or pair of stars), when its system has several; null = the system's primary
     const [hostId, setHostId] = useState<number | null>(ctxHost?.id ?? null);
     const [where, setWhere] = useState<Where | null>(() => (spot ? { pos: lifted(spot), precision: 'exact' } : null));
@@ -1116,10 +1151,13 @@ export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { sto
     const hosts = systems.flatMap((p) => p.bodies.filter(isStarry).map((b) => ({ b, p })));
     const isSatellite = kind === 'moon' || kind === 'station';
     const primaries = systems.flatMap((p) => p.bodies.filter(canCircle).map((b) => ({ b, p })));
-    const parentPrimary = kind === 'belt' ? (primaries.find((x) => x.b.id === parent) ?? primaries[0]) : null;
-    const parentHost = kind === 'companion' ? (hosts.find((x) => x.b.id === parent) ?? hosts[0]) : null;
-    const parentPlanet = isSatellite ? (planets.find((x) => x.b.id === parent) ?? planets[0]) : null;
-    const parentSystem = kind === 'planet' ? systems.find((p) => p.id === parent) : null;
+    // The system being worked in: the open one, else the one picked on the galaxy (if the member may change it)
+    const here = ctxSystem ?? systems.find((p) => p.id === store.selPlace?.id) ?? null;
+    const firstHere = (list: { b: Body; p: Place }[]) => list.find((x) => x.p.id === here?.id) ?? list[0];
+    const parentPrimary = kind === 'belt' ? (primaries.find((x) => x.b.id === bodyId) ?? firstHere(primaries)) : null;
+    const parentHost = kind === 'companion' ? (hosts.find((x) => x.b.id === bodyId) ?? firstHere(hosts)) : null;
+    const parentPlanet = isSatellite ? (planets.find((x) => x.b.id === bodyId) ?? firstHere(planets)) : null;
+    const parentSystem = kind === 'planet' ? systems.find((p) => p.id === systemId) : null;
     const systemHosts = parentSystem ? parentSystem.bodies.filter(isStarry) : [];
     const planetHost = parentSystem ? (systemHosts.find((b) => b.id === hostId) ?? primaryOf(parentSystem)) : undefined;
     const needsWhere = kind === 'system' || kind === 'landmark' || (kind === 'planet' && !parentSystem);
@@ -1131,18 +1169,19 @@ export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { sto
 
     const pickKind = (k: Exclude<CreateKind, 'pair'>) => {
         setKind(k);
+        // Each kind starts from the selection (else this system's primary or first planet), never from what the last kind
+        // defaulted to, so the same kind always starts in the same place however it was reached
         if (k === 'belt') {
-            const primary = primaries.find((x) => x.b.id === parent)?.b ?? ctxPrimary ?? primaries[0]?.b;
-            setParent(primary?.id ?? 'new');
+            const primary = ctxPrimary ?? (here && primaryOf(here)) ?? firstHere(primaries)?.b;
+            setBodyId(primary?.id ?? null);
             setDraft(beltDraft(primary));
         } else if (k === 'companion') {
-            setParent(hosts.find((x) => x.b.id === parent)?.b.id ?? ctxHost?.id ?? (ctxSystem && primaryOf(ctxSystem)?.id) ?? hosts[0]?.b.id ?? 'new');
+            setBodyId(ctxHost?.id ?? (here && primaryOf(here)?.id) ?? hosts[0]?.b.id ?? null);
             setDraft({ type: 'red_dwarf', radiusKm: 0, orbit: 40 });
         } else if (k === 'moon') setDraft({ type: 'rocky', radiusKm: 1737, orbit: 384400 });
         else if (k === 'station') setDraft({ type: 'artificial', radiusKm: 473, orbit: 42000 });
         else setDraft({ type: 'rocky', radiusKm: 6371, orbit: habAU(hostLight) * 1.1 });
-        if (k === 'planet' && !systems.some((p) => p.id === parent)) setParent(ctxSystem?.id ?? 'new');
-        if ((k === 'moon' || k === 'station') && !planets.some((x) => x.b.id === parent)) setParent(planets[0]?.b.id ?? 'new');
+        if (k === 'moon' || k === 'station') setBodyId(ctxPlanet?.id ?? firstHere(planets)?.b.id ?? null);
     };
 
     const save = async () => {
@@ -1228,26 +1267,35 @@ export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { sto
         <div className={styles.field}>
             <div className={styles.fieldHead}><span className='pixel-label'>Circles</span></div>
             {/* A star's belt is measured in AU and a ring in km, so a new choice starts the belt over */}
-            <select value={parentPrimary?.b.id ?? ''} onChange={(e) => (setParent(Number(e.target.value)), setDraft(beltDraft(primaries.find((x) => x.b.id === Number(e.target.value))?.b)))}>
-                {primaries.map(({ b, p }) => <option key={b.id} value={b.id}>{b.parentId === null ? `${placeTitle(p)} (the ${b.kind === 'star' ? 'star' : 'pair of stars'})` : inSystem(b, p)}</option>)}
+            <select value={parentPrimary?.b.id ?? ''} onChange={(e) => (setBodyId(Number(e.target.value)), setDraft(beltDraft(primaries.find((x) => x.b.id === Number(e.target.value))?.b)))}>
+                <BodyOptions items={primaries} here={here} />
             </select>
             {primaries.length === 0 && <p className={styles.muted}>Add its star system first.</p>}
         </div>
     ) : kind === 'companion' ? (
         <div className={styles.field}>
             <div className={styles.fieldHead}><span className='pixel-label'>Orbits</span></div>
-            <select value={parentHost?.b.id ?? ''} onChange={(e) => setParent(Number(e.target.value))}>
-                {hosts.map(({ b, p }) => <option key={b.id} value={b.id}>{inSystem(b, p)}</option>)}
+            <select value={parentHost?.b.id ?? ''} onChange={(e) => setBodyId(Number(e.target.value))}>
+                <BodyOptions items={hosts} here={here} />
             </select>
             {hosts.length === 0 && <p className={styles.muted}>Add its star system first.</p>}
         </div>
     ) : (kind === 'planet' || isSatellite) && (
         <div className={styles.field}>
             <div className={styles.fieldHead}><span className='pixel-label'>{kind === 'planet' ? 'Star system' : 'Orbits'}</span></div>
-            <select value={isSatellite ? (parentPlanet?.b.id ?? '') : parent} onChange={(e) => (setParent(e.target.value === 'new' ? 'new' : Number(e.target.value)), setHostId(null))}>
-                {kind === 'planet' && <option value='new'>I don&apos;t know its star yet</option>}
-                {kind === 'planet' ? systems.map((p) => <option key={p.id} value={p.id}>{placeTitle(p)}</option>) : planets.map(({ b, p }) => <option key={b.id} value={b.id}>{inSystem(b, p)}</option>)}
-            </select>
+            {kind === 'planet' ? (
+                <select value={systemId} onChange={(e) => (setSystemId(e.target.value === 'new' ? 'new' : Number(e.target.value)), setHostId(null))}>
+                    <option value='new'>I don&apos;t know its star yet</option>
+                    {here && <optgroup label='This system'><option value={here.id}>{placeTitle(here)}</option></optgroup>}
+                    <optgroup label={here ? 'Other systems' : 'Systems'}>
+                        {systems.filter((p) => p.id !== here?.id).sort((a, b) => placeTitle(a).localeCompare(placeTitle(b))).map((p) => <option key={p.id} value={p.id}>{placeTitle(p)}</option>)}
+                    </optgroup>
+                </select>
+            ) : (
+                <select value={parentPlanet?.b.id ?? ''} onChange={(e) => setBodyId(Number(e.target.value))}>
+                    <BodyOptions items={planets} here={here} />
+                </select>
+            )}
             {isSatellite && planets.length === 0 && <p className={styles.muted}>Add its planet first.</p>}
             {kind === 'planet' && !parentSystem && name.trim() === '' && <p className={styles.formError}>A planet with no name needs its star: pick its system, or go back and name it.</p>}
         </div>
