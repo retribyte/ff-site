@@ -23,6 +23,8 @@ const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boo
 const LOG_SIZE = 1 / Math.log(1.25);
 const bodyPx = (b: Body) => Math.max(b.kind === 'planet' ? 4 : 2.2, Math.min(26, Math.log(Math.max(b.radiusKm, 1) / 1000) * LOG_SIZE));
 const MOON_GAP = 11;
+/** Spacing of the rings drawn round one planet of a pair (its own moons, rings and stations), which travel with it. */
+const PART_GAP = 4;
 /** Spacing of the orbits drawn round a companion star (its planets, belts and stations). */
 const SAT_GAP = 13;
 /** A companion star is drawn this much smaller than the primary would be. */
@@ -224,18 +226,27 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
     const starPx = core.length ? coreR + Math.max(...core.map((k) => (k.kind === 'star' ? typePx(k) * 0.8 : 12))) : typePx(star);
     // In line, the orbits have the height down to the legend and the folded sheet
     const maxR = inline ? Hh - 120 : Math.min(W - inset, Hh) / 2 - 40;
-    /** A planet's, or a pair of planets', drawing: the pair's planets (going round its center on `pairR`) and what is drawn in rings round it. */
-    const slotParts = (p: Body) => {
+    /**
+     * A planet's, or a pair of planets', drawing. A pair's planets go round its center on `pairR`, each carrying its
+     * own moons, rings and stations in small rings round its disc; only what circles both is ringed round the center.
+     */
+    const slotParts = (p: Body, pr?: number) => {
         const pair = p.kind === 'barycenter' ? componentsOf(place.bodies, p).sort((a, b) => b.radiusKm - a.radiusKm) : [];
-        // Round a pair: its own moons, rings and stations, then its planets' moons (drawn round the pair too: there is no room to draw them round each)
-        const kids = pair.length ? [...kidsOf(p.id).filter((k) => !pair.includes(k)), ...pair.flatMap((k) => kidsOf(k.id))].sort((x, y) => x.orbit - y.orbit) : kidsOf(p.id);
+        const kids = pair.length ? kidsOf(p.id).filter((k) => !pair.includes(k)) : kidsOf(p.id);
         const discPx = pair.length ? Math.max(...pair.map(bodyPx)) : bodyPx(p);
-        return { pair, kids, discPx };
+        const partPx = (k: Body) => Math.max(2.5, Math.min(bodyPx(k), pr ?? discPx));
+        // How far out one planet of the pair reaches with its own rings
+        const extent = (k: Body) => partPx(k) + kidsOf(k.id).length * PART_GAP;
+        const widest = pair.length ? Math.max(...pair.map(extent)) : 0;
+        // The two never overlap, rings and all; the pair's own rings start outside both
+        const pairR = pair.length ? widest + 1.5 : 0;
+        const inner = pair.length ? pairR + widest : (pr ?? discPx);
+        return { pair, kids, discPx, partPx, pairR, inner };
     };
-    // How much room a planet needs around its own center (its moons' rings included); a pair, its two discs side by side.
+    // How much room a planet needs around its own center (its moons' rings included); a pair, both planets with their rings.
     const reach = (p: Body) => {
-        const { pair, kids, discPx } = slotParts(p);
-        return (pair.length ? discPx * 2 + 3 : discPx) + kids.length * MOON_GAP + 6;
+        const { kids, inner } = slotParts(p);
+        return inner + kids.length * MOON_GAP + 6;
     };
     /** A companion star's drawing: how big, and the orbits drawn round it (a pair of stars: its stars are drawn, not ringed). */
     const companionParts = (b: Body) => {
@@ -506,10 +517,8 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                     const [bx, by] = [0, 0];
                     const pr = ring.px;
                     const zone = host ? zoneOf(p.orbit, host) : ZONES[2];
-                    const { pair, kids } = slotParts(p);
-                    // A pair of planets: its two discs go round the slot's center, the moons' rings round both
-                    const pairR = pair.length ? pr + 1.5 : 0;
-                    const inner = pr + pairR;
+                    // A pair of planets: its two discs go round the slot's center, each with its own rings; what circles both is ringed round the center
+                    const { pair, kids, partPx, pairR, inner } = slotParts(p, pr);
                     return (
                         <g key={p.id} className={cx(styles.orb, selBodyId === p.id && styles.orbSelected)} onClick={(e) => (e.stopPropagation(), onSelect(p.id))} onDoubleClick={() => onEdit(p.id)}>
                             <circle cx={c.x} cy={c.y} r={r} className={styles.orbitLine} style={{ stroke: zone.color }} />
@@ -525,7 +534,7 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                 <>
                                     <circle cx={0} cy={0} r={inner + 3} className={styles.pairRing} />
                                     {pair.map((k, j) => {
-                                        const kr = Math.max(2.5, Math.min(bodyPx(k), pr));
+                                        const kr = partPx(k);
                                         return partner(
                                             k,
                                             mover(`pair${k.id}`, inline ? held(0, 0, pairR, j * Math.PI) : round(0, 0, pairR, j * ((2 * Math.PI) / pair.length), PAIR_SECONDS / 2)),
@@ -533,6 +542,29 @@ function SystemDiagram({ place, selBodyId, onSelect, onEdit, onAdd, moving, onMo
                                                 <circle cx={0} cy={0} r={kr} fill={bodyColor(k)} className={styles.partDisc} />
                                                 <BodyTexture body={k} x={0} y={0} r={kr} />
                                                 <circle cx={0} cy={0} r={kr} className={styles.shade} />
+                                                {/* This planet's own moons, rings and stations, close round its disc and travelling with it */}
+                                                {kidsOf(k.id).map((m, mi) => {
+                                                    const sr = kr + PART_GAP * (mi + 1);
+                                                    const pick = (e: React.MouseEvent) => (e.stopPropagation(), onSelect(m.id));
+                                                    const open = (e: React.MouseEvent) => (e.stopPropagation(), onEdit(m.id));
+                                                    if (m.kind === 'belt') {
+                                                        return (
+                                                            <g key={m.id} className={cx(styles.orb, selBodyId === m.id && styles.orbSelected)} style={{ color: bodyColor(m) }} onClick={pick} onDoubleClick={open}>
+                                                                <circle cx={0} cy={0} r={sr} className={styles.ringBand} style={{ strokeWidth: 1.5 }} />
+                                                                <circle cx={0} cy={0} r={sr} className={styles.orbitHit} style={{ strokeWidth: PART_GAP }} />
+                                                            </g>
+                                                        );
+                                                    }
+                                                    return (
+                                                        <g key={m.id} className={cx(styles.orb, selBodyId === m.id && styles.orbSelected)} onClick={pick} onDoubleClick={open}>
+                                                            <circle cx={0} cy={0} r={sr} className={styles.orbitLine} />
+                                                            <circle cx={0} cy={0} r={sr} className={styles.orbitHit} style={{ strokeWidth: PART_GAP }} />
+                                                          <g className={styles.mover} {...mover(`partsat${m.id}`, inline ? held(0, 0, sr, 0) : round(0, 0, sr, angle(k.id, mi + 1), moonMonth(m)))}>
+                                                            {m.kind === 'station' ? <rect x={-1.6} y={-1.6} width='3.2' height='3.2' fill={bodyColor(m)} transform='rotate(45)' /> : <circle cx={0} cy={0} r={1.8} fill={bodyColor(m)} />}
+                                                          </g>
+                                                        </g>
+                                                    );
+                                                })}
                                             </>,
                                         );
                                     })}
