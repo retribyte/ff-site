@@ -1007,6 +1007,9 @@ button.fieldReadout {
     font: 0.75rem var(--font-pixel);
     text-transform: uppercase;
     color: var(--text-muted);
+    position: sticky;
+    top: 0;
+    background-color: var(--surface);
 
     button {
         padding: 0;
