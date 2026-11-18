@@ -373,6 +373,60 @@ export function designate(bodies: Body[], systemName: string | null = null): Bod
     });
 }
 
+/** A body that is not on the map yet: what `wouldBe` and `wouldPair` are told about it. */
+export interface Draft {
+    kind: BodyKind;
+    parentId: number | null;
+    name?: string | null;
+    type: string;
+    radiusKm?: number;
+    orbit: number;
+    width?: number;
+    ordinal?: number | null;
+    builtYear?: number | null;
+    iteration?: number | null;
+}
+
+// Above every real id: a new body gets the next id, so it loses ties (equal mass) to bodies already on the map
+const NEW_ID = Number.MAX_SAFE_INTEGER;
+const asBody = (d: Draft, id: number): Body => ({
+    id,
+    kind: d.kind,
+    parentId: d.parentId,
+    name: d.name?.trim() || '',
+    unnamed: !d.name?.trim(),
+    ordinal: d.ordinal ?? null,
+    num: 0,
+    gu: '',
+    type: d.type,
+    radiusKm: d.radiusKm ?? 696000,
+    orbit: d.orbit,
+    width: d.width,
+    builtYear: d.builtYear ?? null,
+    iteration: d.iteration ?? null,
+    travelogue: [],
+});
+
+/** The designation a new body would get in `place` (none yet: a brand new system with only an unnamed star). '' when it would have none. */
+export function wouldBe(place: Place | undefined, draft: Draft): string {
+    const bodies = place?.bodies ?? [asBody({ kind: 'star', parentId: null, type: 'sunlike', orbit: 0 }, NEW_ID - 1)];
+    const parentId = draft.parentId ?? (place ? null : NEW_ID - 1);
+    const out = designate([...bodies, asBody({ ...draft, parentId }, NEW_ID)], place ? systemName(place) : null);
+    return out.find((b) => b.id === NEW_ID)?.gu ?? '';
+}
+
+/**
+ * What making `body` one of a pair with `companion` would designate: the companion, and
+ * the body itself (the heavier of the two is A, so the body may become A or B).
+ */
+export function wouldPair(place: Place, body: Body, companion: Omit<Draft, 'parentId' | 'orbit'>): { companion: string; body: string } {
+    const center = asBody({ kind: 'barycenter', parentId: body.parentId, type: body.kind === 'star' ? 'stars' : 'planets', orbit: body.orbit, ordinal: body.ordinal }, NEW_ID - 1);
+    center.unnamed = true;
+    const bodies = place.bodies.map((b) => (b.id === body.id ? { ...b, parentId: center.id, ordinal: null, orbit: 1 } : b));
+    const out = designate([...bodies, center, asBody({ ...companion, parentId: center.id, orbit: 2 }, NEW_ID)], systemName(place));
+    return { companion: out.find((b) => b.id === NEW_ID)?.gu ?? '', body: out.find((b) => b.id === body.id)?.gu ?? '' };
+}
+
 /** The number a planet at `orbit` round `parentId` gets among that star's other planets when it claims `ordinal`, and the lowest it could have there. */
 export function planetNumber(bodies: Body[], parentId: number | null, orbit: number, ordinal: number | null): { n: number; min: number } {
     const min = Math.max(0, ...bodies.filter((b) => b.parentId === parentId && isSlot(b) && b.orbit < orbit).map((b) => b.num)) + 1;

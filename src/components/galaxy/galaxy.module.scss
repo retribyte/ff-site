@@ -781,6 +781,52 @@ button.fieldReadout {
     box-shadow: inset 0 0 0 1px var(--chip);
 }
 
+// The add modal's kinds: a card each, with the kind's picture as the system view draws it
+.kindCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+    gap: 6px;
+}
+
+.kindCard {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    padding: 6px 4px 5px;
+    border: 1px solid var(--border-loud);
+    background: var(--surface-2);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.78rem;
+    line-height: 1.15;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--map-nav);
+    }
+}
+
+.kindCardOn {
+    border-color: var(--map-nav);
+    box-shadow: inset 0 0 0 1px var(--map-nav);
+}
+
+// The picture sits on space, whatever the theme
+.kindPictureBox {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 40px;
+    background: var(--void);
+    overflow: hidden;
+}
+
+.kindPicture {
+    overflow: hidden;
+}
+
 .chipDot {
     width: 9px;
     height: 9px;

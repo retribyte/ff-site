@@ -739,6 +739,16 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
         return () => window.removeEventListener('keydown', onKey);
     });
 
+    // The add buttons for what is picked; none (nothing picked, a belt or a station) leaves just "+ Add"
+    const shortcuts: { label: string; kind: CreateKind }[] = !body
+        ? []
+        : isStarry(body)
+          ? [{ label: '+ Planet', kind: 'planet' }, ...(pairable ? [{ label: 'Make it a pair', kind: 'pair' as const }] : [])]
+          : isSlot(body)
+            ? [{ label: '+ Moon', kind: 'moon' }, ...(pairable ? [{ label: 'Make it a pair', kind: 'pair' as const }] : [])]
+            : body.kind === 'moon'
+              ? [{ label: '+ Ring', kind: 'belt' }]
+              : [];
     // A planet goes round the star (or pair of stars) that is picked, else round the primary
     const addPlanet = (slot?: PlanetSlot) => {
         store.select(place.id, !slot && body && isStarry(body) ? body.id : null);
@@ -770,17 +780,11 @@ export default function SystemView({ store, place, onAdd }: { store: Store; plac
                     <BodyTree place={place} selBodyId={body?.id ?? null} onPick={(id) => (setEditing(false), store.select(place.id, id))} onOpen={(id) => (store.select(place.id, id), setEditing(mine))} />
                     {mine && (
                         <div className={cx(styles.actions, styles.sysAdd)}>
-                            <button type='button' className={styles.btnQuiet} onClick={() => addPlanet()}>+ Planet</button>
-                            {body && isSlot(body) && <button type='button' className={styles.btnQuiet} onClick={() => onAdd()}>+ Moon / station</button>}
-                            {/* Round the body that is picked (a ring, or a belt round a companion star), else round the primary (a belt) */}
-                            {body && (isSlot(body) || body.kind === 'moon') ? (
-                                <button type='button' className={styles.btnQuiet} onClick={() => onAdd(undefined, 'belt')}>+ Ring</button>
-                            ) : (
-                                <button type='button' className={styles.btnQuiet} onClick={() => (store.select(place.id, body && isStarry(body) ? body.id : null), onAdd(undefined, 'belt'))}>+ Belt</button>
-                            )}
-                            {/* Round the picked star (or pair of stars), else round the primary */}
-                            <button type='button' className={styles.btnQuiet} onClick={() => (store.select(place.id, body && isStarry(body) ? body.id : null), onAdd(undefined, 'companion'))}>+ Companion star</button>
-                            {pairable && <button type='button' className={styles.btnQuiet} onClick={() => onAdd(undefined, 'pair')}>Make it a pair</button>}
+                            {/* Only what fits the selection: nothing picked (or a belt or station) opens the add modal with no kind chosen */}
+                            {shortcuts.length === 0 && <button type='button' className={styles.btnQuiet} onClick={() => (store.select(place.id, null), onAdd())}>+ Add</button>}
+                            {shortcuts.map(({ label, kind }) => (
+                                <button key={label} type='button' className={styles.btnQuiet} onClick={() => onAdd(undefined, kind)}>{label}</button>
+                            ))}
                         </div>
                     )}
                 </section>

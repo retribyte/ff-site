@@ -11,9 +11,9 @@ import { decodeEntities } from '@/lib/html';
 import { isValidSlug } from '@/lib/slug';
 import {
     BELT_TYPES, BELT_WIDTH_RANGE, PAIR_PLANET_RANGE, PAIR_PLANET_REFS, PAIR_STAR_RANGE, PAIR_STAR_REFS, BELT_WIDTH_REFS, COMPOSITIONS, LANDMARK_CATEGORIES, MOON_ORBIT_REFS, ORBIT_RANGE, ORBIT_REFS, REGIONS, RING_WIDTH_RANGE, RING_WIDTH_REFS, SIZE_RANGE, SIZE_REFS, STAR_TYPES, ZONES,
-    beltDraft, beltWidthMax, bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, lifted, planetNumber, randomPointIn, regionAt, regionLabel, letters, ringRange, roman, satelliteRange, stationMark, hostOf, isSlot, isStarry, massOf, massEarths, orbitAU, primaryOf, unitOf, sectorOf, toT, yearDays, zoneOf,
+    beltDraft, beltWidthMax, bodyColor, describeSize, fmtNum, fromT, fullAddress, gravityG, habAU, lifted, planetNumber, randomPointIn, regionAt, regionLabel, letters, ringRange, roman, satelliteRange, stationMark, wouldBe, wouldPair, hostOf, isSlot, isStarry, massOf, massEarths, orbitAU, primaryOf, unitOf, sectorOf, toT, yearDays, zoneOf,
 } from './data';
-import type { Body, BodyKind, Host, Place, Ref, RegionKey, Vec3 } from './data';
+import type { Body, BodyKind, Draft, Host, Place, Ref, RegionKey, Vec3 } from './data';
 import type { Store, TextPatch, Where } from './store';
 import styles from './galaxy.module.scss';
 
@@ -23,7 +23,7 @@ export const KIND_LABEL: Record<string, string> = { star: 'Star', planet: 'Plane
 export function kindLabel(b: Body): string {
     if (b.kind === 'planet') return `Planet ${b.num}${b.letter ? `-${b.letter}` : ''}`;
     if (b.kind === 'star' && b.letter) return `Star ${b.letter}`;
-    if (b.kind === 'barycenter') return b.type === 'stars' ? 'Pair of stars' : `Pair of planets, planet ${b.num}`;
+    if (b.kind === 'barycenter') return b.type === 'stars' ? 'Pair of stars' : 'Pair of planets';
     if (b.kind === 'belt' && b.ring) return 'Ring';
     return KIND_LABEL[b.kind];
 }
@@ -989,15 +989,97 @@ export function WherePicker({ store, where, onChange }: { store: Store; where: W
 
 // ---------- Add wizard ----------
 export type CreateKind = 'system' | 'planet' | 'moon' | 'station' | 'belt' | 'companion' | 'landmark' | 'pair';
-const CREATE_KINDS: { key: Exclude<CreateKind, 'pair'>; label: string; glyph: string }[] = [
-    { key: 'system', label: 'Star system', glyph: '☀' },
-    { key: 'planet', label: 'Planet', glyph: '◐' },
-    { key: 'moon', label: 'Moon', glyph: '☾' },
-    { key: 'station', label: 'Station', glyph: '▣' },
-    { key: 'belt', label: 'Belt or ring', glyph: '◌' },
-    { key: 'companion', label: 'Companion star', glyph: '✧' },
-    { key: 'landmark', label: 'Landmark', glyph: '✦' },
+const CREATE_KINDS: { key: Exclude<CreateKind, 'pair'>; label: string }[] = [
+    { key: 'system', label: 'Star system' },
+    { key: 'planet', label: 'Planet' },
+    { key: 'moon', label: 'Moon' },
+    { key: 'station', label: 'Station' },
+    { key: 'belt', label: 'Belt or ring' },
+    { key: 'companion', label: 'Companion star' },
+    { key: 'landmark', label: 'Landmark' },
 ];
+
+/** A body to draw a kind's picture with (its texture keys off `type` and `id`). */
+const sample = (kind: BodyKind, type: string, id: number): Body => ({ id, kind, parentId: null, name: '', ordinal: null, num: 0, gu: '', type, radiusKm: 6371, orbit: 1, travelogue: [] });
+
+/** What each kind looks like in the system view, small: the same discs, textures, orbits and bands the diagram draws. */
+function KindPicture({ kind }: { kind: Exclude<CreateKind, 'pair'> }) {
+    if (kind === 'landmark') return <LandmarkIcon category='landmark' size={28} />;
+    const glow = (x: number, y: number, r: number, color: string) => (
+        <>
+            <circle cx={x} cy={y} r={r * 1.7} fill={color} opacity='0.18' />
+            <circle cx={x} cy={y} r={r} fill={color} />
+        </>
+    );
+    const disc = (b: Body, x: number, y: number, r: number) => (
+        <>
+            <circle cx={x} cy={y} r={r} fill={bodyColor(b)} />
+            <BodyTexture body={b} x={x} y={y} r={r} scope='kind' />
+            <circle cx={x} cy={y} r={r} className={styles.shade} />
+        </>
+    );
+    const sun = STAR_TYPES.sunlike.color;
+    return (
+        <svg className={styles.kindPicture} width='56' height='36' viewBox='0 0 56 36' aria-hidden>
+            {kind === 'system' && (
+                <>
+                    <circle cx='14' cy='18' r='28' className={styles.orbitLine} />
+                    {glow(14, 18, 8, sun)}
+                    {disc(sample('planet', 'ocean', 990001), 40.3, 8.4, 3.5)}
+                </>
+            )}
+            {kind === 'planet' && (
+                <>
+                    <circle cx='-40' cy='18' r='68' className={styles.orbitLine} />
+                    {disc(sample('planet', 'ocean', 990002), 28, 18, 11)}
+                </>
+            )}
+            {kind === 'moon' && (
+                <>
+                    <circle cx='8' cy='18' r='22' className={styles.orbitLine} />
+                    {disc(sample('planet', 'gas', 990003), 8, 18, 12)}
+                    {disc(sample('moon', 'rocky', 990004), 30, 18, 4.5)}
+                </>
+            )}
+            {kind === 'station' && (
+                <>
+                    <circle cx='14' cy='18' r='18' className={styles.orbitLine} />
+                    {disc(sample('planet', 'rocky', 990005), 14, 18, 9)}
+                    <rect x='29' y='14.5' width='7' height='7' fill={COMPOSITIONS.artificial.color} transform='rotate(45 32.5 18)' />
+                </>
+            )}
+            {kind === 'belt' && (
+                <g style={{ color: COMPOSITIONS.rocky.color }}>
+                    <circle cx='-14' cy='18' r='42' className={styles.beltBand} style={{ strokeWidth: 12 }} />
+                    {[{ at: -3.5, gap: 5 }, { at: 0, gap: 7 }, { at: 3.5, gap: 4 }].map((lane) => (
+                        <circle key={lane.at} cx='-14' cy='18' r={42 + lane.at} className={styles.beltDots} strokeDasharray={`0.1 ${lane.gap}`} />
+                    ))}
+                </g>
+            )}
+            {kind === 'companion' && (
+                <>
+                    <circle cx='14' cy='18' r='26' className={styles.orbitLine} strokeDasharray='2 4' />
+                    {glow(14, 18, 8, sun)}
+                    {glow(38.7, 10, 4.5, STAR_TYPES.red_dwarf.color)}
+                </>
+            )}
+        </svg>
+    );
+}
+
+/** The kinds to add, as cards with each kind's picture (in place of a row of chips). */
+function KindCards({ kind, onPick }: { kind: Exclude<CreateKind, 'pair'> | null; onPick: (k: Exclude<CreateKind, 'pair'>) => void }) {
+    return (
+        <div className={styles.kindCards} role='tablist' aria-label='What are you adding?'>
+            {CREATE_KINDS.map((k) => (
+                <button key={k.key} type='button' role='tab' aria-selected={kind === k.key} className={cx(styles.kindCard, kind === k.key && styles.kindCardOn)} onClick={() => onPick(k.key)}>
+                    <span className={styles.kindPictureBox}><KindPicture kind={k.key} /></span>
+                    {k.label}
+                </button>
+            ))}
+        </div>
+    );
+}
 
 /** "Name (system)", for the pickers that list bodies of every system the member may change. */
 const inSystem = (b: Body, p: Place) => `${b.name} (${p.placeholder ? 'unnamed system' : p.name})`;
@@ -1011,7 +1093,8 @@ export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { sto
     // A belt circles the body that is picked, or else the open system's primary
     const canCircle = (b: Body) => isStarry(b) || isSlot(b) || b.kind === 'moon';
     const ctxPrimary = sel && canCircle(sel) ? sel : ctxSystem ? (primaryOf(ctxSystem) ?? null) : null;
-    const [kind, setKind] = useState<Exclude<CreateKind, 'pair'>>(asked ?? (ctxPlanet ? 'moon' : ctxSystem ? 'planet' : 'system'));
+    // Opened from a system with nothing picked ("+ Add"): no kind is chosen for the member
+    const [kind, setKind] = useState<Exclude<CreateKind, 'pair'> | null>(asked ?? (ctxPlanet ? 'moon' : ctxSystem ? (sel ? 'planet' : null) : 'system'));
     const [name, setName] = useState('');
     // A planet's system, a satellite's planet, a belt's or companion's primary, by id; 'new' = a planet whose star is not known yet
     const [parent, setParent] = useState<number | 'new'>(asked === 'belt' ? (ctxPrimary?.id ?? 'new') : asked === 'companion' ? (ctxHost?.id ?? (ctxSystem && primaryOf(ctxSystem)?.id) ?? 'new') : (ctxPlanet?.id ?? ctxSystem?.id ?? 'new'));
@@ -1110,22 +1193,34 @@ export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { sto
         if (ok) onDone();
     };
 
-    const kindPicker = (
-        <div className={styles.chips} role='tablist' aria-label='What are you adding?'>
-            {CREATE_KINDS.map((k) => (
-                <button key={k.key} type='button' role='tab' aria-selected={kind === k.key} className={cx(styles.chip, kind === k.key && styles.chipOn)} onClick={() => pickKind(k.key)}>
-                    <span aria-hidden>{k.glyph}</span> {k.label}
-                </button>
-            ))}
-        </div>
+    const kindPicker = <KindCards kind={kind} onPick={pickKind} />;
+
+    // The designation it would get, worked out from where it goes and what it is like so far
+    const draftOf = (): Draft | null => {
+        const base = { name: name.trim() || null, type: draft.type, radiusKm: draft.radiusKm, orbit: draft.orbit, width: draft.width, builtYear: draft.builtYear, iteration: draft.iteration };
+        if (kind === 'planet') return { ...base, kind: 'planet', parentId: planetHost?.id ?? null, ordinal: planetNumber(parentSystem?.bodies ?? [], planetHost?.id ?? null, draft.orbit, draft.ordinal ?? null).n };
+        if (kind === 'companion' && parentHost) return { ...base, kind: 'star', parentId: parentHost.b.id };
+        if (kind === 'belt' && parentPrimary) return { ...base, kind: 'belt', parentId: parentPrimary.b.id };
+        if (isSatellite && parentPlanet) return { ...base, kind: kind as BodyKind, parentId: parentPlanet.b.id };
+        return null;
+    };
+    const drafted = draftOf();
+    const placeOf = kind === 'planet' ? parentSystem : kind === 'companion' ? parentHost?.p : kind === 'belt' ? parentPrimary?.p : parentPlanet?.p;
+    const designationNow = drafted ? wouldBe(placeOf ?? undefined, drafted) : '';
+    const designationHint = drafted && (
+        <p className={styles.muted}>
+            {kind === 'station' && !designationNow
+                ? 'It gets a designation once you enter the year it was built.'
+                : name.trim()
+                  ? <>Its designation will be <b>{designationNow}</b>.</>
+                  : <>With no name it goes by its designation, <b>{designationNow}</b>.</>}
+        </p>
     );
 
-    const nameField = (
+    const nameField = kind && (
         <div className={styles.field}>
             <input className={styles.nameInput} value={name} onChange={(e) => setName(e.target.value)} placeholder={`New ${CREATE_KINDS.find((k) => k.key === kind)!.label.toLowerCase()}`} aria-label='Name' maxLength={100} autoFocus />
-            {(kind === 'planet' || kind === 'moon') && <p className={styles.muted}>With no name it goes by its designation, like Sol-3{kind === 'moon' && 'a'}.</p>}
-            {kind === 'belt' && <p className={styles.muted}>With no name it goes by its designation, like Sol-V.</p>}
-            {kind === 'companion' && <p className={styles.muted}>With no name it goes by its designation, like Sol-B.</p>}
+            {designationHint}
         </div>
     );
 
@@ -1202,7 +1297,7 @@ export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { sto
     const pages = [
         { title: 'What are you adding?', body: <>{kindPicker}{nameField}</> },
         ...(!whereKnown && (parentField || whereField) ? [{ title: 'Where does it go?', body: <>{parentField}{whereField}</> }] : []),
-        { title: 'What is it like?', body: <>{kind === 'system' ? starField : kind === 'landmark' ? categoryField : <>{hostField}{bodyFields}</>}</> },
+        { title: 'What is it like?', body: <>{kind === 'system' ? starField : kind === 'landmark' ? categoryField : <>{hostField}{bodyFields}{designationHint}</>}</> },
     ];
     const at = Math.min(step, pages.length - 1);
     return (
@@ -1214,7 +1309,7 @@ export function CreateFlow({ store, onDone, slot, at: spot, kind: asked }: { sto
             <div className={styles.actions}>
                 {at > 0 && <button type='button' className={styles.btnQuiet} onClick={() => setStep(at - 1)}>Back</button>}
                 {at < pages.length - 1 ? (
-                    <button type='button' className={styles.btn} disabled={at === 0 && name.trim() === '' && kind !== 'planet' && kind !== 'moon' && kind !== 'belt' && kind !== 'companion'} onClick={() => setStep(at + 1)}>Next</button>
+                    <button type='button' className={styles.btn} disabled={!kind || (at === 0 && name.trim() === '' && kind !== 'planet' && kind !== 'moon' && kind !== 'belt' && kind !== 'companion')} onClick={() => setStep(at + 1)}>Next</button>
                 ) : (
                     <button type='button' className={styles.btn} disabled={!canSave} onClick={save}>{saving ? 'Saving' : 'Done'}</button>
                 )}
@@ -1243,6 +1338,7 @@ export function PairFlow({ store, onDone }: { store: Store; onDone: () => void }
     const mine = massOf(place.bodies, body);
     const theirs = stars ? (STAR_TYPES[type]?.mass ?? 1) : massEarths({ ...body, type, radiusKm });
     const unit = stars ? 'AU' : 'km';
+    const named = wouldPair(place, body, { kind: body.kind, name: name.trim() || null, type, radiusKm: stars ? undefined : radiusKm });
     const save = async () => {
         setSaving(true);
         const share = theirs / Math.max(mine + theirs, 1e-9);
@@ -1257,7 +1353,10 @@ export function PairFlow({ store, onDone }: { store: Store; onDone: () => void }
             <p className={styles.muted}>The two will orbit a point between them, the heavier nearer; {stars ? 'its planets count from both' : 'they share one planet number'}.</p>
             <div className={styles.field}>
                 <input className={styles.nameInput} value={name} onChange={(e) => setName(e.target.value)} placeholder={`Its companion ${stars ? 'star' : 'planet'}`} aria-label='Name' maxLength={100} autoFocus />
-                <p className={styles.muted}>With no name it goes by its designation.</p>
+                <p className={styles.muted}>
+                    {name.trim() ? 'Its designation will be ' : 'With no name it goes by its designation, '}
+                    <b>{named.companion}</b>, and {body.name} {named.body === body.gu ? 'keeps' : 'becomes'} <b>{named.body}</b>.
+                </p>
             </div>
             <div className={styles.field}>
                 <div className={styles.fieldHead}><span className='pixel-label'>{stars ? 'Kind of star' : 'Type'}</span></div>
