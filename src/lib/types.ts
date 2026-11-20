@@ -350,6 +350,30 @@ export interface ViewTotal {
     anonymous: number;
 }
 
+/** GET /admin/metrics: the admin dashboard's numbers (ff-server src/admin/metrics.ts) */
+export interface AdminMetrics {
+    days: number;
+    /** One row per UTC day, oldest first, days without views included */
+    views: { day: string; member: number; anonymous: number }[];
+    /** Total views in the `days` before the window */
+    previousViews: number;
+    runs: { succeeded: number; failed: number; running: number; dryRuns: number };
+    archive: { episodes: number; messages: number; stories: number; characters: number; items: number; users: number; notes: number; portraits: number };
+    /** The last 24 hours of the server's in-memory log buffer */
+    traffic: {
+        coveredSince: string | null;
+        hours: { hour: string; ok: number; clientErrors: number; serverErrors: number }[];
+        requests: number;
+        clientErrors: number;
+        serverErrors: number;
+        p50: number | null;
+        p95: number | null;
+        topRoutes: { route: string; count: number }[];
+        warnings: number;
+        errors: number;
+    };
+}
+
 /** GET /admin/jobs: a maintenance job and its latest run */
 export interface AdminJob {
     name: string;
