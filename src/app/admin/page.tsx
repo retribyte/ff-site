@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
 import { getSessionUser, getToken } from '@/lib/auth';
 import type { AdminJob, JobRun } from '@/lib/types';
+import Link from 'next/link';
 import SignalLost from '@/components/SignalLost';
 import EpisodeImportPanel from '@/components/admin/EpisodeImportPanel';
 import MaintenanceJobs from '@/components/admin/MaintenanceJobs';
@@ -44,6 +45,9 @@ export default async function AdminPage() {
         <main className={styles.main}>
             <header className={styles.header}>
                 <h1>Admin</h1>
+                <p>
+                    <Link href='/admin/portraits'>Portrait creator settings</Link>: mods, races, hidden clothing
+                </p>
             </header>
             <EpisodeImportPanel />
             <MaintenanceJobs jobs={jobs} />

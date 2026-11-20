@@ -1,0 +1,864 @@
+@use '../../styles/mixins' as m;
+
+// Three columns: races, the portrait, its options. Each column scrolls on its own so the
+// portrait stays in view while browsing long lists.
+.page {
+    display: grid;
+    grid-template-columns: minmax(15rem, 19rem) minmax(20rem, 1fr) minmax(19rem, 26rem);
+    gap: 1rem;
+    width: 100%;
+    max-width: 100rem;
+    margin: 0 auto;
+    padding: 1rem;
+    height: calc(100vh - var(--navbar-height));
+    min-height: 34rem;
+
+    @media (max-width: 68rem) {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+}
+
+.races,
+.stage,
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-height: 0;
+    padding: 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: var(--px) solid var(--accent);
+}
+
+.stage {
+    align-items: center;
+    overflow-y: auto;
+    border-top-color: var(--accent-2);
+}
+
+.raceScroll,
+.panelBody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+
+    @media (max-width: 68rem) {
+        max-height: 28rem;
+    }
+}
+
+.search {
+    @include m.scan-input;
+    flex: 0 0 auto; // the mixin's flex: 1 would stretch it down a column
+    height: 2rem;
+    width: 100%;
+    padding: 0 0.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    &:focus {
+        border-color: var(--accent-soft);
+    }
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+
+.tab,
+.toggle,
+.small,
+.primary {
+    font-family: var(--font-pixel);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        color: var(--text);
+        border-color: var(--border-loud);
+    }
+
+    &[aria-selected='true'],
+    &[aria-pressed='true'] {
+        color: var(--text);
+        background: var(--highlight);
+        border-color: var(--accent-soft);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.primary {
+    @include m.cta-gradient;
+    padding: 0.4rem 0.8rem;
+}
+
+.small {
+    align-self: flex-start;
+    font-size: 0.6rem;
+    padding: 0.2rem 0.4rem;
+}
+
+.check,
+.inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.inline select {
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border-loud);
+    border-radius: var(--radius);
+    padding: 0.2rem 0.3rem;
+}
+
+.count,
+.npc {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.npc {
+    margin-left: 0.35rem;
+    padding: 0 0.25rem;
+    border: 1px solid var(--border-loud);
+}
+
+.empty,
+.hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.error {
+    @include m.pixel-error;
+}
+
+// The "log in" notice shown to visitors: across the whole page, not in the first column
+.gate {
+    grid-column: 1 / -1;
+    align-self: start;
+    justify-self: center;
+    max-width: 28rem;
+    margin-top: 3rem;
+    padding: 1.5rem;
+    text-align: center;
+
+    p {
+        margin: 0.5rem 0 0;
+    }
+}
+
+.loginButton {
+    display: inline-block;
+    margin-top: 1rem;
+    text-decoration: none;
+    @include m.cta-button(1rem, 0.5rem 1.25rem);
+}
+
+// ----- race picker
+
+.groupTitle,
+.fieldTitle {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-soft);
+}
+
+// A title with a small control at the end of its line.
+.titleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+
+    .fieldTitle {
+        margin: 0;
+    }
+
+    .small {
+        align-self: center;
+        flex-shrink: 0;
+    }
+}
+
+.raceGrid {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.6rem;
+
+    // Squares: just the head, the name in the tooltip.
+    &[data-layout='grid'] {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(3.5rem, 1fr));
+
+        .race {
+            justify-content: center;
+            aspect-ratio: 1;
+            padding: 0.2rem;
+        }
+
+        .raceText {
+            display: none;
+        }
+    }
+}
+
+.race {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.25rem 0.4rem;
+    text-align: left;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--border-loud);
+    }
+
+    &[aria-pressed='true'] {
+        background: var(--highlight);
+        border-color: var(--accent-soft);
+        box-shadow: var(--glow);
+    }
+}
+
+.raceText {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.2;
+}
+
+.raceName {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+}
+
+.raceKind {
+    font-family: var(--font-pixel);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    color: var(--accent-2);
+}
+
+.raceMod {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+// ----- stage
+
+.stageHead {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+}
+
+.frame {
+    display: grid;
+    place-items: center;
+    padding: 0.5rem;
+    border: var(--px) solid var(--border-loud);
+    background: #10102c var(--starfield);
+    background-size: var(--starfield-size);
+
+    &[data-backdrop='dark'] {
+        background: #16161d;
+    }
+
+    &[data-backdrop='light'] {
+        background: #e9e7f2;
+    }
+
+    &[data-backdrop='checker'] {
+        background: repeating-conic-gradient(#8a8a98 0% 25%, #b9b9c6 0% 50%) 0 0 / 16px 16px;
+    }
+}
+
+.portrait {
+    width: min(344px, 70vw);
+    height: min(344px, 70vw);
+    image-rendering: pixelated;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 0.6rem;
+}
+
+.field {
+    width: 100%;
+}
+
+.poses,
+.styleGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.poses {
+    justify-content: center;
+}
+
+.styleCell {
+    padding: 0.1rem;
+    line-height: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--border-loud);
+    }
+
+    &[aria-pressed='true'] {
+        background: var(--highlight);
+        border-color: var(--accent-2);
+    }
+}
+
+// ----- swatches
+
+.swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+}
+
+.swatch {
+    display: flex;
+    width: 2rem;
+    height: 1.25rem;
+    padding: 0;
+    overflow: hidden;
+    background: var(--surface-2);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    span {
+        flex: 1;
+    }
+
+    &[aria-pressed='true'] {
+        border-color: var(--text);
+        box-shadow: 0 0 0 1px var(--accent-2);
+    }
+}
+
+.swatchFx {
+    font-family: var(--font-pixel);
+    font-size: 0.55rem;
+    line-height: 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+// ----- wardrobe
+
+.wornBox {
+    padding: 0.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border-loud);
+}
+
+.wornHead {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+
+    .small {
+        margin-left: auto;
+    }
+}
+
+.modGroup {
+    border: 1px solid var(--border);
+
+    summary {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        background: var(--surface-2);
+    }
+
+    .small {
+        margin: 0 0.4rem 0.4rem;
+    }
+}
+
+.itemList {
+    @include m.reset-list;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    gap: 0.2rem;
+    padding: 0.4rem;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    padding: 0.2rem 0.3rem;
+    font-size: 0.75rem;
+    text-align: left;
+    color: var(--text);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &:hover {
+        border-color: var(--border-loud);
+    }
+
+    &[aria-pressed='true'] {
+        background: var(--highlight);
+        border-color: var(--accent-soft);
+    }
+}
+
+.itemIcon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    image-rendering: pixelated;
+}
+
+// ----- palette editor
+
+.paletteList,
+.sourceList {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.paletteRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    input[type='color'] {
+        width: 2.2rem;
+        height: 1.6rem;
+        padding: 0;
+        background: none;
+        border: 1px solid var(--border-loud);
+        cursor: pointer;
+    }
+}
+
+.chip {
+    width: 2.2rem;
+    height: 1.6rem;
+    border: 1px solid var(--border-loud);
+}
+
+.arrow {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.hex {
+    width: 5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.2rem 0.35rem;
+}
+
+// ----- sprite sources
+
+.sourceRow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.4rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+}
+
+.sourceThumbs {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .small {
+        margin-left: auto;
+        align-self: center;
+    }
+}
+
+.code {
+    margin: 0;
+    padding: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+    background: var(--bg);
+    border: 1px solid var(--border);
+}
+
+// ----- saved portraits
+
+.savedList {
+    list-style: none;
+    margin: 0.4rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.savedItem {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--border);
+
+    &[data-current] {
+        border-color: var(--border-loud);
+    }
+}
+
+.savedOpen {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.25rem;
+    text-align: left;
+    font: inherit;
+    color: var(--text);
+    background: none;
+    border: 0;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        background: var(--surface-2);
+    }
+}
+
+.savedThumb {
+    flex: none;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+// ----- 14x14 avatar modal
+
+.avatarModal {
+    width: min(46rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    padding: 1rem;
+    color: var(--text);
+    background: var(--surface);
+    overflow: auto;
+
+    &::backdrop {
+        background: rgba(0, 0, 0, 0.55);
+    }
+}
+
+.avatarHead,
+.avatarFoot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.avatarHead {
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+
+    h2 {
+        margin: 0;
+    }
+}
+
+.avatarFoot {
+    margin-top: 1rem;
+}
+
+.avatarBody {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.avatarPane {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+// Transparent pixels show as a checkerboard, as in an image editor
+.avatarCanvas {
+    display: block;
+    image-rendering: pixelated;
+    background: repeating-conic-gradient(#8a8a98 0% 25%, #b9b9c6 0% 50%) 0 0 / 16px 16px;
+    touch-action: none;
+}
+
+.avatarSource {
+    position: relative;
+    max-width: 100%;
+    cursor: move;
+
+    canvas {
+        width: 100%;
+        height: 100%;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--border-loud);
+        outline-offset: 2px;
+    }
+}
+
+.avatarBox {
+    position: absolute;
+    box-sizing: border-box;
+    border: 2px solid #fff;
+    outline: 2px solid #000;
+    pointer-events: none;
+}
+
+.avatarCrop {
+    cursor: crosshair;
+}
+
+.avatarSizes {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+
+.avatarApply {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.select {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.4rem;
+    max-width: 16rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+// ----- narrow screens: one column at a time, picked with the bar's buttons.
+// Kept last in the file so its rules win over the ones above.
+
+.viewBar {
+    display: none;
+}
+
+@media (max-width: 48rem) {
+    .page {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        height: calc(100dvh - var(--navbar-height));
+        min-height: 0;
+        padding: 0.5rem;
+
+        &[data-view='race'] > :is(.stage, .options),
+        &[data-view='portrait'] > :is(.races, .options),
+        &[data-view='options'] > :is(.races, .stage) {
+            display: none;
+        }
+    }
+
+    .viewBar {
+        display: flex;
+        align-items: stretch;
+        gap: 0.3rem;
+        flex-shrink: 0;
+    }
+
+    .viewTab {
+        flex: 1 1 0;
+        min-height: 2.5rem;
+        font-family: var(--font-pixel);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-muted);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        cursor: pointer;
+
+        &[aria-pressed='true'] {
+            color: var(--text);
+            background: var(--highlight);
+            border-color: var(--accent-soft);
+        }
+    }
+
+    // The portrait at twice its size, cut down to the figure (which stands at the bottom
+    // middle of its 43 pixel square) so the bar stays short.
+    .mini {
+        position: relative;
+        flex: 0 0 3rem;
+        height: 4rem;
+        padding: 0;
+        overflow: hidden;
+        background: #10102c;
+        border: 1px solid var(--border-loud);
+        border-radius: var(--radius);
+        cursor: pointer;
+
+        canvas {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 86px;
+            height: 86px;
+            margin-left: -43px;
+            image-rendering: pixelated;
+        }
+    }
+
+    .races,
+    .stage,
+    .options {
+        flex: 1 1 auto;
+        padding: 0.6rem;
+    }
+
+    .raceScroll,
+    .panelBody {
+        flex: 1 1 auto;
+        max-height: none;
+    }
+
+    .gate {
+        flex: 0 0 auto;
+        align-self: center;
+    }
+
+    // Room for a finger; a row of tabs fills its line, and the five option tabs fit on one
+    .tab,
+    .toggle {
+        padding: 0.5rem 0.6rem;
+    }
+
+    .tab {
+        flex: 1 1 auto;
+        padding: 0.5rem 0.3rem;
+        font-size: 0.6rem;
+        letter-spacing: 0;
+    }
+
+    .small {
+        padding: 0.35rem 0.5rem;
+    }
+
+    .swatch {
+        width: 2.4rem;
+        height: 1.7rem;
+    }
+
+    .title {
+        font-size: 1.25rem;
+    }
+
+    .portrait {
+        width: min(344px, 70vw, 36dvh);
+        height: min(344px, 70vw, 36dvh);
+    }
+
+    // One row that scrolls sideways, not four rows above the buttons
+    .poses {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.3rem;
+
+        .styleCell {
+            flex-shrink: 0;
+        }
+    }
+}

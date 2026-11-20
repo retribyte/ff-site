@@ -127,7 +127,7 @@
 }
 
 // Admin sessions (Import link + username) need the most room — tighten first
-@media (max-width: 1240px) {
+@media (max-width: 1300px) {
     .navbar {
         gap: 1rem;
     }
@@ -138,7 +138,7 @@
 }
 
 // Links collapse into a dropdown panel under the bar
-@media (max-width: 1080px) {
+@media (max-width: 1180px) {
     .menuToggle {
         display: block;
     }
