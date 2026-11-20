@@ -103,7 +103,8 @@ if [ -n "$PRUNE" ]; then
 fi
 
 if [ -z "$DRY" ] && [ -z "$LOCAL" ]; then
-    # The API runs as ff: it reads the folders, and deletes one when an admin removes a mod
-    remote "chgrp -R ff '$DEST' && chmod -R g+rwX,o-rwx '$DEST'"
+    # The API runs as ff: it reads the folders, and deletes one when an admin removes a mod.
+    # Only what is inside: the folder itself belongs to ff, so the SSH user can't chgrp it.
+    remote "find '$DEST' -mindepth 1 ! -group ff -exec chgrp ff {} + && find '$DEST' -mindepth 1 -exec chmod g+rwX,o-rwx {} +"
 fi
 echo "done${DRY:+ (dry run: nothing was changed)}"
