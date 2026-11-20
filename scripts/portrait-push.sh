@@ -13,21 +13,23 @@
 # Sprites are game and mod assets: they go to the server by this script only, never by git
 # and never inside a deployed folder (both deploys mirror their folder with --delete).
 #
-# The server folder is /home/protected/portrait-bundle; ff-server's .env on the host must
-# name it (PORTRAIT_BUNDLE_DIR), which is a one-time step by hand.
+# The server is the home server (throne, since 2026-11-20; see
+# ff-server/docs/migrate-home-server.md) and the folder is /srv/ff/portrait-bundle, which
+# ff-server's .env there names (PORTRAIT_BUNDLE_DIR). The SSH user must be in group `ff`
+# (the API's group: it reads the folders and deletes one when an admin removes a mod).
 #
-# Env: NFSN_SSH (user@host), NFSN_KEY (ssh key path) override the defaults, as in
-# deploy-nfsn.sh. PORTRAIT_BUNDLE is the local bundle (default .portrait-bundle here).
+# Env: PORTRAIT_SSH (user@host, default trey@throne; keys come from ~/.ssh/config),
+# PORTRAIT_DEST (server folder). PORTRAIT_BUNDLE is the local bundle (default
+# .portrait-bundle here).
 # PORTRAIT_PUSH_LOCAL=<dir> copies into a local directory instead of the server (for a
 # trial run, or a server on this machine).
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 SRC="${PORTRAIT_BUNDLE:-$PWD/.portrait-bundle}"
-SSH_TARGET="${NFSN_SSH:-retri_vortox@ssh.nyc1.nearlyfreespeech.net}"
-KEY="${NFSN_KEY:-$HOME/.ssh/booru}"
-DEST=/home/protected/portrait-bundle
-SSH_OPTS="-i $KEY -o IdentitiesOnly=yes -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
+SSH_TARGET="${PORTRAIT_SSH:-trey@throne}"
+DEST="${PORTRAIT_DEST:-/srv/ff/portrait-bundle}"
+SSH_OPTS="-o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
 LOCAL="${PORTRAIT_PUSH_LOCAL:-}"
 
 DRY=""
@@ -37,7 +39,7 @@ for arg in "$@"; do
     case "$arg" in
         --dry-run) DRY=1 ;;
         --prune) PRUNE=1 ;;
-        -h | --help) sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        -h | --help) sed -n '2,24p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
         -*) echo "unknown option: $arg" >&2; exit 2 ;;
         *) MODS+=("$arg") ;;
     esac
@@ -101,7 +103,7 @@ if [ -n "$PRUNE" ]; then
 fi
 
 if [ -z "$DRY" ] && [ -z "$LOCAL" ]; then
-    # The API runs as web: it reads the folders, and deletes one when an admin removes a mod
-    remote "chgrp -R web '$DEST' && chmod -R g+rwX,o-rwx '$DEST'"
+    # The API runs as ff: it reads the folders, and deletes one when an admin removes a mod
+    remote "chgrp -R ff '$DEST' && chmod -R g+rwX,o-rwx '$DEST'"
 fi
 echo "done${DRY:+ (dry run: nothing was changed)}"
