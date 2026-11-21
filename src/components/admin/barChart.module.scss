@@ -1,0 +1,177 @@
+// BarChart: stacked columns with a recessive grid, a hover tooltip per column
+
+.figure {
+    position: relative; // keeps the hidden table inside the chart
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+}
+
+.swatch {
+    display: inline-block;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+// Room on the left for the axis numbers, below for the tick labels. 8rem tall, or
+// taller when its card is stretched (the admin dashboard fitting the window)
+.plot {
+    position: relative;
+    flex: 1 1 8rem;
+    min-height: 6rem;
+    margin: 0.4rem 0 1.4rem 2.75rem;
+    border-bottom: 1px solid var(--border-loud);
+    // Gridlines at the top and the middle
+    background: linear-gradient(var(--border), var(--border)) 0 0 / 100% 1px no-repeat,
+        linear-gradient(var(--border), var(--border)) 0 50% / 100% 1px no-repeat;
+}
+
+.yMax,
+.yMid {
+    position: absolute;
+    right: calc(100% + 0.5rem);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    transform: translateY(-50%);
+    white-space: nowrap;
+}
+
+.yMax {
+    top: 0;
+}
+
+.yMid {
+    top: 50%;
+}
+
+.bars {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.col {
+    position: relative;
+    flex: 1 1 0;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    min-width: 0;
+
+    &:hover {
+        background: var(--highlight);
+    }
+
+    &:hover .tip {
+        display: flex;
+    }
+}
+
+// Segments stack bottom-up; a 2px surface gap between them, a rounded top end
+.stack {
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2px;
+    overflow: hidden;
+    border-radius: 4px 4px 0 0;
+
+    span {
+        flex-basis: 0;
+        min-height: 2px;
+    }
+}
+
+.tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% - 0.5rem);
+    z-index: 2;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    color: var(--text);
+    background: var(--surface);
+    border: var(--px) solid var(--border-loud);
+    pointer-events: none;
+
+    &[data-side='right'] {
+        left: 0;
+    }
+
+    &[data-side='left'] {
+        right: 0;
+    }
+
+    span {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+}
+
+.tick {
+    position: absolute;
+    top: calc(100% + 0.3rem);
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+
+    // The first and last labels sit inside the plot instead of hanging off its edges
+    &[data-align='start'] {
+        left: 0;
+        transform: none;
+    }
+
+    &[data-align='end'] {
+        left: auto;
+        right: 0;
+        transform: none;
+    }
+
+    // A phone has room for the first and last labels only
+    @media (max-width: 40rem) {
+        &:not([data-align]) {
+            display: none;
+        }
+    }
+}
+
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}

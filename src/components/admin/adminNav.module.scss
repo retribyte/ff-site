@@ -1,0 +1,82 @@
+@use '../../styles/mixins' as m;
+
+// The /admin sidebar (AdminNav): pinned under the navbar at the window's full height,
+// on a solid background. On a phone it is a bar of chips above the section.
+
+.nav {
+    position: sticky;
+    top: var(--navbar-height);
+    height: calc(100dvh - var(--navbar-height));
+    overflow-y: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.25rem 0.75rem;
+    background: var(--surface);
+    border-right: var(--px) solid var(--border-loud);
+}
+
+.home {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.groupLabel {
+    margin: 0 0.75rem;
+    font-size: 0.65rem;
+}
+
+.links {
+    @include m.reset-list;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 0.75rem;
+    color: var(--text);
+    text-decoration: none;
+    border: var(--px) solid transparent;
+
+    &:hover {
+        background: var(--surface-2);
+        color: var(--text);
+    }
+
+    &[aria-current='page'] {
+        background: var(--surface-2);
+        border-color: var(--border-loud);
+    }
+}
+
+@media (max-width: 48rem) {
+    .nav {
+        position: static;
+        height: auto;
+        gap: 0.75rem;
+        border-right: none;
+        border-bottom: var(--px) solid var(--border-loud);
+    }
+
+    .links {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+
+    .link {
+        border-color: var(--border);
+    }
+}

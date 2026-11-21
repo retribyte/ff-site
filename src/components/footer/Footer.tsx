@@ -7,7 +7,7 @@ import styles from './footer.module.scss';
 
 // Pages whose main view fills the window and scrolls inside itself: a footer under one only
 // adds a stray page scroll (on a phone, a swipe meant for a list drags the whole page down).
-const FULL_SCREEN_PAGES = ['/portraits'];
+const FULL_SCREEN_PAGES = [/^\/portraits(\/|$)/, /^\/admin(\/|$)/, /^\/galaxy(\/|$)/];
 
 // Which build is this? The site's version is inlined at build time
 // (next.config.ts); the API's is asked for. If your local numbers differ from
@@ -27,7 +27,7 @@ export default function Footer() {
         return () => controller.abort();
     }, []);
 
-    if (FULL_SCREEN_PAGES.includes(pathname)) return null;
+    if (FULL_SCREEN_PAGES.some((re) => re.test(pathname))) return null;
 
     const site = process.env.NEXT_PUBLIC_APP_VERSION ?? 'unknown';
     const siteCommit = process.env.NEXT_PUBLIC_APP_COMMIT ?? 'unknown';

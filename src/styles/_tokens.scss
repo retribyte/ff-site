@@ -81,6 +81,9 @@
     --shadow: rgba(0, 0, 0, 0.55);
     --glow: 0 0 14px rgba(93, 75, 229, 0.35);
     --star-opacity: 0.25;
+    // Chart series (admin dashboard), in this order; checked for colour-blind separation on --surface-2
+    --chart-1: #8f7bec;
+    --chart-2: #c97a22;
 }
 
 :root[data-theme='light'] {
@@ -102,4 +105,6 @@
     --glow: 0 0 14px rgba(93, 75, 229, 0.22);
     --star-opacity: 0; // white stars are invisible on paper — hide the texture
     --tint-ink: 55%; // bright identity colors (VM gold, FF3 green) are unreadable as text on paper
+    --chart-1: #5d4be5;
+    --chart-2: #b8641a;
 }
