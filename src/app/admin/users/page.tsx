@@ -78,7 +78,7 @@ export default async function AdminUsersPage() {
                                     <td>
                                         <span className={styles.badges}>
                                             {!u.inactive && !u.loginDisabled && (
-                                                <span className={`${styles.chip} ${styles.success}`} title='Has signed in with a password of their own; not shown on the profile'>
+                                                <span className={`${styles.chip} ${styles.success}`} title='Sign-in is turned off (system account or suspended); not shown on the profile'>
                                                     active
                                                 </span>
                                             )}
