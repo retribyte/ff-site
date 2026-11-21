@@ -18,6 +18,20 @@ export interface PublicUser {
     bio: string | null;
 }
 
+/** GET /users as an admin: the full account (less the password) with counts */
+export interface AdminUser extends PublicUser {
+    email: string | null;
+    iconBooruId: number | null;
+    wikiUser: string | null;
+    createdAt: string;
+    mustChangePassword: boolean;
+    /** System accounts and suspended users */
+    loginDisabled: boolean;
+    /** Still on the seeded/reset password: has never signed in as themselves */
+    inactive: boolean;
+    _count: { characters: number; messages: number; stories: number; commentaries: number };
+}
+
 /** GET /users/:idOrUsername — the public profile page's payload */
 export interface UserProfile extends PublicUser {
     iconBooruId: number | null;

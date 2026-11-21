@@ -22,6 +22,12 @@ const GROUPS: { label: string; links: { href: string; label: string }[] }[] = [
         ],
     },
     {
+        label: 'People',
+        links: [
+            { href: '/admin/users', label: 'Users' },
+        ],
+    },
+    {
         label: 'Portraits',
         links: [
             { href: '/admin/portraits', label: 'Creator settings' },

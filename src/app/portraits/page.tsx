@@ -8,7 +8,6 @@ import styles from '@/components/portrait/portrait.module.scss';
 export const metadata: Metadata = {
     title: 'Portrait Creator',
     description: 'Build a character portrait from Starbound sprites: race, colours, wardrobe and pose.',
-    // Members only, and the sprites are not ours to publish
     robots: { index: false, follow: false },
 };
 

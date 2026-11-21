@@ -276,6 +276,10 @@ $bad: color-mix(in srgb, var(--ff1) 70%, var(--text));
         text-align: left;
         padding: 0 0.6rem 0.35rem 0;
         border-bottom: 1px solid var(--border);
+        
+        &.num {
+            font-family: var(--font-pixel);
+        }
     }
 
     td {
