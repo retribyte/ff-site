@@ -5,11 +5,11 @@ import { paint, type BrowserBundle } from '@/lib/portrait/browserBundle';
 import { wearableBy } from '@/lib/portrait/curation';
 import { renderLayer } from '@/lib/portrait/compose';
 import { distinctColors, hexToRgba } from '@/lib/portrait/directives';
-import { buildLayers, defaultRecipe } from '@/lib/portrait/humanoid';
+import { availableStyles, buildLayers, defaultRecipe, reconcileStyles } from '@/lib/portrait/humanoid';
 import { raceSpecies, spriteSources, UNCATEGORISED, type Race } from '@/lib/portrait/races';
-import { speciesFor } from '@/lib/portrait/species';
+import { speciesFor, styleSlot } from '@/lib/portrait/species';
 import { sortOptions, SWATCH_COLORS, SWATCH_SORTS } from '@/lib/portrait/swatchSort';
-import type { ColorOption, ColorPick, ItemsFile, Recipe, WearItem, WearSlot } from '@/lib/portrait/types';
+import type { ColorOption, ColorPick, ItemsFile, Recipe, StyleSlot, WearItem, WearSlot } from '@/lib/portrait/types';
 import Thumb from './Thumb';
 import { usePref } from './usePref';
 import styles from './portrait.module.scss';
@@ -126,18 +126,31 @@ export function Swatches({ options, value, onPick, label }: { options: ColorOpti
 
 // ---------------------------------------------------------------------------- body
 
-function StyleGrid({ bundle, recipe, label, options, value, field, onPick }: {
-    bundle: BrowserBundle; recipe: Recipe; label: string; options: string[]; value: string;
-    field: 'hair' | 'facialHair' | 'facialMask'; onPick: (value: string) => void;
+function StyleGrid({ bundle, recipe, slot, label, onPick }: {
+    bundle: BrowserBundle; recipe: Recipe; slot: StyleSlot; label?: string; onPick: (picks: string[]) => void;
 }) {
-    if (options.length < 2) return null;
+    // Styles whose sprites only ship in a mod this race passes over are left out, and so are
+    // repeats (hair mods sometimes list a style twice).
+    const options = availableStyles(slot, (image) => bundle.has(image, recipe));
+    const picks = recipe.styles[slot.id] ?? [];
+    if (options.length < 2 && !(slot.stack && options.length)) return null;
+    // A layer drawn anywhere but the head is previewed on the whole figure.
+    const view = Object.values(slot.files).some((parts) => Object.keys(parts).some((p) => p !== 'head')) ? 'full' : 'head';
+    const choose = (o: string) => {
+        if (!slot.stack) return onPick(o ? [o] : []);
+        if (!o) return onPick([]);
+        onPick(picks.includes(o) ? picks.filter((p) => p !== o) : [...picks, o]);
+    };
     return (
         <div className={styles.field}>
-            <h4 className={styles.fieldTitle}>{label} <span className={styles.count}>{options.length}</span></h4>
+            <h4 className={styles.fieldTitle}>
+                {label ?? slot.label} <span className={styles.count}>{slot.stack && picks.length ? `${picks.length} of ${options.filter(Boolean).length}` : options.length}</span>
+            </h4>
+            {slot.stack && <p className={styles.hint}>Pick as many as you like; later picks are drawn over earlier ones.</p>}
             <div className={styles.styleGrid}>
                 {options.map((o) => (
-                    <button key={o} type='button' className={styles.styleCell} aria-pressed={o === value} title={o || 'none'} onClick={() => onPick(o)}>
-                        <Thumb bundle={bundle} recipe={{ ...recipe, [field]: o, nude: true, wear: {} }} view='head' size={44} />
+                    <button key={o} type='button' className={styles.styleCell} aria-pressed={o ? picks.includes(o) : picks.length === 0} title={o || 'none'} onClick={() => choose(o)}>
+                        <Thumb bundle={bundle} recipe={{ ...recipe, styles: { ...recipe.styles, [slot.id]: o ? [o] : [] }, nude: true, wear: {} }} view={view} size={44} />
                     </button>
                 ))}
             </div>
@@ -148,31 +161,38 @@ function StyleGrid({ bundle, recipe, label, options, value, field, onPick }: {
 export function BodyPanel({ bundle, race, recipe, set }: { bundle: BrowserBundle; race: Race; recipe: Recipe; set: SetRecipe }) {
     const sp = race.species;
     const g = sp.genders[recipe.gender] ?? sp.genders[0];
-    const dir = (g.sprites.body ?? '').replace(/[^/]*$/, '');
     const f = sp.flags;
     const L = (i: number, fallback: string) => sp.labels[i] || fallback;
-    // Options whose sprite only ships in a mod this race passes over are left out, and so are
-    // repeats (hair mods sometimes list a style twice).
-    const available = (group: string, list: string[]) => [...new Set(list)].filter((o) => o === '' || bundle.has(`${dir}${group}/${o}.png`.toLowerCase(), recipe));
     const pick = (key: 'body' | 'undy' | 'hairColor') => (option: number) => set((r) => ({ ...r, [key]: { ...r[key], option } }));
     const both = (label: string, kind: string, shared: boolean) => (shared ? `${label} (${kind})` : label);
+    const setStyle = (id: string) => (picks: string[]) => set((r) => ({ ...r, styles: { ...r.styles, [id]: picks } }));
+    const grid = (slot: StyleSlot | undefined, label?: string) => slot && <StyleGrid bundle={bundle} recipe={recipe} slot={slot} label={label} onPick={setStyle(slot.id)} />;
+    const hair = styleSlot(g, 'hair'), facialHair = styleSlot(g, 'facialHair'), facialMask = styleSlot(g, 'facialMask');
+    const own = g.styles.filter((s) => !s.builtin);
+    // The species' own layers can use the detail colour even where the game's creator would not offer it.
+    const detail = f.altOptionAsUndyColor || f.altOptionAsHairColor || own.some((s) => s.color.includes('undy'));
 
     return (
         <div className={styles.panelBody}>
             <Swatches label={L(0, 'Body colour')} options={sp.bodyColor} value={recipe.body.option} onPick={pick('body')} />
-            <StyleGrid bundle={bundle} recipe={recipe} label={L(1, 'Hair')} options={available(g.hairGroup, g.hair)} value={recipe.hair} field='hair' onPick={(hair) => set((r) => ({ ...r, hair }))} />
+            {grid(hair)}
             {f.headOptionAsHairColor && (
-                <Swatches label={both(L(5, 'Hair colour'), 'colour', !!f.headOptionAsFacialhair)} options={sp.hairColor} value={recipe.hairColor.option} onPick={pick('hairColor')} />
+                <Swatches label={both(L(5, 'Hair colour'), 'colour', !!facialHair)} options={sp.hairColor} value={recipe.hairColor.option} onPick={pick('hairColor')} />
             )}
-            {f.headOptionAsFacialhair && (
-                <StyleGrid bundle={bundle} recipe={recipe} label={both(L(5, 'Facial hair'), 'style', !!f.headOptionAsHairColor)} options={available(g.facialHairGroup, g.facialHair)} value={recipe.facialHair} field='facialHair' onPick={(facialHair) => set((r) => ({ ...r, facialHair }))} />
+            {grid(facialHair, facialHair && both(facialHair.label, 'style', !!f.headOptionAsHairColor))}
+            {detail && (
+                <Swatches label={both(L(4, 'Detail colour'), 'colour', !!facialMask)} options={sp.undyColor} value={recipe.undy.option} onPick={pick('undy')} />
             )}
-            {(f.altOptionAsUndyColor || f.altOptionAsHairColor) && (
-                <Swatches label={both(L(4, 'Detail colour'), 'colour', !!f.altOptionAsFacialMask)} options={sp.undyColor} value={recipe.undy.option} onPick={pick('undy')} />
-            )}
-            {f.altOptionAsFacialMask && (
-                <StyleGrid bundle={bundle} recipe={recipe} label={both(L(4, 'Face'), 'style', !!f.altOptionAsUndyColor)} options={available(g.facialMaskGroup, g.facialMask)} value={recipe.facialMask} field='facialMask' onPick={(facialMask) => set((r) => ({ ...r, facialMask }))} />
-            )}
+            {grid(facialMask, facialMask && both(facialMask.label, 'style', !!f.altOptionAsUndyColor))}
+            {own.map((slot) => (
+                <div key={slot.id}>
+                    {grid(slot)}
+                    {slot.color.includes('own') && (recipe.styles[slot.id]?.length ?? 0) > 0 && (
+                        <Swatches label={`${slot.label} colour`} options={slot.colors} value={recipe.styleColors?.[slot.id]?.option ?? 0}
+                            onPick={(option) => set((r) => ({ ...r, styleColors: { ...r.styleColors, [slot.id]: { ...r.styleColors?.[slot.id], option } } }))} />
+                    )}
+                </div>
+            ))}
         </div>
     );
 }
@@ -309,23 +329,23 @@ export function WardrobePanel({ bundle, race, recipe, set }: { bundle: BrowserBu
 
 // ---------------------------------------------------------------------------- palette editor
 
-type PaletteTarget = 'body' | 'hairColor' | WearSlot;
-const TARGET_PARTS: Record<PaletteTarget, string[]> = {
-    body: ['backArm', 'head', 'emote', 'body', 'frontArm', 'facialMask'],
-    hairColor: ['hair', 'facialHair'],
-    head: ['headwear'],
-    chest: ['chest', 'backSleeve', 'frontSleeve'],
-    legs: ['legs'],
-    back: ['back'],
-};
+/** A colour pick the palette editor edits: the body, the hair, a style layer's own colours (`style:<id>`) or a clothing slot. */
+type PaletteTarget = 'body' | 'hairColor' | WearSlot | `style:${string}`;
+const WEAR_TARGETS: WearSlot[] = ['head', 'chest', 'legs', 'back'];
+
+const styleId = (target: PaletteTarget) => (target.startsWith('style:') ? target.slice(6) : null);
 
 function getPick(recipe: Recipe, target: PaletteTarget): ColorPick | undefined {
-    return target === 'body' || target === 'hairColor' ? recipe[target] : recipe.wear[target];
+    const id = styleId(target);
+    if (id) return recipe.styleColors?.[id] ?? { option: 0 };
+    return target === 'body' || target === 'hairColor' ? recipe[target] : recipe.wear[target as WearSlot];
 }
 
 function withTweak(recipe: Recipe, target: PaletteTarget, tweak: Record<string, string> | undefined): Recipe {
+    const id = styleId(target);
+    if (id) return { ...recipe, styleColors: { ...recipe.styleColors, [id]: { ...(recipe.styleColors?.[id] ?? { option: 0 }), tweak } } };
     if (target === 'body' || target === 'hairColor') return { ...recipe, [target]: { ...recipe[target], tweak } };
-    const worn = recipe.wear[target];
+    const worn = recipe.wear[target as WearSlot];
     return worn ? { ...recipe, wear: { ...recipe.wear, [target]: { ...worn, tweak } } } : recipe;
 }
 
@@ -335,7 +355,15 @@ function withTweak(recipe: Recipe, target: PaletteTarget, tweak: Record<string, 
  * and every clothing item, whatever directives the option itself uses.
  */
 export function PalettePanel({ bundle, recipe, set }: { bundle: BrowserBundle; recipe: Recipe; set: SetRecipe }) {
-    const targets = (['body', 'hairColor', 'head', 'chest', 'legs', 'back'] as PaletteTarget[]).filter((t) => getPick(recipe, t));
+    const species = speciesFor(bundle.manifest, recipe.species, recipe.exclude);
+    const gender = species?.genders[recipe.gender] ?? species?.genders[0];
+    // Style layers with a palette of their own get a tab while they are worn.
+    const ownStyles = (gender?.styles ?? []).filter((s) => s.color.includes('own') && s.colors.length && (recipe.styles[s.id]?.length ?? 0) > 0);
+    const targets: PaletteTarget[] = [
+        'body', 'hairColor',
+        ...ownStyles.map((s) => `style:${s.id}` as const),
+        ...WEAR_TARGETS.filter((t) => recipe.wear[t]),
+    ];
     const [target, setTarget] = useState<PaletteTarget>('body');
     const active = targets.includes(target) ? target : 'body';
     const tweak = getPick(recipe, active)?.tweak ?? {};
@@ -347,7 +375,7 @@ export function PalettePanel({ bundle, recipe, set }: { bundle: BrowserBundle; r
         (async () => {
             const base: Recipe = JSON.parse(baseKey);
             const items = Object.keys(base.wear).length ? await bundle.loadItems() : undefined;
-            const layers = buildLayers(speciesFor(bundle.manifest, base.species, base.exclude), base, items).filter((l) => TARGET_PARTS[active].includes(l.part));
+            const layers = buildLayers(speciesFor(bundle.manifest, base.species, base.exclude), base, items).filter((l) => l.pick === active);
             await bundle.preload(layers, base);
             const source = bundle.source(base);
             const counts = new Map<string, number>();
@@ -368,7 +396,11 @@ export function PalettePanel({ bundle, recipe, set }: { bundle: BrowserBundle; r
         else next[from] = to;
         return withTweak(r, active, Object.keys(next).length ? next : undefined);
     });
-    const label = (t: PaletteTarget) => (t === 'body' ? 'Body' : t === 'hairColor' ? 'Hair' : `${t[0].toUpperCase()}${t.slice(1)} item`);
+    const label = (t: PaletteTarget) => {
+        const id = styleId(t);
+        if (id) return ownStyles.find((s) => s.id === id)?.label ?? id;
+        return t === 'body' ? 'Body' : t === 'hairColor' ? 'Hair' : `${t[0].toUpperCase()}${t.slice(1)} item`;
+    };
 
     return (
         <div className={styles.panelBody}>
@@ -419,17 +451,8 @@ export function SourcesPanel({ bundle, race, recipe, set }: { bundle: BrowserBun
         // Dropping a mod can change the species itself (its styles, and which kinds it has).
         const sp = raceSpecies(bundle.manifest, race, exclude);
         const g = sp.genders[r.gender] ?? sp.genders[0];
-        const dir = `/humanoid/${sp.kind.toLowerCase()}/`;
-        const has = (group: string, o: string) => o === '' || bundle.has(`${dir}${group}/${o}.png`.toLowerCase(), choice);
         // A style that is gone falls back to the first one still available.
-        const keep = (group: string, value: string, list: string[], wanted: boolean) =>
-            !wanted ? '' : value !== '' && list.includes(value) && has(group, value) ? value : list.find((o) => has(group, o)) ?? '';
-        const next: Recipe = {
-            ...r, exclude,
-            hair: keep(g.hairGroup, r.hair, g.hair, true),
-            facialHair: keep(g.facialHairGroup, r.facialHair, g.facialHair, !!sp.flags.headOptionAsFacialhair),
-            facialMask: keep(g.facialMaskGroup, r.facialMask, g.facialMask, !!sp.flags.altOptionAsFacialMask),
-        };
+        const next: Recipe = { ...r, exclude, styles: reconcileStyles(g, r.styles, (image) => bundle.has(image, choice)) };
         if (onTop.length) next.prefer = onTop;
         else delete next.prefer;
         return next;

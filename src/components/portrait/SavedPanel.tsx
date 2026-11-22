@@ -57,7 +57,8 @@ export default function SavedPanel({ race, raceName, recipe, pixels, kept, setKe
     kept: Kept | null;
     setKept: (kept: Kept | null) => void;
     /** Puts a saved portrait on the stage; false (with its own note) if it cannot be shown here. */
-    onOpen: (draft: { race: string; recipe: Recipe }) => boolean;
+    /** The recipe as saved, of any version: the creator upgrades it. */
+    onOpen: (draft: { race: string; recipe: unknown }) => boolean;
 }) {
     const [list, setList] = useState<SavedPortrait[] | null>(null);
     const [name, setName] = useState(kept?.name ?? '');
@@ -103,7 +104,7 @@ export default function SavedPanel({ race, raceName, recipe, pixels, kept, setKe
         return `“${made.name}” updated.`;
     });
     const open = (item: SavedPortrait) => run(async () => {
-        const full = await call<SavedPortrait & { recipe: Recipe }>(`/${item.id}`);
+        const full = await call<SavedPortrait & { recipe: unknown }>(`/${item.id}`);
         if (!onOpen({ race: full.race, recipe: full.recipe })) return '';
         setKept({ id: full.id, name: full.name });
         setName(full.name);

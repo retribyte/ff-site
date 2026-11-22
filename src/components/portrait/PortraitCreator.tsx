@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BrowserBundle, paint, toPngBlob } from '@/lib/portrait/browserBundle';
-import { defaultRecipe, EMOTES, randomRecipe } from '@/lib/portrait/humanoid';
+import { defaultRecipe, EMOTES, randomRecipe, reconcileStyles, upgradeRecipe } from '@/lib/portrait/humanoid';
 import type { Curation } from '@/lib/portrait/curation';
 import { raceSpecies, resolveRaces, type Race, type RaceDef } from '@/lib/portrait/races';
 import type { Pixels, Recipe } from '@/lib/portrait/types';
@@ -80,11 +80,13 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
             const list = resolveRaces(loaded.manifest, settings.races);
             let saved: Draft | null = null;
             try {
-                saved = JSON.parse(localStorage.getItem(DRAFT_KEY) ?? 'null');
+                const raw = JSON.parse(localStorage.getItem(DRAFT_KEY) ?? 'null');
+                const recipe = upgradeRecipe(raw?.recipe);
+                saved = recipe && typeof raw.race === 'string' ? { race: raw.race, recipe } : null;
             } catch {
                 saved = null;
             }
-            const known = saved && saved.recipe?.v === 1 && list.some((r) => r.id === saved!.race && r.species.kind === saved!.recipe.species);
+            const known = saved && list.some((r) => r.id === saved!.race && r.species.kind === saved!.recipe.species);
             setBundle(loaded);
             if (list.length) setDraft(known ? saved : { race: list[0].id, recipe: defaultRecipe(list[0].species, list[0]) });
         }, (e: Error) => setError(e.message));
@@ -129,14 +131,7 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
 
     const sp = race.species;
     const setGender = (gender: number) => set((r) => {
-        const g = sp.genders[gender];
-        return {
-            ...r,
-            gender,
-            hair: g.hair.includes(r.hair) ? r.hair : g.hair[0] ?? '',
-            facialHair: g.facialHair.includes(r.facialHair) ? r.facialHair : sp.flags.headOptionAsFacialhair ? g.facialHair[0] ?? '' : '',
-            facialMask: g.facialMask.includes(r.facialMask) ? r.facialMask : sp.flags.altOptionAsFacialMask ? g.facialMask[0] ?? '' : '',
-        };
+        return { ...r, gender, styles: reconcileStyles(sp.genders[gender], r.styles, (image) => bundle.has(image, r)) };
     });
     const download = async (scale: number) => {
         if (!pixels) return;
@@ -159,9 +154,10 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
         }
     };
     // Puts a pasted or saved portrait on the stage; false (with a note) if it cannot be shown here.
-    const loadDraft = (parsed: Draft | null): boolean => {
-        const r = parsed?.recipe;
-        if (!r || r.v !== 1 || typeof r.species !== 'string' || !Array.isArray(r.exclude) || typeof r.wear !== 'object') {
+    const loadDraft = (parsed: { race: string; recipe: unknown } | null): boolean => {
+        // Recipes saved before style layers became generic are read as they are now.
+        const r = upgradeRecipe(parsed?.recipe);
+        if (!r) {
             setNote('That is not a portrait recipe.');
             return false;
         }
@@ -179,7 +175,7 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
         return true;
     };
     const loadRecipe = (text: string) => {
-        let parsed: Draft | null = null;
+        let parsed: { race: string; recipe: unknown } | null = null;
         try {
             parsed = JSON.parse(text);
         } catch {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { compose, pickProvider, type FrameSource } from './compose';
 import { buildLayers, createIdentity, defaultRecipe, randomRecipe } from './humanoid';
+import { builtinSlot } from './testing/slots';
 import { applyPatch } from './jsonPatch';
 import { resolveRaces, UNCATEGORISED } from './races';
 import { speciesFor } from './species';
@@ -16,7 +17,11 @@ const species = (over: Partial<Species> = {}): Species => ({
     genders: ['male', 'female'].map((name) => ({
         name,
         sprites: { head: `/humanoid/testkin/${name}head.png`, body: `/humanoid/testkin/${name}body.png`, emote: '/humanoid/testkin/emote.png', backArm: '/humanoid/testkin/backarm.png', frontArm: '/humanoid/testkin/frontarm.png' },
-        hairGroup: 'hair', hair: ['1', '2'], facialHairGroup: 'beard', facialHair: ['', 'b1'], facialMaskGroup: 'mask', facialMask: ['m1'],
+        styles: [
+            builtinSlot('testkin', 'hair', 'hair', ['1', '2'], ['hair'], 'emote'),
+            ...(over.flags?.headOptionAsFacialhair ? [builtinSlot('testkin', 'facialHair', 'beard', ['', 'b1'], ['hair'], 'chest')] : []),
+            ...(over.flags?.altOptionAsFacialMask ? [builtinSlot('testkin', 'facialMask', 'mask', ['m1'], ['facialMask'], 'chest')] : []),
+        ],
         shirt: ['shirt'], pants: ['pants'],
     })),
     ...over,
@@ -55,11 +60,12 @@ describe('createIdentity', () => {
 describe('buildLayers', () => {
     it('stacks parts in the game\'s portrait order', () => {
         const sp = species({ flags: { headOptionAsFacialhair: true, altOptionAsFacialMask: true } });
-        const recipe = { ...defaultRecipe(sp), facialHair: 'b1', wear: { head: { item: 'hat', option: 0 }, chest: { item: 'shirt', option: 1 }, legs: { item: 'pants', option: 0 }, back: { item: 'cape', option: 0 } } };
+        const recipe = { ...defaultRecipe(sp), styles: { ...defaultRecipe(sp).styles, facialHair: ['b1'] }, wear: { head: { item: 'hat', option: 0 }, chest: { item: 'shirt', option: 1 }, legs: { item: 'pants', option: 0 }, back: { item: 'cape', option: 0 } } };
         const layers = buildLayers(sp, recipe, items);
         expect(layers.map((l) => l.part)).toEqual(['backArm', 'backSleeve', 'back', 'head', 'emote', 'hair', 'body', 'legs', 'chest', 'facialHair', 'facialMask', 'headwear', 'frontArm', 'frontSleeve']);
         expect(layers.find((l) => l.part === 'chest')?.directives).toBe('?replace;dddddd=666666');
-        expect(layers.find((l) => l.part === 'hair')).toMatchObject({ image: '/humanoid/testkin/hair/1.png', frame: 'normal', mask: '/i/mask.png' });
+        expect(layers.find((l) => l.part === 'hair')).toMatchObject({ image: '/humanoid/testkin/hair/1.png', frame: 'normal', mask: '/i/mask.png', head: true, pick: 'hairColor' });
+        expect(layers.find((l) => l.part === 'hair')?.framesOf).toBeUndefined();
     });
 
     it('uses the pose for frames and offsets, and female sheets for a second gender', () => {
@@ -81,7 +87,7 @@ describe('buildLayers', () => {
         const sp = species();
         let n = 0;
         const recipe = randomRecipe(sp, { exclude: [] }, () => ((n += 0.37) % 1));
-        expect(sp.genders[recipe.gender].hair).toContain(recipe.hair);
+        expect(sp.genders[recipe.gender].styles[0].options).toContain(recipe.styles.hair[0]);
         expect(recipe.body.option).toBeLessThan(sp.bodyColor.length);
     });
 });
@@ -151,13 +157,13 @@ describe('resolveRaces and speciesFor', () => {
 
     it('applies only the patches of the mods a race keeps', () => {
         const all = speciesFor(m, 'novakid')!;
-        expect(all.genders[0].hair).toEqual(['1', '2']);
+        expect(all.genders[0].styles[0].options).toEqual(['1', '2']);
         expect(all.flags.altOptionAsFacialMask).toBeUndefined();
-        expect(all.genders[0].facialMask).toEqual([]);
+        expect(all.genders[0].styles.map((x) => x.id)).toEqual(['hair']);
         const without = speciesFor(m, 'novakid', ['cuter', 'unrelated'])!;
-        expect(without.genders[0].hair).toEqual(['1', '2']);
+        expect(without.genders[0].styles[0].options).toEqual(['1', '2']);
         expect(without.flags.altOptionAsFacialMask).toBe(true);
-        expect(without.genders[0].facialMask).toEqual(['b1']);
+        expect(without.genders[0].styles[1]).toMatchObject({ id: 'facialMask', options: ['b1'], files: { b1: { head: '/humanoid/novakid/beaks/b1.png' } } });
         expect(without.genders[0].sprites.body).toBe('/humanoid/novakid/malebody.png');
         expect(speciesFor(m, 'novakid', ['cuter'])).toBe(without);
     });
@@ -168,7 +174,7 @@ describe('resolveRaces and speciesFor', () => {
             { id: 'blazekid', species: 'novakid', name: 'Blazekid', descriptor: 'Star', category: 'fantasy' },
             { id: 'gone', descriptor: 'Ghost', category: 'fantasy' },
         ]);
-        expect(races.map((r) => [r.id, r.name, r.modName, r.category, r.exclude, r.npc, r.species.genders[0].facialMask.length])).toEqual([
+        expect(races.map((r) => [r.id, r.name, r.modName, r.category, r.exclude, r.npc, r.species.genders[0].styles.find((x) => x.id === 'facialMask')?.options.length ?? 0])).toEqual([
             ['novakid', 'Novakid', null, 'fantasy', ['cuter'], false, 1],
             ['blazekid', 'Blazekid', 'Novakid', 'fantasy', [], false, 0],
             ['newcomer', 'Newcomer', null, UNCATEGORISED, [], true, 0],

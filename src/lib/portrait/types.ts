@@ -80,17 +80,74 @@ export interface PackInfo {
 /** For each mod, where each of its images sits in its pack. */
 export type ImageIndex = Record<string, Record<string, ImageRef>>;
 
+/** The body parts a style layer can draw on, each over the sprite of the same name. */
+export type StylePart = 'head' | 'body' | 'frontArm' | 'backArm';
+export const STYLE_PARTS: StylePart[] = ['head', 'body', 'frontArm', 'backArm'];
+
+/**
+ * Where a style layer takes its colours from: one of the species' colour picks (`body`,
+ * `hair`, `undy`: the alt/detail colour), `facialMask` (the game's own mix for facial masks),
+ * `own` (the layer's own palette, picked on its own) or `none`. Several apply in order.
+ */
+export type StyleColor = 'body' | 'hair' | 'undy' | 'facialMask' | 'own' | 'none';
+
+/**
+ * One layer of styles the creator offers: the game's hair, facial hair and facial mask, and any
+ * number of the site's own (`ffLayers` in a .species file; the guide for mod authors is /portraits/guide).
+ * A gender has its own list, since styles can differ by gender.
+ */
+export interface StyleSlot {
+    /** 'hair', 'facialHair', 'facialMask', or the species file's own id. A recipe keys picks by it. */
+    id: string;
+    label: string;
+    /** Folder under /humanoid/<species>/ holding the styles. */
+    group: string;
+    /** The style names offered, in order; '' is "none". The first is the default. */
+    options: string[];
+    /** For each option, the sprite it draws on each part (only parts it has a sprite for). */
+    files: Record<string, Partial<Record<StylePart, string>>>;
+    color: StyleColor[];
+    /** The palette for `own`. */
+    colors: ColorOption[];
+    /** Several options may be worn at once, drawn in the order picked. */
+    stack: boolean;
+    /** Cut by the helmet's mask (head part only), as hair is. */
+    masked: boolean;
+    /** Each part is drawn just above this layer (a body part, a clothing part or `<slot id>`). */
+    above: Record<StylePart, string>;
+    /**
+     * True for the game's own three: a style is one image (`<group>/<style>.png`) drawn with its
+     * own frames. Otherwise each style is a folder of sheets laid out like the body part's own
+     * sheet, and drawn with that part's frames.
+     */
+    builtin: boolean;
+}
+
+/**
+ * Moves and resizes one kind of clothing sprite to fit a body that is not the standard humanoid's
+ * (`ffClothingFit` in a .species file). Pixels; `offset` y is up. `columns` repeats (add > 0) or
+ * removes (add < 0) columns starting at x `at` of the frame; `rows` does the same with rows from
+ * the top. Resizing happens first, then the move.
+ */
+export interface FitRule {
+    offset?: [number, number];
+    columns?: { at: number; add: number };
+    rows?: { at: number; add: number };
+}
+
+/** The clothing layers a fit can change. */
+export type FitPart = 'headwear' | 'chest' | 'backSleeve' | 'frontSleeve' | 'legs' | 'back';
+export type ClothingFit = Partial<Record<FitPart, FitRule>>;
+
 export interface SpeciesGender {
     name: string;
     sprites: Partial<Record<'head' | 'body' | 'emote' | 'backArm' | 'frontArm', string>>;
-    hairGroup: string;
-    hair: string[];
-    facialHairGroup: string;
-    facialHair: string[];
-    facialMaskGroup: string;
-    facialMask: string[];
+    /** The style layers, in the order the creator lists them. */
+    styles: StyleSlot[];
     shirt: string[];
     pants: string[];
+    /** How clothing is moved and resized on this body; absent for the standard humanoid. */
+    fit?: ClothingFit;
 }
 
 export type SpeciesFlag =
@@ -182,7 +239,8 @@ export interface Worn extends ColorPick {
 
 /** Everything needed to redraw a portrait. Stored with it so it can be reopened and edited. */
 export interface Recipe {
-    v: 1;
+    /** 2 since style layers became generic; upgradeRecipe() reads a 1. */
+    v: 2;
     species: string;
     /** Mod ids whose sprites are not used (how one species becomes two races). */
     exclude: string[];
@@ -190,15 +248,24 @@ export interface Recipe {
     prefer?: string[];
     gender: number;
     personality: number;
-    hair: string;
-    facialHair: string;
-    facialMask: string;
+    /** Style picks by layer id (`hair`, `facialHair`, a species' own layers), in draw order; none = []. */
+    styles: Record<string, string[]>;
+    /** Colour picks of the style layers with their own palette, by layer id. */
+    styleColors?: Record<string, ColorPick>;
     body: ColorPick;
     undy: ColorPick;
     hairColor: ColorPick;
     wear: Partial<Record<WearSlot, Worn>>;
     emote: string;
     nude: boolean;
+}
+
+/** A recipe as saved before version 2. */
+export interface RecipeV1 extends Omit<Recipe, 'v' | 'styles' | 'styleColors'> {
+    v: 1;
+    hair: string;
+    facialHair: string;
+    facialMask: string;
 }
 
 /** Which mods' sprites to draw from; a Recipe is one. */
