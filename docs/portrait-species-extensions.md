@@ -61,6 +61,9 @@ humanoid/squoat/
   the marking over every frame, then erase the body. The creator cuts frames from your sheet with
   the body part's own `.frames` file, so the marking follows every pose. Your style folder needs
   no `.frames` file.
+- **Draw every pose the race uses**: at least the five idle frames (`idle.1` to `idle.5`) of the
+  body and both arms, since the creator's poses are made of them, and the head's `normal` frame.
+  A pose whose frame you leave empty simply shows no marking in that pose; nothing warns you.
 - File names are `head.png`, `body.png`, `frontarm.png` and `backarm.png`. A gendered name
   (`femalebody.png`, using the gender's `name`) wins over the plain one for that gender.
 - A style is offered only if at least one of its sheets exists.
