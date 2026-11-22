@@ -238,7 +238,7 @@ of it; the creator now can, from extra keys in the `.species` file that the game
   this is the site's own.
 - **Extractors unchanged**: both already bundle every PNG under `/humanoid/<species>/` and keep
   species files raw, so the new keys and folders reach the site as they are.
-- Guide for mod authors: `/portraits/guide`.
+- Guide for mod authors: `docs/portrait-species-extensions.md`.
 
 ### Other parts of the humanoid model that could go the same way
 

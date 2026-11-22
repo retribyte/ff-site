@@ -40,9 +40,6 @@ export default async function PortraitModsPage() {
                 <p>
                     <Link href='/portraits'>Back to the portrait creator</Link>
                 </p>
-                <p>
-                    Making a race? <Link href='/portraits/guide'>Extra style layers and clothing fit</Link>{' '}work here even though Starbound has neither.
-                </p>
             </header>
             <section className={`pixel-panel ${styles.panel}`}>
                 <ModUploader switchedOff={off} />

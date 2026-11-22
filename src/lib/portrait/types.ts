@@ -93,7 +93,7 @@ export type StyleColor = 'body' | 'hair' | 'undy' | 'facialMask' | 'own' | 'none
 
 /**
  * One layer of styles the creator offers: the game's hair, facial hair and facial mask, and any
- * number of the site's own (`ffLayers` in a .species file; the guide for mod authors is /portraits/guide).
+ * number of the site's own (`ffLayers` in a .species file; the guide for mod authors is docs/portrait-species-extensions.md).
  * A gender has its own list, since styles can differ by gender.
  */
 export interface StyleSlot {
