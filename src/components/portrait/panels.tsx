@@ -360,11 +360,19 @@ function ColourInput({ value, onPick, label }: { value: string; onPick: (hex: st
     const ref = useRef<HTMLInputElement>(null);
     const waiting = useRef<string | null>(null);
     const frame = useRef(0);
+    // Picks already passed on: a render can still be carrying an older one of them back as
+    // `value` while the input shows a newer pick, and that must not be written back over it.
+    const echoes = useRef(new Set<string>());
     const latest = useRef(onPick);
     useEffect(() => {
         latest.current = onPick;
     });
     useEffect(() => {
+        if (echoes.current.has(value)) {
+            if (waiting.current === null && ref.current?.value === value) echoes.current.clear();
+            return;
+        }
+        echoes.current.clear();
         if (ref.current && waiting.current === null && ref.current.value !== value) ref.current.value = value;
     }, [value]);
     useEffect(() => () => cancelAnimationFrame(frame.current), []);
@@ -374,7 +382,10 @@ function ColourInput({ value, onPick, label }: { value: string; onPick: (hex: st
             frame.current = 0;
             const next = waiting.current;
             waiting.current = null;
-            if (next) latest.current(next);
+            if (next) {
+                echoes.current.add(next);
+                latest.current(next);
+            }
         });
     };
     return <input ref={ref} type='color' defaultValue={value} onChange={(e) => pick(e.target.value)} aria-label={label} />;

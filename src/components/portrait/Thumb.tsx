@@ -32,6 +32,9 @@ function cropToContent(px: Pixels): Pixels {
     return { width: size, height: size, data };
 }
 
+// A change this long after the last one (a click) is drawn at once...
+const QUIET_MS = 500;
+// ...and quicker ones (a colour picker being dragged) wait until the recipe has held still this long.
 const REDRAW_DELAY_MS = 200;
 
 /** A small live render of a recipe: the whole figure, or just the head. Drawn once it scrolls into view. */
@@ -50,13 +53,17 @@ export default function Thumb({ bundle, recipe, view = 'full', size = 56 }: { bu
         return () => io.disconnect();
     }, [visible]);
 
-    // Drawn at once the first time; after that, redrawn only once the recipe has held still a
-    // moment. A colour picker dragged across its field changes the recipe on every mouse move,
-    // and recomposing a whole grid of thumbnails each time made the page lag.
-    const painted = useRef(false);
+    // A change after a quiet spell (a click) is drawn at once; changes that come quicker than
+    // that wait until the recipe has held still a moment, then draw once. A colour picker
+    // dragged across its field changes the recipe on every mouse move, and recomposing a whole
+    // grid of thumbnails each time made the page lag.
+    const lastChange = useRef(-Infinity);
     useEffect(() => {
         if (!visible) return;
         let stale = false;
+        const now = performance.now();
+        const delay = now - lastChange.current >= QUIET_MS ? 0 : REDRAW_DELAY_MS;
+        lastChange.current = now;
         const timer = setTimeout(async () => {
             const r: Recipe = JSON.parse(key);
             const dressed = !r.nude && Object.keys(r.wear).length > 0;
@@ -67,8 +74,10 @@ export default function Thumb({ bundle, recipe, view = 'full', size = 56 }: { bu
             if (stale || !ref.current) return;
             const px = compose(layers, bundle.source(r));
             paint(ref.current, view === 'head' ? cropToContent(px) : px);
-            painted.current = true;
-        }, painted.current ? REDRAW_DELAY_MS : 0);
+            // Drawing is busy time too: on a slow machine a grid of draws can itself make the
+            // next change look like it came after a quiet spell, and draw the grid again.
+            lastChange.current = performance.now();
+        }, delay);
         return () => {
             stale = true;
             clearTimeout(timer);
