@@ -148,7 +148,7 @@ export function wrap<T>(list: T[], index: number): T | undefined {
     return list.length ? list[((index % list.length) + list.length) % list.length] : undefined;
 }
 
-/** The distinct opaque-ish colours of an image, most used first (what a palette editor lists). */
+/** The distinct opaque-ish colors of an image, most used first (what a palette editor lists). */
 export function distinctColors(pixels: Pixels): string[] {
     const counts = new Map<string, number>();
     const d = pixels.data;

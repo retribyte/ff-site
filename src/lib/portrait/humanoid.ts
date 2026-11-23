@@ -56,7 +56,7 @@ export interface Identity {
 
 export function createIdentity(species: Species, recipe: Recipe): Identity {
     const f = species.flags;
-    // Hand edits apply to the finished colours, so they go after every option directive.
+    // Hand edits apply to the finished colors, so they go after every option directive.
     let bodyColor = optionDirective(wrap(species.bodyColor, recipe.body.option));
     const undy = optionDirective(wrap(species.undyColor, recipe.undy.option));
     const altColor = f.altOptionAsUndyColor ? undy : '';
@@ -292,7 +292,7 @@ export function defaultRecipe(species: Species, choice: SpriteChoice = { exclude
     };
 }
 
-/** What the original creator's "randomise" does, with every style layer (and its own colours) rolled on its own. */
+/** What the original creator's "randomise" does, with every style layer (and its own colors) rolled on its own. */
 export function randomRecipe(species: Species, choice: SpriteChoice = { exclude: [] }, random: () => number = Math.random): Recipe {
     const roll = (n: number) => Math.floor(random() * Math.max(1, n));
     const any = <T,>(list: T[]) => list[roll(list.length)];

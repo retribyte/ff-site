@@ -7,24 +7,24 @@ export const SWATCH_SORTS = ['default', 'hue', 'saturation', 'lightness'] as con
 export type SwatchSort = (typeof SWATCH_SORTS)[number];
 
 interface Tone {
-    /** Degrees, 0 to 360, of the most colourful of the option's first colours. */
+    /** Degrees, 0 to 360, of the most colourful of the option's first colors. */
     hue: number;
     /** 0 to 1: how far that colour is from grey. */
     chroma: number;
-    /** 0 to 1: mean brightness of those colours. */
+    /** 0 to 1: mean brightness of those colors. */
     light: number;
 }
 
 /** Below this an option reads as grey, and its hue is noise. */
 const GREY = 0.12;
 const HUE_BANDS = 12;
-/** How many of an option's colours a swatch shows. */
+/** How many of an option's colors a swatch shows. */
 export const SWATCH_COLORS = 4;
 
 function tone(option: ColorOption): Tone | null {
-    if (typeof option === 'string') return null; // a raw directive: no colours to read
+    if (typeof option === 'string') return null; // a raw directive: no colors to read
     let best: Tone | null = null, light = 0, n = 0;
-    // Only the colours a swatch shows, so the order matches what is on screen.
+    // Only the colors a swatch shows, so the order matches what is on screen.
     for (const hex of Object.values(option).slice(0, SWATCH_COLORS)) {
         if (!/^[0-9a-f]{6}/i.test(hex)) continue;
         const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
@@ -41,7 +41,7 @@ function tone(option: ColorOption): Tone | null {
 /**
  * The options' indices in display order. 'hue' runs round the colour wheel in bands, light to
  * dark within each, with the greys after; 'saturation' goes vivid to dull; 'lightness' light
- * to dark. Options without readable colours keep their place at the end.
+ * to dark. Options without readable colors keep their place at the end.
  */
 export function sortOptions(options: ColorOption[], mode: SwatchSort): number[] {
     const order = options.map((_, i) => i);

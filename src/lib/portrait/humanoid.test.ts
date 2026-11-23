@@ -37,7 +37,7 @@ const items: ItemsFile = {
 };
 
 describe('createIdentity', () => {
-    it('colours hair like the body unless the species says otherwise', () => {
+    it('colors hair like the body unless the species says otherwise', () => {
         const id = createIdentity(species(), defaultRecipe(species()));
         expect(id.bodyDirectives).toBe('?replace;aaaaaa=111111');
         expect(id.hairDirectives).toBe('?replace;aaaaaa=111111');

@@ -85,7 +85,7 @@ export type StylePart = 'head' | 'body' | 'frontArm' | 'backArm';
 export const STYLE_PARTS: StylePart[] = ['head', 'body', 'frontArm', 'backArm'];
 
 /**
- * Where a style layer takes its colours from: one of the species' colour picks (`body`,
+ * Where a style layer takes its colors from: one of the species' colour picks (`body`,
  * `hair`, `undy`: the alt/detail colour), `facialMask` (the game's own mix for facial masks),
  * `own` (the layer's own palette, picked on its own) or `none`. Several apply in order.
  */

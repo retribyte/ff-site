@@ -329,7 +329,7 @@ export function WardrobePanel({ bundle, race, recipe, set }: { bundle: BrowserBu
 
 // ---------------------------------------------------------------------------- palette editor
 
-/** A colour pick the palette editor edits: the body, the hair, a style layer's own colours (`style:<id>`) or a clothing slot. */
+/** A colour pick the palette editor edits: the body, the hair, a style layer's own colors (`style:<id>`) or a clothing slot. */
 type PaletteTarget = 'body' | 'hairColor' | WearSlot | `style:${string}`;
 const WEAR_TARGETS: WearSlot[] = ['head', 'chest', 'legs', 'back'];
 
@@ -350,7 +350,49 @@ function withTweak(recipe: Recipe, target: PaletteTarget, tweak: Record<string, 
 }
 
 /**
- * Lists the colours a part is actually drawn in and lets each be replaced. The edits are a
+ * A colour input that passes on at most one pick per frame. A browser's picker (Chrome's
+ * colour field, a colour wheel) fires on every mouse move while it is dragged, and each pick
+ * redraws the portrait; taking only the latest pick each frame keeps a slow redraw from
+ * queueing up behind the mouse. The input is left uncontrolled so React never pushes an older
+ * value back into it mid-drag; it follows `value` again whenever no pick is waiting.
+ */
+function ColourInput({ value, onPick, label }: { value: string; onPick: (hex: string) => void; label: string }) {
+    const ref = useRef<HTMLInputElement>(null);
+    const waiting = useRef<string | null>(null);
+    const frame = useRef(0);
+    // Picks already passed on: a render can still be carrying an older one of them back as
+    // `value` while the input shows a newer pick, and that must not be written back over it.
+    const echoes = useRef(new Set<string>());
+    const latest = useRef(onPick);
+    useEffect(() => {
+        latest.current = onPick;
+    });
+    useEffect(() => {
+        if (echoes.current.has(value)) {
+            if (waiting.current === null && ref.current?.value === value) echoes.current.clear();
+            return;
+        }
+        echoes.current.clear();
+        if (ref.current && waiting.current === null && ref.current.value !== value) ref.current.value = value;
+    }, [value]);
+    useEffect(() => () => cancelAnimationFrame(frame.current), []);
+    const pick = (hex: string) => {
+        waiting.current = hex;
+        frame.current ||= requestAnimationFrame(() => {
+            frame.current = 0;
+            const next = waiting.current;
+            waiting.current = null;
+            if (next) {
+                echoes.current.add(next);
+                latest.current(next);
+            }
+        });
+    };
+    return <input ref={ref} type='color' defaultValue={value} onChange={(e) => pick(e.target.value)} aria-label={label} />;
+}
+
+/**
+ * Lists the colors a part is actually drawn in and lets each be replaced. The edits are a
  * colour swap applied after the part's chosen option, so they work the same for body, hair
  * and every clothing item, whatever directives the option itself uses.
  */
@@ -420,7 +462,7 @@ export function PalettePanel({ bundle, recipe, set }: { bundle: BrowserBundle; r
                         <li key={from} className={styles.paletteRow}>
                             <span className={styles.chip} style={{ background: `#${from}` }} title={`#${from}`} />
                             <span className={styles.arrow}>to</span>
-                            <input type='color' value={`#${to.slice(0, 6)}`} onChange={(e) => change(from, e.target.value.slice(1) + alpha)} aria-label={`Replace #${from}`} />
+                            <ColourInput value={`#${to.slice(0, 6)}`} onPick={(hex) => change(from, hex.slice(1) + alpha)} label={`Replace #${from}`} />
                             <input type='text' className={styles.hex} defaultValue={to.slice(0, 6)} key={to} maxLength={6} spellCheck={false}
                                 onBlur={(e) => hexToRgba(e.target.value) && e.target.value.length === 6 && change(from, e.target.value.toLowerCase() + alpha)} aria-label={`Hex for #${from}`} />
                             {tweak[from] && <button type='button' className={styles.small} onClick={() => change(from, null)}>reset</button>}
@@ -429,7 +471,7 @@ export function PalettePanel({ bundle, recipe, set }: { bundle: BrowserBundle; r
                 })}
             </ul>
             {Object.keys(tweak).length > 0 && (
-                <button type='button' className={styles.small} onClick={() => set((r) => withTweak(r, active, undefined))}>reset all {label(active).toLowerCase()} colours</button>
+                <button type='button' className={styles.small} onClick={() => set((r) => withTweak(r, active, undefined))}>reset all {label(active).toLowerCase()} colors</button>
             )}
         </div>
     );

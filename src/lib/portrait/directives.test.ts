@@ -4,7 +4,7 @@ import { applyOperations, distinctColors, hexToRgba, optionDirective, parseDirec
 const px = (...colors: number[][]) => new Uint8ClampedArray(colors.flat());
 
 describe('hexToRgba', () => {
-    it('reads 3, 4, 6 and 8 digit colours', () => {
+    it('reads 3, 4, 6 and 8 digit colors', () => {
         expect(hexToRgba('fff')).toEqual([255, 255, 255, 255]);
         expect(hexToRgba('f008')).toEqual([255, 0, 0, 136]);
         expect(hexToRgba('ffca8a')).toEqual([255, 202, 138, 255]);
@@ -14,7 +14,7 @@ describe('hexToRgba', () => {
 });
 
 describe('replace', () => {
-    it('swaps exact colours only, both separator styles', () => {
+    it('swaps exact colors only, both separator styles', () => {
         for (const d of ['?replace;ffca8a=d0d4e9;e0975c=90a0cc', '?replace=ffca8a=d0d4e9=e0975c=90a0cc']) {
             const data = px([255, 202, 138, 255], [224, 151, 92, 255], [255, 202, 138, 128], [1, 2, 3, 255]);
             applyOperations(data, parseDirectives(d));
@@ -71,7 +71,7 @@ describe('helpers', () => {
         expect(wrap([], 2)).toBeUndefined();
     });
 
-    it('lists the colours in use, most common first', () => {
+    it('lists the colors in use, most common first', () => {
         const data = px([1, 2, 3, 255], [1, 2, 3, 255], [9, 9, 9, 128], [0, 0, 0, 0]);
         expect(distinctColors({ width: 4, height: 1, data })).toEqual(['010203', '09090980']);
     });
