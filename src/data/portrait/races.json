@@ -60,6 +60,7 @@
         { "id": "mantizi", "descriptor": "Beetle", "category": "insect" },
         { "id": "squoatling", "descriptor": "Goat", "category": "animal" },
         { "id": "llamanian", "descriptor": "Llama", "category": "animal" },
+        { "id": "verinian", "descriptor": "Wolverine", "category": "animal" },
         { "id": "akkimari", "descriptor": "Scavenger", "category": "fantasy" },
         { "id": "centens", "descriptor": "Ancient", "category": "fantasy" },
         { "id": "fenerox", "descriptor": "Fox", "category": "animal" },
