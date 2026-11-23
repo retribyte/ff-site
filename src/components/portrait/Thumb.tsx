@@ -32,6 +32,8 @@ function cropToContent(px: Pixels): Pixels {
     return { width: size, height: size, data };
 }
 
+const REDRAW_DELAY_MS = 200;
+
 /** A small live render of a recipe: the whole figure, or just the head. Drawn once it scrolls into view. */
 export default function Thumb({ bundle, recipe, view = 'full', size = 56 }: { bundle: BrowserBundle; recipe: Recipe; view?: 'full' | 'head'; size?: number }) {
     const ref = useRef<HTMLCanvasElement>(null);
@@ -48,10 +50,14 @@ export default function Thumb({ bundle, recipe, view = 'full', size = 56 }: { bu
         return () => io.disconnect();
     }, [visible]);
 
+    // Drawn at once the first time; after that, redrawn only once the recipe has held still a
+    // moment. A colour picker dragged across its field changes the recipe on every mouse move,
+    // and recomposing a whole grid of thumbnails each time made the page lag.
+    const painted = useRef(false);
     useEffect(() => {
         if (!visible) return;
         let stale = false;
-        (async () => {
+        const timer = setTimeout(async () => {
             const r: Recipe = JSON.parse(key);
             const dressed = !r.nude && Object.keys(r.wear).length > 0;
             const items = dressed ? await bundle.loadItems() : bundle.items ?? undefined;
@@ -61,9 +67,11 @@ export default function Thumb({ bundle, recipe, view = 'full', size = 56 }: { bu
             if (stale || !ref.current) return;
             const px = compose(layers, bundle.source(r));
             paint(ref.current, view === 'head' ? cropToContent(px) : px);
-        })();
+            painted.current = true;
+        }, painted.current ? REDRAW_DELAY_MS : 0);
         return () => {
             stale = true;
+            clearTimeout(timer);
         };
     }, [bundle, key, view, visible]);
 
