@@ -14,7 +14,7 @@ import Thumb from './Thumb';
 import styles from './portrait.module.scss';
 
 const DRAFT_KEY = 'portraitDraft';
-const TABS = ['body', 'wardrobe', 'colours', 'sources', 'saved'] as const;
+const TABS = ['body', 'wardrobe', 'colors', 'sources', 'saved'] as const;
 type Tab = (typeof TABS)[number];
 const BACKDROPS = ['space', 'dark', 'light', 'checker'] as const;
 // On a narrow screen the three columns become three views, one shown at a time (the
@@ -270,7 +270,7 @@ export default function PortraitCreator({ settings, user }: { settings: Portrait
                 </div>
                 {tab === 'body' && <BodyPanel bundle={bundle} race={race} recipe={recipe} set={set} />}
                 {tab === 'wardrobe' && <WardrobePanel bundle={bundle} race={race} recipe={recipe} set={set} />}
-                {tab === 'colours' && <PalettePanel bundle={bundle} recipe={recipe} set={set} />}
+                {tab === 'colors' && <PalettePanel bundle={bundle} recipe={recipe} set={set} />}
                 {tab === 'sources' && <SourcesPanel bundle={bundle} race={race} recipe={recipe} set={set} />}
                 {tab === 'saved' && <SavedPanel race={race.id} raceName={race.name} recipe={recipe} pixels={pixels} kept={kept} setKept={setKept} onOpen={loadDraft} />}
             </section>

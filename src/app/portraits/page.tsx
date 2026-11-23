@@ -7,7 +7,7 @@ import styles from '@/components/portrait/portrait.module.scss';
 
 export const metadata: Metadata = {
     title: 'Portrait Creator',
-    description: 'Build a character portrait from Starbound sprites: race, colours, wardrobe and pose.',
+    description: 'Build a character portrait from Starbound sprites: race, colors, wardrobe and pose.',
     robots: { index: false, follow: false },
 };
 

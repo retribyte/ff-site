@@ -329,7 +329,7 @@ export function WardrobePanel({ bundle, race, recipe, set }: { bundle: BrowserBu
 
 // ---------------------------------------------------------------------------- palette editor
 
-/** A colour pick the palette editor edits: the body, the hair, a style layer's own colours (`style:<id>`) or a clothing slot. */
+/** A colour pick the palette editor edits: the body, the hair, a style layer's own colors (`style:<id>`) or a clothing slot. */
 type PaletteTarget = 'body' | 'hairColor' | WearSlot | `style:${string}`;
 const WEAR_TARGETS: WearSlot[] = ['head', 'chest', 'legs', 'back'];
 
@@ -392,7 +392,7 @@ function ColourInput({ value, onPick, label }: { value: string; onPick: (hex: st
 }
 
 /**
- * Lists the colours a part is actually drawn in and lets each be replaced. The edits are a
+ * Lists the colors a part is actually drawn in and lets each be replaced. The edits are a
  * colour swap applied after the part's chosen option, so they work the same for body, hair
  * and every clothing item, whatever directives the option itself uses.
  */
@@ -471,7 +471,7 @@ export function PalettePanel({ bundle, recipe, set }: { bundle: BrowserBundle; r
                 })}
             </ul>
             {Object.keys(tweak).length > 0 && (
-                <button type='button' className={styles.small} onClick={() => set((r) => withTweak(r, active, undefined))}>reset all {label(active).toLowerCase()} colours</button>
+                <button type='button' className={styles.small} onClick={() => set((r) => withTweak(r, active, undefined))}>reset all {label(active).toLowerCase()} colors</button>
             )}
         </div>
     );
