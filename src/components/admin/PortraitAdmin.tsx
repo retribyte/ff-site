@@ -177,7 +177,11 @@ function ModsPanel({ settings, onSaved }: PanelProps) {
 
 // ----- races
 
-const LOCKS: (keyof StyleLock)[] = ['hair', 'facialHair', 'facialMask'];
+/** The game's own style layers, always offered; a species' own layers are added by id. */
+const LOCKS = ['hair', 'facialHair', 'facialMask'];
+
+/** The layers a race's form shows a "fixed" row for: the game's three and any it already fixes. */
+const lockKeys = (lock: StyleLock | undefined) => [...new Set([...LOCKS, ...Object.keys(lock ?? {})])];
 
 /** A race entry without its empty fields, as the server stores it. */
 function tidy(race: RaceDef): RaceDef {
@@ -313,7 +317,7 @@ function RacesPanel({ settings, kinds, onSaved }: PanelProps & { kinds: { kind: 
                                     </Field>
                                     <ModList label='Leaves out' hint='Mods whose sprites and species changes this race does not use' ids={race.exclude ?? []} modName={modName} onChange={(exclude) => edit(i, { exclude })} />
                                     <ModList label='Puts on top' hint='Mods whose sprites win, most preferred first' ids={race.prefer ?? []} modName={modName} onChange={(prefer) => edit(i, { prefer })} />
-                                    {LOCKS.map((key) => (
+                                    {lockKeys(race.lock).map((key) => (
                                         <Field key={key} label={`Fixed ${key}`} hint='Tick to take the choice away; blank value = none'>
                                             <span className={own.lock}>
                                                 <input
@@ -333,6 +337,20 @@ function RacesPanel({ settings, kinds, onSaved }: PanelProps & { kinds: { kind: 
                                             </span>
                                         </Field>
                                     ))}
+                                    <Field label='Fix another layer' hint='A species’ own style layer (its ffLayers id), then tick it above'>
+                                        <input
+                                            className={own.input}
+                                            type='text'
+                                            placeholder='layer id, Enter'
+                                            onKeyDown={(e) => {
+                                                const id = e.currentTarget.value.trim();
+                                                if (e.key !== 'Enter' || !id) return;
+                                                e.preventDefault();
+                                                edit(i, { lock: { ...race.lock, [id]: race.lock?.[id] ?? '' } });
+                                                e.currentTarget.value = '';
+                                            }}
+                                        />
+                                    </Field>
                                     <div>
                                         <button
                                             type='button'

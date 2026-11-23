@@ -213,3 +213,53 @@ Still open from before:
 - Saved portraits are private (Trey, 2026-11-14); an avatar put on a character is public like any avatar.
 - The extractor has only been run on Linux; Windows and macOS paths are written but untested.
 - Curating the wardrobe: 2,930 head items and one mod with about 2,400 items.
+
+## Style layers and clothing fit (2026-11-22)
+
+Asked for: in-house races with markings on the body and arms as well as the head, more than
+Starbound's two head options, and clothes that fit a shorter, wider body. Starbound can do none
+of it; the creator now can, from extra keys in the `.species` file that the game ignores.
+
+- **Generic style layers.** `SpeciesGender.styles` is a list of `StyleSlot`s. The game's hair,
+  facial hair and facial mask are built-in slots (the flags still decide which exist); `ffLayers`
+  adds more. A slot has its options, each option's sprite per part (head, body, front arm, back
+  arm), colour sources (`body`, `hair`, `undy`, `facialMask`, `own` palette, `none`), `stack`
+  (several at once), `masked` (helmet mask) and `above` (draw order anchor per part). One code
+  path draws, picks, randomises, locks and reconciles all of them.
+- **Frames.** A layer's sheet copies the layout of the part it covers and is cut with that
+  part's frames (`Layer.framesOf`), so markings follow poses with no frames file of their own.
+- **Recipe v2**: `styles: {id: [picks]}` and `styleColors`. `upgradeRecipe` reads v1 (drafts,
+  saved portraits, pasted text). ff-server stores recipes as opaque JSON, so it needed no change
+  for this; its race validation now takes any layer id as a `lock` key.
+- **Clothing fit** (`ffClothingFit`, per species with per-gender overrides): per clothing sprite
+  an offset and row/column repeat or removal (`fitPixels`). Starbound's
+  `headArmorOffset`/`chestArmorOffset`/... in humanoid.config looked like a fit but are only
+  anchor points for effects, not sprite moves (checked in OpenStarbound's `StarHumanoid.cpp`), so
+  this is the site's own.
+- **Extractors unchanged**: both already bundle every PNG under `/humanoid/<species>/` and keep
+  species files raw, so the new keys and folders reach the site as they are.
+- Guide for mod authors: `docs/portrait-species-extensions.md`.
+
+### Other parts of the humanoid model that could go the same way
+
+Ranked by how likely an in-house race is to hit them:
+
+1. **Colour channels.** Body, alt/undy and hair are fixed, wired together by eight flags.
+   `own` palettes cover one layer each; next would be named channels in the species file
+   (`ffColors: {fur, eyes, ...}`) that body parts and layers refer to, each with its own picker.
+2. **Extra body parts.** Tails, wings, ears that are always there are possible today as a layer
+   with no "none" option; if they need their own pose frames or to sit behind the back arm, a
+   `ffParts` list (sheet, frames, offset source, anchor) would generalise `sprites`.
+3. **Per-species clothing sprites.** Fit moves and stretches; a convention for a species'
+   own version of an item's sheet (next to the item, or in the race mod) would let artists redraw
+   the worst offenders. Same lookup order idea as gendered sheets.
+4. **Layer order** for body parts and clothing is still `BASE_ORDER` in `humanoid.ts`; only style
+   layers move. A species could reorder it (`ffOrder`), e.g. a back item in front of the body.
+5. **Emotes**: `EMOTES` is a fixed list of the game's names; a species with other emote frames
+   would want the list read from its emote frames file.
+6. **Genders.** Items still dress the first gender as male and the rest as female; a species
+   with other genders might want to say which sheets each wears.
+7. **Head frame and canvas**: style layers and headwear use the frame named `normal` and a
+   43x43 frame; a taller race may want both from the species.
+8. **Creator labels** come from fixed indices of `charGenTextLabels`; `ffLayers` labels are
+   already free text.

@@ -7,8 +7,6 @@ import { buildLayers } from '@/lib/portrait/humanoid';
 import { speciesFor } from '@/lib/portrait/species';
 import type { Pixels, Recipe } from '@/lib/portrait/types';
 
-const HEAD_PARTS = new Set(['head', 'emote', 'hair', 'facialHair', 'facialMask', 'headwear']);
-
 /** The smallest square around the opaque pixels, with a pixel of margin. */
 function cropToContent(px: Pixels): Pixels {
     let x0 = px.width, y0 = px.height, x1 = -1, y1 = -1;
@@ -58,7 +56,7 @@ export default function Thumb({ bundle, recipe, view = 'full', size = 56 }: { bu
             const dressed = !r.nude && Object.keys(r.wear).length > 0;
             const items = dressed ? await bundle.loadItems() : bundle.items ?? undefined;
             let layers = buildLayers(speciesFor(bundle.manifest, r.species, r.exclude), r, items);
-            if (view === 'head') layers = layers.filter((l) => HEAD_PARTS.has(l.part));
+            if (view === 'head') layers = layers.filter((l) => l.head);
             await bundle.preload(layers, r);
             if (stale || !ref.current) return;
             const px = compose(layers, bundle.source(r));

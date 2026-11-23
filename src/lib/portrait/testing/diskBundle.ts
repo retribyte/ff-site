@@ -60,9 +60,9 @@ export class DiskBundle {
         };
         return {
             image,
-            frame: (name, frame) => {
+            frame: (name, frame, framesOf) => {
                 const sheet = image(name);
-                const frames = this.entry(name)?.f;
+                const frames = this.entry(framesOf ?? name)?.f;
                 if (!sheet) return null;
                 if (!frames) return sheet;
                 const rect = this.manifest.frames[frames]?.[frame];

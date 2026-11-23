@@ -3,7 +3,7 @@
 
 import { applyOperations, parseDirectives } from './directives';
 import type { Layer } from './humanoid';
-import type { FrameRect, ImageEntry, Pixels, SpriteChoice } from './types';
+import type { FitRule, FrameRect, ImageEntry, Pixels, SpriteChoice } from './types';
 
 /** Starbound's humanoid frames are 43x43; the portrait canvas matches so offsets stay exact. */
 export const FRAME_SIZE = 43;
@@ -32,34 +32,85 @@ export function cropFrame(sheet: Pixels, rect: FrameRect | undefined): Pixels | 
     return { width: w, height: h, data };
 }
 
-/** Starbound's addmask: alpha becomes min(alpha, mask alpha); both images are aligned at the bottom-left. */
-function applyMask(frame: Pixels, mask: Pixels): void {
+/**
+ * Starbound's addmask: alpha becomes min(alpha, mask alpha); both images are aligned at the
+ * bottom-left, then the mask moves by `shift` (pixels, y up).
+ */
+function applyMask(frame: Pixels, mask: Pixels, shift: [number, number] = [0, 0]): void {
     for (let y = 0; y < frame.height; y++) {
-        const my = y - (frame.height - mask.height);
+        const my = y - (frame.height - mask.height) + shift[1];
         for (let x = 0; x < frame.width; x++) {
-            const inside = my >= 0 && my < mask.height && x < mask.width;
-            const alpha = inside ? mask.data[(my * mask.width + x) * 4 + 3] : 0;
+            const mx = x - shift[0];
+            const inside = my >= 0 && my < mask.height && mx >= 0 && mx < mask.width;
+            const alpha = inside ? mask.data[(my * mask.width + mx) * 4 + 3] : 0;
             const i = (y * frame.width + x) * 4 + 3;
             if (alpha < frame.data[i]) frame.data[i] = alpha;
         }
     }
 }
 
+/** Index lists for one axis: `add` > 0 repeats index `at`, < 0 drops -add indices from `at`. */
+function axis(length: number, change?: { at: number; add: number }): number[] {
+    const out = Array.from({ length }, (_, i) => i);
+    if (!change || change.at >= length) return out;
+    if (change.add > 0) out.splice(change.at + 1, 0, ...Array(change.add).fill(change.at));
+    else out.splice(change.at, Math.min(-change.add, length - change.at));
+    return out;
+}
+
+/** Rows and columns repeated or dropped, nothing else moved: the new image is as big as it needs to be. */
+export function resizePixels(px: Pixels, rule: Pick<FitRule, 'rows' | 'columns'>): Pixels {
+    const xs = axis(px.width, rule.columns), ys = axis(px.height, rule.rows);
+    const out: Pixels = { width: xs.length, height: ys.length, data: new Uint8ClampedArray(xs.length * ys.length * 4) };
+    ys.forEach((sy, y) => xs.forEach((sx, x) => out.data.set(px.data.subarray((sy * px.width + sx) * 4, (sy * px.width + sx) * 4 + 4), (y * out.width + x) * 4)));
+    return out;
+}
+
+/**
+ * A clothing sprite fitted to another body: columns change about the frame's centre (compose
+ * centres the wider or narrower frame), rows change with everything below them staying put
+ * (the frame is padded so that its centre does not move).
+ */
+export function fitPixels(px: Pixels, rule: Pick<FitRule, 'rows' | 'columns'>): Pixels {
+    const resized = resizePixels(px, rule);
+    const change = resized.height - px.height;
+    if (change === 0) return resized;
+    // Grown: pad the bottom as much again. Shrunk: pad the top back to the old height.
+    const height = change > 0 ? resized.height + change : px.height;
+    const top = change > 0 ? 0 : -change;
+    const out: Pixels = { width: resized.width, height, data: new Uint8ClampedArray(resized.width * height * 4) };
+    out.data.set(resized.data, top * resized.width * 4);
+    return out;
+}
+
 export interface FrameSource {
-    /** One frame of a sheet (a fresh copy is not required; compose never mutates it), or null. */
-    frame(image: string, frame: string): Pixels | null;
+    /**
+     * One frame of a sheet (a fresh copy is not required; compose never mutates it), or null.
+     * With `framesOf`, the frame's rectangle comes from that image's frames instead.
+     */
+    frame(image: string, frame: string, framesOf?: string): Pixels | null;
     /** A whole image, for masks. */
     image(image: string): Pixels | null;
 }
 
 /** One layer with its directives and mask applied, uncomposited. */
 export function renderLayer(layer: Layer, source: FrameSource): Pixels | null {
-    const frame = source.frame(layer.image, layer.frame);
+    const frame = source.frame(layer.image, layer.frame, layer.framesOf);
     if (!frame) return null;
-    const out: Pixels = { width: frame.width, height: frame.height, data: new Uint8ClampedArray(frame.data) };
+    let out: Pixels = { width: frame.width, height: frame.height, data: new Uint8ClampedArray(frame.data) };
+    if (layer.resize) out = fitPixels(out, layer.resize);
     applyOperations(out.data, parseDirectives(layer.directives));
-    const mask = layer.mask ? source.image(layer.mask) : null;
-    if (mask) applyMask(out, mask);
+    let mask = layer.mask ? source.image(layer.mask) : null;
+    if (mask) {
+        // The mask follows its helmet's fit: resized the same way, and moved as far as the helmet was.
+        const fit = layer.maskFit;
+        const shift: [number, number] = [fit?.offset?.[0] ?? 0, fit?.offset?.[1] ?? 0];
+        if (fit?.rows || fit?.columns) {
+            mask = resizePixels(mask, fit);
+            if (fit.columns) shift[0] -= Math.ceil(fit.columns.add / 2);
+        }
+        applyMask(out, mask, shift);
+    }
     return out;
 }
 

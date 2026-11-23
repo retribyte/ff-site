@@ -22,12 +22,19 @@ export interface RaceDef {
     lock?: StyleLock;
 }
 
-export type StyleLock = Partial<Record<'hair' | 'facialHair' | 'facialMask', string>>;
+/** Style layers fixed for a race, by layer id (`hair`, `facialHair`, `facialMask` or a species' own): the one style it gets ('' for none). */
+export type StyleLock = Record<string, string>;
 
 /** The species with a race's locked styles reduced to their one value, so no picker offers them. */
 export function lockStyles(species: Species, lock: StyleLock | undefined): Species {
     if (!lock || !Object.keys(lock).length) return species;
-    return { ...species, genders: species.genders.map((g) => ({ ...g, ...Object.fromEntries(Object.entries(lock).map(([k, v]) => [k, [v]])) })) };
+    return {
+        ...species,
+        genders: species.genders.map((g) => ({
+            ...g,
+            styles: g.styles.map((slot) => (slot.id in lock ? { ...slot, options: [lock[slot.id]], stack: false } : slot)),
+        })),
+    };
 }
 
 /** A race's species for a given choice of mods (the Sources tab can change a recipe's). */

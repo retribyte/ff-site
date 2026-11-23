@@ -139,10 +139,10 @@ export class BrowserBundle {
         };
         return {
             image,
-            frame: (name, frame) => {
+            frame: (name, frame, framesOf) => {
                 const sheet = image(name);
                 if (!sheet) return null;
-                const frames = this.entry(name)?.f;
+                const frames = this.entry(framesOf ?? name)?.f;
                 if (!frames) return sheet;
                 const rect = this.manifest.frames[frames]?.[frame];
                 return rect ? cropFrame(sheet, rect) : null;

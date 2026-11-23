@@ -69,6 +69,10 @@ Subscribe to the mod (or pass `--mod`), run the extractor again, reload the page
 appears under "uncategorised" until it gets a line in `src/data/portrait/races.json` (Final
 Frontier name, one-word descriptor, category).
 
+A race can also carry extra style layers and a clothing fit that Starbound itself lacks (extra
+keys in its `.species` file, which the extractor passes through as they are): see
+`docs/portrait-species-extensions.md`.
+
 ## What it reproduces from the game
 
 `sbassets.py` follows OpenStarbound's `StarAssets.cpp` and `StarRoot.cpp`: case-insensitive
